@@ -33,11 +33,11 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6">
                             <div class="card bg-white stats-card balances-card">
-                                <div class="skeleton-loading loading-title d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
-                                <div class="balance-card-data">
+                                <div class="skeleton-loading loading-title"></div>
+                                <div class="skeleton-loading loading-content"></div>
+                                <div class="balance-card-data d-none">
                                     <div
-                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600 ">
                                             <span class="card-desc">Vendas aprovadas hoje</span>
                                         </div>
@@ -55,9 +55,9 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <div class="card bg-white stats-card balances-card">
-                                <div class="skeleton-loading loading-title d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
-                                <div class="balance-card-data">
+                                <div class="skeleton-loading loading-title"></div>
+                                <div class="skeleton-loading loading-content"></div>
+                                <div class="balance-card-data d-none">
                                     <div
                                          class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
@@ -77,9 +77,9 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <div class="card bg-white stats-card balances-card">
-                                <div class="skeleton-loading loading-title d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
-                                <div class="balance-card-data">
+                                <div class="skeleton-loading loading-title"></div>
+                                <div class="skeleton-loading loading-content"></div>
+                                <div class="balance-card-data d-none">
                                     <div
                                          class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
@@ -100,9 +100,9 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <div class="card bg-white stats-card balances-card">
-                                <div class="skeleton-loading loading-title d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
-                                <div class="balance-card-data">
+                                <div class="skeleton-loading loading-title"></div>
+                                <div class="skeleton-loading loading-content"></div>
+                                <div class="balance-card-data d-none">
                                     <div
                                          class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600 mr-auto">
@@ -125,20 +125,21 @@
 
                         <div class="col-12 d-none d-sm-block">
                             <div class="card bg-white chart-card">
-                                <div class="skeleton-loading loading-title d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
-                                <div class="skeleton-loading loading-content-inside d-none"></div>
-                                <div class="skeleton-loading loading-content d-none"></div>
+                                <div class="skeleton-loading loading-title"></div>
+                                <div class="skeleton-loading loading-content"></div>
+                                <div class="skeleton-loading loading-content-inside"></div>
+                                <div class="skeleton-loading loading-content"></div>
 
-                                <div class="chart-data">
+                                <div class="chart-data d-none">
                                     <div
                                          class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600">
                                             <span class="card-desc">Vendas nos últimos 30 dias</span>
                                         </div>
                                     </div>
-                                    <div class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5"
-                                         style="height: 270px">
+                                    <div
+                                        class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5"
+                                        style="height: 270px">
                                         <div id="scoreLineToMonth"
                                              class="ct-chart"></div>
                                         <div id="empty-sale"
@@ -161,10 +162,11 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
-                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
+                        <div
+                            class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
 
                             <div class="card pb-15 bg-white w-full performance-card">
-                                <div class="performance-loading d-none">
+                                <div class="performance-loading">
                                     <div class="skeleton-loading title"></div>
                                     <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
                                         <div class="level-icon-container row">
@@ -202,9 +204,9 @@
                         </div>
 
                         <div
-                             class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
+                            class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
                             <div class="card bg-white w-full sirius-account-health">
-                                <div class="sirius-account-health-loading d-none">
+                                <div class="sirius-account-health-loading">
                                     <div class="skeleton-loading title"></div>
                                     <div class="row">
                                         <div class="col skeleton-loading gauge"></div>

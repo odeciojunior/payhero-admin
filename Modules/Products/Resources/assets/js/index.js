@@ -1,22 +1,26 @@
 jQuery(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#type-products").find('option').not(':first').remove();
-        loadOnAny('.page-content');
-        updateCompanyDefault().done(function(data1){
-            getCompaniesAndProjects().done(function(data2){
+        $("#type-products").find("option").not(":first").remove();
+        showFiltersLoadingSkeleton();
+        showProductsLoadingSkeleton();
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
                 renderSiriusSelect("#type-products");
-                $("#select-projects-1").find('option').remove();
-                $("#select-projects-2").find('option').remove();
-                $("#projects-list select").prop("disabled", true).addClass("disabled");
+                $("#select-projects-1").find("option").remove();
+                $("#select-projects-2").find("option").remove();
+                $("#projects-list select")
+                    .prop("disabled", true)
+                    .addClass("disabled");
                 $("#projects-list, .box-projects").addClass("d-none");
-                localStorage.removeItem('page')
-                localStorage.removeItem('filtersApplied')
-                getProjects('n');
+                localStorage.removeItem("page");
+                localStorage.removeItem("filtersApplied");
+                getProjects("n");
             });
         });
     });
+
+    showProductsLoadingSkeleton();
 
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
@@ -51,15 +55,12 @@ jQuery(function () {
         }
     };
 
-    function getProjects(loading='y') {
-        if(loading=='y')
-            loadingOnScreen();
-        else
-            loadOnAny('.page-content');
-
+    function getProjects(loading = "y") {
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&status=active&company="+ $('.company-navbar').val(),
+            url:
+                "/api/projects?select=true&status=active&company=" +
+                $(".company-navbar").val(),
             data: {
                 status: "active",
             },
@@ -69,8 +70,6 @@ jQuery(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny('.page-content',true);
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -82,19 +81,18 @@ jQuery(function () {
                     } else {
                         $("#div-create").show();
                     }
-                    if (response.data != 'api sales') {
+                    if (response.data != "api sales") {
                         $.each(appsList, function (index, value) {
-                            let exist_shopify = 'n';
-                            let exist_woocommerce = 'n';
+                            let exist_shopify = "n";
+                            let exist_woocommerce = "n";
                             $.each(response.data, function (index, value) {
                                 if (value.shopify) {
-                                    exist_shopify = 's';
-                                }
-                                else if (value.woocommerce) {
-                                    exist_woocommerce = 's';
+                                    exist_shopify = "s";
+                                } else if (value.woocommerce) {
+                                    exist_woocommerce = "s";
                                 }
                             });
-                            if (index == 1 && exist_shopify == 's') {
+                            if (index == 1 && exist_shopify == "s") {
                                 $("#type-products").append(
                                     $("<option>", {
                                         value: index,
@@ -102,7 +100,7 @@ jQuery(function () {
                                     })
                                 );
                             }
-                            if (index == 2 && exist_woocommerce == 's') {
+                            if (index == 2 && exist_woocommerce == "s") {
                                 $("#type-products").append(
                                     $("<option>", {
                                         value: index,
@@ -119,8 +117,7 @@ jQuery(function () {
                                         text: value.name,
                                     })
                                 );
-                            }
-                            else if (value.woocommerce) {
+                            } else if (value.woocommerce) {
                                 $("#select-projects-2").append(
                                     $("<option>", {
                                         value: value.id,
@@ -128,17 +125,17 @@ jQuery(function () {
                                     })
                                 );
                             }
-                        })
+                        });
                     }
                     handleLocalStorage();
                     updateProducts();
                 } else {
+                    removeFilterLoadingSkeleton();
+                    removeLoadingSkeletonCards();
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
                     $("#div-create").hide();
-                    loadOnAny('.page-content',true);
                 }
-                loadingOnScreenRemove();
             },
         });
     }
@@ -147,20 +144,20 @@ jQuery(function () {
         pageCurrent = link;
         let existFilters = () => {
             if (localStorage.getItem("filtersApplied") != null) {
-                let getFilters = JSON.parse(localStorage.getItem("filtersApplied"));
+                let getFilters = JSON.parse(
+                    localStorage.getItem("filtersApplied")
+                );
                 return getFilters;
             } else {
                 return null;
             }
         };
-
         if (link != null) {
             let getPage = {
                 atualPage: pageCurrent,
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
-
         if (localStorage.getItem("page") != null) {
             let parsePage = JSON.parse(localStorage.getItem("page"));
             if (existFilters() != null && existFilters().getName != "") {
@@ -174,8 +171,7 @@ jQuery(function () {
             pageCurrent = parsePage.atualPage;
         }
         link = pageCurrent;
-        loadOnAny(".page-content");
-
+        showProductsLoadingSkeleton();
         let type =
             existFilters() != null
                 ? existFilters().getTypeProducts
@@ -223,12 +219,14 @@ jQuery(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny(".page-content", true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
+                removeFilterLoadingSkeleton();
+
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
+                    $("#filter-products").show();
                     $("#data-table-products").html("");
                     let dados = "";
                     $.each(response.data, function (index, value) {
@@ -377,10 +375,6 @@ jQuery(function () {
                         $(".products-is-empty").show();
                     }
                 }
-                setTimeout(() => {
-                    loadOnAny(".page-content", true);
-                }, 2000);
-                loadOnAny('.page-content',true);
             },
             complete: (response) => {
                 unlockSearch($("#btn-filtro"));
@@ -507,7 +501,21 @@ jQuery(function () {
         loadData();
     });
 
-    getCompaniesAndProjects().done( function (data){
+    getCompaniesAndProjects().done(function (data) {
         getProjects();
     });
+
+    function showProductsLoadingSkeleton() {
+        $("#data-table-products").empty();
+        loadingSkeletonCards($("#data-table-products"));
+    }
+
+    function showFiltersLoadingSkeleton() {
+        $("#filter-products").hide();
+        $("#filter-products-loading").show();
+    }
+
+    function removeFilterLoadingSkeleton() {
+        $("#filter-products-loading").hide();
+    }
 });

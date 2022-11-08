@@ -612,7 +612,7 @@ $(document).ready(function () {
     });
 
     function putSkeletonLoadingOnBalanceCards() {
-        $(".balances-card > .balance-card-data").hide();
+        $(".balances-card > .balance-card-data").addClass("d-none");
         $(".balances-card > .loading-title").removeClass("d-none");
         $(".balances-card > .loading-content").removeClass("d-none");
     }
@@ -620,11 +620,11 @@ $(document).ready(function () {
     function removeSkeletonLoadingFromBalanceCards() {
         $(".balances-card > .loading-title").addClass("d-none");
         $(".balances-card > .loading-content").addClass("d-none");
-        $(".balances-card > .balance-card-data").show();
+        $(".balances-card > .balance-card-data").removeClass("d-none");
     }
 
     function putSkeletonLoadingOnChart() {
-        $(".chart-data").hide();
+        $(".chart-data").addClass("d-none");
         $(".chart-card > .loading-title").removeClass("d-none");
         $(".chart-card > .loading-content").removeClass("d-none");
         $(".chart-card > .loading-content-inside").removeClass("d-none");
@@ -634,6 +634,6 @@ $(document).ready(function () {
         $(".chart-card > .loading-title").addClass("d-none");
         $(".chart-card > .loading-content").addClass("d-none");
         $(".chart-card > .loading-content-inside").addClass("d-none");
-        $(".chart-data").show();
+        $(".chart-data").removeClass("d-none");
     }
 });

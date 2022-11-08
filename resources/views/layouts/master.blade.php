@@ -76,8 +76,6 @@
 
     @include('layouts.bonus-balance')
 
-    @include('layouts.loading')
-
     @include('layouts.menu-principal')
 
     <div class="top-alert-container">

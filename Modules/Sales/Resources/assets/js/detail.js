@@ -174,10 +174,21 @@ $(() => {
         });
     });
 
+    function showLoadingModalSkeleton() {
+        $(".modal_sale_details_content").hide();
+        $(".modal_loading_skeleton").show();
+    }
+
+    function removeLoadingModalSkeleton() {
+        $(".modal_loading_skeleton").hide();
+        $(".modal_sale_details_content").show();
+    }
+
     // MODAL DETALHES DA VENDA
     $(document).on("click", ".detalhes_venda", function () {
         let sale = $(this).attr("venda");
-        loadOnAny("#modal-saleDetails");
+
+        showLoadingModalSkeleton();
 
         $("#nav-home-tab").addClass("active");
         $("#nav-home-tab").addClass("show");
@@ -301,6 +312,8 @@ $(() => {
                         );
                     });
                 });
+
+                removeLoadingModalSkeleton();
             },
         });
     });

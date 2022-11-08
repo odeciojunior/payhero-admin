@@ -1,4 +1,4 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('content')
     @push('css')
@@ -8,10 +8,12 @@
 
     <div class="page">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div class="page-header container pb-0" style="display: none !important;">
-            <div class="row align-items-center justify-content-between" style="min-height:50px">
+        <div class="page-header container pb-0"
+             style="display: none !important;">
+            <div class="row align-items-center justify-content-between"
+                 style="min-height:50px">
                 <div class="col-md-12">
                     <h1 class="page-title mt-25 mt-md-0">
                         Atendimento <span class="new-circle"></span>
@@ -43,6 +45,7 @@
                             <span class="title">Em aberto</span>
                             <div class="tickets-resume"
                                  id="ticket-open">
+                                <span class="skeleton-loading"></span>
                                 <span class="number"></span>
                                 <span class="detail"></span>
                             </div>
@@ -53,6 +56,7 @@
                             <span class="title">Em mediação</span>
                             <div class="tickets-resume"
                                  id="ticket-mediation">
+                                <span class="skeleton-loading"></span>
                                 <span class="number"></span>
                                 <span class="detail"></span>
                             </div>
@@ -63,6 +67,7 @@
                             <span class="title">Resolvidos</span>
                             <div class="tickets-resume"
                                  id="ticket-closed">
+                                <span class="skeleton-loading"></span>
                                 <span class="number"></span>
                                 <span class="detail"></span>
                             </div>
@@ -73,6 +78,7 @@
                             <span class="title">Total</span>
                             <div class="tickets-resume"
                                  id="ticket-total">
+                                <span class="skeleton-loading"></span>
                                 <span class="number"></span>
                             </div>
                         </div>
@@ -164,7 +170,8 @@
                                         <select id="filter-status"
                                                 class="input-select">
                                             <option value=""
-                                                    selected>todos</option>
+                                                    selected>todos
+                                            </option>
                                             <option value="1">abertos</option>
                                             <option value="2">resolvidos</option>
                                             <option value="3">em mediação</option>
@@ -179,6 +186,92 @@
                                             <button class="btn btn-primary">
                                                 <i class="material-icons">check</i>
                                             </button>
+                                        </div>
+                                    </div>
+                                    <div id="tickets-container-loading">
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ticket-item">
+                                            <div class="px-30">
+                                                <div class="ticket-status-icon skeleton-loading"></div>
+                                            </div>
+                                            <div class="d-flex flex-column"
+                                                 style="width: 100%">
+                                                <div class="skeleton-loading"
+                                                     style="width: 25%; height: 20px;"></div>
+                                                <div class="skeleton-loading mt-3"
+                                                     style="width: 40%; height: 10px;"></div>
+                                                <div class="skeleton-loading mt-5"
+                                                     style="width: 80%; height: 10px;"></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="tickets-container">
@@ -202,6 +295,10 @@
                                             <span class="material-icons ml-10">arrow_back_ios</span>
                                         </button>
                                         <div class="ticket-customer"></div>
+                                        <div class="ticket-status ticket-skeleton-loading">
+                                            <span class="ticket-status-icon small skeleton-loading"></span>
+                                            <span class="skeleton-loading ticket-status-text-loading"></span>
+                                        </div>
                                         <div class="ticket-status d-none">
                                             <span class="ticket-status-icon small"></span>
                                             <span class="ticket-status-text"></span>
@@ -211,10 +308,22 @@
                                             <span class="ticket-start-date"></span> para
                                             <span class="ticket-project"></span>
                                         </div>
+                                        <div class="ticket-sale ticket-skeleton-loading">
+                                            <div class="skeleton-loading"
+                                                 style="width: 100px; height: 12px;"></div>
+                                        </div>
                                         <div class="ticket-sale d-none">
                                             <b>Transação: </b>
                                             <span></span>
                                         </div>
+                                    </div>
+                                    <div id="messages-container-loading">
+                                        <div class="ticket-message skeleton-loading"></div>
+                                        <div class="ticket-message skeleton-loading"
+                                             style="margin-left: auto"></div>
+                                        <div class="ticket-message skeleton-loading"></div>
+                                        <div class="ticket-message skeleton-loading"
+                                             style="margin-left: auto"></div>
                                     </div>
                                     <div class="messages-container">
                                         {{-- loaded via js --}}

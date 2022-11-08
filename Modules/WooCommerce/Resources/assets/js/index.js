@@ -25,7 +25,7 @@ $(document).ready(function () {
     let companyNotFound = false;
     let woocommerceIntegrationNotFound = false;
 
-    loadingOnScreen();
+    loadingSkeletonCards($("#content"));
 
     $("#btn-integration-model").hide();
 
@@ -68,7 +68,6 @@ $(document).ready(function () {
                 .addClass("d-flex")
                 .css("display", "flex");
         }
-        loadingOnScreenRemove();
     }
 
     function index() {
@@ -91,8 +90,8 @@ $(document).ready(function () {
                 if (isEmpty(data)) {
                     woocommerceIntegrationNotFound = true;
                     if (woocommerceIntegrationNotFound) {
+                        removeLoadingSkeletonCards();
                         $("#no-integration-found").show();
-                        loadingOnScreenRemove();
                     } else {
                         $("#no-integration-found").hide();
                     }

@@ -77,7 +77,6 @@ $(document).ready(function () {
             });
 
             $("#new-register-first-page").fadeIn();
-
         } else {
             $(".new-register-overlay").fadeOut(400, function () {
                 changeNewRegisterLayoutOnWindowResize();
@@ -91,15 +90,12 @@ $(document).ready(function () {
         function () {
             $("#new-register-first-page").hide();
 
+        $(".modal-top-btn").hide();
 
+        setStepButton(getNewRegisterStep());
 
-            $(".modal-top-btn").hide();
-
-            setStepButton(getNewRegisterStep());
-
-            $("#new-register-steps-container").show();
-        }
-    );
+        $("#new-register-steps-container").show();
+    });
 
     $("#new-register-step-container input[type=text]").on("input", function () {
         setStepButton(getNewRegisterStep());
@@ -220,7 +216,6 @@ $(document).ready(function () {
 
         if (step === 1) {
             $("#new-register-first-page").show();
-
 
             $(".modal-top-btn").show();
 
@@ -584,6 +579,47 @@ function heightAnimate(element, height) {
     element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
 }
 
+function loadingSkeletonCards(elementAppend) {
+    const loadingHtml =
+        '<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 card-skeleton-loading">' +
+        '    <div class="card">' +
+        '        <div class="d-flex justify-content-center">' +
+        '            <div class="skeleton-loading card-skeleton-loading-img-top" style="border-radius: 0;"></div>' +
+        "        </div>" +
+        '        <div class="card-body">' +
+        '            <div class="skeleton-loading mt-3" style="width: 80%; height: 20px;"></div>' +
+        '            <div class="skeleton-loading mt-45" style="width: 60%; height: 10px"></div>' +
+        "        </div>" +
+        "    </div>" +
+        "</div>";
+
+    let cont = 2;
+
+    if (window.innerWidth > 479 && window.innerWidth <= 767) {
+        cont = 4;
+    }
+
+    if (window.innerWidth > 767 && window.innerWidth <= 991) {
+        cont = 6;
+    }
+
+    if (window.innerWidth > 991) {
+        cont = 8;
+    }
+
+    let html = "";
+
+    for (let i = 0; i < cont; i++) {
+        html += loadingHtml;
+    }
+
+    elementAppend.append(html);
+}
+
+function removeLoadingSkeletonCards() {
+    $(".card-skeleton-loading").remove();
+}
+
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
         loadOnAnyPage(".page", true);
@@ -701,7 +737,7 @@ function loadOnAny(target, remove = false, options = {}) {
 
         //add message load
         if (options.message) {
-            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.append(`<p class="mb-30">${options.message}</p>`);
             container.addClass("d-flex").addClass("flex-column");
         }
 
@@ -754,7 +790,7 @@ function loadOnAnyPage(target, remove = false, options = {}) {
 
         //add message load
         if (options.message) {
-            container.append(`<p class='mb-30'>${options.message}</p>`);
+            container.append(`<p class="mb-30">${options.message}</p>`);
             container.addClass("d-flex").addClass("flex-column");
         }
 
@@ -1331,7 +1367,6 @@ function verifyDocumentPending() {
                 var card_user_biometry_button = "";
                 var card_user_biometry_link = "/personal-info";
 
-
                 if (response.data.user_status === "pending" || response.data.user_status === "") {
                     count += 1;
 
@@ -1343,7 +1378,7 @@ function verifyDocumentPending() {
                         "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                        card_user_biometry_link +
+                    card_user_biometry_link +
                         '">Ir para configurações</button>';
                 } else if (response.data.user_status === "analyzing") {
                     count += 1;
@@ -2452,7 +2487,7 @@ const loadSkeletonBonus = `
             </div>
             `;
 
-function getCompaniesAndProjects() {
+function getCompaniesAndProjects(removeLoadingFunction = null) {
     var ajax = $.ajax({
         method: "GET",
         url: `/api/core/usercompanies`,
@@ -2547,6 +2582,9 @@ function getCompaniesAndProjects() {
             } else {
                 //$(".content-error").show();
                 $("#company-select, .page-content").hide();
+                if (removeLoadingFunction) {
+                    removeLoadingFunction();
+                }
                 loadingOnScreenRemove();
             }
         },
@@ -2599,6 +2637,7 @@ function fillSelectProject(companiesAndProjects, selectorName, value = "") {
         $(selectorName).val(value);
     }
 }
+
 function showFiltersInReports(show) {
     if (show) {
         $("#box-projects").show();

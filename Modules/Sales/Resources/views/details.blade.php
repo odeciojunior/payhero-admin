@@ -8,7 +8,47 @@
      aria-labelledby="exampleModalTitle"
      role="dialog"
      tabindex="-1">
-    <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+    <div class="modal-dialog modal-simple modal-sidebar modal-lg modal_loading_skeleton"
+         style="display: none">
+        <div class="modal-content detail-padding">
+            <div>
+                <div class="skeleton-loading"
+                     style="width: 100%; height: 40px;"></div>
+                <div class="skeleton-loading my-15"
+                     style="width: 100%; height: 20px;"></div>
+                <div class="skeleton-loading my-15"
+                     style="width: 100%; height: 25px;"></div>
+                <div class="skeleton-loading"
+                     style="width: 100%; height: 40px;"></div>
+            </div>
+            <div class="d-flex flex-column align-items-center mt-50">
+                <div class="skeleton-loading"
+                     style="width: 90%; height: 60px;"></div>
+                <div class="skeleton-loading mt-15"
+                     style="width: 100%; height: 2px;"></div>
+                <div class="skeleton-loading mt-15"
+                     style="width: 90%; height: 60px;"></div>
+                <div class="skeleton-loading mt-15"
+                     style="width: 100%; height: 1px;"></div>
+                <div class="skeleton-loading mt-15"
+                     style="width: 90%; height: 60px;"></div>
+            </div>
+            <div class="skeleton-loading mt-50"
+                 style="width: 100%; height: 60px;"></div>
+            <div class="mt-50">
+                <div class="d-flex justify-content-around"
+                     style="width: 50%; height: 25px;">
+                    <div class="skeleton-loading"
+                         style="width: 35%"></div>
+                    <div class="skeleton-loading"
+                         style="width: 35%"></div>
+                </div>
+                <div class="skeleton-loading mt-25"
+                     style="width: 100%; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-dialog modal-simple modal-sidebar modal-lg modal_sale_details_content">
         <div id='modal-saleDetails'
              class="modal-content detail-padding"
              style="width: 500px;">

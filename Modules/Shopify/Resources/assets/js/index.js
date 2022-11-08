@@ -4,16 +4,21 @@ $(document).ready(function () {
         $("#integration-actions").hide();
         $("#no-integration-found").hide();
         $("#project-empty").hide();
-        loadOnAny("#content");
+        $("#content").html("");
+        loadingSkeletonCards($("#content"));
         updateCompanyDefault().done(function (data1) {
             getCompaniesAndProjects().done(function (data2) {
                 companiesAndProjects = data2;
-                $(".company_name").val(companiesAndProjects.company_default_fullname);
+                $(".company_name").val(
+                    companiesAndProjects.company_default_fullname
+                );
                 $("#company-navbar-value").val($(".company-navbar").val());
                 getCompanies("n");
             });
         });
     });
+
+    loadingSkeletonCards($("#content"));
 
     companiesAndProjects = "";
 
@@ -25,9 +30,6 @@ $(document).ready(function () {
     });
 
     function getCompanies(loading = "y") {
-        if (loading == "y") loadingOnScreen();
-        else loadOnAny("#content");
-
         $.ajax({
             method: "GET",
             url: "/api/core/companies?select=true",
@@ -38,8 +40,7 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                loadOnAny("#content", true);
-                loadingOnScreenRemove();
+                removeLoadingSkeletonCards();
             },
             success: function success(response) {
                 verifyCompanies(response.data);
@@ -51,6 +52,8 @@ $(document).ready(function () {
     }
 
     function verifyCompanies(companies) {
+        removeLoadingSkeletonCards();
+
         if (isEmpty(companies)) {
             htmlCompanyNotFound();
             return;
@@ -61,13 +64,18 @@ $(document).ready(function () {
         $(companies).each(function (index, company) {
             if (companyIsApproved(company)) {
                 hasCompanyApproved = true;
-                $("#select_companies").append(`<option value=${company.id}> ${company.name}</option>`);
+                $("#select_companies").append(
+                    `<option value="${company.id}"> ${company.name}</option>`
+                );
             }
         });
 
         if (hasCompanyApproved) {
             $("#btn-integration-model").show();
-            $("#button-information").show().addClass("d-flex").css("display", "flex");
+            $("#button-information")
+                .show()
+                .addClass("d-flex")
+                .css("display", "flex");
 
             getShopifyIntegrations();
         } else {
@@ -85,8 +93,6 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                loadOnAny("#content", true);
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -100,15 +106,24 @@ $(document).ready(function () {
                 }
 
                 htmlHasIntegrationShopify();
-                $(shopifyIntegrations).each(function (index, shopifyIntegration) {
+                $(shopifyIntegrations).each(function (
+                    index,
+                    shopifyIntegration
+                ) {
                     var data = shopifyIntegration;
                     $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${shopifyIntegration.id}">
+                            <div class="card shadow card-edit" project="${
+                                shopifyIntegration.id
+                            }">
 
                             <svg
                             class="open-cfg" app="${data.id}"
-                            data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
+                            data-img="${
+                                !data.project_photo
+                                    ? "/build/global/img/produto.svg"
+                                    : data.project_photo
+                            }"
                             data-name="${data.project_name}"
                             data-token="${data.token}"
                             data-skip="${shopifyIntegration.skip_to_cart}"
@@ -132,10 +147,14 @@ $(document).ready(function () {
                                         : shopifyIntegration.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
-                                    <div class='row'>
-                                        <div class='col-md-12'>
-                                            <h4 class="card-title">${shopifyIntegration.project_name}</h4>
-                                            <p class="card-text sm">Criado em ${shopifyIntegration.created_at}</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4 class="card-title">${
+                                                shopifyIntegration.project_name
+                                            }</h4>
+                                            <p class="card-text sm">Criado em ${
+                                                shopifyIntegration.created_at
+                                            }</p>
                                         </div>
                                     </div>
                                 </div>
@@ -150,35 +169,45 @@ $(document).ready(function () {
     }
 
     function htmlCompanyNotFound() {
-        $("#btn-integration-model, #button-information, #no-integration-found").hide();
+        $(
+            "#btn-integration-model, #button-information, #no-integration-found"
+        ).hide();
         $("#empty-companies-error").show();
     }
 
     function htmlAllCompanyNotApproved() {
-        $("#btn-integration-model, #button-information, #no-integration-found").hide();
+        $(
+            "#btn-integration-model, #button-information, #no-integration-found"
+        ).hide();
         $("#companies-not-approved-getnet").show();
     }
 
     function htmlIntegrationShopifyNotFound() {
+        removeLoadingSkeletonCards();
         $("#empty-companies-error, #companies-not-approved-getnet").hide();
-        $("#btn-integration-model, #button-information, #no-integration-found, #integration-actions").show();
-        $("#button-information").show().addClass("d-flex").css("display", "flex");
+        $(
+            "#btn-integration-model, #button-information, #no-integration-found, #integration-actions"
+        ).show();
+        $("#button-information")
+            .show()
+            .addClass("d-flex")
+            .css("display", "flex");
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
-        loadOnAny("#content", true);
-        loadingOnScreenRemove();
     }
 
     function htmlHasIntegrationShopify() {
+        removeLoadingSkeletonCards();
         $("#no-integration-found").hide();
         $(".modal-title").html("Adicionar nova integração com Shopify");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").text("Realizar integração");
         $("#integration-actions").show();
-        $("#button-information").show().addClass("d-flex").css("display", "flex");
-        loadOnAny("#content", true);
-        loadingOnScreenRemove();
+        $("#button-information")
+            .show()
+            .addClass("d-flex")
+            .css("display", "flex");
     }
 
     $("#btn-integration-model").on("click", function () {
@@ -187,7 +216,11 @@ $(document).ready(function () {
     });
 
     $("#bt_integration").on("click", function () {
-        if ($("#token").val() == "" || $("#url_store").val() == "" || $("#company").val() == "") {
+        if (
+            $("#token").val() == "" ||
+            $("#url_store").val() == "" ||
+            $("#company").val() == ""
+        ) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
@@ -196,7 +229,9 @@ $(document).ready(function () {
     });
 
     function saveIntegration() {
-        let form_data = new FormData(document.getElementById("form_add_integration"));
+        let form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
 
         loadingOnScreen();
 
@@ -228,6 +263,7 @@ $(document).ready(function () {
 
     let projectId;
     let token;
+
     function openCfg() {
         projectId = $(this).attr("app");
         var img = $(this).attr("data-img");
@@ -240,7 +276,7 @@ $(document).ready(function () {
         function imageFound() {}
 
         function imageNotFound() {
-            img = "/build/global/img/produto.svg";
+            img = "/build/global/img/produto.png";
             $("#project-img").attr("src", img);
         }
 
@@ -347,12 +383,18 @@ $(document).ready(function () {
 
     $(".sync-tracking").click(function () {
         syncAction = "tracking";
-        toggle_confirm("Rastreios", "A sincronização pode demorar algumas horas.");
+        toggle_confirm(
+            "Rastreios",
+            "A sincronização pode demorar algumas horas."
+        );
     });
 
     $(".sync-products").click(function () {
         syncAction = "products";
-        toggle_confirm("Produtos", "A sincronização pode demorar algumas horas.");
+        toggle_confirm(
+            "Produtos",
+            "A sincronização pode demorar algumas horas."
+        );
     });
 
     $(".sync-template").click(function () {
@@ -374,11 +416,14 @@ $(document).ready(function () {
         function fill() {
             $("#sync-name").html(name);
             if (desc) {
-                $("#sync-desc").html('<div style="padding:2px 0">' + desc + "</div>");
+                $("#sync-desc").html(
+                    '<div style="padding:2px 0">' + desc + "</div>"
+                );
             } else {
                 $("#sync-desc").html("");
             }
         }
+
         if ($("#bts-confirm").is(":visible")) {
             // $("#bts-confirm").fadeOut('fast',null, function () {
             //     fill()
@@ -404,7 +449,9 @@ $(document).ready(function () {
                     url: "/api/apps/shopify/synchronize/products",
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     data: {
@@ -424,7 +471,9 @@ $(document).ready(function () {
                     url: "/api/apps/shopify/synchronize/templates",
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     data: {
@@ -444,7 +493,9 @@ $(document).ready(function () {
                     url: "/api/apps/shopify/synchronize/trackings",
                     dataType: "json",
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
+                        Authorization: $('meta[name="access-token"]').attr(
+                            "content"
+                        ),
                         Accept: "application/json",
                     },
                     data: {
