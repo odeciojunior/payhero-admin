@@ -98,16 +98,24 @@ $(document).ready(function () {
     function renderIntegration(data) {
         $("#content").append(
             `
+
+
+
+
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` +
                 data.id +
                 ` style='cursor:pointer;'>
                                     <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
+
+                                    <div class="d-flex align-items-center justify-content-center" style="" >
                                         <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
+                </div>
+
                                     </a>
                                     <div class="card-body">
                                         <div class='row'>
@@ -125,7 +133,8 @@ $(document).ready(function () {
                                                 <div role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` +
                 data.id +
                 `>
-                                                    <span class='o-bin-1'></span>
+
+                                                    <img src="/build/global/img/icon-trash-new.svg" />
                                                 </div>
                                             </div>
                                         </div>

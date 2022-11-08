@@ -29,9 +29,12 @@ $(document).ready(function () {
 
         $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
-            $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if (project.status == 1) $hasProjects = true;
-            });
+            $.each(
+                companiesAndProjects.company_default_projects,
+                function (i, project) {
+                    if (project.status == 1) $hasProjects = true;
+                }
+            );
         }
 
         if (!$hasProjects) {
@@ -43,10 +46,13 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/convertax?company=" + $(".company-navbar").val(),
+                url:
+                    "/api/apps/convertax?company=" + $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: (response) => {
@@ -91,11 +97,15 @@ $(document).ready(function () {
                                 <div class="card shadow card-edit" project=` +
                 data.id +
                 ` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` +
+
+                <div class="d-flex align-items-center justify-content-center"   >
+                <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
+                </div>
+
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
@@ -165,7 +175,11 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $("#select_projects_edit").html("");
-                fillSelectProject(companiesAndProjects, "#select_projects_edit", response.data.project_id);
+                fillSelectProject(
+                    companiesAndProjects,
+                    "#select_projects_edit",
+                    response.data.project_id
+                );
                 $("#integration_id").val(response.data.id);
                 $("#link_edit").val(response.data.link);
 
@@ -176,19 +190,36 @@ $(document).ready(function () {
                 });
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
+                $("#boleto_generated_edit").prop(
+                    "checked",
+                    $("#boleto_generated_edit").val() == "1"
+                );
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
+                $("#boleto_paid_edit").prop(
+                    "checked",
+                    $("#boleto_paid_edit").val() == "1"
+                );
 
-                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
+                $("#credit_card_refused_edit").val(
+                    response.data.credit_card_refused
+                );
+                $("#credit_card_refused_edit").prop(
+                    "checked",
+                    $("#credit_card_refused_edit").val() == "1"
+                );
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
+                $("#credit_card_paid_edit").prop(
+                    "checked",
+                    $("#credit_card_paid_edit").val() == "1"
+                );
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
+                $("#abandoned_cart_edit").prop(
+                    "checked",
+                    $("#abandoned_cart_edit").val() == "1"
+                );
             },
         });
     });
@@ -199,7 +230,9 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(document.getElementById("form_add_integration"));
+        var form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
 
         $.ajax({
             method: "POST",
@@ -230,7 +263,9 @@ $(document).ready(function () {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(document.getElementById("form_update_integration"));
+        var form_data = new FormData(
+            document.getElementById("form_update_integration")
+        );
 
         $.ajax({
             method: "POST",
@@ -263,24 +298,30 @@ $(document).ready(function () {
     });
 
     //destroy
-    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
-        e.stopPropagation();
-        var project = $(this).attr("project");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/convertax/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index("n");
-                alertCustom("success", response.message);
-            },
-        });
-    });
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/convertax/" + project,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index("n");
+                    alertCustom("success", response.message);
+                },
+            });
+        }
+    );
 });

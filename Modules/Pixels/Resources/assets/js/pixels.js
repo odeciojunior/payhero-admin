@@ -818,6 +818,8 @@ $(function () {
             formData.get("conversional")
         );
         formData.set("code", codeSave);
+
+        $("#btn-store-pixel").attr("disabled", true);
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/pixels",
@@ -832,11 +834,18 @@ $(function () {
             cache: false,
             error: function (response) {
                 errorAjaxResponse(response);
+                setTimeout(() => {
+                    $("#btn-store-pixel").attr("disabled", false);
+                }, 1000);
             },
             success: function success(response) {
                 $("#modal-create-pixel").modal("hide");
                 alertCustom("success", response.message);
                 atualizarPixel();
+
+                setTimeout(() => {
+                    $("#btn-store-pixel").attr("disabled", false);
+                }, 1000);
             },
         });
     });

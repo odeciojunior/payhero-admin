@@ -2,26 +2,28 @@ let statusCupons = {
     1: "success",
     0: "disable",
 };
-var edit_rules = []
-var cancel_edit_rules = []
+var edit_rules = [];
+var cancel_edit_rules = [];
 // var items_selected = []
 
-
-let projectId = $(window.location.pathname.split('/')).get(-1);
+let projectId = $(window.location.pathname.split("/")).get(-1);
 
 function formatMoney(input) {
-    $(input).on('blur', function () {
+    $(input).on("blur", function () {
         if ($(this).val().length > 2) return;
-        $(this).val(new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(this).val()));
+        $(this).val(
+            new Intl.NumberFormat("de-DE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format($(this).val())
+        );
         // input = this
         // if($(input).val().length > 2) return;
         // $(input).val( new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(input).val() ) );
     });
 }
 
-
 function setBodyHight(n1, n2) {
-
     // $('#coupon_edit_step0').css('height', n1);
     // $('#coupon_edit_step0').css('min-height',468);
     // $('#edit-coupon .modal-content').css('height', n2);
@@ -30,235 +32,251 @@ function setBodyHight(n1, n2) {
 //     setBodyHight('auto', 'auto');
 // })
 
-function count_plans_coupons(qtde) { //thumbnails
+function count_plans_coupons(qtde) {
+    //thumbnails
 
-
-
-    $('#c-show_plans').html('')
+    $("#c-show_plans").html("");
 
     $.ajax({
         data: {
             total: 1,
-            list: 'plan',
-            search: '',
+            list: "plan",
+            search: "",
             project_id: projectId,
             //page: params.page || 1
-        }
-        ,
-
+        },
         method: "GET",
         url: "/api/plans/user-plans",
 
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
-
-        }, success: function success(response) {
-
-
-
-
-
-            var html_show_plans = ''
+        },
+        success: function success(response) {
+            var html_show_plans = "";
             for (i in response.thumbnails) {
+                var toolTip =
+                    'aria-describedby="tt' +
+                    response.thumbnails[i].id +
+                    '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                    response.thumbnails[i].name +
+                    '"';
 
+                var img = response.thumbnails[i].products[0].photo
+                    ? response.thumbnails[i].products[0].photo
+                    : "https://cloudfox-files.s3.amazonaws.com/produto.svg";
 
-                var toolTip = 'aria-describedby="tt' + response.thumbnails[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + response.thumbnails[i].name + '"'
-
-
-                var img = response.thumbnails[i].products[0].photo ? response.thumbnails[i].products[0].photo : 'https://cloudfox-files.s3.amazonaws.com/produto.svg'
-
-                html_show_plans += `
+                html_show_plans +=
+                    `
 
 
                     <span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
                     background-repeat: no-repeat; background-position: center center;
-                    background-size: cover !important;  background-image: url('`+ img + `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');  "></span>
+                    background-size: cover !important;  background-image: url('` +
+                    img +
+                    `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');  "></span>
 
-                `
+                `;
             }
 
-            $('#c-show_plans').html(html_show_plans)
-            $('#c-show_plans').css('height', '48px')
+            $("#c-show_plans").html(html_show_plans);
+            $("#c-show_plans").css("height", "48px");
 
-            $('[data-toggle="tooltip"]').tooltip('dispose')
+            $('[data-toggle="tooltip"]').tooltip("dispose");
 
             $('[data-toggle="tooltip"]').tooltip({
-                container: '.page'
+                container: ".page",
             });
 
             if (response.total > 8) {
-                var rest = response.total - 8
-                $('#c-show_plans').append('<div class="plans_rest">+' + rest + '</div>')
-
+                var rest = response.total - 8;
+                $("#c-show_plans").append(
+                    '<div class="plans_rest">+' + rest + "</div>"
+                );
             }
-
-
-
-        }
+        },
     });
-
 }
 
 function plans_count2() {
     if (items_selected.length > 0 && items_selected.length < 11) {
+        var plans_count =
+            items_selected.length +
+            " plano" +
+            (items_selected.length > 1 ? "s" : "");
+        $("#planos-count2, #planos-count-edit2").html(plans_count);
 
-        var plans_count = items_selected.length + ' plano' + (items_selected.length > 1 ? 's' : '')
-        $('#planos-count2, #planos-count-edit2').html(plans_count);
+        $("#c-show_plans").css("margin-top", "10px");
 
-        $('#c-show_plans').css('margin-top', '10px')
-
-        $('#c-show_plans').css('height', '88px')
+        $("#c-show_plans").css("height", "88px");
         // $('#c-show_plans').addClass('mostrar_mais_detalhes')
 
-
-        if ($('#mostrar_mais_label2').html() == 'Mostrar menos') {
-
-            $('#mostrar_mais2').trigger('click')
+        if ($("#mostrar_mais_label2").html() == "Mostrar menos") {
+            $("#mostrar_mais2").trigger("click");
         }
-
     } else {
+        $("#c-show_plans").removeClass("mostrar_mais_detalhes");
 
-
-        $('#c-show_plans').removeClass('mostrar_mais_detalhes')
-
-        $('#c-show_plans').css('height', '48px')
+        $("#c-show_plans").css("height", "48px");
 
         //c-show_plans
-        $('#c-show_plans').css('margin-top', '20px')
+        $("#c-show_plans").css("margin-top", "20px");
 
         if (items_selected.length > 10) {
-            var plans_count = items_selected.length + ' plano' + (items_selected.length > 1 ? 's' : '')
-            $('#planos-count2, #planos-count-edit2').html(plans_count);
+            var plans_count =
+                items_selected.length +
+                " plano" +
+                (items_selected.length > 1 ? "s" : "");
+            $("#planos-count2, #planos-count-edit2").html(plans_count);
         } else {
-
-            $('#planos-count2, #planos-count-edit2').html('Todos os planos');
-            count_plans_coupons(items_selected.length)
+            $("#planos-count2, #planos-count-edit2").html("Todos os planos");
+            count_plans_coupons(items_selected.length);
         }
-
     }
 
     if (items_selected.length > 2 && items_selected.length < 11) {
-        $('#mostrar_mais2').show();
-
+        $("#mostrar_mais2").show();
     } else {
-        $('#mostrar_mais2').hide();
-
+        $("#mostrar_mais2").hide();
     }
 }
 
-
 function coupon_rules(data) {
-
-    var html = 'Desconto em '
-    var value = ''
+    var html = "Desconto em ";
+    var value = "";
     if (data.type == 0) {
-        html += '<strong>porcentagem</strong>'
-        value = data.value + '%'
+        html += "<strong>porcentagem</strong>";
+        value = data.value + "%";
     } else {
-        html += '<strong>dinheiro</strong>'
-        value = 'R$' + data.value
+        html += "<strong>dinheiro</strong>";
+        value = "R$" + data.value;
     }
     console.log(data);
     //if(!expires) data.nao_vence = 1
-    var expires = data.nao_vence ? 'Não vence' : '';
-    if (data.nao_vence) data.expires_days = null
+    var expires = data.nao_vence ? "Não vence" : "";
+    if (data.nao_vence) data.expires_days = null;
     if (!data.nao_vence) {
-
         if (data.expires_days < 0) {
-            expires = '<span id="c-expire-label" style="color:">Vencido</span>'
+            expires = '<span id="c-expire-label" style="color:">Vencido</span>';
         }
         if (data.expires_days > 0) {
-            expires = '<span style="color:">Vence em ' + data.expires_days + ' dia(s)</span>'
+            expires =
+                '<span style="color:">Vence em ' +
+                data.expires_days +
+                " dia(s)</span>";
         }
         if (data.expires_days == 0) {
-            expires = '<span style="color:">Vence hoje</span>'
+            expires = '<span style="color:">Vence hoje</span>';
         }
     }
 
     if (data.expires_days >= 0 || data.nao_vence) {
-        $('#c-edit_status_label').html('Desconto ativo');
-        $('#c-edit_status').prop('checked', true);
+        $("#c-edit_status_label").html("Desconto ativo");
+        $("#c-edit_status").prop("checked", true);
     } else {
-        $('#c-edit_status_label').html('Desativado');
-        $('#c-edit_status').prop('checked', false);
+        $("#c-edit_status_label").html("Desativado");
+        $("#c-edit_status").prop("checked", false);
     }
     //console.log(data.expires_days);
-    html += '<br><small>' + expires + '</small><br>'
-    html += '<strong>' + value + ' de desconto</strong> em compras <strong>de R$' + data.rule_value + ' ou mais</strong> com o cupom <strong>' + data.code + '</strong>'
+    html += "<br><small>" + expires + "</small><br>";
+    html +=
+        "<strong>" +
+        value +
+        " de desconto</strong> em compras <strong>de R$" +
+        data.rule_value +
+        " ou mais</strong> com o cupom <strong>" +
+        data.code +
+        "</strong>";
 
-    $('#c-rules').html(html)
+    $("#c-rules").html(html);
 }
 
 function show_plans() {
     if (items_selected.length > 10) {
-        var html_show_plans = ''
+        var html_show_plans = "";
         for (i in items_selected) {
-
             if (i > 7) break;
-            var toolTip = 'aria-describedby="tt' + items_selected[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + items_selected[i].name + '"'
+            var toolTip =
+                'aria-describedby="tt' +
+                items_selected[i].id +
+                '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                items_selected[i].name +
+                '"';
 
-            html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
+            html_show_plans +=
+                `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
             background-repeat: no-repeat; background-position: center center;
-            background-size: cover !important; background: url('`+ items_selected[i].image + `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
+            background-size: cover !important; background: url('` +
+                items_selected[i].image +
+                `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`;
         }
 
-        $('#show_plans, #c-show_plans').removeClass('mostrar_mais_detalhes')
-        $('#show_plans, #c-show_plans').css('margin-top', 20);
+        $("#show_plans, #c-show_plans").removeClass("mostrar_mais_detalhes");
+        $("#show_plans, #c-show_plans").css("margin-top", 20);
 
-        $('#show_plans, #c-show_plans').html(html_show_plans)
+        $("#show_plans, #c-show_plans").html(html_show_plans);
 
-        $('[data-toggle="tooltip"]').tooltip('dispose')
+        $('[data-toggle="tooltip"]').tooltip("dispose");
 
         $('[data-toggle="tooltip"]').tooltip({
-            container: '.page'
+            container: ".page",
         });
 
-        var rest = items_selected.length - 8
-        $('#show_plans, #c-show_plans').append('<div class="plans_rest">+' + rest + '</div>')
+        var rest = items_selected.length - 8;
+        $("#show_plans, #c-show_plans").append(
+            '<div class="plans_rest">+' + rest + "</div>"
+        );
 
-        $('#c-show_plans, #show_plans').css('height', 48)
-        return false
+        $("#c-show_plans, #show_plans").css("height", 48);
+        return false;
     } else {
-        $('#c-show_plans, #show_plans').css('height', 88)
-
+        $("#c-show_plans, #show_plans").css("height", 88);
     }
 
-
-    var show_plans = ''
+    var show_plans = "";
     for (i in items_selected) {
-
         if (items_selected[i].name.length > 18) {
-
-            toolTip = 'aria-describedby="tt' + items_selected[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + items_selected[i].name + '"'
+            toolTip =
+                'aria-describedby="tt' +
+                items_selected[i].id +
+                '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                items_selected[i].name +
+                '"';
         } else {
-            toolTip = ''
+            toolTip = "";
         }
 
-        show_plans += `<div ${toolTip} class="item_raw" >
+        show_plans +=
+            `<div ${toolTip} class="item_raw" >
 
             <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
-                <span style="background-image: url(`+ (items_selected[i].image ? items_selected[i].image : 'https://cloudfox-files.s3.amazonaws.com/produto.svg') + `)" class="image2"></span>
+                <span style="background-image: url(` +
+            (items_selected[i].image
+                ? items_selected[i].image
+                : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+            `)" class="image2"></span>
             </span>
 
-            <span class="title text-overflow-title">`+ items_selected[i].name + `</span>
-            <span class="description text-overflow-description">`+ items_selected[i].description + `</span>
-        </div>`
+            <span class="title text-overflow-title">` +
+            items_selected[i].name +
+            `</span>
+            <span class="description text-overflow-description">` +
+            items_selected[i].description +
+            `</span>
+        </div>`;
     }
-    if (show_plans)
-        $('#show_plans, #c-show_plans').html(show_plans)
+    if (show_plans) $("#show_plans, #c-show_plans").html(show_plans);
 
-    $('[data-toggle="tooltip"]').tooltip('dispose')
+    $('[data-toggle="tooltip"]').tooltip("dispose");
 
     $('[data-toggle="tooltip"]').tooltip({
-        container: '.page'
+        container: ".page",
     });
 }
-
 
 noDiscountsFound = `<div class="mt-20 d-flex justify-content-center align-items-center">
 <img src="/build/global/img/empty-state-table.svg" style="margin-right: 60px;">
@@ -268,59 +286,61 @@ noDiscountsFound = `<div class="mt-20 d-flex justify-content-center align-items-
     <br>gerenciá-los nesse painel.</p>
     <button type="button" style="width: auto; height: auto; padding: .429rem 1rem !important;" class="btn btn-primary add-desconto">Adicionar desconto</button>
 </div>
-</div>`
+</div>`;
 
-
-
-var page = null
+var page = null;
 function atualizarCoupon() {
-    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    var link =
+        arguments.length > 0 && arguments[0] !== undefined
+            ? arguments[0]
+            : null;
     if (link == null) {
-        link = page
+        link = page;
     }
     if (link == null) {
-        link = '/api/project/' + projectId + '/couponsdiscounts';
+        link = "/api/project/" + projectId + "/couponsdiscounts";
     } else {
-        page = link
-        link = '/api/project/' + projectId + '/couponsdiscounts' + link;
+        page = link;
+        link = "/api/project/" + projectId + "/couponsdiscounts" + link;
     }
 
-
-    loadOnTable('#data-table-coupon', '#tabela-coupom');
+    loadOnTable("#data-table-coupon", "#tabela-coupom");
     $("#pagination-coupons").children().attr("disabled", "disabled");
 
     $.ajax({
         method: "GET",
-        data: { name: $('#search-name').val() },
+        data: { name: $("#search-name").val() },
         url: link,
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            $("#data-table-coupon").html('');
+            $("#data-table-coupon").html("");
 
-            if (response.data == '' && !$('#search-name').val()) {
-                $("#pagination-container-coupon").removeClass("d-flex").addClass("d-none")
-                pagination(response, 'coupons', atualizarCoupon);
+            if (response.data == "" && !$("#search-name").val()) {
+                $("#pagination-container-coupon")
+                    .removeClass("d-flex")
+                    .addClass("d-none");
+                pagination(response, "coupons", atualizarCoupon);
                 $("#data-table-coupon").html(noDiscountsFound);
-                $('.add-desconto').on('click', function () {
-                    $('#add-coupon').trigger('click')
-                })
-                $('#tabela-coupon thead').hide()
-                $('#coupon-panel').hide()
-
+                $(".add-desconto").on("click", function () {
+                    $("#add-coupon").trigger("click");
+                });
+                $("#tabela-coupon thead").hide();
+                $("#coupon-panel").hide();
             } else {
+                $("#tabela-coupon thead").show();
+                $("#coupon-panel").show();
+                $("#pagination-container-coupon")
+                    .removeClass("d-none")
+                    .addClass("d-flex");
 
-                $('#tabela-coupon thead').show()
-                $('#coupon-panel').show()
-                $("#pagination-container-coupon").removeClass("d-none").addClass("d-flex")
-
-                $('#count-coupons').html(response.meta.total)
+                $("#count-coupons").html(response.meta.total);
 
                 $.each(response.data, function (index, value) {
                     let data = `<tr>
@@ -355,7 +375,9 @@ function atualizarCoupon() {
 
 
                         <td class="" style="vertical-align: middle; text-align:center">
-                            <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
+                            <span class="badge badge-${
+                                statusCupons[value.status]
+                            }">${value.status_translated}</span>
                         </td>
 
 
@@ -364,11 +386,15 @@ function atualizarCoupon() {
 
                             <div class="d-flex justify-content-end align-items-right" style="margin-right:-10px">
 
-                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${value.discount}" coupon="${value.id}">
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${
+                                    value.discount
+                                }" coupon="${value.id}">
                                     <span class=""><img src='/build/global/img/icon-eye.svg'/></span>
                                 </a>
 
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}">
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${
+                                    value.id
+                                }">
                                     <span class=''><img src='/build/global/img/icon-trash-tale.svg'/></span>
                                 </a>
 
@@ -380,30 +406,37 @@ function atualizarCoupon() {
 
                     $("#data-table-coupon").append(data);
                 });
-                if (response.data == '') {
+                if (response.data == "") {
                     $("#data-table-coupon").html(`<tr class="text-center">
                     <td colspan="11" style="height: 70px; vertical-align: middle;">
                         Nenhum dado encontrado
                     </td>
-                    </tr>`)
+                    </tr>`);
                 }
                 // response.meta.current_page = 2
-                pagination(response, 'coupons', atualizarCoupon);
+                pagination(response, "coupons", atualizarCoupon);
 
-                $('.fullInformation-coupon').bind('mouseover', function () {
+                $(".fullInformation-coupon").bind("mouseover", function () {
                     var $this = $(this);
 
-                    if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                        $this.attr({
-                            'data-toggle': "tooltip",
-                            'data-placement': "top",
-                            'data-title': $this.text()
-                        }).tooltip({ container: ".container-tooltips-coupon" })
-                        $this.tooltip("show")
+                    if (
+                        this.offsetWidth < this.scrollWidth &&
+                        !$this.attr("title")
+                    ) {
+                        $this
+                            .attr({
+                                "data-toggle": "tooltip",
+                                "data-placement": "top",
+                                "data-title": $this.text(),
+                            })
+                            .tooltip({
+                                container: ".container-tooltips-coupon",
+                            });
+                        $this.tooltip("show");
                     }
                 });
             }
-        }
+        },
     });
 }
 
@@ -415,90 +448,102 @@ var items_placeholder = `<div id="items_loading">
     <div class="item_placeholder"></div>
     <div class="item_placeholder"></div>
     <div class="item_placeholder"></div>
-    <div class="item_placeholder"></div> </div>`
+    <div class="item_placeholder"></div> </div>`;
 
 function run_search(search, now) {
+    search_holder = search;
+    var search2 = $("#search_input_description_value").val();
 
-    search_holder = search
-    var search2 = $('#search_input_description_value').val()
+    var loading = $(".item_placeholder").is(":visible");
 
-
-
-    var loading = $('.item_placeholder').is(':visible')
-
-    if (loading && !now) return
+    if (loading && !now) return;
 
     if (search.length > 0 || now) {
-
-        $('#search_result, #search_result2').html(items_placeholder);
+        $("#search_result, #search_result2").html(items_placeholder);
         //animateItemsPlaceholder()
 
-        var items_saved = mount_selected_items(search, search2)
+        var items_saved = mount_selected_items(search, search2);
         // console.log(items_saved);
-        var items_saved_array = []
+        var items_saved_array = [];
         for (i in items_selected) {
-            items_saved_array.push({ 'id': items_selected[i].id })
+            items_saved_array.push({ id: items_selected[i].id });
         }
 
         $.ajax({
             data: {
                 most_sales: 1,
-                list: 'plan',
+                list: "plan",
                 search: search,
                 search2: search2,
                 items_saved: items_saved_array,
                 project_id: projectId,
-                limit: 30
+                limit: 30,
                 //page: params.page || 1
-            }
-            ,
-
+            },
             method: "GET",
             url: "/api/plans/user-plans",
 
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
-            }, success: function success(response) {
-
+            },
+            success: function success(response) {
                 if (search_holder != search) {
-                    run_search(search_holder, 1)
-                    return
+                    run_search(search_holder, 1);
+                    return;
                 }
 
-                var data = response.data
-                var items = ''
+                var data = response.data;
+                var items = "";
                 for (plan in data) {
-
-                    var skip = false
+                    var skip = false;
                     for (i in items_selected) {
-                        if (items_selected[i].id == data[plan].id)
-                            skip = true;
+                        if (items_selected[i].id == data[plan].id) skip = true;
                     }
                     if (skip) continue;
 
-                    var toolTip
+                    var toolTip;
                     if (data[plan].name.length > 18) {
-
-                        toolTip = 'aria-describedby="tt' + data[plan].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + data[plan].name + '"'
+                        toolTip =
+                            'aria-describedby="tt' +
+                            data[plan].id +
+                            '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                            data[plan].name +
+                            '"';
                     } else {
-                        toolTip = ''
+                        toolTip = "";
                     }
 
-                    var item = `<div ${toolTip} class="item" data-id="` + data[plan].id + `" data-image="` + data[plan].photo + `" data-name="` + data[plan].name + `" data-description="` + data[plan].description + `" >
+                    var item =
+                        `<div ${toolTip} class="item" data-id="` +
+                        data[plan].id +
+                        `" data-image="` +
+                        data[plan].photo +
+                        `" data-name="` +
+                        data[plan].name +
+                        `" data-description="` +
+                        data[plan].description +
+                        `" >
 
                                     <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
 
-                                        <span style="background-image: url(`+ (data[plan].photo ? data[plan].photo : 'https://cloudfox-files.s3.amazonaws.com/produto.svg') + `)" class="image2"></span>
+                                        <span style="background-image: url(` +
+                        (data[plan].photo
+                            ? data[plan].photo
+                            : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+                        `)" class="image2"></span>
                                     </span>
 
-                                    <span class="title text-overflow-title">`+ data[plan].name + `</span>
-                                    <span class="description text-overflow-description">`+ data[plan].description + `</span>
+                                    <span class="title text-overflow-title">` +
+                        data[plan].name +
+                        `</span>
+                                    <span class="description text-overflow-description">` +
+                        data[plan].description +
+                        `</span>
                                     <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>
                                     <svg class="empty_check " width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
                                 </div>`;
@@ -506,18 +551,23 @@ function run_search(search, now) {
                 }
                 //console.log(items.length , items_saved);
                 if (items || items_saved.length) {
+                    $("#search_result, #search_result2").html(
+                        items_saved + items
+                    );
 
-                    $('#search_result, #search_result2').html(items_saved + items);
+                    $("#search_result, #search_result2").mCustomScrollbar(
+                        "destroy"
+                    );
 
-                    $('#search_result, #search_result2').mCustomScrollbar('destroy')
+                    $("#search_result, #search_result2").mCustomScrollbar();
 
-                    $('#search_result, #search_result2').mCustomScrollbar()
-
-                    set_item_click()
+                    set_item_click();
                 } else {
-                    $('#search_result, #search_result2').mCustomScrollbar('destroy')
+                    $("#search_result, #search_result2").mCustomScrollbar(
+                        "destroy"
+                    );
 
-                    $('#search_result, #search_result2').html(`
+                    $("#search_result, #search_result2").html(`
                     <div class="not-found">
                         <img src="/build/global/img/not-found.svg" >
                         <div class="title">
@@ -526,76 +576,92 @@ function run_search(search, now) {
                         Por aqui, nenhum plano com esse nome.
                         </div>
                     </div>`);
-
                 }
-
-            }
+            },
         });
     } else {
-
-        run_search('', 1)
-
+        run_search("", 1);
     }
 }
 
 $(function () {
     function show_rules(rules) {
-        var rules_html = '<ol>'
+        var rules_html = "<ol>";
         for (i in rules) {
-            rules_html += `<li>
+            rules_html +=
+                `<li>
                             Na compra
-                            <strong>`+ (rules[i].buy == 'above_of' ? 'acima de ' : 'de ') +
-                rules[i].qtde + ` itens</strong>,
+                            <strong>` +
+                (rules[i].buy == "above_of" ? "acima de " : "de ") +
+                rules[i].qtde +
+                ` itens</strong>,
                             aplicar desconto de <strong>
-                            `+ (rules[i].type == 'percent' ? rules[i].value + '%' : 'R$' + rules[i].value) + `
+                            ` +
+                (rules[i].type == "percent"
+                    ? rules[i].value + "%"
+                    : "R$" + rules[i].value) +
+                `
                             </strong>
                         </li>`;
         }
-        rules_html += '</ol>'
+        rules_html += "</ol>";
 
-        if (rules_html.indexOf('%') > 0)
-            $('.rules-label').html('Por Valor em Porcentagem')
+        if (rules_html.indexOf("%") > 0)
+            $(".rules-label").html("Por Valor em Porcentagem");
 
-        if (rules_html.indexOf('R$') > 0)
-            $('.rules-label').html('Por Valor em R$')
+        if (rules_html.indexOf("R$") > 0)
+            $(".rules-label").html("Por Valor em R$");
 
-        if (rules_html.indexOf('%') > 0 && rules_html.indexOf('R$') > 0)
-            $('.rules-label').html('Por Valor em R$ e Porcentagem')
+        if (rules_html.indexOf("%") > 0 && rules_html.indexOf("R$") > 0)
+            $(".rules-label").html("Por Valor em R$ e Porcentagem");
 
-        $('.rules').html(rules_html)
+        $(".rules").html(rules_html);
     }
 
     //comportamento da tela
     var cuponType = 0;
-    $('.coupon-value').mask('00%', { reverse: true });
+    $(".coupon-value").mask("00%", { reverse: true });
 
-    $(document).on('change', '#edit-coupon-type', function (event) {
+    $(document).on("change", "#edit-coupon-type", function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
-            $(".coupon-value").maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-
+            $(".coupon-value").maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+                prefix: "",
+            });
         } else {
             cuponType = 0;
-            $('.coupon-value').mask('00%', { reverse: true });
+            $(".coupon-value").mask("00%", { reverse: true });
         }
     });
-    $(document).on('change', '#create-coupon-type', function (event) {
+    $(document).on("change", "#create-coupon-type", function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
-            $(".coupon-value").maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-
+            $(".coupon-value").maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+                prefix: "",
+            });
         } else {
             cuponType = 0;
-            $('.coupon-value').mask('00%', { reverse: true });
+            $(".coupon-value").mask("00%", { reverse: true });
         }
     });
-    $(".rule-value").maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
+    $(".rule-value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
 
-    $('.rule-value').on('blur', function () {
+    $(".rule-value").on("blur", function () {
         applyMaskManually(this);
     });
 
-    $('.coupon-value').on('blur', function () {
+    $(".coupon-value").on("blur", function () {
         if (cuponType == 1) {
             applyMaskManually(this);
         }
@@ -603,267 +669,280 @@ $(function () {
 
     function applyMaskManually(classValue) {
         if ($(classValue).val().length == 1) {
-            let val = '0,0' + $(classValue).val();
+            let val = "0,0" + $(classValue).val();
             $(classValue).val(val);
         } else if ($(classValue).val().length == 2) {
-            let val = '0,' + $(classValue).val();
+            let val = "0," + $(classValue).val();
             $(classValue).val(val);
         }
     }
 
-    $('.tab_coupons').on('click', function () {
+    $(".tab_coupons").on("click", function () {
         atualizarCoupon();
         $(this).off();
     });
 
     // carregar modal de detalhes
-    $(document).on('click', '.details-coupon', function () {
-        let coupon = $(this).attr('coupon');
+    $(document).on("click", ".details-coupon", function () {
+        let coupon = $(this).attr("coupon");
         $("#btn-modal").hide();
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-            }, success: function success(response) {
-                $('#modal-detail-coupon .coupon-name').html(response.data.name);
-                $('#modal-detail-coupon .coupon-code').html(response.data.code);
-                $('#modal-detail-coupon .coupon-type').html(response.data.type);
-                $('#modal-detail-coupon .coupon-value').html(response.data.type == 'Valor' ? 'R$ ' + response.data.value : response.data.value + '%');
-                $('#modal-detail-coupon .rule-value').html('R$ ' + response.data.rule_value);
-                $('#modal-detail-coupon .coupon-status').html(response.data.status == '1'
-                    ? '<span class="badge badge-success text-left">Ativo</span>'
-                    : '<span class="badge badge-secondary">Inativo</span>');
-                $('#modal-detail-coupon').modal('show');
-
-            }
+            },
+            success: function success(response) {
+                $("#modal-detail-coupon .coupon-name").html(response.data.name);
+                $("#modal-detail-coupon .coupon-code").html(response.data.code);
+                $("#modal-detail-coupon .coupon-type").html(response.data.type);
+                $("#modal-detail-coupon .coupon-value").html(
+                    response.data.type == "Valor"
+                        ? "R$ " + response.data.value
+                        : response.data.value + "%"
+                );
+                $("#modal-detail-coupon .rule-value").html(
+                    "R$ " + response.data.rule_value
+                );
+                $("#modal-detail-coupon .coupon-status").html(
+                    response.data.status == "1"
+                        ? '<span class="badge badge-success text-left">Ativo</span>'
+                        : '<span class="badge badge-secondary">Inativo</span>'
+                );
+                $("#modal-detail-coupon").modal("show");
+            },
         });
     });
     // Edit discount
     function edit_name() {
-        $('#edit-name').hide()
-        $('#edit-plans').hide()
-        $('#edit-rules').hide()
+        $("#edit-name").hide();
+        $("#edit-plans").hide();
+        $("#edit-rules").hide();
 
-
-        $('#edit-name-box').animate({ height: 146 })
-        $('#display_name').hide()
-        $('#display_name_edit').show()
+        $("#edit-name-box").animate({ height: 146 });
+        $("#display_name").hide();
+        $("#display_name_edit").show();
 
         // 44 146
-        $('#name-edit').focus()
-        $('#name-edit').val($('#d-name').html());
+        $("#name-edit").focus();
+        $("#name-edit").val($("#d-name").html());
 
+        $("#cancel_name_edit").click(function () {
+            $("#edit-plans").show();
+            $("#edit-rules").show();
 
-        $('#cancel_name_edit').click(function () {
-            $('#edit-plans').show()
-            $('#edit-rules').show()
-
-            $('#display_name_edit').hide()
-            $('#display_name').show()
-            $('#edit-name').show()
-            $('#edit-name-box').animate({ height: 44 })
-
-        })
+            $("#display_name_edit").hide();
+            $("#display_name").show();
+            $("#edit-name").show();
+            $("#edit-name-box").animate({ height: 44 });
+        });
     }
 
     function reset_edit_buttons() {
-        $('#edit-name').show()
-        $('#edit-plans').show()
-        $('#edit-rules').show()
+        $("#edit-name").show();
+        $("#edit-plans").show();
+        $("#edit-rules").show();
     }
 
     function edit_plans() {
-
-        if ($('#mostrar_mais_label').html() == 'Mostrar menos') {
-
-            $('#mostrar_mais').trigger('click');
+        if ($("#mostrar_mais_label").html() == "Mostrar menos") {
+            $("#mostrar_mais").trigger("click");
         }
 
-        $('#edit_step0').hide();
-        $('#edit_step2').hide();
-        $('#edit_step1').show();
-        $('.form-control').each(function () {
+        $("#edit_step0").hide();
+        $("#edit_step2").hide();
+        $("#edit_step1").show();
+        $(".form-control").each(function () {
+            $(this).val("");
+        });
 
-            $(this).val('');
-        })
+        $("#search_input2").focus();
 
-        $('#search_input2').focus();
-
-        $('#edit-finish-btn').hide()
-        $('#plans-actions').show()
-
+        $("#edit-finish-btn").hide();
+        $("#plans-actions").show();
 
         if (items_selected.length > 0) {
-            var items_thumbs = ''
+            var items_thumbs = "";
             for (i in items_selected) {
-
                 // if(i>7) break;
 
-                var toolTip = 'aria-describedby="tt' + items_selected[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + items_selected[i].name + '"'
+                var toolTip =
+                    'aria-describedby="tt' +
+                    items_selected[i].id +
+                    '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                    items_selected[i].name +
+                    '"';
 
-
-                items_thumbs += `
+                items_thumbs +=
+                    `
                 <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                 background-repeat: no-repeat; background-position: center center;
-                background-size: cover !important; background: url('`+ items_selected[i].image + `'), url('/build/global/img/produto.svg')"></span>`
-
+                background-size: cover !important; background: url('` +
+                    items_selected[i].image +
+                    `'), url('/build/global/img/produto.svg')"></span>`;
             }
 
-            $('.edit-plans-thumbs').html(items_thumbs)
+            $(".edit-plans-thumbs").html(items_thumbs);
 
             if (items_selected.length > 9) {
-
-                $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 16)
-                $('.search_result2').css('height', 317)
-                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
-                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar({
-                    axis: 'x',
+                $(".edit-disc-plans-thumbs-scroll").css("margin-bottom", 16);
+                $(".search_result2").css("height", 317);
+                $(".edit-disc-plans-thumbs-scroll").mCustomScrollbar("destroy");
+                $(".edit-disc-plans-thumbs-scroll").mCustomScrollbar({
+                    axis: "x",
                     advanced: {
-                        autoExpandHorizontalScroll: true
-                    }
-                })
+                        autoExpandHorizontalScroll: true,
+                    },
+                });
             } else {
-                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
-                $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 0)
-                $('.search_result2').css('height', 334)
-
+                $(".edit-disc-plans-thumbs-scroll").mCustomScrollbar("destroy");
+                $(".edit-disc-plans-thumbs-scroll").css("margin-bottom", 0);
+                $(".search_result2").css("height", 334);
             }
 
-            $('[data-toggle="tooltip"]').tooltip('dispose')
+            $('[data-toggle="tooltip"]').tooltip("dispose");
 
             $('[data-toggle="tooltip"]').tooltip({
-                container: '.page'
+                container: ".page",
             });
-
         } else {
-            count_plans2()
+            count_plans2();
         }
 
-
-        $('#search_input_description_value').val('')
-        run_search('', 1)
-
-
+        $("#search_input_description_value").val("");
+        run_search("", 1);
     }
 
+    $(".cancel-btn").click(function () {
+        $("#edit_step1").hide();
+        $("#edit_step2").hide();
+        $("#edit_step0").show();
+    });
 
-    $('.cancel-btn').click(function () {
-        $('#edit_step1').hide();
-        $('#edit_step2').hide();
-        $('#edit_step0').show();
-    })
+    $(".btn-edit-plans-save").click(function () {
+        $("#show_plans").html("");
 
-    $('.btn-edit-plans-save').click(function () {
+        $("#plans_value").val(JSON.stringify(items_selected));
+        $("#save_name_edit").click();
+        $(".cancel-btn").click();
 
+        $("#edit-finish-btn").show();
+        $("#plans-actions").hide();
 
-        $('#show_plans').html('');
+        plans_count();
+    });
 
-
-        $('#plans_value').val(JSON.stringify(items_selected));
-        $('#save_name_edit').click()
-        $('.cancel-btn').click()
-
-        $('#edit-finish-btn').show()
-        $('#plans-actions').hide()
-
-        plans_count()
-    })
-
-
-    $('.btn-save-edit-rules').click(function () {
-
+    $(".btn-save-edit-rules").click(function () {
         if (!toggleDiscountRulesAlert(edit_rules.length)) {
-            return false
+            return false;
         }
 
-        $('#rules_edited').val(JSON.stringify(edit_rules));
-        $('#save_name_edit').click()
-        $('#edit-rules-back').click()
-    })
+        $("#rules_edited").val(JSON.stringify(edit_rules));
+        $("#save_name_edit").click();
+        $("#edit-rules-back").click();
+    });
 
-    $("#type_percent-edit").on('click', function () {
+    $("#type_percent-edit").on("click", function () {
+        $("#percent-edit").show();
+        $("#value-edit").hide();
+    });
+    $("#type_value-edit").on("click", function () {
+        $("#value-edit").show();
+        $("#percent-edit").hide();
+    });
 
-        $("#percent-edit").show()
-        $("#value-edit").hide()
-    })
-    $("#type_value-edit").on('click', function () {
-
-        $("#value-edit").show()
-        $("#percent-edit").hide()
-    })
-
-    $('#value-edit').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-    formatMoney('#value-edit')
+    $("#value-edit").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+    formatMoney("#value-edit");
     //var rules = edit_rules
 
-    $("#add_rule-edit").on('click', function () {
-
+    $("#add_rule-edit").on("click", function () {
         var rule_id = edit_rules.length + 1;
         for (i in edit_rules) {
-            edit_rules[i].id = ++i
+            edit_rules[i].id = ++i;
         }
 
-
-        if (!$('#qtde-edit').val() || $('#qtde-edit').val() == 0) {
-            $('#qtde-edit').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            $('#qtde-edit').focus()
-            return false
+        if (!$("#qtde-edit").val() || $("#qtde-edit").val() == 0) {
+            $("#qtde-edit").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            $("#qtde-edit").focus();
+            return false;
         }
 
-        if ($("#type_percent-edit").prop('checked') && (!$('#percent-edit').val() || $('#percent-edit').val() == 0)) {
-            $('#percent-edit').focus()
-            $('#percent-edit').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            return false
+        if (
+            $("#type_percent-edit").prop("checked") &&
+            (!$("#percent-edit").val() || $("#percent-edit").val() == 0)
+        ) {
+            $("#percent-edit").focus();
+            $("#percent-edit").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            return false;
         }
 
-        if ($("#type_value-edit").prop('checked') && (!$('#value-edit').val() || $('#value-edit').val().replace(',', '').replace('.', '') == 0)) {
-            $('#value-edit').focus()
-            $('#value-edit').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            return false
+        if (
+            $("#type_value-edit").prop("checked") &&
+            (!$("#value-edit").val() ||
+                $("#value-edit").val().replace(",", "").replace(".", "") == 0)
+        ) {
+            $("#value-edit").focus();
+            $("#value-edit").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            return false;
         }
-
-
 
         edit_rules.push({
             id: rule_id,
-            buy: $('#buy-edit').val(),
-            type: $("#type_percent-edit").prop('checked') ? 'percent' : 'value',
-            qtde: $('#qtde-edit').val(),
-            value: $("#type_percent-edit").prop('checked') ? $('#percent-edit').val() : $('#value-edit').val()
-        })
+            buy: $("#buy-edit").val(),
+            type: $("#type_percent-edit").prop("checked") ? "percent" : "value",
+            qtde: $("#qtde-edit").val(),
+            value: $("#type_percent-edit").prop("checked")
+                ? $("#percent-edit").val()
+                : $("#value-edit").val(),
+        });
 
-        toggleDiscountRulesAlert(1)
+        toggleDiscountRulesAlert(1);
         mount_rules(edit_rules);
         return false;
-    })
+    });
 
     function mount_rules(rules, edit) {
-        let rules_html = ''
+        let rules_html = "";
 
         for (i in rules) {
-            rules_html += `<div class="rule_holder">
+            rules_html +=
+                `<div class="rule_holder">
                                 <div class="rule_box">
                                     Na compra
-                                    <strong>`+ (rules[i].buy == 'above_of' ? 'acima de ' : 'de ') +
-                rules[i].qtde + ` itens</strong>,
+                                    <strong>` +
+                (rules[i].buy == "above_of" ? "acima de " : "de ") +
+                rules[i].qtde +
+                ` itens</strong>,
                                     aplicar desconto de <strong>
-                                    `+ (rules[i].type == 'percent' ? rules[i].value + '%' : 'R$' + rules[i].value) + `
+                                    ` +
+                (rules[i].type == "percent"
+                    ? rules[i].value + "%"
+                    : "R$" + rules[i].value) +
+                `
                                     </strong>
 
-                                    <svg data-id="`+ rules[i].id + `"  style="float:right; margin:4px 4px 0 18px" class="pointer delete2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg data-id="` +
+                rules[i].id +
+                `"  style="float:right; margin:4px 4px 0 18px" class="pointer delete2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15 1L1 15M1 1L15 15L1 1Z" stroke="#5E6576" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
 
-                                    <svg data-id="`+ rules[i].id + `" style="float:right;" class="pointer edit2" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg data-id="` +
+                rules[i].id +
+                `" style="float:right;" class="pointer edit2" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.8397 5.7993L19.8987 3.74294L17.2652 1.10974L15.2065 3.1661" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M3.19598 15.163L5.82952 17.7962M5.82952 17.7962L17.8395 5.79928L15.2063 3.16608L3.19598 15.163L1.10156 19.8903L5.82952 17.7962V17.7962Z" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
@@ -874,18 +953,32 @@ $(function () {
 
                                     Na compra
                                     <select id="buy" class="buy  w-auto d-inline-block adjust-select">
-                                        <option `+ (rules[i].buy == 'above_of' ? 'selected' : '') + ` value="above_of">acima de</option>
-                                        <option `+ (rules[i].buy == 'of' ? 'selected' : '') + ` value="of">de</option>
+                                        <option ` +
+                (rules[i].buy == "above_of" ? "selected" : "") +
+                ` value="above_of">acima de</option>
+                                        <option ` +
+                (rules[i].buy == "of" ? "selected" : "") +
+                ` value="of">de</option>
                                     </select>
 
-                                    <input value="`+ rules[i].qtde + `" class="qtde input-pad" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                    <input value="` +
+                rules[i].qtde +
+                `" class="qtde input-pad" type="text" onkeyup="$(this).removeClass('warning-input')"
                                      style="width: 60px; height: 49px;
                                     margin-top: 2px;" maxlength="2" data-mask="0#" />
                                     itens, aplicar desconto de
-                                    <input maxlength="9" value="`+ (rules[i].type == 'value' ? rules[i].value : '') + `" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
-                                     style="`+ (rules[i].type == 'percent' ? 'display: none;' : '') + ` width: 86px; height:46px" />
-                                    <input value="`+ (rules[i].type == 'percent' ? rules[i].value : '') + `" type="text" onkeyup="$(this).removeClass('warning-input')"
-                                     style="width: 86px; `+ (rules[i].type == 'value' ? 'display: none;' : '') + ` height:46px" class="input-pad percent" maxlength="2"
+                                    <input maxlength="9" value="` +
+                (rules[i].type == "value" ? rules[i].value : "") +
+                `" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                     style="` +
+                (rules[i].type == "percent" ? "display: none;" : "") +
+                ` width: 86px; height:46px" />
+                                    <input value="` +
+                (rules[i].type == "percent" ? rules[i].value : "") +
+                `" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                     style="width: 86px; ` +
+                (rules[i].type == "value" ? "display: none;" : "") +
+                ` height:46px" class="input-pad percent" maxlength="2"
                                         data-mask="0#" autocomplete="off">
 
                                     <svg  class="pointer float-right save-edit-rule2" style="" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -898,188 +991,175 @@ $(function () {
                                 </div>
                             </div>`;
         }
-        $('#rules-edit').html(rules_html)
+        $("#rules-edit").html(rules_html);
 
-        $('#rules-edit').mCustomScrollbar('destroy')
-        $('#rules-edit').mCustomScrollbar()
+        $("#rules-edit").mCustomScrollbar("destroy");
+        $("#rules-edit").mCustomScrollbar();
 
-        $('.rule_box_edit select.buy').each(function () {
+        $(".rule_box_edit select.buy").each(function () {
+            $(this).siriusSelect();
+        });
 
-            $(this).siriusSelect()
-        })
+        $(".value").maskMoney({
+            thousands: ".",
+            decimal: ",",
+            allowZero: true,
+            prefix: "",
+        });
 
-        $('.value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
+        formatMoney(".value_edit");
 
-        formatMoney('.value_edit')
-
-
-
-        set_rules_events()
+        set_rules_events();
         if (!edit) {
-
-            $('#percent-edit').val('')
-            $('#value-edit').val('')
-            $('#qtde-edit').val('')
+            $("#percent-edit").val("");
+            $("#value-edit").val("");
+            $("#qtde-edit").val("");
         }
 
         if (edit_rules.length > 0) {
-            $('#empty-rules2').hide()
+            $("#empty-rules2").hide();
         } else {
-            $('#empty-rules2').show()
+            $("#empty-rules2").show();
         }
     }
 
     function toggleDiscountRulesAlert(rules) {
         if (rules == 0) {
+            $(".inputs-warning2").addClass("warning");
+            $(".warning-text2").fadeIn();
 
-            $('.inputs-warning2').addClass('warning')
-            $('.warning-text2').fadeIn()
-
-            return false
-
+            return false;
         } else {
-            $('.inputs-warning2').removeClass('warning')
-            $('.warning-text2').fadeOut()
+            $(".inputs-warning2").removeClass("warning");
+            $(".warning-text2").fadeOut();
         }
-        return true
+        return true;
     }
 
     function set_rules_events() {
-
-        $(".delete2").on('click', function () {
-            var id = $(this).attr('data-id')
+        $(".delete2").on("click", function () {
+            var id = $(this).attr("data-id");
 
             for (i in edit_rules) {
                 if (edit_rules[i].id == id) {
-                    edit_rules.splice(i, 1)
+                    edit_rules.splice(i, 1);
                 }
             }
             mount_rules(edit_rules);
-        })
+        });
 
-        $(".edit2").on('click', function () {
-            var id = $(this).attr('data-id')
+        $(".edit2").on("click", function () {
+            var id = $(this).attr("data-id");
 
-            $(this).parents('.rule_holder').find('.rule_box').hide()
-            $(this).parents('.rule_holder').find('.rule_box_edit').show()
+            $(this).parents(".rule_holder").find(".rule_box").hide();
+            $(this).parents(".rule_holder").find(".rule_box_edit").show();
 
             for (i in edit_rules) {
                 if (edit_rules[i].id == id) {
-                    editingRule = i
+                    editingRule = i;
                 }
             }
 
+            $(".btn-save-edit-rules").prop("disabled", true);
+        });
 
-
-            $('.btn-save-edit-rules').prop('disabled', true);
-
-
-        })
-
-        $('.save-edit-rule2').on('click', function () {
-
+        $(".save-edit-rule2").on("click", function () {
             var that = this;
             function go(obj) {
-                return $(that).parents('.rule_holder').find(obj)
+                return $(that).parents(".rule_holder").find(obj);
             }
 
-            if (!go('.qtde').val() || go('.qtde').val() == 0) {
-                go('.qtde').focus()
-                go('.qtde').addClass('warning-input')
-                alertCustom("error", 'Digite um valor acima de 0');
+            if (!go(".qtde").val() || go(".qtde").val() == 0) {
+                go(".qtde").focus();
+                go(".qtde").addClass("warning-input");
+                alertCustom("error", "Digite um valor acima de 0");
                 return false;
             }
-            if (edit_rules[editingRule].type == 'percent') {
-                if (!go('.percent').val() || go('.percent').val() == 0) {
-                    go('.percent').focus()
-                    go('.percent').addClass('warning-input')
-                    alertCustom("error", 'Digite um valor acima de 0');
+            if (edit_rules[editingRule].type == "percent") {
+                if (!go(".percent").val() || go(".percent").val() == 0) {
+                    go(".percent").focus();
+                    go(".percent").addClass("warning-input");
+                    alertCustom("error", "Digite um valor acima de 0");
                     return false;
                 }
             } else {
-                if (!go('.value').val() || go('.value').val().replace(',', '').replace('.', '') == 0) {
-                    go('.value').focus()
-                    go('.value').addClass('warning-input')
-                    alertCustom("error", 'Digite um valor acima de 0');
+                if (
+                    !go(".value").val() ||
+                    go(".value").val().replace(",", "").replace(".", "") == 0
+                ) {
+                    go(".value").focus();
+                    go(".value").addClass("warning-input");
+                    alertCustom("error", "Digite um valor acima de 0");
                     return false;
                 }
             }
 
-
-            edit_rules[editingRule].buy = go('#buy').val(),
-                edit_rules[editingRule].qtde = go('.qtde').val(),
-                edit_rules[editingRule].value = edit_rules[editingRule].type == 'percent' ? go('.percent').val() : go('.value').val()
+            (edit_rules[editingRule].buy = go("#buy").val()),
+                (edit_rules[editingRule].qtde = go(".qtde").val()),
+                (edit_rules[editingRule].value =
+                    edit_rules[editingRule].type == "percent"
+                        ? go(".percent").val()
+                        : go(".value").val());
             mount_rules(edit_rules, 1);
 
+            $(".btn-save-edit-rules").prop("disabled", false);
 
-
-
-            $('.btn-save-edit-rules').prop('disabled', false);
-
-            $(this).parents('.rule_holder').find('.rule_box_edit').hide()
-            $(this).parents('.rule_holder').find('.rule_box').show()
-
-
-        })
+            $(this).parents(".rule_holder").find(".rule_box_edit").hide();
+            $(this).parents(".rule_holder").find(".rule_box").show();
+        });
     }
-    var editingRule = 0
+    var editingRule = 0;
 
+    $("#edit-rules").click(function () {
+        $("#edit_step0").hide();
+        $("#edit_step1").hide();
+        $("#edit_step2").show();
 
+        mount_rules(edit_rules);
+    });
 
-
-    $('#edit-rules').click(function () {
-
-
-        $('#edit_step0').hide();
-        $('#edit_step1').hide();
-        $('#edit_step2').show();
-
-        mount_rules(edit_rules)
-    })
-
-    $('#edit-rules-back').click(function () {
-        $('#edit_step0').show();
-        $('#edit_step1').hide();
-        $('#edit_step2').hide();
+    $("#edit-rules-back").click(function () {
+        $("#edit_step0").show();
+        $("#edit_step1").hide();
+        $("#edit_step2").hide();
         // edit_rules = Object.assign(edit_rules, cancel_edit_rules)
-    })
+    });
 
-    $('#edit_status').click(function () {
-        if ($(this).is(':checked')) {
+    $("#edit_status").click(function () {
+        if ($(this).is(":checked")) {
             // $('#edit_status_label').css('color', '#41DC8F');
-            $('#edit_status_label').html('Desconto ativo');
-
+            $("#edit_status_label").html("Desconto ativo");
         } else {
             // $('#edit_status_label').css('color', '#9B9B9B');
-            $('#edit_status_label').html('Desativado');
-
-
+            $("#edit_status_label").html("Desativado");
         }
-        $('#set_status').val(1)
+        $("#set_status").val(1);
 
-        $('#save_name_edit').click()
-    })
+        $("#save_name_edit").click();
+    });
 
-    $('.edit-finish-btn').click(function () {
-        $('#modal-button-close-2').click()
-    })
+    $(".edit-finish-btn").click(function () {
+        $("#modal-button-close-2").click();
+    });
 
-    $('#form-update-discount').submit(function () {
+    $("#form-update-discount").submit(function () {
         return false;
-    })
+    });
 
-    $("#save_name_edit").on('click', function () {
-        let formData = new FormData(document.getElementById('form-update-discount'));
-        let id = $('#discount-id').val();
-        $('#edit-name-box').animate({ height: 44 })
+    $("#save_name_edit").on("click", function () {
+        let formData = new FormData(
+            document.getElementById("form-update-discount")
+        );
+        let id = $("#discount-id").val();
+        $("#edit-name-box").animate({ height: 44 });
 
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/discounts/" + id,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
@@ -1093,420 +1173,394 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
                 alertCustom("success", data.message);
                 atualizarCoupon();
 
-                $('#display_name_edit').hide()
-                $('#display_name').show()
+                $("#display_name_edit").hide();
+                $("#display_name").show();
 
-                if ($('#name-edit').val())
-                    $('#d-name').html($('#name-edit').val())
+                if ($("#name-edit").val())
+                    $("#d-name").html($("#name-edit").val());
 
+                show_plans();
+                show_rules(edit_rules);
 
-                show_plans()
-                show_rules(edit_rules)
-
-
-                $('#edit-plans').show()
-                $('#edit-rules').show()
-                $('#edit-name').show()
-
-
-            }
+                $("#edit-plans").show();
+                $("#edit-rules").show();
+                $("#edit-name").show();
+            },
         });
-        return false
+        return false;
     });
     // End edit discount
 
-
-
-
-    $('#nao_vence').on('click', function () {
-        if ($(this).prop('checked')) {
-            $('#date_range').prop('disabled', true)
-            $('#date_range').val('')
+    $("#nao_vence").on("click", function () {
+        if ($(this).prop("checked")) {
+            $("#date_range").prop("disabled", true);
+            $("#date_range").val("");
         } else {
-            $('#date_range').prop('disabled', false)
+            $("#date_range").prop("disabled", false);
             //$('#date_range').focus()
-
         }
-    })
+    });
 
-    $('#nao_vence2').on('click', function () {
-        if ($(this).prop('checked')) {
-            $('#date_range2').prop('disabled', true)
-            $('#date_range2').val('')
+    $("#nao_vence2").on("click", function () {
+        if ($(this).prop("checked")) {
+            $("#date_range2").prop("disabled", true);
+            $("#date_range2").val("");
         } else {
-            $('#date_range2').prop('disabled', false)
+            $("#date_range2").prop("disabled", false);
             //$('#date_range2').trigger('click')
         }
-    })
+    });
 
-
-
-    $('#date_range2').val('DD/MM/YYYY')
+    $("#date_range2")
+        .val("DD/MM/YYYY")
         .dateRangePicker({
-            format: 'DD/MM/YYYY',
+            format: "DD/MM/YYYY",
             singleDate: true,
             showShortcuts: true,
             startDate: new Date(),
             endDate: false,
-            container: '#modal-edit-coupon',
+            container: "#modal-edit-coupon",
             customShortcuts: [
                 {
-                    name: 'Hoje',
-                    dates: () => [moment().startOf('day').toDate(), new Date()]
+                    name: "Hoje",
+                    dates: () => [moment().startOf("day").toDate(), new Date()],
                 },
                 {
-                    name: '7 dias',
-                    dates: () => [moment().add(6, 'days').toDate(), moment().add(6, 'days').toDate()]
+                    name: "7 dias",
+                    dates: () => [
+                        moment().add(6, "days").toDate(),
+                        moment().add(6, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '15 dias',
-                    dates: () => [moment().add(14, 'days').toDate(), moment().add(14, 'days').toDate()]
+                    name: "15 dias",
+                    dates: () => [
+                        moment().add(14, "days").toDate(),
+                        moment().add(14, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '1 mês',
-                    dates: () => [moment().add(30, 'days').toDate(), moment().add(30, 'days').toDate()]
+                    name: "1 mês",
+                    dates: () => [
+                        moment().add(30, "days").toDate(),
+                        moment().add(30, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '3 meses',
-                    dates: () => [moment().add(90, 'days').toDate(), moment().add(90, 'days').toDate()]
-                }
+                    name: "3 meses",
+                    dates: () => [
+                        moment().add(90, "days").toDate(),
+                        moment().add(90, "days").toDate(),
+                    ],
+                },
             ],
         })
-        .bind('datepicker-opened', function () {
-            $('.modal-open .modal').animate({ scrollTop: $(document).height() + $(window).height() });
-            $('.date-picker-wrapper').attr('tabindex', 0).focus()
+        .bind("datepicker-opened", function () {
+            $(".modal-open .modal").animate({
+                scrollTop: $(document).height() + $(window).height(),
+            });
+            $(".date-picker-wrapper").attr("tabindex", 0).focus();
         });
 
-    $('#edit-name').on('click', edit_name);
-    $('#edit-plans').on('click', edit_plans);
+    $("#edit-name").on("click", edit_name);
+    $("#edit-plans").on("click", edit_plans);
     // carregar modal de edicao
 
-    $(document).on('click', '.edit-coupon', function () {
-        let coupon = $(this).attr('coupon');
-        var discount = $(this).attr('discount');
+    $(document).on("click", ".edit-coupon", function () {
+        let coupon = $(this).attr("coupon");
+        var discount = $(this).attr("discount");
 
-        setBodyHight('auto', 'auto');
-
+        setBodyHight("auto", "auto");
 
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon + "/edit",
+            url:
+                "/api/project/" +
+                projectId +
+                "/couponsdiscounts/" +
+                coupon +
+                "/edit",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-            }, success: function success(response) {
-
+            },
+            success: function success(response) {
                 if (response.status == 1) {
                     // $('#edit_status_label').css('color', '#41DC8F');
-                    $('#edit_status_label').html('Desconto ativo');
-                    $('#edit_status').prop('checked', true);
-
+                    $("#edit_status_label").html("Desconto ativo");
+                    $("#edit_status").prop("checked", true);
                 } else {
                     // $('#edit_status_label').css('color', '#9B9B9B');
-                    $('#edit_status_label').html('Desativado');
-                    $('#edit_status').prop('checked', false);
+                    $("#edit_status_label").html("Desativado");
+                    $("#edit_status").prop("checked", false);
                 }
 
-
-
-
-                if (discount == 'Progressivo') {
-                    $('.cancel-btn').trigger('click')
-                    $('#cancel_name_edit').trigger('click')
-                    $('#edit_step0').show()
-                    $('#edit_step1').hide()
-                    $('#edit_step2').hide()
+                if (discount == "Progressivo") {
+                    $(".cancel-btn").trigger("click");
+                    $("#cancel_name_edit").trigger("click");
+                    $("#edit_step0").show();
+                    $("#edit_step1").hide();
+                    $("#edit_step2").hide();
                     // console.log(response);
-                    $('#edit-discount').show();
-                    $('#edit-coupon').hide();
+                    $("#edit-discount").show();
+                    $("#edit-coupon").hide();
 
-
-                    $('#set_status').val(0);
+                    $("#set_status").val(0);
                     // $('#edit_status').val('');
 
+                    $("#discount-id").val(coupon);
 
-                    $('#discount-id').val(coupon);
+                    $("#modal-edit-coupon").modal("show");
 
-                    $('#modal-edit-coupon').modal('show');
-
-                    $('#d-name').html(response.name);
-                    $('#name-edit').val(response.name);
-
-
-
+                    $("#d-name").html(response.name);
+                    $("#name-edit").val(response.name);
 
                     if (response.plans != null) {
-                        items_selected = JSON.parse(response.plans)
+                        items_selected = JSON.parse(response.plans);
 
-                        plans_count()
+                        plans_count();
 
-                        $('#plans_value').val(response.plans);
+                        $("#plans_value").val(response.plans);
                     } else {
-                        items_selected = []
-                        $('#plans_value').val('');
+                        items_selected = [];
+                        $("#plans_value").val("");
                     }
 
-
-
-
-
-                    show_plans()
+                    show_plans();
 
                     //rules
-                    $('#rules_edited').val(response.progressive_rules);
-                    var rules = JSON.parse(response.progressive_rules)
-                    edit_rules = rules
+                    $("#rules_edited").val(response.progressive_rules);
+                    var rules = JSON.parse(response.progressive_rules);
+                    edit_rules = rules;
 
-                    show_rules(rules)
-
-
+                    show_rules(rules);
                 } else {
                     if (response.plans != null) {
-                        items_selected = JSON.parse(response.plans)
-                        plans_count2()
-                        plans_count()
-
+                        items_selected = JSON.parse(response.plans);
+                        plans_count2();
+                        plans_count();
                     } else {
-                        items_selected = []
+                        items_selected = [];
                     }
                     // mount_selected_items()
                     // set_item_click()
-                    show_plans()
+                    show_plans();
 
                     if (!response.expires && response.status) {
-                        response.nao_vence = 1
+                        response.nao_vence = 1;
                     }
-                    coupon_rules(response)
+                    coupon_rules(response);
 
-                    $('#c-cancel_name_edit').trigger('click')
-                    $('#c-set_status').val(0);
+                    $("#c-cancel_name_edit").trigger("click");
+                    $("#c-set_status").val(0);
                     // $('#c-edit_status').val('');
 
-                    $('#edit-discount').hide();
-                    $('#edit-coupon').show();
+                    $("#edit-discount").hide();
+                    $("#edit-coupon").show();
 
-                    $('#coupon-id2').val(coupon);
+                    $("#coupon-id2").val(coupon);
 
-                    $('#d-code, #d-code2').html(response.code);
-                    $('#c-d-name, #c-d-name2').html(response.name);
-                    $('#c-code-edit').val(response.code);
-                    $('#c-name-edit').val(response.name);
+                    $("#d-code, #d-code2").html(response.code);
+                    $("#c-d-name, #c-d-name2").html(response.name);
+                    $("#c-code-edit").val(response.code);
+                    $("#c-name-edit").val(response.name);
 
-                    $('#c-edit_step1').hide()
-                    $('#c-edit_step2').hide()
-                    $('#c-edit_step0').show()
-
-
+                    $("#c-edit_step1").hide();
+                    $("#c-edit_step2").hide();
+                    $("#c-edit_step0").show();
 
                     // response.rule_value = response.rule_value.replace(',','.')
                     // response.value = response.value.replace(',','.')
-                    $('#2minimum_value').val(response.rule_value);
-
+                    $("#2minimum_value").val(response.rule_value);
 
                     if (response.type == 1) {
-                        $('#2c_type_value').prop('checked', true).click();
+                        $("#2c_type_value").prop("checked", true).click();
                     } else {
-                        $('#2c_type_percent').prop('checked', true).click();
+                        $("#2c_type_percent").prop("checked", true).click();
                     }
-                    if ($('#2c_type_value').prop('checked')) {
-                        $('#2discount_value').val(response.value)
-
+                    if ($("#2c_type_value").prop("checked")) {
+                        $("#2discount_value").val(response.value);
                     }
-                    if ($('#2c_type_percent').prop('checked')) {
-                        $('#2percent_value').val(response.value)
-
+                    if ($("#2c_type_percent").prop("checked")) {
+                        $("#2percent_value").val(response.value);
                     }
-                    $('#2c_value').val(response.value)
+                    $("#2c_value").val(response.value);
 
-                    $('#date_range2').val(response.expires_date);
+                    $("#date_range2").val(response.expires_date);
                     if (!response.expires_date) {
-                        $('#nao_vence2').prop('checked', true);
+                        $("#nao_vence2").prop("checked", true);
                     } else {
-                        $('#nao_vence2').prop('checked', false);
-                        $('#date_range2').prop('disabled', false)
-
-
+                        $("#nao_vence2").prop("checked", false);
+                        $("#date_range2").prop("disabled", false);
                     }
                     // console.log(response.status);
                     if (response.status == 1) {
                         // $('#c-edit_status_label').css('color', '#41DC8F');
-                        $('#c-edit_status_label').html('Desconto ativo');
-                        $('#c-edit_status').prop('checked', true);
-
+                        $("#c-edit_status_label").html("Desconto ativo");
+                        $("#c-edit_status").prop("checked", true);
                     } else {
                         // $('#c-edit_status_label').css('color', '#9B9B9B');
-                        $('#c-edit_status_label').html('Desativado');
-                        $('#c-edit_status').prop('checked', false);
-
-
+                        $("#c-edit_status_label").html("Desativado");
+                        $("#c-edit_status").prop("checked", false);
                     }
 
-                    $('#modal-edit-coupon').modal('show');
+                    $("#modal-edit-coupon").modal("show");
                 }
-            }
+            },
         });
     });
 
     // carregar modal delecao
-    $(document).on('click', '.delete-coupon', function (event) {
-        let coupon = $(this).attr('coupon');
-        $('#modal-delete-coupon .btn-delete1').attr('coupon', coupon);
-        $("#modal-delete-coupon").modal('show');
+    $(document).on("click", ".delete-coupon", function (event) {
+        let coupon = $(this).attr("coupon");
+        $("#modal-delete-coupon .btn-delete1").attr("coupon", coupon);
+        $("#modal-delete-coupon").modal("show");
     });
 
+    function count_plans2() {
+        //thumbnails on editing
 
-
-
-
-    function count_plans2() { //thumbnails on editing
-
-        $('.edit-plans-thumbs').html('')
-
+        $(".edit-plans-thumbs").html("");
 
         $.ajax({
             data: {
                 total: 1,
-                list: 'plan',
-                search: '',
+                list: "plan",
+                search: "",
                 project_id: projectId,
                 //page: params.page || 1
-            }
-            ,
-
+            },
             method: "GET",
             url: "/api/plans/user-plans",
 
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
-            }, success: function success(response) {
-
-
-
-
-
-
-                var html_show_plans = ''
+            },
+            success: function success(response) {
+                var html_show_plans = "";
                 for (i in response.thumbnails) {
-                    var toolTip = 'aria-describedby="tt' + response.thumbnails[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + response.thumbnails[i].name + '"'
-                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
+                    var toolTip =
+                        'aria-describedby="tt' +
+                        response.thumbnails[i].id +
+                        '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                        response.thumbnails[i].name +
+                        '"';
+                    html_show_plans +=
+                        `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                     background-repeat: no-repeat; background-position: center center;
-                    background-size: cover !important; background: url('`+ response.thumbnails[i].products[0].photo + `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
+                    background-size: cover !important; background: url('` +
+                        response.thumbnails[i].products[0].photo +
+                        `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`;
                 }
 
-                $('.edit-plans-thumbs').html(html_show_plans)
+                $(".edit-plans-thumbs").html(html_show_plans);
 
-                $('[data-toggle="tooltip"]').tooltip('dispose')
+                $('[data-toggle="tooltip"]').tooltip("dispose");
 
                 $('[data-toggle="tooltip"]').tooltip({
-                    container: '.page'
+                    container: ".page",
                 });
 
                 if (response.total > 8) {
-                    var rest = response.total - 8
-                    $('.edit-plans-thumbs').append('<div style="margin-top:14px" class="plans_rest">+' + rest + '</div>')
-
+                    var rest = response.total - 8;
+                    $(".edit-plans-thumbs").append(
+                        '<div style="margin-top:14px" class="plans_rest">+' +
+                            rest +
+                            "</div>"
+                    );
                 }
-
-
-
-            }
+            },
         });
-
     }
 
     function plans_count() {
         if (items_selected.length > 0) {
+            var plans_count =
+                items_selected.length +
+                " plano" +
+                (items_selected.length > 1 ? "s" : "");
+            $("#planos-count, #planos-count-edit").html(plans_count);
 
-            var plans_count = items_selected.length + ' plano' + (items_selected.length > 1 ? 's' : '')
-            $('#planos-count, #planos-count-edit').html(plans_count);
-
-            $('#plans_holder').css('height', 'auto')
-            $('#show_plans').css('margin-top', '10px')
-
+            $("#plans_holder").css("height", "auto");
+            $("#show_plans").css("margin-top", "10px");
 
             //$('#show_plans').addClass('mostrar_mais_detalhes')
-
         } else {
-            $('#plans_holder').css('height', '158px')
-            $('#show_plans').css('margin-top', '20px')
+            $("#plans_holder").css("height", "158px");
+            $("#show_plans").css("margin-top", "20px");
 
-            $('#planos-count, #planos-count-edit').html('Todos os planos');
+            $("#planos-count, #planos-count-edit").html("Todos os planos");
 
-            count_plans()
+            count_plans();
         }
 
         if (items_selected.length > 2 && items_selected.length < 11) {
-            $('#mostrar_mais').show();
-
+            $("#mostrar_mais").show();
         } else {
-            $('#mostrar_mais').hide();
-            $('#show_plans').removeClass('mostrar_mais_detalhes')
-            $('#show_plans').css({
-                height: "88px"
+            $("#mostrar_mais").hide();
+            $("#show_plans").removeClass("mostrar_mais_detalhes");
+            $("#show_plans").css({
+                height: "88px",
             });
-
         }
     }
 
-
-
-
     //cria novo cupom
-    $('#modal-create-coupon .btn-save').on('click', function () {
-        let formData = new FormData(document.getElementById('form-register-coupon'));
+    $("#modal-create-coupon .btn-save").on("click", function () {
+        let formData = new FormData(
+            document.getElementById("form-register-coupon")
+        );
 
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
             error: function (response) {
-
                 errorAjaxResponse(response);
             },
             success: function success() {
-
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Desconto adicionado!");
                 atualizarCoupon();
                 clearFields();
-            }
+            },
         });
     });
 
     //atualizar cupom
-    $("#modal-edit-coupon .btn-update").on('click', function () {
-        let formData = new FormData(document.getElementById('form-update-coupon'));
-        let coupon = $('#modal-edit-coupon .coupon-id').val();
+    $("#modal-edit-coupon .btn-update").on("click", function () {
+        let formData = new FormData(
+            document.getElementById("form-update-coupon")
+        );
+        let coupon = $("#modal-edit-coupon .coupon-id").val();
 
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
@@ -1520,225 +1574,255 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
                 alertCustom("success", data.message);
                 atualizarCoupon();
-            }
+            },
         });
     });
 
     //deletar cupom
-    $('#modal-delete-coupon .btn-delete1').on('click', function () {
-        let coupon = $(this).attr('coupon');
+    $("#modal-delete-coupon .btn-delete1").on("click", function () {
+        let coupon = $(this).attr("coupon");
 
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function (response) {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
                 alertCustom("success", "Registro removido com sucesso");
                 atualizarCoupon();
-            }
-
+            },
         });
     });
 
-
-
     //Limpa campos
     function clearFields() {
-        $('.coupon-name').val('');
-        $('.coupon-value').val('');
-        $('.coupon-code').val('');
-        $('.rule-value').val('');
+        $(".coupon-name").val("");
+        $(".coupon-value").val("");
+        $(".coupon-code").val("");
+        $(".rule-value").val("");
     }
 
-
-
     //
-    $('#edit_step0').mCustomScrollbar()
-    $('#coupon_edit_step0').mCustomScrollbar()
-
+    $("#edit_step0").mCustomScrollbar();
+    $("#coupon_edit_step0").mCustomScrollbar();
 });
 
-function count_plans() { //thumbnails
+function count_plans() {
+    //thumbnails
 
-    $('#show_plans').html('')
+    $("#show_plans").html("");
 
     $.ajax({
         data: {
             total: 1,
-            list: 'plan',
-            search: '',
+            list: "plan",
+            search: "",
             project_id: projectId,
             //page: params.page || 1
-        }
-        ,
-
+        },
         method: "GET",
         url: "/api/plans/user-plans",
 
         dataType: "json",
         headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
         },
         error: function error(response) {
             errorAjaxResponse(response);
-
-        }, success: function success(response) {
-
-
-
-
-            var html_show_plans = ''
+        },
+        success: function success(response) {
+            var html_show_plans = "";
             for (i in response.thumbnails) {
-                var toolTip = 'aria-describedby="tt' + response.thumbnails[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + response.thumbnails[i].name + '"'
-                html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
+                var toolTip =
+                    'aria-describedby="tt' +
+                    response.thumbnails[i].id +
+                    '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                    response.thumbnails[i].name +
+                    '"';
+                html_show_plans +=
+                    `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
                 background-repeat: no-repeat; background-position: center center;
-                background-size: cover !important; background: url('`+ response.thumbnails[i].products[0].photo + `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
+                background-size: cover !important; background: url('` +
+                    response.thumbnails[i].products[0].photo +
+                    `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`;
             }
 
-            $('#show_plans').removeClass('mostrar_mais_detalhes')
+            $("#show_plans").removeClass("mostrar_mais_detalhes");
 
-            $('#show_plans').html(html_show_plans)
+            $("#show_plans").html(html_show_plans);
 
-            $('[data-toggle="tooltip"]').tooltip('dispose')
+            $('[data-toggle="tooltip"]').tooltip("dispose");
 
             $('[data-toggle="tooltip"]').tooltip({
-                container: '.page'
+                container: ".page",
             });
 
             if (response.total > 8) {
-                var rest = response.total - 8
-                $('#show_plans').append('<div class="plans_rest">+' + rest + '</div>')
-
+                var rest = response.total - 8;
+                $("#show_plans").append(
+                    '<div class="plans_rest">+' + rest + "</div>"
+                );
             }
-
-
-
-        }
+        },
     });
-
 }
 
-var timer_desc
+var timer_desc;
 function set_description_value(obj, obj2) {
-    $('#search_input_description_value').val($(obj).val())
-    $(obj2).trigger('keyup')
+    $("#search_input_description_value").val($(obj).val());
+    $(obj2).trigger("keyup");
 }
 
 function toggleSelect(obj) {
-    if ($('.selected_check', obj).is(':visible')) {
-        $('.selected_check', obj).hide()
-        $('.empty_check', obj).show()
-        $(obj).removeClass('item_selected')
+    if ($(".selected_check", obj).is(":visible")) {
+        $(".selected_check", obj).hide();
+        $(".empty_check", obj).show();
+        $(obj).removeClass("item_selected");
         return false;
     } else {
-        $('.empty_check', obj).hide()
-        $('.selected_check', obj).show()
-        $(obj).addClass('item_selected')
+        $(".empty_check", obj).hide();
+        $(".selected_check", obj).show();
+        $(obj).addClass("item_selected");
         return true;
     }
 }
 
-
 function set_item_click() {
-
     var item_click_count = 0;
 
-    $('.item').on('click', function () {
+    $(".item").on("click", function () {
+        var iqde = 190; //limite máximo de planos em um desconto.
 
-        var iqde = 190 //limite máximo de planos em um desconto.
-
-        if (items_selected.length >= iqde && !$('.selected_check', this).is(':visible')) {
-            $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled', false)
-            alertCustom("error", 'É possível selecionar no máximo ' + iqde + ' planos.');
-            return false
+        if (
+            items_selected.length >= iqde &&
+            !$(".selected_check", this).is(":visible")
+        ) {
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
+                "disabled",
+                false
+            );
+            alertCustom(
+                "error",
+                "É possível selecionar no máximo " + iqde + " planos."
+            );
+            return false;
         }
 
         if (toggleSelect($(this))) {
-
             items_selected.push({
-                id: $(this).attr('data-id'),
-                name: $(this).attr('data-name'),
-                description: $(this).attr('data-description'),
-                image: $(this).attr('data-image')
-            })
-            item_click_count++
+                id: $(this).attr("data-id"),
+                name: $(this).attr("data-name"),
+                description: $(this).attr("data-description"),
+                image: $(this).attr("data-image"),
+            });
+            item_click_count++;
         } else {
             for (i in items_selected) {
-                if (items_selected[i].id == $(this).attr('data-id')) {
-
+                if (items_selected[i].id == $(this).attr("data-id")) {
                     items_selected.splice(i, 1);
                 }
             }
         }
 
         if (items_selected.length > 0 && items_selected.length <= iqde) {
-            $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled', false)
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
+                "disabled",
+                false
+            );
         } else {
-            $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled', true)
-        };
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
+                "disabled",
+                true
+            );
+        }
 
         if (item_click_count == 16) {
-
-            $(this).parents('.step1, #step1, #c-edit_step1, #edit_step1').find('input').first().trigger('keyup')
-
+            $(this)
+                .parents(".step1, #step1, #c-edit_step1, #edit_step1")
+                .find("input")
+                .first()
+                .trigger("keyup");
         }
-    })
+    });
 
-
-    $('[data-toggle="tooltip"]').tooltip('dispose')
+    $('[data-toggle="tooltip"]').tooltip("dispose");
 
     $('[data-toggle="tooltip"]').tooltip({
-        container: '.page'
+        container: ".page",
     });
 }
 
 function mount_selected_items(search, search2) {
-    var items = ''
+    var items = "";
 
     if (items_selected.length == 0) {
         return [];
     }
 
     for (i in items_selected) {
-
         if (search) {
-            if (items_selected[i].name.toLowerCase().search(search.toLowerCase()) < 0) {
-                continue
+            if (
+                items_selected[i].name
+                    .toLowerCase()
+                    .search(search.toLowerCase()) < 0
+            ) {
+                continue;
             }
         }
         if (search2) {
-            if (items_selected[i].description.toLowerCase().search(search2.toLowerCase()) < 0) {
-                continue
+            if (
+                items_selected[i].description
+                    .toLowerCase()
+                    .search(search2.toLowerCase()) < 0
+            ) {
+                continue;
             }
         }
 
-
-        var toolTip
+        var toolTip;
         if (items_selected[i].name.length > 18) {
-
-            toolTip = 'aria-describedby="tt' + items_selected[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + items_selected[i].name + '"'
+            toolTip =
+                'aria-describedby="tt' +
+                items_selected[i].id +
+                '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                items_selected[i].name +
+                '"';
         } else {
-            toolTip = ''
+            toolTip = "";
         }
-        var item = `<div ${toolTip} class="item item_selected"  data-id="` + items_selected[i].id + `" data-image="` + items_selected[i].image + `" data-name="` + items_selected[i].name + `" data-description="` + items_selected[i].description + `" >
+        var item =
+            `<div ${toolTip} class="item item_selected"  data-id="` +
+            items_selected[i].id +
+            `" data-image="` +
+            items_selected[i].image +
+            `" data-name="` +
+            items_selected[i].name +
+            `" data-description="` +
+            items_selected[i].description +
+            `" >
 
                         <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
-                            <span style="background-image: url(`+ (items_selected[i].image ? items_selected[i].image : 'https://cloudfox-files.s3.amazonaws.com/produto.svg') + `)" class="image2"></span>
+                            <span style="background-image: url(` +
+            (items_selected[i].image
+                ? items_selected[i].image
+                : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+            `)" class="image2"></span>
                         </span>
-                        <span class="title text-overflow-title">`+ items_selected[i].name + `</span>
-                        <span class="description text-overflow-description">`+ items_selected[i].description + `</span>
+                        <span class="title text-overflow-title">` +
+            items_selected[i].name +
+            `</span>
+                        <span class="description text-overflow-description">` +
+            items_selected[i].description +
+            `</span>
                         <svg class="selected_check "  width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>
                         <svg class="empty_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
                     </div>`;
@@ -1750,88 +1834,109 @@ function mount_selected_items(search, search2) {
     return items;
 }
 
-var items_selected = []
+var items_selected = [];
 
 $(function () {
+    $("#bt-search").click(function () {
+        $("#pagination-container-coupon")
+            .removeClass("d-flex")
+            .addClass("d-none");
+        atualizarCoupon();
+    });
 
-    $('#bt-search').click(function () {
-        $("#pagination-container-coupon").removeClass("d-flex").addClass("d-none")
-        atualizarCoupon()
-    })
-
-    $('#search-name').on('keypress', function (e) {
+    $("#search-name").on("keypress", function (e) {
         if (e.which == 13) {
-            atualizarCoupon()
-            return false
+            atualizarCoupon();
+            return false;
         }
     });
 
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let projectId = $(window.location.pathname.split("/")).get(-1);
 
-    $('#value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-    formatMoney('#value')
+    $("#value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+    formatMoney("#value");
 
-
-
-    var rules = []
+    var rules = [];
     var rule_id = 1;
-    $("#add_rule1").on('click', function () {
-
-
-
-        if (!$('#qtde').val() || $('#qtde').val() == 0) {
-            $('#qtde').focus()
-            $('#qtde').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            return false
+    $("#add_rule1").on("click", function () {
+        if (!$("#qtde").val() || $("#qtde").val() == 0) {
+            $("#qtde").focus();
+            $("#qtde").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            return false;
         }
 
-        if ($("#type_percent").prop('checked') && (!$('#percent').val() || $('#percent').val() == 0)) {
-            $('#percent').focus()
-            $('#percent').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            return false
+        if (
+            $("#type_percent").prop("checked") &&
+            (!$("#percent").val() || $("#percent").val() == 0)
+        ) {
+            $("#percent").focus();
+            $("#percent").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            return false;
         }
 
-        if ($("#type_value").prop('checked') && (!$('#value').val() || $('#value').val().replace(',', '').replace('.', '') == 0)) {
-            $('#value').focus()
-            $('#value').addClass('warning-input')
-            alertCustom("error", 'Digite um valor acima de 0');
-            return false
+        if (
+            $("#type_value").prop("checked") &&
+            (!$("#value").val() ||
+                $("#value").val().replace(",", "").replace(".", "") == 0)
+        ) {
+            $("#value").focus();
+            $("#value").addClass("warning-input");
+            alertCustom("error", "Digite um valor acima de 0");
+            return false;
         }
         rules.push({
             id: rule_id++,
-            buy: $('#buy').val(),
-            type: $("#type_percent").prop('checked') ? 'percent' : 'value',
-            qtde: $('#qtde').val(),
-            value: $("#type_percent").prop('checked') ? $('#percent').val() : $('#value').val()
-        })
+            buy: $("#buy").val(),
+            type: $("#type_percent").prop("checked") ? "percent" : "value",
+            qtde: $("#qtde").val(),
+            value: $("#type_percent").prop("checked")
+                ? $("#percent").val()
+                : $("#value").val(),
+        });
 
-        toggleDiscountRulesAlert(1)
+        toggleDiscountRulesAlert(1);
 
         mount_rules(rules);
         return false;
-    })
+    });
 
     function mount_rules(rules, edit) {
-        let rules_html = ''
+        let rules_html = "";
         for (i in rules) {
-            rules_html += `
+            rules_html +=
+                `
 
                         <div class="rule_holder">
                             <div class="rule_box">
                                 Na compra
-                                <strong>`+ (rules[i].buy == 'above_of' ? 'acima de ' : 'de ') +
-                rules[i].qtde + ` itens</strong>,
+                                <strong>` +
+                (rules[i].buy == "above_of" ? "acima de " : "de ") +
+                rules[i].qtde +
+                ` itens</strong>,
                                 aplicar desconto de <strong>
-                                `+ (rules[i].type == 'percent' ? rules[i].value + '%' : 'R$' + rules[i].value) + `
+                                ` +
+                (rules[i].type == "percent"
+                    ? rules[i].value + "%"
+                    : "R$" + rules[i].value) +
+                `
                                 </strong>
 
-                                <svg data-id="`+ rules[i].id + `"  style="float:right; margin:4px 4px 0 18px" class="pointer delete" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg data-id="` +
+                rules[i].id +
+                `"  style="float:right; margin:4px 4px 0 18px" class="pointer delete" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15 1L1 15M1 1L15 15L1 1Z" stroke="#5E6576" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
 
-                                <svg data-id="`+ rules[i].id + `" style="float:right;" class="pointer edit" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg data-id="` +
+                rules[i].id +
+                `" style="float:right;" class="pointer edit" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17.8397 5.7993L19.8987 3.74294L17.2652 1.10974L15.2065 3.1661" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M3.19598 15.163L5.82952 17.7962M5.82952 17.7962L17.8395 5.79928L15.2063 3.16608L3.19598 15.163L1.10156 19.8903L5.82952 17.7962V17.7962Z" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -1842,17 +1947,31 @@ $(function () {
 
                                 Na compra
                                 <select id="buy1" class="buy w-auto d-inline-block adjust-select" style="width: 124px; height: 44px;">
-                                    <option `+ (rules[i].buy == 'above_of' ? 'selected' : '') + ` value="above_of">acima de</option>
-                                    <option `+ (rules[i].buy == 'of' ? 'selected' : '') + ` value="of">de</option>
+                                    <option ` +
+                (rules[i].buy == "above_of" ? "selected" : "") +
+                ` value="above_of">acima de</option>
+                                    <option ` +
+                (rules[i].buy == "of" ? "selected" : "") +
+                ` value="of">de</option>
                                 </select>
-                                <input value="`+ rules[i].qtde + `" class="input-pad qtde" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                <input value="` +
+                rules[i].qtde +
+                `" class="input-pad qtde" type="text" onkeyup="$(this).removeClass('warning-input')"
                                  style="width: 60px; height: 49px;
                                 margin-top: 2px;" maxlength="2" data-mask="0#" />
                                 itens, aplicar desconto de
-                                <input maxlength="9" value="`+ (rules[i].type == 'value' ? rules[i].value : '') + `" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
-                                 style="`+ (rules[i].type == 'percent' ? 'display: none;' : '') + ` width: 86px; height:46px" />
-                                <input value="`+ (rules[i].type == 'percent' ? rules[i].value : '') + `" type="text" onkeyup="$(this).removeClass('warning-input')"
-                                 style="width: 86px; `+ (rules[i].type == 'value' ? 'display: none;' : '') + ` height:46px" class="input-pad percent" maxlength="2"
+                                <input maxlength="9" value="` +
+                (rules[i].type == "value" ? rules[i].value : "") +
+                `" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                 style="` +
+                (rules[i].type == "percent" ? "display: none;" : "") +
+                ` width: 86px; height:46px" />
+                                <input value="` +
+                (rules[i].type == "percent" ? rules[i].value : "") +
+                `" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                 style="width: 86px; ` +
+                (rules[i].type == "value" ? "display: none;" : "") +
+                ` height:46px" class="input-pad percent" maxlength="2"
                                     data-mask="0#" autocomplete="off">
 
                                 <svg  class="pointer float-right save-edit-rule" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1867,77 +1986,72 @@ $(function () {
                         `;
         }
 
+        $("#rules").html(rules_html);
 
+        $("#rules").mCustomScrollbar("destroy");
+        $("#rules").mCustomScrollbar();
 
-        $('#rules').html(rules_html);
+        $(".rule_box_edit select.buy").each(function () {
+            $(this).siriusSelect();
+        });
 
-        $('#rules').mCustomScrollbar('destroy')
-        $('#rules').mCustomScrollbar()
+        $(".value").maskMoney({
+            thousands: ".",
+            decimal: ",",
+            allowZero: true,
+            prefix: "",
+        });
 
-        $('.rule_box_edit select.buy').each(function () {
+        formatMoney(".value");
 
-            $(this).siriusSelect()
-        })
-
-
-
-
-        $('.value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-
-        formatMoney('.value')
-
-
-        set_rules_events()
+        set_rules_events();
         if (!edit) {
-
-            $('#percent').val('')
-            $('#value').val('')
-            $('#qtde').val('')
+            $("#percent").val("");
+            $("#value").val("");
+            $("#qtde").val("");
         }
 
         if (rules.length > 0) {
             //$('.finish-btn').prop('disabled',false)
-            $('#empty-rules').hide()
+            $("#empty-rules").hide();
         } else {
             //$('.finish-btn').prop('disabled',true)
-            $('#empty-rules').show()
-
+            $("#empty-rules").show();
         }
     }
 
-    $(".finish-btn").on('click', function () {
-
+    $(".finish-btn").on("click", function () {
         if (!toggleDiscountRulesAlert(rules.length)) {
-            return false
+            return false;
         }
 
-        $('#discount_rules').val(JSON.stringify(rules))
-        $('#discount_plans').val(JSON.stringify(items_selected))
+        $("#discount_rules").val(JSON.stringify(rules));
+        $("#discount_plans").val(JSON.stringify(items_selected));
 
-        let formData = new FormData(document.getElementById('form-register-discount'));
+        let formData = new FormData(
+            document.getElementById("form-register-discount")
+        );
+
+        $(".finish-btn").attr("disabled", true);
 
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
             error: function (response) {
-
+                $(".finish-btn").attr("disabled", false);
 
                 errorAjaxResponse(response);
             },
             success: function success() {
-
-
-
-
                 $("#modal-button-close-1").click();
 
                 $(".loading").css("visibility", "hidden");
@@ -1945,289 +2059,243 @@ $(function () {
                 atualizarCoupon();
 
                 setTimeout(() => {
-                    $('.edit-coupon').first().click()
+                    $(".edit-coupon").first().click();
                 }, 400);
 
-            }
+                setTimeout(() => {
+                    $(".finish-btn").attr("disabled", false);
+                }, 1000);
+            },
         });
         return false;
-    })
+    });
 
     function set_rules_events() {
-
-        $(".delete").on('click', function () {
-            var id = $(this).attr('data-id')
+        $(".delete").on("click", function () {
+            var id = $(this).attr("data-id");
 
             for (i in rules) {
                 if (rules[i].id == id) {
-                    rules.splice(i, 1)
+                    rules.splice(i, 1);
                 }
             }
             mount_rules(rules);
-        })
+        });
 
-        $(".edit").on('click', function () {
-            var id = $(this).attr('data-id')
-            $(this).parents('.rule_holder').find('.rule_box').hide()
-            $(this).parents('.rule_holder').find('.rule_box_edit').show()
+        $(".edit").on("click", function () {
+            var id = $(this).attr("data-id");
+            $(this).parents(".rule_holder").find(".rule_box").hide();
+            $(this).parents(".rule_holder").find(".rule_box_edit").show();
 
             for (i in rules) {
                 if (rules[i].id == id) {
-                    editingRule1 = i
+                    editingRule1 = i;
                 }
             }
 
+            $(".finish-btn").prop("disabled", true);
+        });
 
-
-            $('.finish-btn').prop('disabled', true);
-
-
-        })
-
-        $('.save-edit-rule').on('click', function () {
+        $(".save-edit-rule").on("click", function () {
             var that = this;
             function go(obj) {
-                return $(that).parents('.rule_holder').find(obj)
+                return $(that).parents(".rule_holder").find(obj);
             }
 
-            if (!go('.qtde').val() || go('.qtde').val() == 0) {
-                go('.qtde').focus()
-                go('.qtde').addClass('warning-input')
-                alertCustom("error", 'Digite um valor acima de 0');
+            if (!go(".qtde").val() || go(".qtde").val() == 0) {
+                go(".qtde").focus();
+                go(".qtde").addClass("warning-input");
+                alertCustom("error", "Digite um valor acima de 0");
                 return false;
             }
-            if (rules[editingRule1].type == 'percent') {
-                if (!go('.percent').val() || go('.percent').val() == 0) {
-                    go('.percent').focus()
-                    go('.percent').addClass('warning-input')
-                    alertCustom("error", 'Digite um valor acima de 0');
+            if (rules[editingRule1].type == "percent") {
+                if (!go(".percent").val() || go(".percent").val() == 0) {
+                    go(".percent").focus();
+                    go(".percent").addClass("warning-input");
+                    alertCustom("error", "Digite um valor acima de 0");
                     return false;
                 }
             } else {
-                if (!go('.value').val() || go('.value').val().replace(',', '').replace('.', '') == 0) {
-                    go('.value').focus()
-                    go('.value').addClass('warning-input')
-                    alertCustom("error", 'Digite um valor acima de 0');
+                if (
+                    !go(".value").val() ||
+                    go(".value").val().replace(",", "").replace(".", "") == 0
+                ) {
+                    go(".value").focus();
+                    go(".value").addClass("warning-input");
+                    alertCustom("error", "Digite um valor acima de 0");
                     return false;
                 }
             }
 
-            rules[editingRule1].buy = go('#buy1').val(),
-                rules[editingRule1].qtde = go('.qtde').val(),
-                rules[editingRule1].value = rules[editingRule1].type == 'percent' ? go('.percent').val() : go('.value').val()
+            (rules[editingRule1].buy = go("#buy1").val()),
+                (rules[editingRule1].qtde = go(".qtde").val()),
+                (rules[editingRule1].value =
+                    rules[editingRule1].type == "percent"
+                        ? go(".percent").val()
+                        : go(".value").val());
             mount_rules(rules, 1);
 
+            $(".finish-btn").prop("disabled", false);
 
-
-
-
-            $('.finish-btn').prop('disabled', false);
-
-            $(this).parents('.rule_holder').find('.rule_box_edit').hide()
-            $(this).parents('.rule_holder').find('.rule_box').show()
-        })
+            $(this).parents(".rule_holder").find(".rule_box_edit").hide();
+            $(this).parents(".rule_holder").find(".rule_box").show();
+        });
     }
-    var editingRule1 = 0
+    var editingRule1 = 0;
 
+    $("#type_percent").on("click", function () {
+        $("#percent").show();
+        $("#value").hide();
+    });
+    $("#type_value").on("click", function () {
+        $("#value").show();
+        $("#percent").hide();
+    });
+    $("#add-coupon").on("click", function () {
+        $("#select-type").show();
+        $("#select-coupon").hide();
+        $("#select-discount").hide();
 
+        $(".step1").show();
+        $(".step2").hide();
 
+        $("#step1").show();
+        $("#step2").hide();
 
-    $("#type_percent").on('click', function () {
+        $("#select-type-body").css({ height: "281px" });
 
-        $("#percent").show()
-        $("#value").hide()
-    })
-    $("#type_value").on('click', function () {
+        $("#modal-create-holder").css({ width: "400px" });
 
-        $("#value").show()
-        $("#percent").hide()
-    })
-    $("#add-coupon").on('click', function () {
+        $("#create_name").hide();
 
-        $('#select-type').show();
-        $('#select-coupon').hide();
-        $('#select-discount').hide();
-
-        $('.step1').show()
-        $('.step2').hide()
-
-        $('#step1').show()
-        $('#step2').hide()
-
-        $('#select-type-body').css({ 'height': '281px' });
-
-        $('#modal-create-holder').css({ 'width': '400px' });
-
-        $('#create_name').hide()
-
-
-        items_selected = []
+        items_selected = [];
         //run_search('',1)
-        $('#search_input_description_value').val('')
-
-    })
-
-    $('.next-btn').on('click', function () {
-        $('#step1').hide();
-        $('#step2').show();
-        $('.finish-btn').prop('disabled', false)
-
-
-    })
-
-    $('.back-btn').on('click', function () {
-        $('#step2').hide();
-        $('#step1').show();
-        $('#search_input').focus();
-    })
-
-    $('.cancel-btn').on('click', function () {
-        $('#select-type').show();
-        $('#select-coupon').hide();
-        $('#select-discount').hide();
-
-        $('#edit-finish-btn').show()
-        $('#plans-actions').hide()
-
-        $('#select-type-body').css({ 'height': '281px' });
-
-        $('#modal-create-holder').css({ 'width': '400px' });
-
-        $('#create_name').hide()
-
-    })
-
-    $('#coupon-modals input').on('change', function () {
-        $(this).val($(this).val().replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, ''))
-
-    })
-
-    $('#coupon').on('click', function () {
-
-        $('#date_range').removeClass('warning-input')
-        $('#date_range').val('')
-
-        $('#search_result, #search_result2').html('');
-
-        $('#modal-create-holder').css({ 'width': '600px' });
-
-
-
-        $('.search_coupon').val('')
-
-        $('#select-type').fadeOut('fast', '', function () {
-
-            $('#select-coupon').fadeIn('fast', '', function () {
-
-                $('.search_coupon').trigger('focus');
-
-                $('#search_input_description_value').val('')
-                run_search('', 1)
-
-
-            })
-        })
-
-
-
-        $('#c_name').val('')
-        $('#c_code').val('')
-        $('#discount_value').val('')
-        $('#percent_value').val('')
-        $('#minimum_value').val('')
-        $('#nao_vence').prop('checked', false)
-
-        items_selected = []
-
+        $("#search_input_description_value").val("");
     });
 
-    $('#discount').on('click', function () {
+    $(".next-btn").on("click", function () {
+        $("#step1").hide();
+        $("#step2").show();
+        $(".finish-btn").prop("disabled", false);
+    });
 
-        $('#select-type-body').animate(
-            { 'height': '417px' },
-            '400',
-            'swing',
+    $(".back-btn").on("click", function () {
+        $("#step2").hide();
+        $("#step1").show();
+        $("#search_input").focus();
+    });
+
+    $(".cancel-btn").on("click", function () {
+        $("#select-type").show();
+        $("#select-coupon").hide();
+        $("#select-discount").hide();
+
+        $("#edit-finish-btn").show();
+        $("#plans-actions").hide();
+
+        $("#select-type-body").css({ height: "281px" });
+
+        $("#modal-create-holder").css({ width: "400px" });
+
+        $("#create_name").hide();
+    });
+
+    $("#coupon-modals input").on("change", function () {
+        $(this).val(
+            $(this)
+                .val()
+                .replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")
+        );
+    });
+
+    $("#coupon").on("click", function () {
+        $("#date_range").removeClass("warning-input");
+        $("#date_range").val("");
+
+        $("#search_result, #search_result2").html("");
+
+        $("#modal-create-holder").css({ width: "600px" });
+
+        $(".search_coupon").val("");
+
+        $("#select-type").fadeOut("fast", "", function () {
+            $("#select-coupon").fadeIn("fast", "", function () {
+                $(".search_coupon").trigger("focus");
+
+                $("#search_input_description_value").val("");
+                run_search("", 1);
+            });
+        });
+
+        $("#c_name").val("");
+        $("#c_code").val("");
+        $("#discount_value").val("");
+        $("#percent_value").val("");
+        $("#minimum_value").val("");
+        $("#nao_vence").prop("checked", false);
+
+        items_selected = [];
+    });
+
+    $("#discount").on("click", function () {
+        $("#select-type-body").animate(
+            { height: "417px" },
+            "400",
+            "swing",
             slide_name
         );
 
         function slide_name(params) {
-            $('#create_name').fadeIn();
-            $('#new_name').val('');
-            $('#new_name').focus();
+            $("#create_name").fadeIn();
+            $("#new_name").val("");
+            $("#new_name").focus();
         }
-
-
-
-
     });
 
-    $('#new_continue').on('click', function () {
+    $("#new_continue").on("click", function () {
+        toggleDiscountRulesAlert(1);
 
-        toggleDiscountRulesAlert(1)
+        $("#date_range").prop("disabled", false);
 
-        $('#date_range').prop('disabled', false)
+        $("#search_result, #search_result2").html("");
 
-        $('#search_result, #search_result2').html('');
-
-        if (!$('#new_name').val()) {
-            $('#new_name').focus()
-            return false
+        if (!$("#new_name").val()) {
+            $("#new_name").focus();
+            return false;
         }
 
+        $("#discount_name").val($("#new_name").val());
 
-        $('#discount_name').val($('#new_name').val())
+        $("#select-type").fadeOut("fast", "", function () {
+            $("#select-discount").fadeIn("fast", "", function () {
+                $("#search_input").trigger("focus");
 
+                $("#search_input_description_value").val("");
+                run_search("", 1);
+            });
+        });
 
-        $('#select-type').fadeOut('fast', '', function () {
+        $("#new_namme").val("");
+        $("#search_input").val("");
 
-            $('#select-discount').fadeIn('fast', '', function () {
+        $("#modal-create-holder").css({ width: "600px" });
 
-                $('#search_input').trigger('focus');
-
-                $('#search_input_description_value').val('')
-                run_search('', 1)
-
-
-            })
-        })
-
-
-
-
-        $('#new_namme').val('')
-        $('#search_input').val('')
-
-        $('#modal-create-holder').css({ 'width': '600px' });
-
-
-        items_selected = []
-        rules = []
-        mount_rules(rules)
-    })
-
-
-
-
+        items_selected = [];
+        rules = [];
+        mount_rules(rules);
+    });
 
     // Search type event
-    var searchTimeout
-    $('#search_input, #search_input2').on('keyup', function () {
+    var searchTimeout;
+    $("#search_input, #search_input2").on("keyup", function () {
+        var search = $(this).val();
 
-
-        var search = $(this).val()
-
-        $('[data-toggle="tooltip"]').tooltip('dispose')
-        clearTimeout(searchTimeout)
-        searchTimeout = setTimeout(
-            () => {
-                run_search(search)
-            },
-            1200
-        )
-
-
-    })
-
+        $('[data-toggle="tooltip"]').tooltip("dispose");
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            run_search(search);
+        }, 1200);
+    });
 
     var items_placeholder = `<div id="items_loading">
     <div class="item_placeholder"></div>
@@ -2237,13 +2305,12 @@ $(function () {
     <div class="item_placeholder"></div>
     <div class="item_placeholder"></div>
     <div class="item_placeholder"></div>
-    <div class="item_placeholder"></div> </div>`
+    <div class="item_placeholder"></div> </div>`;
 
-    var search_holder
+    var search_holder;
     // function run_search(search, now){
     //     search_holder = search
     //     var search2 = $('#search_input_description_value').val()
-
 
     //     var items_saved = mount_selected_items()
 
@@ -2357,50 +2424,65 @@ $(function () {
     // }
 
     // Create new cupouns
-    $('#discount_value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-    $('#minimum_value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-    $('#2discount_value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
-    $('#2minimum_value').maskMoney({ thousands: '.', decimal: ',', allowZero: true, prefix: '' });
+    $("#discount_value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+    $("#minimum_value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+    $("#2discount_value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
+    $("#2minimum_value").maskMoney({
+        thousands: ".",
+        decimal: ",",
+        allowZero: true,
+        prefix: "",
+    });
 
+    formatMoney("#discount_value");
+    formatMoney("#minimum_value");
+    formatMoney("#2discount_value");
+    formatMoney("#2minimum_value");
 
-    formatMoney('#discount_value')
-    formatMoney('#minimum_value')
-    formatMoney('#2discount_value')
-    formatMoney('#2minimum_value')
-
-
-    $('.coupon-next').click(function () {
-        $('.step1').hide()
-        $('.step2').show()
-        $('#c_name').focus()
-        $('#nao_vence').prop('checked', false)
-        $('#date_range').prop('disabled', false)
-
-    })
+    $(".coupon-next").click(function () {
+        $(".step1").hide();
+        $(".step2").show();
+        $("#c_name").focus();
+        $("#nao_vence").prop("checked", false);
+        $("#date_range").prop("disabled", false);
+    });
 
     // $('.add-coupon').click(function () {
     //     alert('i')
     // })
 
-    $('.add-coupon-back').click(function () {
-        $('.step2').hide()
-        $('.step1').show()
-        $('.search_coupon').focus()
+    $(".add-coupon-back").click(function () {
+        $(".step2").hide();
+        $(".step1").show();
+        $(".search_coupon").focus();
+    });
 
-    })
+    $("#c_type_value").click(function () {
+        $("#percent_opt").hide();
+        $("#money_opt").show();
+        $("#money_opt input").focus();
+    });
 
-
-    $('#c_type_value').click(function () {
-        $('#percent_opt').hide()
-        $('#money_opt').show()
-        $('#money_opt input').focus()
-    })
-
-    $('#c_type_percent').click(function () {
-        $('#money_opt').hide()
-        $('#percent_opt').show()
-        $('#percent_opt input').focus()
-    })
+    $("#c_type_percent").click(function () {
+        $("#money_opt").hide();
+        $("#percent_opt").show();
+        $("#percent_opt input").focus();
+    });
 
     // $('#c_name').keyup(validate_coupon);
     // $('#c_code').keyup(validate_coupon);
@@ -2413,15 +2495,17 @@ $(function () {
     function validate_coupon() {
         var ok = true;
         //
-        if (!$('#c_name').val()) ok = false;
+        if (!$("#c_name").val()) ok = false;
 
-        if (!$('#c_code').val()) ok = false;
+        if (!$("#c_code").val()) ok = false;
 
-        if (!$('#minimum_value').val()) ok = false;
+        if (!$("#minimum_value").val()) ok = false;
 
-        if ($('#c_type_value').prop('checked') && !$('#discount_value').val()) ok = false;
+        if ($("#c_type_value").prop("checked") && !$("#discount_value").val())
+            ok = false;
 
-        if ($('#c_type_percent').prop('checked') && !$('#percent_value').val()) ok = false;
+        if ($("#c_type_percent").prop("checked") && !$("#percent_value").val())
+            ok = false;
 
         //
         // if(ok){
@@ -2429,7 +2513,6 @@ $(function () {
         // }else{
         //     $('.add-coupon').prop('disabled',true)
         // }
-
     }
 
     // $('#value-edit, #value, #discount_value, #minimum_value, #2discount_value, #2minimum_value').on('change', function () {
@@ -2440,135 +2523,144 @@ $(function () {
     //     }
     // })
 
-    $(".add-coupon").on('click', function () {
-        if (!$('#c_name').val()) {
-            $('#c_name').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um nome para o cupom');
+    $(".add-coupon").on("click", function () {
+        if (!$("#c_name").val()) {
+            $("#c_name").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um nome para o cupom");
             return false;
         }
 
-        if (!$('#c_code').val()) {
-            $('#c_code').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um código para o cupom');
+        if (!$("#c_code").val()) {
+            $("#c_code").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um código para o cupom");
             return false;
         }
 
+        if (
+            $("#c_type_value").prop("checked") &&
+            (!$("#discount_value").val() ||
+                $("#discount_value").val().replace(",", "").replace(".", "") ==
+                    0)
+        ) {
+            $("#discount_value").focus().addClass("warning-input");
 
-        if ($('#c_type_value').prop('checked') && (!$('#discount_value').val() || $('#discount_value').val().replace(',', '').replace('.', '') == 0)) {
-            $('#discount_value').focus().addClass('warning-input')
-
-            alertCustom("error", 'Preencha um valor acima de R$ 0,00');
+            alertCustom("error", "Preencha um valor acima de R$ 0,00");
             return false;
         }
-        if ($('#c_type_percent').prop('checked') && (!$('#percent_value').val() || $('#percent_value').val() == 0)) {
-            $('#percent_value').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um valor acima de 0');
+        if (
+            $("#c_type_percent").prop("checked") &&
+            (!$("#percent_value").val() || $("#percent_value").val() == 0)
+        ) {
+            $("#percent_value").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um valor acima de 0");
 
             return false;
         }
-        if (!$('#minimum_value').val() || $('#minimum_value').val().replace(',', '').replace('.', '') == 0) {
-            alertCustom("error", 'Preencha um valor acima de R$ 0,00');
+        if (
+            !$("#minimum_value").val() ||
+            $("#minimum_value").val().replace(",", "").replace(".", "") == 0
+        ) {
+            alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
-            $('#minimum_value').focus().addClass('warning-input')
+            $("#minimum_value").focus().addClass("warning-input");
             return false;
         }
         // console.log($('#date_range').val(), $('#nao_vence').is(':checked')); return false;
-        if ($('#date_range').val() == '' && !$('#nao_vence').is(':checked')) {
-            $('#date_range').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
+        if ($("#date_range").val() == "" && !$("#nao_vence").is(":checked")) {
+            $("#date_range").focus().addClass("warning-input");
+            alertCustom(
+                "error",
+                'Preencha uma data de vencimento ou marque "Não vence"'
+            );
             return false;
         }
 
-        if ($('#c_type_value').prop('checked')) $('#c_value').val($('#discount_value').val());
+        if ($("#c_type_value").prop("checked"))
+            $("#c_value").val($("#discount_value").val());
 
-        if ($('#c_type_percent').prop('checked')) $('#c_value').val($('#percent_value').val());
+        if ($("#c_type_percent").prop("checked"))
+            $("#c_value").val($("#percent_value").val());
 
-        $('#c_plans').val(JSON.stringify(items_selected))
-        let formData = new FormData(document.getElementById('form-register-coupon'));
+        $("#c_plans").val(JSON.stringify(items_selected));
+        let formData = new FormData(
+            document.getElementById("form-register-coupon")
+        );
 
-
-
+        $(".add-coupon").attr("disabled", true);
 
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
             error: function (response) {
-
-
                 errorAjaxResponse(response);
+                $(".add-coupon").attr("disabled", false);
             },
             success: function success() {
-
-
-
-
-
-
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Cupom de desconto adicionado!");
                 atualizarCoupon();
 
                 $("#modal-button-close-4").click();
 
-            }
+                setTimeout(() => {
+                    $(".add-coupon").attr("disabled", false);
+                }, 1000);
+            },
         });
         return false;
-    })
+    });
 
-    $('#c-edit-name').click(edit_name);
+    $("#c-edit-name").click(edit_name);
 
     function edit_name() {
-        $(this).hide()
-        $('#c-edit-plans').hide()
-        $('#c-edit-rules').hide()
+        $(this).hide();
+        $("#c-edit-plans").hide();
+        $("#c-edit-rules").hide();
 
-        $('#c-display_name').hide()
-        $('#c-display_name_edit').show()
-        $('#edit-name-box-c').animate({ 'height': 162 })
+        $("#c-display_name").hide();
+        $("#c-display_name_edit").show();
+        $("#edit-name-box-c").animate({ height: 162 });
 
+        $("#c-name-edit").focus();
+        $("#c-name-edit").val($("#c-d-name").html());
+        $("#c-code-edit").val($("#d-code").html());
 
-        $('#c-name-edit').focus()
-        $('#c-name-edit').val($('#c-d-name').html());
-        $('#c-code-edit').val($('#d-code').html());
+        $("#c-cancel_name_edit").click(function () {
+            $("#c-edit-name").show();
 
+            $("#c-display_name_edit").hide();
+            $("#c-display_name").show();
 
+            $("#c-edit-plans").show();
+            $("#c-edit-rules").show();
 
-        $('#c-cancel_name_edit').click(function () {
-
-            $('#c-edit-name').show()
-
-            $('#c-display_name_edit').hide()
-            $('#c-display_name').show()
-
-            $('#c-edit-plans').show()
-            $('#c-edit-rules').show()
-
-            $('#edit-name-box-c').animate({ height: 68 })
-
-        })
+            $("#edit-name-box-c").animate({ height: 68 });
+        });
     }
 
-    var cupom_data = []
-    $("#c-save_name_edit").on('click', function () {
-        let formData = new FormData(document.getElementById('form-update-coupon'));
-        let id = $('#coupon-id2').val();
-        $('#c-cancel_name_edit').click()
+    var cupom_data = [];
+    $("#c-save_name_edit").on("click", function () {
+        let formData = new FormData(
+            document.getElementById("form-update-coupon")
+        );
+        let id = $("#coupon-id2").val();
+        $("#c-cancel_name_edit").click();
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/discounts/" + id,
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             data: formData,
             processData: false,
@@ -2582,104 +2674,100 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-
                 alertCustom("success", data.message);
                 atualizarCoupon();
 
-                $('#c-display_name_edit').hide()
-                $('#c-display_name').show()
+                $("#c-display_name_edit").hide();
+                $("#c-display_name").show();
 
-                if ($('#c-name-edit').val())
-                    $('#c-d-name').html($('#c-name-edit').val())
+                if ($("#c-name-edit").val())
+                    $("#c-d-name").html($("#c-name-edit").val());
 
-                if ($('#c-code-edit').val())
-                    $('#d-code').html($('#c-code-edit').val())
+                if ($("#c-code-edit").val())
+                    $("#d-code").html($("#c-code-edit").val());
 
+                show_plans();
+                $(".c-plans-back").click();
 
-                show_plans()
-                $('.c-plans-back').click()
+                $("#c-edit-plans").show();
+                $("#c-edit-rules").show();
 
-                $('#c-edit-plans').show()
-                $('#c-edit-rules').show()
+                $("#c-edit-name").show();
 
-                $('#c-edit-name').show()
-
-                console.log('oi');
+                console.log("oi");
                 //coupon_rules()
                 // show_rules(edit_rules)
-                plans_count2()
+                plans_count2();
 
-                if (items_selected.length == 0)
-                    count_plans_coupons()
-
-
-            }
+                if (items_selected.length == 0) count_plans_coupons();
+            },
         });
-        return false
+        return false;
     });
 
+    function count_plans2() {
+        //thumbnails on editing
 
-    function count_plans2() { //thumbnails on editing
-
-        $('.edit-plans-thumbs').html('')
-
+        $(".edit-plans-thumbs").html("");
 
         $.ajax({
             data: {
                 total: 1,
-                list: 'plan',
-                search: '',
+                list: "plan",
+                search: "",
                 project_id: projectId,
                 //page: params.page || 1
-            }
-            ,
-
+            },
             method: "GET",
             url: "/api/plans/user-plans",
 
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
-            }, success: function success(response) {
-
-                var html_show_plans = ''
+            },
+            success: function success(response) {
+                var html_show_plans = "";
 
                 for (i in response.thumbnails) {
-                    var toolTip = 'aria-describedby="tt' + response.thumbnails[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + response.thumbnails[i].name + '"'
-                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
+                    var toolTip =
+                        'aria-describedby="tt' +
+                        response.thumbnails[i].id +
+                        '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                        response.thumbnails[i].name +
+                        '"';
+                    html_show_plans +=
+                        `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                     background-repeat: no-repeat; background-position: center center;
-                    background-size: cover !important; background: url('`+ response.thumbnails[i].products[0].photo + `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
+                    background-size: cover !important; background: url('` +
+                        response.thumbnails[i].products[0].photo +
+                        `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`;
                 }
 
-                $('.edit-plans-thumbs').html(html_show_plans)
+                $(".edit-plans-thumbs").html(html_show_plans);
 
-                $('[data-toggle="tooltip"]').tooltip('dispose')
+                $('[data-toggle="tooltip"]').tooltip("dispose");
 
                 $('[data-toggle="tooltip"]').tooltip({
-                    container: '.page'
+                    container: ".page",
                 });
 
                 if (response.total > 8) {
-                    var rest = response.total - 8
-                    $('.edit-plans-thumbs').append('<div style="margin-top:14px" class="plans_rest">+' + rest + '</div>')
-
+                    var rest = response.total - 8;
+                    $(".edit-plans-thumbs").append(
+                        '<div style="margin-top:14px" class="plans_rest">+' +
+                            rest +
+                            "</div>"
+                    );
                 }
-
-
-
-            }
+            },
         });
-
     }
 
-
-    $('#c-edit-plans').click(function () {
-
+    $("#c-edit-plans").click(function () {
         // console.log('oi');
         // $('#search_result, #search_result2').html('');
 
@@ -2687,376 +2775,381 @@ $(function () {
         //     $(this).val('');
         // })
 
-        $('#search_input2').val('')
-        $('#search_input_description').val('')
-        $('#search_input2').trigger('focus')
+        $("#search_input2").val("");
+        $("#search_input_description").val("");
+        $("#search_input2").trigger("focus");
 
-
-        $('#c-edit_step0').hide()
-        $('#c-edit_step1').show()
-
-
+        $("#c-edit_step0").hide();
+        $("#c-edit_step1").show();
 
         if (items_selected.length > 0) {
-            var items_thumbs = ''
+            var items_thumbs = "";
             for (i in items_selected) {
-
                 // if(i>7) break;
 
-                var toolTip = 'aria-describedby="tt' + items_selected[i].id + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' + items_selected[i].name + '"'
+                var toolTip =
+                    'aria-describedby="tt' +
+                    items_selected[i].id +
+                    '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+                    items_selected[i].name +
+                    '"';
 
-
-
-                items_thumbs += `
+                items_thumbs +=
+                    `
                 <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                 background-repeat: no-repeat; background-position: center center;
-                background-size: cover !important; background: url('`+ items_selected[i].image + `'), url('/build/global/img/produto.svg')"></span>`
-
+                background-size: cover !important; background: url('` +
+                    items_selected[i].image +
+                    `'), url('/build/global/img/produto.svg')"></span>`;
             }
 
-            $('.edit-plans-thumbs').html(items_thumbs)
+            $(".edit-plans-thumbs").html(items_thumbs);
 
             if (items_selected.length > 9) {
-
-                $('.edit-plans-thumbs-scroll').css('margin-bottom', 16)
-                $('#search_result2').css('height', 312)
-                $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
-                $('.edit-plans-thumbs-scroll').mCustomScrollbar({
-                    axis: 'x',
+                $(".edit-plans-thumbs-scroll").css("margin-bottom", 16);
+                $("#search_result2").css("height", 312);
+                $(".edit-plans-thumbs-scroll").mCustomScrollbar("destroy");
+                $(".edit-plans-thumbs-scroll").mCustomScrollbar({
+                    axis: "x",
                     advanced: {
-                        autoExpandHorizontalScroll: true
-                    }
-                })
+                        autoExpandHorizontalScroll: true,
+                    },
+                });
             } else {
-                $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
-                $('.edit-plans-thumbs-scroll').css('margin-bottom', 0)
-                $('#search_result2').css('height', 328)
-
+                $(".edit-plans-thumbs-scroll").mCustomScrollbar("destroy");
+                $(".edit-plans-thumbs-scroll").css("margin-bottom", 0);
+                $("#search_result2").css("height", 328);
             }
 
-            $('[data-toggle="tooltip"]').tooltip('dispose')
+            $('[data-toggle="tooltip"]').tooltip("dispose");
 
             $('[data-toggle="tooltip"]').tooltip({
-                container: '.page'
+                container: ".page",
             });
-
         } else {
-            count_plans2()
+            count_plans2();
         }
 
-        $('#search_input_description_value').val('')
-        run_search('', 1);
-
-    })
-
-    $('.c-plans-back').click(function () {
-        $('#c-edit_step1').hide()
-        $('#c-edit_step2').hide()
-
-        $('#c-edit_step0').show()
+        $("#search_input_description_value").val("");
+        run_search("", 1);
     });
 
-    $('.c-edit-plans-save').click(function () {
+    $(".c-plans-back").click(function () {
+        $("#c-edit_step1").hide();
+        $("#c-edit_step2").hide();
+
+        $("#c-edit_step0").show();
+    });
+
+    $(".c-edit-plans-save").click(function () {
         // console.log(items_selected);
-        $('#edited-plans').val(JSON.stringify(items_selected))
-        $('#c-save_name_edit').click()
-        plans_count()
+        $("#edited-plans").val(JSON.stringify(items_selected));
+        $("#c-save_name_edit").click();
+        plans_count();
     });
 
     function plans_count() {
         if (items_selected.length > 0) {
+            var plans_count =
+                items_selected.length +
+                " plano" +
+                (items_selected.length > 1 ? "s" : "");
+            $("#planos-count, #planos-count-edit").html(plans_count);
 
-            var plans_count = items_selected.length + ' plano' + (items_selected.length > 1 ? 's' : '')
-            $('#planos-count, #planos-count-edit').html(plans_count);
-
-            $('#plans_holder').css('height', 'auto')
-            $('#show_plans').css('margin-top', '10px')
-
+            $("#plans_holder").css("height", "auto");
+            $("#show_plans").css("margin-top", "10px");
 
             //$('#show_plans').addClass('mostrar_mais_detalhes')
-
         } else {
-            $('#plans_holder').css('height', '158px')
-            $('#show_plans').css('margin-top', '20px')
+            $("#plans_holder").css("height", "158px");
+            $("#show_plans").css("margin-top", "20px");
 
-            $('#planos-count, #planos-count-edit').html('Todos os planos');
+            $("#planos-count, #planos-count-edit").html("Todos os planos");
 
-            count_plans()
+            count_plans();
         }
 
         if (items_selected.length > 2 && items_selected.length < 11) {
-            $('#mostrar_mais').show();
-
+            $("#mostrar_mais").show();
         } else {
-            $('#mostrar_mais').hide();
-            $('#show_plans').removeClass('mostrar_mais_detalhes')
-            $('#show_plans').css({
-                height: "88px"
+            $("#mostrar_mais").hide();
+            $("#show_plans").removeClass("mostrar_mais_detalhes");
+            $("#show_plans").css({
+                height: "88px",
             });
-
         }
     }
 
-    $('#c-edit-rules').click(function () {
+    $("#c-edit-rules").click(function () {
+        setBodyHight("auto", 698);
 
-        setBodyHight('auto', 698);
-
-        $('#c-edit_step0').hide()
-        $('#c-edit_step2').show()
-        if ($('#nao_vence2').prop('checked')) {
-            $('#date_range2').prop('disabled', true)
+        $("#c-edit_step0").hide();
+        $("#c-edit_step2").show();
+        if ($("#nao_vence2").prop("checked")) {
+            $("#date_range2").prop("disabled", true);
         }
+    });
 
-    })
+    $(".rule-coupon-back").click(function () {
+        $("#c-edit_step2").hide();
+        $("#c-edit_step0").show();
+    });
 
-    $('.rule-coupon-back').click(function () {
-        $('#c-edit_step2').hide()
-        $('#c-edit_step0').show()
-    })
+    $("#2c_type_value").click(function () {
+        $("#2percent_opt").hide();
+        $("#2money_opt").show();
+        $("#2money_opt input").focus();
+    });
 
+    $("#2c_type_percent").click(function () {
+        $("#2money_opt").hide();
+        $("#2percent_opt").show();
+        $("#2percent_opt input").focus();
+    });
 
-    $('#2c_type_value').click(function () {
-        $('#2percent_opt').hide()
-        $('#2money_opt').show()
-        $('#2money_opt input').focus()
-    })
-
-    $('#2c_type_percent').click(function () {
-        $('#2money_opt').hide()
-        $('#2percent_opt').show()
-        $('#2percent_opt input').focus()
-    })
-
-    $('.update-rule-coupon').click(function () {
-
-        if ($('#2c_type_value').prop('checked') && (!$('#2discount_value').val() || $('#2discount_value').val().replace(',', '').replace('.', '') == 0)) {
-            $('#2discount_value').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um valor acima de R$ 0,00');
+    $(".update-rule-coupon").click(function () {
+        if (
+            $("#2c_type_value").prop("checked") &&
+            (!$("#2discount_value").val() ||
+                $("#2discount_value").val().replace(",", "").replace(".", "") ==
+                    0)
+        ) {
+            $("#2discount_value").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
             return false;
         }
-        if ($('#2c_type_percent').prop('checked') && (!$('#2percent_value').val() || $('#2percent_value').val() == 0)) {
-            $('#2percent_value').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um valor acima de 0');
+        if (
+            $("#2c_type_percent").prop("checked") &&
+            (!$("#2percent_value").val() || $("#2percent_value").val() == 0)
+        ) {
+            $("#2percent_value").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um valor acima de 0");
 
             return false;
         }
-        if (!$('#2minimum_value').val() || $('#2minimum_value').val().replace(',', '').replace('.', '') == 0) {
-            $('#2minimum_value').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha um valor acima de R$ 0,00');
+        if (
+            !$("#2minimum_value").val() ||
+            $("#2minimum_value").val().replace(",", "").replace(".", "") == 0
+        ) {
+            $("#2minimum_value").focus().addClass("warning-input");
+            alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
             return false;
         }
 
-        if ($('#date_range2').val() == '' && !$('#nao_vence2').is(':checked')) {
+        if ($("#date_range2").val() == "" && !$("#nao_vence2").is(":checked")) {
             //$('#date_range2').focus().addClass('warning-input')
-            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
+            alertCustom(
+                "error",
+                'Preencha uma data de vencimento ou marque "Não vence"'
+            );
             return false;
         }
 
-        if ($('#2c_type_value').prop('checked')) $('#2c_value').val($('#2discount_value').val());
+        if ($("#2c_type_value").prop("checked"))
+            $("#2c_value").val($("#2discount_value").val());
 
-        if ($('#2c_type_percent').prop('checked')) $('#2c_value').val($('#2percent_value').val());
+        if ($("#2c_type_percent").prop("checked"))
+            $("#2c_value").val($("#2percent_value").val());
 
-        cupom_data.nao_vence = $('#nao_vence2').prop('checked') ? 1 : 0
-        cupom_data.value = $('#2c_value').val()
-        cupom_data.rule_value = $('#2minimum_value').val()
-        cupom_data.type = $('#2c_type_value').prop('checked') ? 1 : 0
-        cupom_data.expires = $('#date_range2').val() ? ' ' + $('#date_range2').val() : null
+        cupom_data.nao_vence = $("#nao_vence2").prop("checked") ? 1 : 0;
+        cupom_data.value = $("#2c_value").val();
+        cupom_data.rule_value = $("#2minimum_value").val();
+        cupom_data.type = $("#2c_type_value").prop("checked") ? 1 : 0;
+        cupom_data.expires = $("#date_range2").val()
+            ? " " + $("#date_range2").val()
+            : null;
 
         if (cupom_data.expires) {
-            var da = moment(cupom_data.expires, 'DD/MM/YYYY');
+            var da = moment(cupom_data.expires, "DD/MM/YYYY");
             var db = moment.now();
 
-            cupom_data.expires_days = da.diff(db, 'days')
-            cupom_data.expires_days++
+            cupom_data.expires_days = da.diff(db, "days");
+            cupom_data.expires_days++;
         }
 
-        cupom_data.code = $('#d-code').html()
-        if ($('#nao_vence2').prop('checked')) cupom_data.nao_vence = 1
+        cupom_data.code = $("#d-code").html();
+        if ($("#nao_vence2").prop("checked")) cupom_data.nao_vence = 1;
 
+        coupon_rules(cupom_data);
+        $("#c-save_name_edit").click();
+    });
 
-        coupon_rules(cupom_data)
-        $('#c-save_name_edit').click()
-
-
-    })
-
-    $('#c-edit_status').click(function () {
-        if ($('#c-expire-label').html() == 'Vencido') {
+    $("#c-edit_status").click(function () {
+        if ($("#c-expire-label").html() == "Vencido") {
             alertCustom("error", "Não é possivel ativar um cupom vencido!");
-            return false
+            return false;
         }
-        if ($(this).is(':checked')) {
+        if ($(this).is(":checked")) {
             // $('#c-edit_status_label').css('color', '#41DC8F');
-            $('#c-edit_status_label').html('Desconto ativo');
-
+            $("#c-edit_status_label").html("Desconto ativo");
         } else {
             // $('#c-edit_status_label').css('color', '#9B9B9B');
-            $('#c-edit_status_label').html('Desativado');
+            $("#c-edit_status_label").html("Desativado");
         }
-        $('#c-set_status').val(1)
+        $("#c-set_status").val(1);
 
-        $('#c-save_name_edit').click()
-    })
+        $("#c-save_name_edit").click();
+    });
 
-    $('#all-plans').click(function () {
-        items_selected = []
-        $('.coupon-next').click()
+    $("#all-plans").click(function () {
+        items_selected = [];
+        $(".coupon-next").click();
 
-        return false
-    })
+        return false;
+    });
 
+    $("#all-plans2").click(function () {
+        items_selected = [];
+        $(".c-edit-plans-save").click();
+        return false;
+    });
 
-    $('#all-plans2').click(function () {
-        items_selected = []
-        $('.c-edit-plans-save').click()
-        return false
-    })
+    $("#all-plans3").click(function () {
+        items_selected = [];
+        $("#step1").hide();
+        $("#step2").show();
 
-    $('#all-plans3').click(function () {
+        return false;
+    });
 
-        items_selected = []
-        $('#step1').hide();
-        $('#step2').show();
+    $("#all-plans4").click(function () {
+        items_selected = [];
+        $(".btn-edit-plans-save").click();
+        return false;
+    });
 
-        return false
-    })
+    $("#date_range, #date_range2").mask("99/99/9999", {
+        placeholder: "DD/MM/YYYY",
+    });
 
-    $('#all-plans4').click(function () {
-        items_selected = []
-        $('.btn-edit-plans-save').click()
-        return false
-    })
-
-
-    $('#date_range, #date_range2').mask('99/99/9999', { placeholder: "DD/MM/YYYY" });
-
-    $('#date_range').val('DD/MM/YYYY')
+    $("#date_range")
+        .val("DD/MM/YYYY")
         .dateRangePicker({
-            format: 'DD/MM/YYYY',
+            format: "DD/MM/YYYY",
             singleDate: true,
             showShortcuts: true,
             startDate: new Date(),
             endDate: false,
             selectForward: true,
-            container: '#modal-create-coupon',
+            container: "#modal-create-coupon",
             customShortcuts: [
                 {
-                    name: 'Hoje',
-                    dates: () => [moment().startOf('day').toDate(), new Date()]
+                    name: "Hoje",
+                    dates: () => [moment().startOf("day").toDate(), new Date()],
                 },
                 {
-                    name: '7 dias',
-                    dates: () => [moment().add(6, 'days').toDate(), moment().add(6, 'days').toDate()]
+                    name: "7 dias",
+                    dates: () => [
+                        moment().add(6, "days").toDate(),
+                        moment().add(6, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '15 dias',
-                    dates: () => [moment().add(14, 'days').toDate(), moment().add(14, 'days').toDate()]
+                    name: "15 dias",
+                    dates: () => [
+                        moment().add(14, "days").toDate(),
+                        moment().add(14, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '1 mês',
-                    dates: () => [moment().add(30, 'days').toDate(), moment().add(30, 'days').toDate()]
+                    name: "1 mês",
+                    dates: () => [
+                        moment().add(30, "days").toDate(),
+                        moment().add(30, "days").toDate(),
+                    ],
                 },
                 {
-                    name: '3 meses',
-                    dates: () => [moment().add(90, 'days').toDate(), moment().add(90, 'days').toDate()]
-                }
+                    name: "3 meses",
+                    dates: () => [
+                        moment().add(90, "days").toDate(),
+                        moment().add(90, "days").toDate(),
+                    ],
+                },
             ],
-        }).bind('datepicker-opened', function () {
-            $('.modal-open .modal').animate({ scrollTop: $(document).height() + $(window).height() });
-            $('.date-picker-wrapper').attr('tabindex', 0).focus()
-
+        })
+        .bind("datepicker-opened", function () {
+            $(".modal-open .modal").animate({
+                scrollTop: $(document).height() + $(window).height(),
+            });
+            $(".date-picker-wrapper").attr("tabindex", 0).focus();
         });
 
-
-
-    $('#mostrar_mais').click(function () {
-        if ($('#show_plans').hasClass('mostrar_menos')) {
-
-            $('#show_plans').stop(true, false).animate({
-                height: "164px"
+    $("#mostrar_mais").click(function () {
+        if ($("#show_plans").hasClass("mostrar_menos")) {
+            $("#show_plans").stop(true, false).animate({
+                height: "164px",
             });
 
-            $('#show_plans').removeClass('mostrar_menos')
+            $("#show_plans").removeClass("mostrar_menos");
 
             //$('#show_plans').addClass('mostrar_mais_detalhes')
 
-            $('#mostrar_mais_label').html('Mostrar menos')
-            $('#mm-arrow-down').hide()
-            $('#mm-arrow-up').show()
-
+            $("#mostrar_mais_label").html("Mostrar menos");
+            $("#mm-arrow-down").hide();
+            $("#mm-arrow-up").show();
         } else {
             // $('#show_plans').stop(true, false).animate({
             //     height: "88px"
             // });
-            $('#show_plans').css('height', 88);
+            $("#show_plans").css("height", 88);
 
-            var myDiv = document.getElementById('show_plans');
+            var myDiv = document.getElementById("show_plans");
             myDiv.scrollTop = 0;
 
-            $('#show_plans').removeClass('mostrar_mais_detalhes')
+            $("#show_plans").removeClass("mostrar_mais_detalhes");
 
-            $('#show_plans').addClass('mostrar_menos')
+            $("#show_plans").addClass("mostrar_menos");
 
-            $('#mostrar_mais_label').html('Ver todos os planos')
-            $('#mm-arrow-up').hide()
-            $('#mm-arrow-down').show()
+            $("#mostrar_mais_label").html("Ver todos os planos");
+            $("#mm-arrow-up").hide();
+            $("#mm-arrow-down").show();
         }
+    });
 
-    })
-
-
-
-    $('#mostrar_mais2').click(function () {
-        if ($('#c-show_plans').hasClass('mostrar_menos')) {
-
-            $('#c-show_plans').stop(true, false).animate({
-                height: "164px"
+    $("#mostrar_mais2").click(function () {
+        if ($("#c-show_plans").hasClass("mostrar_menos")) {
+            $("#c-show_plans").stop(true, false).animate({
+                height: "164px",
             });
 
-            $('#c-show_plans').removeClass('mostrar_menos')
+            $("#c-show_plans").removeClass("mostrar_menos");
 
             //$('#c-show_plans').addClass('mostrar_mais_detalhes')
 
-            $('#mostrar_mais_label2').html('Mostrar menos')
-            $('#mm-arrow-down2').hide()
-            $('#mm-arrow-up2').show()
-
+            $("#mostrar_mais_label2").html("Mostrar menos");
+            $("#mm-arrow-down2").hide();
+            $("#mm-arrow-up2").show();
         } else {
             // $('#c-show_plans').stop(true, false).animate({
             //     height: "88px"
             // });
-            $('#c-show_plans').css('height', 88);
+            $("#c-show_plans").css("height", 88);
 
-            var myDiv = document.getElementById('c-show_plans');
+            var myDiv = document.getElementById("c-show_plans");
             myDiv.scrollTop = 0;
 
-            $('#c-show_plans').removeClass('mostrar_mais_detalhes')
+            $("#c-show_plans").removeClass("mostrar_mais_detalhes");
 
-            $('#c-show_plans').addClass('mostrar_menos')
+            $("#c-show_plans").addClass("mostrar_menos");
 
-            $('#mostrar_mais_label2').html('Ver todos os planos')
-            $('#mm-arrow-up2').hide()
-            $('#mm-arrow-down2').show()
+            $("#mostrar_mais_label2").html("Ver todos os planos");
+            $("#mm-arrow-up2").hide();
+            $("#mm-arrow-down2").show();
         }
-
-    })
+    });
 
     function toggleDiscountRulesAlert(rules) {
         if (rules == 0) {
+            $(".inputs-warning").addClass("warning");
+            $(".warning-text").fadeIn();
 
-            $('.inputs-warning').addClass('warning')
-            $('.warning-text').fadeIn()
-
-            return false
-
+            return false;
         } else {
-            $('.inputs-warning').removeClass('warning')
-            $('.warning-text').fadeOut()
+            $(".inputs-warning").removeClass("warning");
+            $(".warning-text").fadeOut();
         }
-        return true
+        return true;
     }
-
-
 });

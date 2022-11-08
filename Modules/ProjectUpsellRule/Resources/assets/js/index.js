@@ -306,6 +306,9 @@ $(document).ready(function () {
     $(document).on("click", ".bt-upsell-save", function () {
         var form_data = new FormData(document.getElementById("form_add_upsell"));
         form_data.append("project_id", projectId);
+
+        $(".bt-upsell-save").attr("disabled", true);
+
         $.ajax({
             method: "POST",
             url: "/api/projectupsellrule",
@@ -319,12 +322,14 @@ $(document).ready(function () {
             data: form_data,
             error: function error(response) {
                 errorAjaxResponse(response);
+                $(".bt-upsell-save").attr("disabled", false);
             },
             success: function success(response) {
                 $("#modal_add_upsell").modal("hide");
                 loadUpsell();
                 alertCustom("success", response.message);
                 $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger("change");
+                $(".bt-upsell-save").attr("disabled", false);
             },
         });
     });
@@ -408,7 +413,11 @@ $(document).ready(function () {
                 $(".upsell-discount").html(`${upsell.discount != 0 ? `${upsell.discount}` : `Valor sem desconto`}`);
                 if (upsell.discount != 0) {
                     if (upsell.type == 1) {
-                        $(".upsell-discount").html(formatMoney(upsell.discount));
+                        // $(".upsell-discount").html(formatMoney(upsell.discount));
+                        $(".upsell-discount").html(
+                            upsell.discount.toLocaleString("pt-br", { minimumFractionDigits: 2 })
+                        );
+
                         $(".upsell-discount").prepend("R$");
                     } else {
                         $(".upsell-discount").append("%");

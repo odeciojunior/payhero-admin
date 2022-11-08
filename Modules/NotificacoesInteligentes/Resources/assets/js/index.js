@@ -26,9 +26,12 @@ $(document).ready(function () {
 
         $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
-            $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if (project.status == 1) $hasProjects = true;
-            });
+            $.each(
+                companiesAndProjects.company_default_projects,
+                function (i, project) {
+                    if (project.status == 1) $hasProjects = true;
+                }
+            );
         }
 
         if (!$hasProjects) {
@@ -40,10 +43,14 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/notificacoesinteligentes?company=" + $(".company-navbar").val(),
+                url:
+                    "/api/apps/notificacoesinteligentes?company=" +
+                    $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: (response) => {
@@ -53,7 +60,10 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     $("#project_id, #select_projects_edit").html("");
-                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
+                    fillSelectProject(
+                        companiesAndProjects,
+                        "#project_id, #select_projects_edit"
+                    );
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
                     } else {
@@ -97,11 +107,16 @@ $(document).ready(function () {
                                 <div class="card shadow card-edit" project=` +
                 data.id +
                 ` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` +
+
+                <div class="d-flex align-items-center justify-content-center"   >
+                <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
+                </div>
+
+
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
@@ -129,7 +144,9 @@ $(document).ready(function () {
 
     //create
     $("#btn-add-integration").on("click", function () {
-        $(".modal-title").html("Adicionar nova Integração com Notificacoes Inteligentes");
+        $(".modal-title").html(
+            "Adicionar nova Integração com Notificacoes Inteligentes"
+        );
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").removeClass("btn-update");
         $("#bt_integration").text("Adicionar integração");
@@ -141,7 +158,9 @@ $(document).ready(function () {
 
     //edit
     $(document).on("click", ".card-edit", function () {
-        $(".modal-title").html("Editar Integração com Notificacoes Inteligentes");
+        $(".modal-title").html(
+            "Editar Integração com Notificacoes Inteligentes"
+        );
         $("#bt_integration").addClass("btn-update");
         $("#bt_integration").removeClass("btn-save");
         $("#bt_integration").text("Atualizar");
@@ -151,7 +170,8 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/notificacoesinteligentes/" + $(this).attr("project"),
+            url:
+                "/api/apps/notificacoesinteligentes/" + $(this).attr("project"),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -167,26 +187,52 @@ $(document).ready(function () {
                 $("#token_edit").val(response.data.token);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
+                $("#boleto_generated_edit").prop(
+                    "checked",
+                    $("#boleto_generated_edit").val() == "1"
+                );
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
+                $("#boleto_paid_edit").prop(
+                    "checked",
+                    $("#boleto_paid_edit").val() == "1"
+                );
 
-                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
+                $("#credit_card_refused_edit").val(
+                    response.data.credit_card_refused
+                );
+                $("#credit_card_refused_edit").prop(
+                    "checked",
+                    $("#credit_card_refused_edit").val() == "1"
+                );
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
+                $("#credit_card_paid_edit").prop(
+                    "checked",
+                    $("#credit_card_paid_edit").val() == "1"
+                );
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
+                $("#abandoned_cart_edit").prop(
+                    "checked",
+                    $("#abandoned_cart_edit").val() == "1"
+                );
 
                 $("#pix_generated_edit").val(response.data.pix_generated);
-                $("#pix_generated_edit").prop("checked", $("#pix_generated_edit").val() == "1");
+                $("#pix_generated_edit").prop(
+                    "checked",
+                    $("#pix_generated_edit").val() == "1"
+                );
                 $("#pix_paid_edit").val(response.data.pix_paid);
-                $("#pix_paid_edit").prop("checked", $("#pix_paid_edit").val() == "1");
+                $("#pix_paid_edit").prop(
+                    "checked",
+                    $("#pix_paid_edit").val() == "1"
+                );
                 $("#pix_expired_edit").val(response.data.pix_expired);
-                $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
+                $("#pix_expired_edit").prop(
+                    "checked",
+                    $("#pix_expired_edit").val() == "1"
+                );
             },
         });
     });
@@ -197,7 +243,9 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(document.getElementById("form_add_integration"));
+        var form_data = new FormData(
+            document.getElementById("form_add_integration")
+        );
 
         $.ajax({
             method: "POST",
@@ -228,7 +276,9 @@ $(document).ready(function () {
             return false;
         }
         var integrationId = $("#integration_id").val();
-        var form_data = new FormData(document.getElementById("form_update_integration"));
+        var form_data = new FormData(
+            document.getElementById("form_update_integration")
+        );
 
         $.ajax({
             method: "POST",
@@ -261,25 +311,31 @@ $(document).ready(function () {
     });
 
     //destroy
-    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
-        e.stopPropagation();
-        var project = $(this).attr("project");
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
 
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/notificacoesinteligentes/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index();
-                alertCustom("success", response.message);
-            },
-        });
-    });
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/notificacoesinteligentes/" + project,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                },
+            });
+        }
+    );
 });

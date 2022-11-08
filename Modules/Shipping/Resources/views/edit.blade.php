@@ -9,6 +9,9 @@
     <input type="hidden"
            class="shipping-id"
            value="">
+    <input type="hidden"
+           name="regions_values"
+           class="regions_values">
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">

@@ -21,9 +21,12 @@ $(document).ready(function () {
 
         $hasProjects = false;
         if (companiesAndProjects.company_default_projects) {
-            $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if (project.status == 1) $hasProjects = true;
-            });
+            $.each(
+                companiesAndProjects.company_default_projects,
+                function (i, project) {
+                    if (project.status == 1) $hasProjects = true;
+                }
+            );
         }
 
         if (!$hasProjects) {
@@ -35,10 +38,13 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 method: "GET",
-                url: "/api/apps/whatsapp2?company=" + $(".company-navbar").val(),
+                url:
+                    "/api/apps/whatsapp2?company=" + $(".company-navbar").val(),
                 dataType: "json",
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
                     Accept: "application/json",
                 },
                 error: (response) => {
@@ -48,7 +54,10 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     $("#project_id, #select_projects_edit").html("");
-                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
+                    fillSelectProject(
+                        companiesAndProjects,
+                        "#project_id, #select_projects_edit"
+                    );
                     $("#inputTokenWhats2").val(response.token_whatsapp2);
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
@@ -95,7 +104,9 @@ $(document).ready(function () {
         $("#url_checkout").val("");
         $("#url_order").val("");
         $(":checkbox").prop("checked", true).val(1);
-        $("#project_id, #select_projects_edit").prop("selectedIndex", 0).change();
+        $("#project_id, #select_projects_edit")
+            .prop("selectedIndex", 0)
+            .change();
     }
 
     //draw the integration cards
@@ -106,11 +117,13 @@ $(document).ready(function () {
                                 <div class="card shadow card-edit" project=` +
                 data.id +
                 ` style='cursor:pointer;'>
+                <div class="d-flex align-items-center justify-content-center"   >
                                     <img class="card-img-top img-fluid w-full" src=` +
                 data.project_photo +
                 ` onerror="this.onerror=null;this.src='/build/global/img/produto.svg';" alt="` +
                 data.project_name +
                 `"/>
+                </div>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
@@ -176,32 +189,58 @@ $(document).ready(function () {
                 $("#url_order_edit").val(response.data.url_order);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
-                $("#boleto_generated_edit").prop("checked", $("#boleto_generated_edit").val() == "1");
+                $("#boleto_generated_edit").prop(
+                    "checked",
+                    $("#boleto_generated_edit").val() == "1"
+                );
 
                 $("#boleto_paid_edit").val(response.data.boleto_paid);
-                $("#boleto_paid_edit").prop("checked", $("#boleto_paid_edit").val() == "1");
+                $("#boleto_paid_edit").prop(
+                    "checked",
+                    $("#boleto_paid_edit").val() == "1"
+                );
 
-                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                $("#credit_card_refused_edit").prop("checked", $("#credit_card_refused_edit").val() == "1");
+                $("#credit_card_refused_edit").val(
+                    response.data.credit_card_refused
+                );
+                $("#credit_card_refused_edit").prop(
+                    "checked",
+                    $("#credit_card_refused_edit").val() == "1"
+                );
 
                 $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                $("#credit_card_paid_edit").prop("checked", $("#credit_card_paid_edit").val() == "1");
+                $("#credit_card_paid_edit").prop(
+                    "checked",
+                    $("#credit_card_paid_edit").val() == "1"
+                );
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                $("#abandoned_cart_edit").prop("checked", $("#abandoned_cart_edit").val() == "1");
+                $("#abandoned_cart_edit").prop(
+                    "checked",
+                    $("#abandoned_cart_edit").val() == "1"
+                );
 
                 $("#pix_expired_edit").val(response.data.pix_expired);
-                $("#pix_expired_edit").prop("checked", $("#pix_expired_edit").val() == "1");
+                $("#pix_expired_edit").prop(
+                    "checked",
+                    $("#pix_expired_edit").val() == "1"
+                );
 
                 $("#pix_paid_edit").val(response.data.pix_paid);
-                $("#pix_paid_edit").prop("checked", $("#pix_paid_edit").val() == "1");
+                $("#pix_paid_edit").prop(
+                    "checked",
+                    $("#pix_paid_edit").val() == "1"
+                );
             },
         });
     });
 
     //store
     $(document).on("click", ".btn-save", function () {
-        if ($("#url_checkout").val().length < 0 || $("#url_order").val().length < 0) {
+        if (
+            $("#url_checkout").val().length < 0 ||
+            $("#url_order").val().length < 0
+        ) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
@@ -230,7 +269,10 @@ $(document).ready(function () {
 
     //update
     $(document).on("click", ".btn-update", function () {
-        if ($("#url_checkout_edit").val().length < 0 || $("#url_order_edit").val().length < 0) {
+        if (
+            $("#url_checkout_edit").val().length < 0 ||
+            $("#url_order_edit").val().length < 0
+        ) {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
@@ -246,7 +288,9 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
-            data: new FormData(document.getElementById("form_update_integration")),
+            data: new FormData(
+                document.getElementById("form_update_integration")
+            ),
             error: (response) => {
                 errorAjaxResponse(response);
             },
@@ -264,31 +308,41 @@ $(document).ready(function () {
         $("#modal-delete-integration").modal("show");
     });
     //destroy
-    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
-        e.stopPropagation();
-        var project = $(this).attr("project");
-        var card = $("a[class='delete-integration float-right mt-35'][project='" + project + "']")
-            .parent()
-            .parent()
-            .parent()
-            .parent()
-            .parent();
-        card.find(".card-edit").unbind("click");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/apps/whatsapp2/" + project,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                index();
-                alertCustom("success", response.message);
-            },
-        });
-    });
+    $(document).on(
+        "click",
+        "#modal-delete-integration .btn-delete",
+        function (e) {
+            e.stopPropagation();
+            var project = $(this).attr("project");
+            var card = $(
+                "a[class='delete-integration float-right mt-35'][project='" +
+                    project +
+                    "']"
+            )
+                .parent()
+                .parent()
+                .parent()
+                .parent()
+                .parent();
+            card.find(".card-edit").unbind("click");
+            $.ajax({
+                method: "DELETE",
+                url: "/api/apps/whatsapp2/" + project,
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom("success", response.message);
+                },
+            });
+        }
+    );
 });

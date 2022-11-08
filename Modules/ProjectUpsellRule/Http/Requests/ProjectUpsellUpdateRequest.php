@@ -15,7 +15,7 @@ class ProjectUpsellUpdateRequest extends FormRequest
     {
         return [
             "description" => "required",
-            "discount" => "nullable",
+            "discount" => "required|numeric|min:0|not_in:0",
             "type" => "nullable",
             "active_flag" => "nullable",
             "use_variants" => "nullable",
@@ -39,6 +39,7 @@ class ProjectUpsellUpdateRequest extends FormRequest
         return [
             "description.required" => "O campo Descrição é obrigatório",
             "discount.required" => "O campo Desconto é obrigatório",
+            "discount.not_in" => "O campo Desconto não pode ser zero",
             "apply_on_shipping.required" => "O campo Ao selecionar o frete é obrigatório",
             "apply_on_plans.required" => "O campo Ao comprar o plano é obrigatório",
             "offer_on_plans.required" => "O campo Oferecer o plano é obrigatório",
