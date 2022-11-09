@@ -237,11 +237,10 @@ $(document).ready(function () {
                                         <span class="fullInformation-notazz">
                                             ${value.client}
                                         </span>
-                                    }</td>
+                                    </td>
 
                                     <td>
-                                        <span class="badge badge-${statusArray[value.status]}">${value.status_translate
-                            }</span>
+                                        <span class="badge badge-${statusArray[value.status]}">${value.status_translate}</span>
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.updated_date}</td>
                                     <td class='display-sm-none'>${value.value}</td>

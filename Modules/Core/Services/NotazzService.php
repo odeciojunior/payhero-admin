@@ -13,6 +13,7 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
@@ -160,7 +161,12 @@ class NotazzService
                             //plataforma
                             $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_tax);
                             $costTotal += (int) $trasactionRate;
-                            $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->tax / 100));
+
+                            if ($transaction->tax_type == Transaction::TYPE_PERCENTAGE_TAX) {
+                                $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->tax / 100));
+                            } else {
+                                $costTotal += (int) foxutils()->onlyNumbers($transaction->tax);
+                            }
 
                             $installmentTaxValue = $sale->installment_tax_value ?? 0;
                             $costTotal += (int) $installmentTaxValue;
