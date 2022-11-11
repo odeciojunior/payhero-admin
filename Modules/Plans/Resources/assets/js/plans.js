@@ -3906,7 +3906,7 @@ $(function () {
     });
 
     // Tab general settings
-    $("body").on("click", "#tab_configuration", function () {
+    $("body").on("click", "#tab_configuration_cost", function () {
         $("#tab_plans").addClass("active");
 
         $("#modal_config_cost_plan")
@@ -4560,7 +4560,7 @@ $(function () {
 
         $(modal).find(".modal-body").css("height", "auto");
 
-        $(modal).find("#tab_configuration").addClass("active");
+        $(modal).find("#tab_configuration_cost").addClass("active");
         $(modal).find("#tab_update_cost_block").removeClass("show active");
 
         $(modal).find("#tab_configuration_cost-panel").addClass("show active");

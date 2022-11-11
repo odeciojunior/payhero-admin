@@ -24,7 +24,7 @@
                             role="tablist">
                             <li class="nav-item text-center"
                                 style="width: 50%;">
-                                <a id="tab_configuration"
+                                <a id="tab_configuration_cost"
                                    class="nav-link active show"
                                    data-toggle="tab"
                                    href="#tab_configuration_cost-panel"
