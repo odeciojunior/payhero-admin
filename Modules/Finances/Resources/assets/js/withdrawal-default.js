@@ -302,8 +302,8 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
             return false;
         }
 
-        if (toTransfer < 5000) {
-            alertCustom("error", "Valor mínimo de saque  R$ 50,00");
+        if (toTransfer < 999) {
+            alertCustom("error", "Valor mínimo de saque  R$ 10,00");
             return;
         }
 
