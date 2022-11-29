@@ -21,9 +21,9 @@
                         <div class="d-flex align-items-center">
                             <span class="o-download-cloud-1 mr-2"></span>
                             <div class="btn-group" role="group">
-                                <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left border-right-0">.xls
-                                </button>
-                                <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.csv
+                                <!-- <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left border-right-0">.XLS
+                                </button> -->
+                                <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill">.CSV
                                 </button>
                             </div>
                         </div>
@@ -68,9 +68,9 @@
                                     <div class="d-flex align-items-center">
                                         <span class="o-download-cloud-1 mr-2"></span>
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
-                                            </button>
-                                            <button type="button" class="btn btn-round btn-default btn-outline btn-pill-right">
+                                            <!-- <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                            </button> -->
+                                            <button type="button" class="btn btn-round btn-default btn-outline btn-pill">
                                                 .CSV
                                             </button>
                                         </div>

@@ -103,9 +103,9 @@
                                     <div class="align-middle-input"><input type="radio"
                                                name="format"
                                                value="csv"><label for="">.csv</label></div>
-                                    <div class="align-middle-input"><input type="radio"
+                                    <!-- <div class="align-middle-input"><input type="radio"
                                                name="format"
-                                               value="xls"><label for="">.xls</label></div>
+                                               value="xls"><label for="">.xls</label></div> -->
                                 </div>
 
                                 <div class="d-flex modal-buttons">

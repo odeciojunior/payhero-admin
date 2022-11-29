@@ -86,13 +86,13 @@
                                           class="o-download-cloud-1 icon-export btn mr-2"></span>
                                     <div class="btn-group"
                                          role="group">
-                                        <button id="bt_get_xls_transfer"
+                                        <!-- <button id="bt_get_xls_transfer"
                                                 type="button"
                                                 class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
-                                        </button>
+                                        </button> -->
                                         <button id="bt_get_csv_transfer"
                                                 type="button"
-                                                class="btn btn-round btn-default btn-outline btn-pill-right">.CSV
+                                                class="btn btn-round btn-default btn-outline btn-pill">.CSV
                                         </button>
                                     </div>
                                 </div>
