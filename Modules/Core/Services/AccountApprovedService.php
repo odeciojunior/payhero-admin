@@ -53,18 +53,18 @@ class AccountApprovedService
                     ->update(["account_is_approved" => true]);
 
                 if (FoxUtils::isProduction()) {
-                    PipefyMoveCardPhaseJob::dispatch(
-                        $user,
-                        PipefyService::PHASE_ACTIVE
-                    );
+                    // PipefyMoveCardPhaseJob::dispatch(
+                    //     $user,
+                    //     PipefyService::PHASE_ACTIVE
+                    // );
                 }
             }
 
             if (FoxUtils::isProduction()) {
-                PipefyMoveCardPhaseJob::dispatch(
-                    $user,
-                    PipefyService::PHASE_ACTIVE
-                );
+                // PipefyMoveCardPhaseJob::dispatch(
+                //     $user,
+                //     PipefyService::PHASE_ACTIVE
+                // );
             }
         }
     }

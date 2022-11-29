@@ -32,7 +32,7 @@ class UserInformationsApiController extends Controller
                 $user->save();
 
                 if (FoxUtils::isProduction()) {
-                    PipefyUpdateCardJob::dispatch($user->userInformations);
+                    // PipefyUpdateCardJob::dispatch($user->userInformations);
                 }
 
                 return response()->json(
