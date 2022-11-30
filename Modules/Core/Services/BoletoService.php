@@ -175,9 +175,6 @@ class BoletoService
                                 $sale->total_paid_value
                             );
                             if ($discount != "") {
-                                $sale->total_paid_value =
-                                    $sale->total_paid_value -
-                                    preg_replace("/[^0-9]/", "", $discount);
                                 $discount = substr_replace(
                                     $discount,
                                     ",",
@@ -405,9 +402,6 @@ class BoletoService
                         );
 
                         if ($discount != "") {
-                            $boleto->total_paid_value =
-                                $boleto->total_paid_value -
-                                preg_replace("/[^0-9]/", "", $discount);
                             $discount = substr_replace(
                                 $discount,
                                 ",",
@@ -921,12 +915,6 @@ class BoletoService
                                 "",
                                 $boleto->total_paid_value
                             );
-
-                            if ($discount != "") {
-                                $boleto->total_paid_value =
-                                    $boleto->total_paid_value -
-                                    preg_replace("/[^0-9]/", "", $discount);
-                            }
 
                             $boleto->total_paid_value = substr_replace(
                                 $boleto->total_paid_value,
