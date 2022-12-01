@@ -285,8 +285,6 @@
     </div>
 
     @push('scripts')
-        <script async
-                src="https://cdn.announcekit.app/widget-v2.js"></script>
         <script src="{{ mix('build/layouts/dashboard/scripts.min.js') }}"></script>
     @endpush
 

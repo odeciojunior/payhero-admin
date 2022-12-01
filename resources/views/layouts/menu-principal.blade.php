@@ -151,7 +151,7 @@
                 </div>
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe"
+                <!-- <div id="my-iframe"
                      class="announcekit-widget d-none d-sm-flex align-items-center justify-content-center"
                      style="padding-right: 10px">
                     <span class="nav-link navbar-avatar"
@@ -162,12 +162,11 @@
                           data-animation="scale-up"
                           role="button"
                           style='padding-right: 10px'>
-                        <!--  style='cursor:pointer; padding-right: .0rem' -->
                         <img class="svg-menu"
                              src="{{ mix('build/global/img/svg/notificacao.svg') }}"
                              alt="Novidades">
                     </span>
-                </div>
+                </div> -->
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
                 <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">

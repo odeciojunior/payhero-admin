@@ -10,7 +10,7 @@ if (!function_exists('hashids')) {
 if (!function_exists('hashids_decode')) {
     function hashids_decode(string $hash, $connection = null)
     {
-        if($connection) {
+        if ($connection) {
             return current((array) \Vinkla\Hashids\Facades\Hashids::connection($connection)->decode($hash));
         }
         return current((array) \Vinkla\Hashids\Facades\Hashids::decode($hash));
@@ -20,7 +20,7 @@ if (!function_exists('hashids_decode')) {
 if (!function_exists('hashids_encode')) {
     function hashids_encode($numbers, $connection = null)
     {
-        if($connection) {
+        if ($connection) {
             return current((array) \Vinkla\Hashids\Facades\Hashids::connection($connection)->encode($numbers));
         }
         return \Vinkla\Hashids\Facades\Hashids::encode($numbers);
@@ -38,7 +38,7 @@ if (!function_exists('builder2sql')) {
     function builder2sql($query)
     {
         $bindings = array_map(function ($binding) {
-            return is_numeric($binding) ? $binding : "'".$binding."'";
+            return is_numeric($binding) ? $binding : "'" . $binding . "'";
         }, $query->getBindings());
         return str_replace_array('?', $bindings, $query->toSql());
     }
@@ -49,8 +49,8 @@ if (!function_exists('getRegionByIp')) {
     {
         $regionJson = [];
 
-        $query = @unserialize(file_get_contents('http://ip-api.com/php/'.$ip));
-        if($query && $query['status'] == 'success') {
+        $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
+        if ($query && $query['status'] == 'success') {
             $regionJson['status'] = $query['status'];
             $regionJson['country'] = $query['country'];
             $regionJson['countryCode'] = $query['countryCode'];
@@ -84,7 +84,7 @@ if (!function_exists('getRegionByIp')) {
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://geolocation-db.com/json/".$ip,
+            CURLOPT_URL => "https://geolocation-db.com/json/" . $ip,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,

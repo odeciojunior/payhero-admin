@@ -350,7 +350,6 @@ mix.babel(
         "Modules/Dashboard/Resources/assets/js/dashboard-performance.js",
         "Modules/Dashboard/Resources/assets/js/dashboard.js",
         "Modules/Dashboard/Resources/assets/js/dashboard-account-health.js",
-        "Modules/Dashboard/Resources/assets/js/announcekit-dashboard-mobile.js",
     ],
     "public/build/layouts/dashboard/scripts.min.js"
 );
@@ -1176,7 +1175,6 @@ mix.babel(
         "resources/modules/global/js/global.js",
         "resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js",
         "resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js",
-        "resources/modules/global/js/announcekit-global.js",
         "resources/modules/global/js/mk_charts.js",
     ],
     "public/build/layouts/master/plugins.min.js"
