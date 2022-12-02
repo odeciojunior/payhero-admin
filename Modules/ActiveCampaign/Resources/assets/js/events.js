@@ -272,7 +272,6 @@ $(function () {
                 $(".details-event").on("click", function () {
                     var event = $(this).attr("event");
 
-                    console.log("entrei 1");
                     $.ajax({
                         method: "GET",
                         url: "/api/apps/activecampaignevent/" + event,

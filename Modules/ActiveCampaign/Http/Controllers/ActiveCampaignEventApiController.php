@@ -26,6 +26,11 @@ class ActiveCampaignEventApiController extends Controller
             $request = Request::capture();
             $data = $request->all();
 
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
+
+
             $id = Hashids::decode($data["integration"]);
 
             $activecampaignIntegrationModel = new ActivecampaignIntegration();
@@ -39,7 +44,7 @@ class ActiveCampaignEventApiController extends Controller
                 ->log("Visualizou tela todos os eventos do ActiveCampaign");
 
             $activecampaignIntegration = $activecampaignIntegrationModel
-                ->where("user_id", auth()->id())
+                ->where("user_id", $userId)
                 ->with("events")
                 ->where("id", $id)
                 ->first();
@@ -465,7 +470,6 @@ class ActiveCampaignEventApiController extends Controller
 
             return response()->json(["tags" => $tags, "lists" => $lists, "events" => $events], 200);
         } catch (Exception $e) {
-            // dd($e);
             return response()->json(["message" => "Ocorreu algum erro"], 400);
         }
     }
