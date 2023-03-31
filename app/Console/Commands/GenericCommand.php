@@ -6,8 +6,10 @@ use App\Jobs\SendNotazzInvoiceJob;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\NotazzService;
 
 class GenericCommand extends Command
@@ -43,34 +45,11 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        try {
-            $notazzInvoiceModel = new NotazzInvoice();
-
-            $notazzInvoices = $notazzInvoiceModel
-                ->with(["sale", "notazzIntegration"])
-                ->whereIn("status", [
-                    $notazzInvoiceModel->present()->getStatus("in_process")
-                ])
-                ->where("schedule", "<", Carbon::now())
-                ->get();
-
-            foreach ($notazzInvoices as $notazzInvoice) {
-                $transaction = Transaction::where('sale_id', $notazzInvoice->sale_id)->where('type', Transaction::TYPE_PRODUCER)->where('tax_type', Transaction::TYPE_VALUE_TAX)->first();
-                if(!empty($transaction)) {
-                    //cria as jobs para enviar as invoices
-                    $notazzInvoice->update([
-                        "status" => $notazzInvoiceModel->present()->getStatus("in_process"),
-                    ]);
-
-                    SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
-                }
-            }
-        } catch(Exception $ex) {
-            report($ex);
+        $gateways = DB::table("gateways")->get();
+        foreach ($gateways as $gateway) {
+            $jsonConfig = FoxUtils::xorEncrypt($gateway->json_config, "decrypt");
+            \Log::info(json_decode($jsonConfig ?? ""));
+            break;
         }
-
-        dd("Fim");
-
-
     }
 }
