@@ -2,15 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SendNotazzInvoiceJob;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\NotazzInvoice;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\NotazzService;
 
 class GenericCommand extends Command
 {
@@ -45,11 +37,5 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        $gateways = DB::table("gateways")->get();
-        foreach ($gateways as $gateway) {
-            $jsonConfig = FoxUtils::xorEncrypt($gateway->json_config, "decrypt");
-            \Log::info(json_decode($jsonConfig ?? ""));
-            break;
-        }
     }
 }
