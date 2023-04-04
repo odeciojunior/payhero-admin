@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -6209,6 +6210,11 @@ return new class extends Migration {
                 ->onUpdate("NO ACTION")
                 ->onDelete("NO ACTION");
         });
+
+        if (Config::get("database.default") != "demo") {
+            DB::statement("ALTER TABLE `users` AUTO_INCREMENT=2");
+            DB::statement("ALTER TABLE `companies` AUTO_INCREMENT=2");
+        }
     }
 
     /**
