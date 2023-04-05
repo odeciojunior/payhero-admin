@@ -43,10 +43,10 @@ class UsersTableSeeder extends Seeder
             VALUES({$permission->id}, 'Modules\\\Core\\\Entities\\\User', {$user->id});");
         }
 
-        //usuario conta demo
+        //usuario seller
         $userStore = User::create([
-            "name" => "Lojista de teste",
-            "email" => "lojista@teste.com.br",
+            "name" => "Seller Teste",
+            "email" => "seller@nexuspay.com.br",
             "password" => bcrypt("nexuspay"),
             "document" => "00000000000",
             "account_is_approved" => true,
