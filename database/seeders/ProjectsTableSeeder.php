@@ -43,6 +43,8 @@ class ProjectsTableSeeder extends Seeder
             "company_id" => $company->id,
             "status_flag" => 1,
             "status" => "active",
+            "type_enum" => 1, // producer
+            "type" => "producer",
         ]);
 
         $projectNotificationService = new ProjectNotificationService();

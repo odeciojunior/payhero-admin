@@ -42,10 +42,17 @@ class Gateway extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    public const PAGARME_PRODUCTION_ID = 1;
-    public const PAGARME_SANDBOX_ID = 2;
-    public const ZOOP_PRODUCTION_ID = 3;
-    public const ZOOP_SANDBOX_ID = 4;
+    public const VEGA_PRODUCTION_ID = 25;
+    public const VEGA_SANDBOX_ID = 26;
+
+    public const SAFE2PAY_PRODUCTION_ID = 21;
+    public const SAFE2PAY_SANDBOX_ID = 22;
+
+    // disabled
+    // public const PAGARME_PRODUCTION_ID = 1;
+    // public const PAGARME_SANDBOX_ID = 2;
+    // public const ZOOP_PRODUCTION_ID = 3;
+    // public const ZOOP_SANDBOX_ID = 4;
     public const CIELO_PRODUCTION_ID = 5;
     public const CIELO_SANDBOX_ID = 6;
     public const GETNET_PRODUCTION_ID = 15;
@@ -54,12 +61,8 @@ class Gateway extends Model
     public const GERENCIANET_SANDBOX_ID = 19;
     public const ASAAS_PRODUCTION_ID = 8;
     public const ASAAS_SANDBOX_ID = 20;
-    public const SAFE2PAY_PRODUCTION_ID = 21;
-    public const SAFE2PAY_SANDBOX_ID = 22;
     public const IUGU_PRODUCTION_ID = 23;
     public const IUGU_SANDBOX_ID = 24;
-    public const VEGA_PRODUCTION_ID = 25;
-    public const VEGA_SANDBOX_ID = 26;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 

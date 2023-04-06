@@ -30,15 +30,15 @@ class CieloService extends GatewayServicesAbstract
             Gateway::CIELO_PRODUCTION_ID,
             Gateway::CIELO_SANDBOX_ID,
             // extrato cielo engloba as vendas antigas zoop e pagarme
-            Gateway::PAGARME_PRODUCTION_ID,
-            Gateway::PAGARME_SANDBOX_ID,
-            Gateway::ZOOP_PRODUCTION_ID,
-            Gateway::ZOOP_SANDBOX_ID,
+            // Gateway::PAGARME_PRODUCTION_ID,
+            // Gateway::PAGARME_SANDBOX_ID,
+            // Gateway::ZOOP_PRODUCTION_ID,
+            // Gateway::ZOOP_SANDBOX_ID,
         ];
 
-        $this->gatewayName = 'Cielo';
+        $this->gatewayName = "Cielo";
 
-        $this->companyColumnBalance = 'cielo_balance';
+        $this->companyColumnBalance = "cielo_balance";
     }
 
     public function setCompany(Company $company)
@@ -297,8 +297,8 @@ class CieloService extends GatewayServicesAbstract
         }
         $lastTransactionDate = $lastTransaction->created_at->format("d/m/Y");
 
-        $blockedBalance = $this->getBlockedBalance();;
-        $blockedBalanceCount = $this->getBlockedBalanceCount();;
+        $blockedBalance = $this->getBlockedBalance();
+        $blockedBalanceCount = $this->getBlockedBalanceCount();
         $pendingBalance = $this->getPendingBalance();
         $pendingBalanceCount = $this->getPendingBalanceCount();
         $availableBalance = $this->getAvailableBalance();
