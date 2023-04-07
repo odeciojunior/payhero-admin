@@ -22,11 +22,11 @@ class SmartfunnelIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,                        
-            'api_url'=>$this->faker->url(),
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "api_url" => $this->faker->url(),
         ];
-    }    
+    }
 }

@@ -15,14 +15,14 @@ class CreateFakeSale extends Command
      *
      * @var string
      */
-    protected $signature = 'demo:create-fake-sale';
+    protected $signature = "demo:create-fake-sale";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -41,16 +41,16 @@ class CreateFakeSale extends Command
      */
     public function handle()
     {
-        Config::set('database.default', 'demo');
+        Config::set("database.default", "demo");
 
         $this->company = Company::find(Company::DEMO_ID);
         $isRandomData = false;
         $attemps = 1;
         $counter = 1;
 
-        do{
-            $this->nextIsUpsell = mt_rand(1,10)==7;
-            do{
+        do {
+            $this->nextIsUpsell = mt_rand(1, 10) == 7;
+            do {
                 $this->resetVars()
                     ->validateCheckoutLogs()
                     ->preparePlans()
@@ -69,18 +69,16 @@ class CreateFakeSale extends Command
 
                 $this->upsellPreviousSaleId = $this->sale->id;
 
-                if($this->isUpsell){
+                if ($this->isUpsell) {
                     $this->isUpsell = false;
-                }else{
+                } else {
                     $this->isUpsell = $this->nextIsUpsell;
                 }
 
                 $counter++;
-            }while($this->isUpsell);
+            } while ($this->isUpsell);
 
             $this->line("$counter/$attemps");
-        }while($counter <= $attemps);
-
-
+        } while ($counter <= $attemps);
     }
 }

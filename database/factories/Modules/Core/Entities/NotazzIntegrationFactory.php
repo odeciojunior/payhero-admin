@@ -23,21 +23,20 @@ class NotazzIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,
-            'token_webhook'=>$this->faker->sha256(),
-            'token_api'=>$this->faker->sha256(),
-            'token_logistics'=>null,
-            'start_date'=>now(),   //data inicial da geracao das notas
-            'retroactive_generated_date'=>now(),    //data da geração das notas retroativas
-            'invoice_type'=>1,
-            'pending_days'=>30,
-            'generate_zero_invoice_flag'=>rand(0,1),
-            'discount_plataform_tax_flag'=>0,
-            'active_flag'=>1,
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "token_webhook" => $this->faker->sha256(),
+            "token_api" => $this->faker->sha256(),
+            "token_logistics" => null,
+            "start_date" => now(), //data inicial da geracao das notas
+            "retroactive_generated_date" => now(), //data da geração das notas retroativas
+            "invoice_type" => 1,
+            "pending_days" => 30,
+            "generate_zero_invoice_flag" => rand(0, 1),
+            "discount_plataform_tax_flag" => 0,
+            "active_flag" => 1,
         ];
-    }    
-
+    }
 }

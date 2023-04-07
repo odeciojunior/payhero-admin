@@ -22,17 +22,16 @@ class HotzappIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,
-            'link'=>$this->faker->url(),
-            'boleto_generated'=>rand(0,1),
-            'boleto_paid'=>rand(0,1),
-            'credit_card_refused'=>rand(0,1),
-            'credit_card_paid'=>rand(0,1),
-            'abandoned_cart'=>rand(0,1),
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "link" => $this->faker->url(),
+            "boleto_generated" => rand(0, 1),
+            "boleto_paid" => rand(0, 1),
+            "credit_card_refused" => rand(0, 1),
+            "credit_card_paid" => rand(0, 1),
+            "abandoned_cart" => rand(0, 1),
         ];
-    }    
-
+    }
 }

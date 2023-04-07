@@ -34,7 +34,7 @@ class ResetPasswordSendEmailListener implements ShouldQueue
             "reset_link" => $resetLink,
         ];
         $sendGridService->sendEmail(
-            "help@cloudfox.net",
+            "help@nexuspay.com.br",
             "cloudfox",
             $userEmail,
             $userName,

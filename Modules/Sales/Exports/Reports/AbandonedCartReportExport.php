@@ -131,7 +131,9 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ",",
                 "."
             ),
-            "link" => $checkout->present()->getCheckoutLink($checkout->project->domains->first(), $this->user->company_default),
+            "link" => $checkout
+                ->present()
+                ->getCheckoutLink($checkout->project->domains->first(), $this->user->company_default),
             "whatsapp_link" =>
                 "https://api.whatsapp.com/send?phone=+55" .
                 preg_replace("/[^0-9]/", "", $checkout->client_telephone) .
@@ -206,7 +208,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ];
 
                 $sendGridService->sendEmail(
-                    "help@cloudfox.net",
+                    "help@nexuspay.com.br",
                     "CloudFox",
                     $userEmail,
                     $userName,

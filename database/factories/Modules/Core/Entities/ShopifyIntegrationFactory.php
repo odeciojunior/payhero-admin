@@ -23,21 +23,20 @@ class ShopifyIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,            
-            'token'=>$this->faker->sha256(),
-            'shared_secret'=>$this->faker->sha256(),
-            'url_store'=>$this->faker->url(),
-            'theme_type'=>1,
-            'theme_name'=>'Debut',
-            'theme_file'=>'sections/cart-template.liquid',
-            'theme_html'=>null,
-            'layout_theme_html'=>null,
-            'status'=>ShopifyIntegration::STATUS_APPROVED,
-            'skip_to_cart'=>0,
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "token" => $this->faker->sha256(),
+            "shared_secret" => $this->faker->sha256(),
+            "url_store" => $this->faker->url(),
+            "theme_type" => 1,
+            "theme_name" => "Debut",
+            "theme_file" => "sections/cart-template.liquid",
+            "theme_html" => null,
+            "layout_theme_html" => null,
+            "status" => ShopifyIntegration::STATUS_APPROVED,
+            "skip_to_cart" => 0,
         ];
-    }    
-
+    }
 }

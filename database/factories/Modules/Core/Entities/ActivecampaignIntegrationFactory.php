@@ -22,12 +22,12 @@ class ActivecampaignIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,
-            'api_url'=>$this->faker->url(),
-            'api_key'=>$this->faker->sha256()
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "api_url" => $this->faker->url(),
+            "api_key" => $this->faker->sha256(),
         ];
-    }    
+    }
 }

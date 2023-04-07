@@ -27,7 +27,7 @@ class CheckDocumentOnBureau extends Command
             $usersQuery = User::query()
                 ->select(["id", "document"])
                 ->whereRaw('(JSON_CONTAINS(bureau_result,\'[]\') OR bureau_result IS NULL)')
-                ->where("email", "NOT LIKE", "%@cloudfox.net%")
+                ->where("email", "NOT LIKE", "%@nexuspay.com.br%")
                 ->where("created_at", ">=", "2022-01-01 00:00:00")
                 ->where("bureau_check_count", "<=", 3)
                 ->where(function ($query) {

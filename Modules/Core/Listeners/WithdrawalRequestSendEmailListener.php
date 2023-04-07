@@ -36,7 +36,7 @@ class WithdrawalRequestSendEmailListener implements ShouldQueue
             "value" => number_format(intval($event->withdrawal->value) / 100, 2, ",", "."),
         ];
         $sendGridService->sendEmail(
-            "help@cloudfox.net",
+            "help@nexuspay.com.br",
             "cloudfox",
             $event->withdrawal->company->user->email,
             $userName,

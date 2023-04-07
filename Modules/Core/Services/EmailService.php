@@ -19,7 +19,7 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class EmailService
 {
-    public const EMAIL_HELP_CLOUDFOX = "help@cloudfox.net";
+    public const EMAIL_HELP_CLOUDFOX = "help@nexuspay.com.br";
 
     public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-ed70ee0df3a04153aa835e8e4f652434";
     public const TEMPLATE_ID_EMAIL_UNDER_ATTACK = "d-d2cc6518bd8d4a88b5e4d58bb25711e6";
@@ -50,7 +50,7 @@ class EmailService
             }
 
             $email = new Mail();
-            $email->setFrom("help@cloudfox.net", "Cloudfox");
+            $email->setFrom("help@nexuspay.com.br", "Cloudfox");
             $email->setSubject("Convite para o CloudFox");
             $email->addTo($to, "CloudFox");
             $email->addContent("text/html", $emailLayout->render());
@@ -282,13 +282,13 @@ class EmailService
             "julioleichtweis@gmail.com",
             "felixlorram@gmail.com",
             "jeanvcastro1@gmail.com",
-            "murillogomes@cloudfox.net",
+            "murillogomes@nexuspay.com.br",
             "henriquebrites@live.com",
         ];
 
         foreach ($emailList as $email) {
             (new SendgridService())->sendEmail(
-                "help@cloudfox.net",
+                "help@nexuspay.com.br",
                 "CloudFox",
                 $email,
                 "Admin/Dev",

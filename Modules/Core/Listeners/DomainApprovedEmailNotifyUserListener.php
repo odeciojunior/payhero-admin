@@ -40,7 +40,7 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
             ];
 
             $sendGridService->sendEmail(
-                "help@cloudfox.net",
+                "help@nexuspay.com.br",
                 "cloudfox",
                 $user->email,
                 $user->name,

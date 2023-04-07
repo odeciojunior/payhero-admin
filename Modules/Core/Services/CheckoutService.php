@@ -29,37 +29,39 @@ class CheckoutService
 
     public function getAbandonedCart(): LengthAwarePaginator
     {
-        $companyId = hashids_decode(request('company'));
+        $companyId = hashids_decode(request("company"));
         $projectIdsAffiliate = [];
         $projectIds = [];
 
-        $ownerId = auth()->user()->getAccountOwnerId();
+        $ownerId = auth()
+            ->user()
+            ->getAccountOwnerId();
 
-        if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', $ownerId)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                ->pluck('project_id')
+        if (request("project") == "all") {
+            $projectIds = UserProject::where("user_id", $ownerId)
+                ->where("type_enum", UserProject::TYPE_PRODUCER_ENUM)
+                ->pluck("project_id")
                 ->toArray();
 
-            $projectIdsAffiliate = Affiliate::where('user_id', $ownerId)
-                ->where('affiliates.company_id',$companyId)
-                ->where('status_enum', Affiliate::STATUS_ACTIVE)
-                ->pluck('project_id')
+            $projectIdsAffiliate = Affiliate::where("user_id", $ownerId)
+                ->where("affiliates.company_id", $companyId)
+                ->where("status_enum", Affiliate::STATUS_ACTIVE)
+                ->pluck("project_id")
                 ->toArray();
-
         } else {
             $projects = explode(",", request("project"));
             foreach ($projects as $project) {
                 $project = hashids_decode($project);
-                $isAffiliate = Affiliate::where('user_id', $ownerId)
-                        ->where('affiliates.company_id',$companyId)
-                        ->where('status_enum', Affiliate::STATUS_ACTIVE)
-                        ->where('affiliates.project_id', $project)
-                        ->first();
-                if($isAffiliate === null)
+                $isAffiliate = Affiliate::where("user_id", $ownerId)
+                    ->where("affiliates.company_id", $companyId)
+                    ->where("status_enum", Affiliate::STATUS_ACTIVE)
+                    ->where("affiliates.project_id", $project)
+                    ->first();
+                if ($isAffiliate === null) {
                     array_push($projectIds, $project);
-                else
+                } else {
                     array_push($projectIdsAffiliate, $project);
+                }
             }
         }
 
@@ -77,60 +79,48 @@ class CheckoutService
             }
         }
 
-        $abandonedCarts = Checkout::
-        join('checkout_configs','checkouts.project_id','=','checkout_configs.project_id')
-        ->leftJoin('affiliates','affiliates.id','=','checkouts.affiliate_id')
-        ->select('checkouts.*')
-        ->with(
-            [
-                'project.domains' => function ($query) {
-                    $query->where('status', Domain::STATUS_APPROVED);
+        $abandonedCarts = Checkout::join("checkout_configs", "checkouts.project_id", "=", "checkout_configs.project_id")
+            ->leftJoin("affiliates", "affiliates.id", "=", "checkouts.affiliate_id")
+            ->select("checkouts.*")
+            ->with([
+                "project.domains" => function ($query) {
+                    $query->where("status", Domain::STATUS_APPROVED);
                 },
-                'checkoutPlans.plan',
-            ]
-        )->whereHas('checkoutPlans', function ($query) {
-            $query->whereHas('plan');
-        })
-        ->whereIn('checkouts.status_enum', $abandonedCartsStatus)
-        ->whereBetween('checkouts.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-        ->where(function($query) use ($projectIds, $projectIdsAffiliate, $companyId){
-            $query->where(function ($query) use ($projectIds, $projectIdsAffiliate, $companyId) {
-                $query->whereIn('checkouts.project_id', $projectIdsAffiliate)->where('affiliates.company_id', $companyId);
+                "checkoutPlans.plan",
+            ])
+            ->whereHas("checkoutPlans", function ($query) {
+                $query->whereHas("plan");
             })
-            ->orWhere(function ($query) use ($projectIds, $companyId) {
-                $query->whereIn('checkouts.project_id', $projectIds)->where('checkout_configs.company_id', $companyId);
+            ->whereIn("checkouts.status_enum", $abandonedCartsStatus)
+            ->whereBetween("checkouts.created_at", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+            ->where(function ($query) use ($projectIds, $projectIdsAffiliate, $companyId) {
+                $query
+                    ->where(function ($query) use ($projectIds, $projectIdsAffiliate, $companyId) {
+                        $query
+                            ->whereIn("checkouts.project_id", $projectIdsAffiliate)
+                            ->where("affiliates.company_id", $companyId);
+                    })
+                    ->orWhere(function ($query) use ($projectIds, $companyId) {
+                        $query
+                            ->whereIn("checkouts.project_id", $projectIds)
+                            ->where("checkout_configs.company_id", $companyId);
+                    });
+            })
+            ->when(!empty(request("client")), function ($query) {
+                $query->where("client_name", "like", "%" . request("client") . "%");
+            })
+            ->when(!empty(request("client_document")), function ($query) {
+                $query->whereHas("logs", function ($query) {
+                    $query->where("document", request("client_document"));
+                });
+            })
+            ->when(!empty($plansIds), function ($query) use ($plansIds) {
+                $query->whereHas("checkoutPlans", function ($query) use ($plansIds) {
+                    $query->whereIn("plan_id", $plansIds);
+                });
             });
-        })
-            ->when(
-                !empty(request('client')),
-                function ($query) {
-                    $query->where('client_name', 'like', '%' . request('client') . '%');
-                }
-            )
-            ->when(
-                !empty(request('client_document')),
-                function ($query) {
-                    $query->whereHas(
-                        'logs',
-                        function ($query) {
-                            $query->where('document', request('client_document'));
-                        }
-                    );
-                }
-            )
-            ->when(
-                !empty($plansIds),
-                function ($query) use ($plansIds) {
-                    $query->whereHas(
-                        'checkoutPlans',
-                        function ($query) use ($plansIds){
-                            $query->whereIn('plan_id', $plansIds);
-                        }
-                    );
-                }
-            );
 
-        return $abandonedCarts->orderBy('checkouts.id', 'DESC')->paginate(10);
+        return $abandonedCarts->orderBy("checkouts.id", "DESC")->paginate(10);
     }
 
     /**
@@ -238,21 +228,24 @@ class CheckoutService
                 "total_paid_value" => $totalPaidValue,
             ];
 
-            $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if (!empty($response->status) && !empty($response->response->status) && $response->status == 'success' && $response->response->status == 'success') {
-                $dataUpdate = (array)$response->response;
-                RegeneratedBillet::create(
-                    [
-                        'sale_id' => $saleIdDecode,
-                        'billet_link' => $dataUpdate['boleto_link'],
-                        'billet_digitable_line' => $dataUpdate['boleto_digitable_line'],
-                        'billet_due_date' => $dataUpdate['boleto_due_date'],
-                        'gateway_transaction_id' => $dataUpdate['gateway_transaction_id'],
-                        'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
-                        'gateway_id' => $sale->gateway_id,
-                        'owner_id' => $sale->owner_id,
-                    ]
-                );
+            $response = $this->runCurl($regenerateBilletUrl, "POST", $data);
+            if (
+                !empty($response->status) &&
+                !empty($response->response->status) &&
+                $response->status == "success" &&
+                $response->response->status == "success"
+            ) {
+                $dataUpdate = (array) $response->response;
+                RegeneratedBillet::create([
+                    "sale_id" => $saleIdDecode,
+                    "billet_link" => $dataUpdate["boleto_link"],
+                    "billet_digitable_line" => $dataUpdate["boleto_digitable_line"],
+                    "billet_due_date" => $dataUpdate["boleto_due_date"],
+                    "gateway_transaction_id" => $dataUpdate["gateway_transaction_id"],
+                    "gateway_billet_identificator" => $dataUpdate["gateway_billet_identificator"] ?? null,
+                    "gateway_id" => $sale->gateway_id,
+                    "owner_id" => $sale->owner_id,
+                ]);
                 $result = [
                     "status" => "success",
                     "message" => print_r($response->message, true) ?? "",
@@ -337,7 +330,7 @@ class CheckoutService
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new Mail();
-                    $sendgridMail->setFrom("help@cloudfox.net", "cloudfox");
+                    $sendgridMail->setFrom("help@nexuspay.com.br", "cloudfox");
                     $sendgridMail->addTo($email, "cloudfox");
                     $sendgridMail->setTemplateId("d-f44033c3eaec46d2a6226f796313d9fc");
 

@@ -22,14 +22,14 @@ class WooCommerceIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,                        
-            'token_user'=>$this->faker->sha256(),
-            'token_pass'=>$this->faker->md5(),
-            'url_store'=>$this->faker->url(),
-            'status'=>2,
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "token_user" => $this->faker->sha256(),
+            "token_pass" => $this->faker->md5(),
+            "url_store" => $this->faker->url(),
+            "status" => 2,
         ];
-    }    
+    }
 }

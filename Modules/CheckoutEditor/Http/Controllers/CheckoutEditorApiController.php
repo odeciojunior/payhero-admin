@@ -96,11 +96,10 @@ class CheckoutEditorApiController extends Controller
                 $data["pix_enabled"] =
                     !empty($bankAccount) && $bankAccount->transfer_type == "PIX" && $data["pix_enabled"];
                 // update company_id at users_projects table
-                UserProject::where('project_id', $config->project_id)
-                    ->update(['company_id' => $data['company_id']]);
+                UserProject::where("project_id", $config->project_id)->update(["company_id" => $data["company_id"]]);
                 // update company_default at users table
                 $user = Auth::user();
-                $user->company_default = $data['company_id'];
+                $user->company_default = $data["company_id"];
                 $user->save();
             }
 
@@ -229,7 +228,7 @@ class CheckoutEditorApiController extends Controller
 
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                "help@cloudfox.net",
+                "help@nexuspay.com.br",
                 "cloudfox",
                 $supportEmail,
                 auth()->user()->name,

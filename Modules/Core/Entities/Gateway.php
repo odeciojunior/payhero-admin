@@ -42,11 +42,11 @@ class Gateway extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    public const VEGA_PRODUCTION_ID = 25;
-    public const VEGA_SANDBOX_ID = 26;
+    public const VEGA_PRODUCTION_ID = 1;
+    public const VEGA_SANDBOX_ID = 2;
 
-    public const SAFE2PAY_PRODUCTION_ID = 21;
-    public const SAFE2PAY_SANDBOX_ID = 22;
+    public const SAFE2PAY_PRODUCTION_ID = 3;
+    public const SAFE2PAY_SANDBOX_ID = 4;
 
     // disabled
     // public const PAGARME_PRODUCTION_ID = 1;

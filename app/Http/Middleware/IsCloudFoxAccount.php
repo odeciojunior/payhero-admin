@@ -17,7 +17,7 @@ class IsCloudFoxAccount
      */
     public function handle($request, Closure $next)
     {
-        if (!str_contains(auth()->user()->email, "@cloudfox.net")) {
+        if (!str_contains(auth()->user()->email, "@nexuspay.com.br")) {
             abort(403);
         }
 

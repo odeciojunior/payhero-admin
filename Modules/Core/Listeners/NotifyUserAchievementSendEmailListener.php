@@ -41,7 +41,7 @@ class NotifyUserAchievementSendEmailListener
         $data = $event->achievement->toArray();
 
         $sendgrindService->sendEmail(
-            "help@cloudfox.net",
+            "help@nexuspay.com.br",
             "cloudfox",
             $event->user->email,
             $event->user->name,

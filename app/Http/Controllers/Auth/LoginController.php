@@ -69,7 +69,7 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        if (foxutils()->isProduction() && str_contains($request->email, "@cloudfox.net")) {
+        if (foxutils()->isProduction() && str_contains($request->email, "@nexuspay.com.br")) {
             return response()
                 ->redirectTo("/")
                 ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);
@@ -241,19 +241,29 @@ class LoginController extends Controller
                 throw new Exception("Usuário não existe");
             }
 
-            $userLogged =  auth()->user();
-            if(empty($userLogged)){
+            $userLogged = auth()->user();
+            if (empty($userLogged)) {
                 auth()->loginUsingId($user->id);
             }
 
-            if (auth()->user()->can("dashboard")) {
+            if (
+                auth()
+                    ->user()
+                    ->can("dashboard")
+            ) {
                 return response()->redirectTo("/dashboard");
             }
-            if (auth()->user()->can("sales")) {
+            if (
+                auth()
+                    ->user()
+                    ->can("sales")
+            ) {
                 return response()->redirectTo("/sales");
             }
 
-            $permissions = auth()->user()->permissions->pluck("name");
+            $permissions = auth()
+                ->user()
+                ->permissions->pluck("name");
 
             foreach ($permissions as $permission) {
                 $route = explode("_", $permission);
@@ -267,7 +277,6 @@ class LoginController extends Controller
                 $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
                 return response()->redirectTo("/{$redirect}");
             }
-
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Não foi possivel autenticar o usuário.",
@@ -282,14 +291,24 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        if (auth()->user()->can("dashboard")) {
+        if (
+            auth()
+                ->user()
+                ->can("dashboard")
+        ) {
             return "/dashboard";
         }
-        if(auth()->user()->can("sales")) {
+        if (
+            auth()
+                ->user()
+                ->can("sales")
+        ) {
             return "/sales";
         }
 
-        $permissions = auth()->user()->permissions->pluck("name");
+        $permissions = auth()
+            ->user()
+            ->permissions->pluck("name");
 
         foreach ($permissions as $permission) {
             $route = explode("_", $permission);
@@ -301,6 +320,5 @@ class LoginController extends Controller
             }
             return "/{$redirect}";
         }
-
     }
 }

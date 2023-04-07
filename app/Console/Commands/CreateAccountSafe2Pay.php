@@ -88,7 +88,7 @@ class CreateAccountSafe2Pay extends Command
                 "Email" => $company->user->email,
                 "TechName" => "CloudFox",
                 "TechIdentity" => "02901053076",
-                "TechEmail" => "julioleichtweis@cloudfox.net",
+                "TechEmail" => "julioleichtweis@nexuspay.com.br",
                 "TechPhone" => "55996931098",
                 "IsPanelRestricted" => true,
                 "Address" => [

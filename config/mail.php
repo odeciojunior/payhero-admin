@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Mail Driver
@@ -16,7 +15,7 @@ return [
     |
     */
 
-    'driver' => 'smtp',
+    "driver" => "smtp",
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +28,7 @@ return [
     |
     */
 
-    'host' => 'smtp.gmail.com',
+    "host" => "smtp.gmail.com",
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +41,7 @@ return [
     |
     */
 
-    'port' => 465,
+    "port" => 465,
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +54,9 @@ return [
     |
     */
 
-    'from' => [
-        'address' => 'help@cloudfox.net',
-        'name' => 'Cloudfox',
+    "from" => [
+        "address" => "help@nexuspay.com.br",
+        "name" => "Cloudfox",
     ],
 
     /*
@@ -71,7 +70,7 @@ return [
     |
     */
 
-    'encryption' => 'ssl',
+    "encryption" => "ssl",
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +83,9 @@ return [
     |
     */
 
-    'username' => 'help@cloudfox.net',
+    "username" => "help@nexuspay.com.br",
 
-    'password' => '',
+    "password" => "",
 
     /*
     |--------------------------------------------------------------------------
@@ -99,7 +98,7 @@ return [
     |
     */
 
-    'sendmail' => '/usr/sbin/sendmail -bs',
+    "sendmail" => "/usr/sbin/sendmail -bs",
 
     /*
     |--------------------------------------------------------------------------
@@ -112,12 +111,9 @@ return [
     |
     */
 
-    'markdown' => [
-        'theme' => 'default',
+    "markdown" => [
+        "theme" => "default",
 
-        'paths' => [
-            resource_path('views/vendor/mail'),
-        ],
+        "paths" => [resource_path("views/vendor/mail")],
     ],
-
 ];

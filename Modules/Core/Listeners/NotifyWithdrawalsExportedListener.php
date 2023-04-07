@@ -37,7 +37,7 @@ class NotifyWithdrawalsExportedListener
             ];
 
             $sendGridService->sendEmail(
-                "help@cloudfox.net",
+                "help@nexuspay.com.br",
                 "CloudFox",
                 $userEmail,
                 $userName,

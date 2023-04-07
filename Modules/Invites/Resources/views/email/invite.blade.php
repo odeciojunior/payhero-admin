@@ -76,7 +76,7 @@
                     <p style="color: #757575; font-size: 0.7rem; margin: 0; text-align:center;"
                        class="small">
                         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte, envie
-                        um e-mail para sac@cloudfox.net
+                        um e-mail para sac@nexuspay.com.br
                     </p>
                 </td>
             </tr>

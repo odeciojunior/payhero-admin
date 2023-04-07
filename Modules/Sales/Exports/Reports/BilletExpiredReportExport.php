@@ -199,7 +199,9 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 "utm_campaign" => $sale->checkout->utm_campaign ?? "",
                 "utm_term" => $sale->checkout->utm_term ?? "",
                 "utm_content" => $sale->checkout->utm_content ?? "",
-                "link" => $sale->checkout->present()->getCheckoutLink($sale->project->domains->first(), $this->user->company_default),
+                "link" => $sale->checkout
+                    ->present()
+                    ->getCheckoutLink($sale->project->domains->first(), $this->user->company_default),
                 "whatsapp_link" =>
                     "https://api.whatsapp.com/send?phone=+55" .
                     preg_replace("/[^0-9]/", "", $sale->customer->telephone) .
@@ -322,7 +324,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ];
 
                 $sendGridService->sendEmail(
-                    "help@cloudfox.net",
+                    "help@nexuspay.com.br",
                     "CloudFox",
                     $userEmail,
                     $userName,

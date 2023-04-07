@@ -40,7 +40,7 @@ class UpdateCompanyGetnetSendEmailListener implements ShouldQueue
             ];
 
             $emailService->sendEmail(
-                "help@cloudfox.net",
+                "help@nexuspay.com.br",
                 "cloudfox",
                 $user->email,
                 $user->name,

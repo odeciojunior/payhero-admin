@@ -4,6 +4,7 @@ namespace Database\Factories\Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Core\Entities\NotificacoesInteligentesIntegration;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
 
 class NotificacoesInteligentesIntegrationFactory extends Factory
@@ -23,7 +24,7 @@ class NotificacoesInteligentesIntegrationFactory extends Factory
     public function definition()
     {
         return [
-            "project_id" => 1,
+            "project_id" => Project::DEMO_ID,
             "user_id" => User::DEMO_ID,
 
             "link" => $this->faker->url(),

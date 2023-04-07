@@ -22,18 +22,18 @@ class ReportanaIntegrationFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
-            'project_id'=>Project::factory(),
-            'user_id'=>User::DEMO_ID,            
-            'url_api'=>$this->faker->url(),            
-            'billet_generated'=>rand(0,1),
-            'billet_paid'=>rand(0,1),
-            'credit_card_refused'=>rand(0,1),
-            'credit_card_paid'=>rand(0,1),
-            'abandoned_cart'=>rand(0,1),    
-            'pix_generated'=>rand(0,1),
-            'pix_paid'=>rand(0,1),
+            "project_id" => Project::DEMO_ID,
+            "user_id" => User::DEMO_ID,
+            "url_api" => $this->faker->url(),
+            "billet_generated" => rand(0, 1),
+            "billet_paid" => rand(0, 1),
+            "credit_card_refused" => rand(0, 1),
+            "credit_card_paid" => rand(0, 1),
+            "abandoned_cart" => rand(0, 1),
+            "pix_generated" => rand(0, 1),
+            "pix_paid" => rand(0, 1),
         ];
-    }    
+    }
 }

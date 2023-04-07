@@ -81,6 +81,8 @@ class Project extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 2;
 
+    public const DEMO_ID = 1;
+
     protected $presenter = ProjectPresenter::class;
 
     protected $appends = ["formatted_created_at", "id_code"];

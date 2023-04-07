@@ -70,7 +70,7 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
 
         try {
             $emailReturn = $this->emailService->sendEmail(
-                "noreply@cloudfox.net",
+                "noreply@nexuspay.com.br",
                 $data["domainName"],
                 $data["clientEmail"],
                 $data["clientName"],
