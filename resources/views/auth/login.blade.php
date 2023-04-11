@@ -236,7 +236,7 @@
         <div class="img-container"></div>
         <div class="login-container">
             <img class="content-logo"
-                 src="{{ mix('build/global/img/logo-secundary.svg') }}"
+                 src="{{ mix('build/global/img/logo-secondary.png') }}"
                  alt=""
                  width="300">
             <div class="form-container"

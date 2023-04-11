@@ -24,7 +24,7 @@
                 <div class="row"
                      id="project-not-empty"
                      style="display: none !important;">
-                    <div
+                    {{-- <div
                          class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch div-notazz-integration">
                         <div class="card app-integration"
                              data-url="/apps/notazz/"
@@ -63,7 +63,7 @@
                                 <p class="card-text sm">Integre suas lojas com HotZapp </p>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/shopify"
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                    {{-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/whatsapp2"
                              style='width: 270px;'>
@@ -202,8 +202,7 @@
                                 <p class="card-text sm">Integre suas lojas com Smart Funnel </p>
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/woocommerce"
@@ -225,8 +224,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                    {{-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/melhorenvio"
                              style='width: 270px;'>
@@ -310,8 +308,7 @@
                                 <p class="card-text sm">Integre suas lojas com Notificações Inteligentes</p>
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
                     {{-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/integrations" style='width:270px;'>
                             <a id="tool_integrations-bt" href="/integrations" class="add-btn">

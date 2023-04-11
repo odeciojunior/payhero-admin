@@ -14,7 +14,7 @@
     <!-- CLOUDFOX LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
          data-toggle="gridmenu"
-         style="background-color: #0e0233; overflow: hidden; top:0px">
+         style="background-color: #ffffff; overflow: hidden; top:0px">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
              src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}"
@@ -454,12 +454,12 @@
                         <span class="site-menu-arrow"></span>
                     </a>
                     <ul class="site-menu-sub">
-                        <li class="site-menu-item">
+                        {{-- <li class="site-menu-item">
                             <a href="{!! route('integrations.index') !!}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">API</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="site-menu-item">
                             <a href="{{ route('webhooks.index') }}">
                                 <span class="bg-menu"></span>

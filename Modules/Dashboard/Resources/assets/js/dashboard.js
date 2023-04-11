@@ -106,7 +106,7 @@ $(document).ready(function () {
                                 divisor: 2,
                             }),
                             showPoint: false,
-                            showLine: false,
+                            showLine: true,
                             showArea: true,
                             fullWidth: true,
                             chartPadding: {
