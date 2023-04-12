@@ -45,8 +45,8 @@
 }
 
 .badge-chargeback {
-    color: #FFFFFF;
-    background: #2E85EC;
+    color: #ffffff;
+    background: #2e85ec;
 }
 
 .status-sale {
@@ -192,13 +192,13 @@ li.select2-selection__choice {
     padding: 0;
 }
 
-.quick-list>li a {
+.quick-list > li a {
     color: #0d2c54;
     font-weight: bold;
     font-size: 18px;
 }
 
-.quick-list>li a:hover {
+.quick-list > li a:hover {
     color: #2e85ec;
 
     -webkit-transition: all 0.3s;
@@ -206,7 +206,7 @@ li.select2-selection__choice {
     transition: all 0.3s;
 }
 
-.quick-list>li a::after {
+.quick-list > li a::after {
     content: "\f9ff";
     font-family: "sirius-font";
     font-style: normal;
@@ -226,7 +226,7 @@ li.select2-selection__choice {
     -webkit-text-stroke: 1.45px #2e85ec;
 }
 
-.quick-list>li a:hover::after {
+.quick-list > li a:hover::after {
     opacity: 1;
     padding-left: 5px;
 }
@@ -254,12 +254,12 @@ li.select2-selection__choice {
 }
 
 .btn-primary-1 {
-    background-color: #2e85ec;
+    background-color: #263238;
     color: #fff;
 }
 
 .btn-primary-1:hover {
-    background-color: #0d2c54;
+    background-color: #3dd9ad;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -298,16 +298,19 @@ li.select2-selection__choice {
     font-size: 12px;
 }
 
-.table thead>tr>td, .table thead>tr>th {
+.table thead > tr > td,
+.table thead > tr > th {
     border-top: none !important;
     background-color: #fafafa !important;
 }
 
-.table thead>tr>td:first-child, .table thead>tr>th:first-child {
+.table thead > tr > td:first-child,
+.table thead > tr > th:first-child {
     -webkit-border-radius: 4px 0 0 0 !important;
 }
 
-.table thead>tr>td:first-child, .table thead>tr>th:last-child {
+.table thead > tr > td:first-child,
+.table thead > tr > th:last-child {
     -webkit-border-radius: 15px 4px 0px 0px !important;
 }
 
@@ -321,6 +324,6 @@ li.select2-selection__choice {
 }
 
 .badge-disable {
-    background-color: #EBEBEB;
+    background-color: #ebebeb;
     color: #999999;
 }

@@ -8,7 +8,7 @@ aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
   <path data-name="layer2" fill="none" stroke="#ffffff" stroke-miterlimit="10"
   stroke-width="2" d="M2 15.3l30 13.3 30-13.3M18.4 8l30 13.3M32 28.6V62"
   stroke-linejoin="round" stroke-linecap="round"></path>
-  <path data-name="layer1" fill="none" stroke="#2e85ec" stroke-miterlimit="10"
+  <path data-name="layer1" fill="none" stroke="#3DD9AD" stroke-miterlimit="10"
   stroke-width="2" d="M54 31.6l-12 5.3v11.3l12-5.3V31.6z" stroke-linejoin="round"
   stroke-linecap="round"></path>
 </svg>

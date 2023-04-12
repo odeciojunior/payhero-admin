@@ -21,7 +21,7 @@ body {
 }
 
 .menu-active > .bg-menu {
-    background: #2e85ec;
+    background: #3dd9ad;
     border-radius: 0 44px 44px 0;
     display: inline-block;
 }
@@ -533,7 +533,9 @@ a.label {
 .bg-menu {
     padding: 0 10px 0 15px;
 }
-
+.bg-menu svg {
+    stroke: #1be4a8;
+}
 .nav-btn {
     margin-right: 5px;
     background: transparent;
@@ -1954,7 +1956,7 @@ input[type="radio"] {
 }
 
 .page-project .tab-pane .link-button-dependent.blue {
-    color: #2e85ec;
+    color: #263238;
 }
 
 .pagination-sm .btn {

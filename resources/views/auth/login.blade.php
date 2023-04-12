@@ -186,7 +186,7 @@
             border: 1px solid #FFFFFF;
             border-radius: 4px;
             text-transform: uppercase;
-            background: #FF6D00;
+            background: #02ce7c;
             color: #FFFFFF;
         }
 
@@ -206,7 +206,7 @@
             border: none;
             background-color: transparent;
             font-size: 14px;
-            color: #FF6D00;
+            color: #02ce7c;
             cursor: pointer;
         }
 
@@ -214,7 +214,7 @@
             display: block;
             margin-top: 18px;
             text-decoration: none;
-            color: #FF6D00;
+            color: #02ce7c;
         }
 
         @media (max-width: 768px) {

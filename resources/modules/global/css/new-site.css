@@ -592,7 +592,7 @@ h3 {
     justify-content: center;
     border-radius: 100%;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-    background-color: #2e85ec;
+    background-color: #263238;
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -929,7 +929,11 @@ h3 {
     border: none;
     outline: none;
     font-weight: normal;
-    background-color: #2e85ec;
+    background-color: #263238;
+}
+
+.btn-primary:hover {
+    background-color: #3dd9ad;
 }
 
 .btn-success,
@@ -940,7 +944,7 @@ h3 {
     border: none;
     outline: none;
     font-weight: normal;
-    background-color: #41dc8f; /* linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71)); */
+    background-color: #06bf69; /* linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71)); */
 }
 
 .btn-simple,
