@@ -37,7 +37,7 @@
                                 <div class="skeleton-loading loading-content"></div>
                                 <div class="balance-card-data d-none">
                                     <div
-                                        class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                                         class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                         <div class="font-size-14 gray-600 ">
                                             <span class="card-desc">Vendas aprovadas hoje</span>
                                         </div>
@@ -49,7 +49,7 @@
                                                   class="text-money"></span>
                                         </div>
                                     </div>
-                                    <div class="s-border-right purple"></div>
+                                    <div class="s-border-right turquoise"></div>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                                                   class="text-money"></span>
                                         </div>
                                     </div>
-                                    <div class="s-border-right yellow"></div>
+                                    <div class="s-border-right emerland"></div>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@
                                                   class="text-money"></span>
                                         </div>
                                     </div>
-                                    <div class="s-border-right blue"></div>
+                                    <div class="s-border-right nephritis"></div>
                                 </div>
                             </div>
                         </div>
@@ -137,9 +137,8 @@
                                             <span class="card-desc">Vendas nos últimos 30 dias</span>
                                         </div>
                                     </div>
-                                    <div
-                                        class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5"
-                                        style="height: 270px">
+                                    <div class="card-body my-30 d-flex flex-column justify-content-center align-items-center p-5"
+                                         style="height: 270px">
                                         <div id="scoreLineToMonth"
                                              class="ct-chart"></div>
                                         <div id="empty-sale"
@@ -162,8 +161,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                     <div class="row">
 
-                        <div
-                            class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
+                        <div class="col-12  d-flex align-items-stretch font-size-12 order-0 order-sm-0 sirius-performance">
 
                             <div class="card pb-15 bg-white w-full performance-card">
                                 <div class="performance-loading">
@@ -204,7 +202,7 @@
                         </div>
 
                         <div
-                            class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
+                             class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">
                             <div class="card bg-white w-full sirius-account-health">
                                 <div class="sirius-account-health-loading">
                                     <div class="skeleton-loading title"></div>

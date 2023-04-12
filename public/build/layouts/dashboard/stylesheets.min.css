@@ -772,11 +772,11 @@ button {
 .ct-series-a .ct-line,
 .ct-series-a .ct-point,
 .ct-series-a .ct-slice-donut {
-    stroke: #263238;
+    stroke: #04d976;
 }
 .ct-series-a .ct-area,
 .ct-series-a .ct-slice-pie {
-    fill: #263238;
+    fill: #04d976;
 }
 .ct-series-b .ct-bar,
 .ct-series-b .ct-line,

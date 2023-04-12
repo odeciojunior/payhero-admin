@@ -8117,32 +8117,32 @@ a.label {
     background: #f41c1c !important;
 }
 
-.blue.s-border-right,
-.blue.s-border-left,
-.blue.s-border-top,
-.blue.s-border-bottom {
-    background: #2e85ec !important;
+.nephritis.s-border-right,
+.nephritis.s-border-left,
+.nephritis.s-border-top,
+.nephritis.s-border-bottom {
+    background: #27ae60 !important;
 }
 
-.yellow.s-border-right,
-.yellow.s-border-left,
-.yellow.s-border-top,
-.yellow.s-border-bottom {
-    background: #ffb400 !important;
+.emerland.s-border-right,
+.emerland.s-border-left,
+.emerland.s-border-top,
+.emerland.s-border-bottom {
+    background: #2ecc71 !important;
 }
 
 .green.s-border-right,
 .green.s-border-left,
 .green.s-border-top,
 .green.s-border-bottom {
-    background: #41dc8f !important;
+    background: #16a085 !important;
 }
 
-.purple.s-border-right,
-.purple.s-border-left,
-.purple.s-border-top,
-.purple.s-border-bottom {
-    background: #5d2fea !important;
+.turquoise.s-border-right,
+.turquoise.s-border-left,
+.turquoise.s-border-top,
+.turquoise.s-border-bottom {
+    background: #1abc9c !important;
 }
 
 .s-btn {

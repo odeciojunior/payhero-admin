@@ -15,7 +15,6 @@ window.loadWithdrawalsTable = function (link = null) {
     loadOnTable("#withdrawals-table-data", "#transfersTable");
     $("#pagination-withdrawals").children().attr("disabled", "disabled");
 
-
     if (link == null) {
         link = "/api/withdrawals";
     } else {
@@ -64,13 +63,13 @@ window.loadWithdrawalsTable = function (link = null) {
             .replace(/\s+/g, "")
             .replace("-", "- ");
     }
-
+    console.log(window.gatewayCode);
     $.ajax({
         method: "GET",
         url: link,
         data: {
-            company_id: $('.company-navbar').val(),
-            gateway_id: window.gatewayCode
+            company_id: $(".company-navbar").val(),
+            gateway_id: window.gatewayCode,
         },
         dataType: "json",
         headers: {
@@ -83,9 +82,9 @@ window.loadWithdrawalsTable = function (link = null) {
         success: (response) => {
             $("#withdrawals-table-data").html("");
             if (response.data === "" || response.data === undefined || response.data.length === 0) {
-                $("#pagination-container").removeClass("d-flex").addClass("d-none")
+                $("#pagination-container").removeClass("d-flex").addClass("d-none");
 
-                $("#pagination-withdrawals").css({ "background": "#f4f4f4" })
+                $("#pagination-withdrawals").css({ background: "#f4f4f4" });
                 const emptyImage = $("#withdrawals-table-data").attr("img-empty");
                 $("#withdrawals-table-data").html(
                     `<tr style='border-radius: 16px;'>
@@ -98,14 +97,13 @@ window.loadWithdrawalsTable = function (link = null) {
                 );
                 $("#withdrawals-pagination").html("");
             } else {
-                $("#pagination-container").removeClass("d-none").addClass("d-flex")
+                $("#pagination-container").removeClass("d-none").addClass("d-flex");
                 $.each(response.data, function (index, data) {
                     let tableData = "";
                     let dateRequest = getRequestTime(data);
                     let dateRelease = getReleaseTime(data);
 
-                    tableData +=
-                        `<tr class="s-table table-finance-transfers">;
+                    tableData += `<tr class="s-table table-finance-transfers">;
 
 
                             <td class="sale-finance-transfers" style="grid-area: sale">
@@ -135,7 +133,9 @@ window.loadWithdrawalsTable = function (link = null) {
                             </td>;
 
                             <td class="shipping-status text-center status-finance-transfers" style="grid-area: status">
-                                <span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated} </span>
+                                <span class="badge badge-${statusWithdrawals[data.status]} "> ${
+                        data.status_translated
+                    } </span>
                             </td>`;
 
                     if (data.tax_value > 0) {
@@ -158,8 +158,11 @@ window.loadWithdrawalsTable = function (link = null) {
                                     `;
                     }
 
-                    if (window.gatewayCode == "w7YL9jZD6gp4qmv" && data.debt_pending_value != null && data.debt_pending_value != "R$0,00") {
-
+                    if (
+                        window.gatewayCode == "w7YL9jZD6gp4qmv" &&
+                        data.debt_pending_value != null &&
+                        data.debt_pending_value != "R$0,00"
+                    ) {
                         tableData += `
                                         <br>
 
@@ -171,7 +174,6 @@ window.loadWithdrawalsTable = function (link = null) {
                                     `;
                     }
                     tableData += "</td>";
-
 
                     if (window.gatewayCode == "w7YL9jZD6gp4qmv") {
                         tableData += `
@@ -191,20 +193,20 @@ window.loadWithdrawalsTable = function (link = null) {
                     $("#withdrawals-table-data").append(tableData);
                     $("#withdrawalsTable").addClass("table-striped");
 
-
-                    $('.fullInformation-transfer').bind('mouseover', function () {
+                    $(".fullInformation-transfer").bind("mouseover", function () {
                         var $this = $(this);
 
-                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                            $this.attr({
-                                'data-toggle': "tooltip",
-                                'data-placement': "top",
-                                'data-title': $this.text()
-                            }).tooltip({ container: ".container-tooltips-transfer" })
-                            $this.tooltip("show")
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+                            $this
+                                .attr({
+                                    "data-toggle": "tooltip",
+                                    "data-placement": "top",
+                                    "data-title": $this.text(),
+                                })
+                                .tooltip({ container: ".container-tooltips-transfer" });
+                            $this.tooltip("show");
                         }
                     });
-
                 });
                 pagination(response, "withdrawals", loadWithdrawalsTable);
             }
