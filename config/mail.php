@@ -56,7 +56,7 @@ return [
 
     "from" => [
         "address" => "help@nexuspay.com.br",
-        "name" => "Cloudfox",
+        "name" => "Nexuspay",
     ],
 
     /*

@@ -85,14 +85,14 @@ class MonthlyResume extends Command
                     ->where("created_at", "<", $createdFinish)
                     ->sum("interest_total_value");
 
-                $this->line('Taxas de juros Cloudfox: R$ ' . foxutils()->formatMoney($installmentsTaxValue / 100));
+                $this->line('Taxas de juros Nexuspay: R$ ' . foxutils()->formatMoney($installmentsTaxValue / 100));
 
                 $this->line(
-                    'Taxa base cobrada pela Cloudfox: R$ ' .
+                    'Taxa base cobrada pela Nexuspay: R$ ' .
                         foxutils()->formatMoney(($comission - $installmentsTaxValue) / 100)
                 );
 
-                $this->line('Taxas totais cobradas pela Cloudfox: R$ ' . foxutils()->formatMoney($comission / 100));
+                $this->line('Taxas totais cobradas pela Nexuspay: R$ ' . foxutils()->formatMoney($comission / 100));
 
                 $gatewayTaxValue = Sale::where("installments_amount", $installmentsNumber)
                     ->where("status", Sale::STATUS_APPROVED)

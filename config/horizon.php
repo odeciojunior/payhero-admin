@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Horizon Domain
@@ -13,7 +12,7 @@ return [
     |
     */
 
-    'domain' => null,
+    "domain" => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +25,7 @@ return [
     |
     */
 
-    'path' => 'horizon',
+    "path" => "horizon",
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +39,7 @@ return [
     */
 
     // 'use' => 'default',
-    'use' => 'redis-horizon',
+    "use" => "redis-horizon",
 
     /*
     |--------------------------------------------------------------------------
@@ -53,7 +52,7 @@ return [
     |
     */
 
-    'prefix' => env('HORIZON_PREFIX', 'horizon:'),
+    "prefix" => env("HORIZON_PREFIX", "horizon:"),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +65,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    "middleware" => ["web"],
 
     /*
     |--------------------------------------------------------------------------
@@ -79,8 +78,8 @@ return [
     |
     */
 
-    'waits' => [
-        'redis:default' => 60,
+    "waits" => [
+        "redis:default" => 60,
     ],
 
     /*
@@ -94,11 +93,11 @@ return [
     |
     */
 
-    'trim' => [
-        'recent' => 60,
-        'recent_failed' => 10080,
-        'failed' => 10080,
-        'monitored' => 10080,
+    "trim" => [
+        "recent" => 60,
+        "recent_failed" => 10080,
+        "failed" => 10080,
+        "monitored" => 10080,
     ],
 
     /*
@@ -114,7 +113,7 @@ return [
     |
     */
 
-    'fast_termination' => false,
+    "fast_termination" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -127,7 +126,7 @@ return [
     |
     */
 
-    'memory_limit' => 256,
+    "memory_limit" => 256,
 
     /*
     |--------------------------------------------------------------------------
@@ -140,125 +139,123 @@ return [
     |
     */
 
-    'defaults' => [],
+    "defaults" => [],
 
-    'environments' => [
-        'production' => [
-            'supervisor-production' => [
-                'connection' => 'redis-horizon',
-                'queue' => ['high', 'default', 'low'],
-                'balance' => 'false',
-                'processes' => 10,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+    "environments" => [
+        "production" => [
+            "supervisor-production" => [
+                "connection" => "redis-horizon",
+                "queue" => ["high", "default", "low"],
+                "balance" => "false",
+                "processes" => 10,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-production-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback',
-                'balance' => 'false',
-                'processes' => 2,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-production-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback",
+                "balance" => "false",
+                "processes" => 2,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-production-long-running' => [
-                'connection' => 'redis-horizon-long-running',
-                'queue' => 'long',
-                'balance' => 'false',
-                'processes' => 10,
-                'tries' => 3,
-                'timeout' => 36000,
-                'delay' => 1,
+            "supervisor-production-long-running" => [
+                "connection" => "redis-horizon-long-running",
+                "queue" => "long",
+                "balance" => "false",
+                "processes" => 10,
+                "tries" => 3,
+                "timeout" => 36000,
+                "delay" => 1,
             ],
-            'supervisor-production-shopify-tracking-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback-shopify-tracking',
-                'balance' => 'false',
-                'processes' => env("APP_NAME") == "Cloudfox-cron" ? 3 : 0,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-production-shopify-tracking-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback-shopify-tracking",
+                "balance" => "false",
+                "processes" => env("APP_NAME") == "Nexuspay-cron" ? 3 : 0,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
         ],
-        'homolog' => [
-            'supervisor-homolog' => [
-                'connection' => 'redis-horizon',
-                'queue' => ['high', 'default', 'low'],
-                'balance' => 'false',
-                'processes' => 10,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+        "homolog" => [
+            "supervisor-homolog" => [
+                "connection" => "redis-horizon",
+                "queue" => ["high", "default", "low"],
+                "balance" => "false",
+                "processes" => 10,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-homolog-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback',
-                'balance' => 'false',
-                'processes' => 2,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-homolog-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback",
+                "balance" => "false",
+                "processes" => 2,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-homolog-long-running' => [
-                'connection' => 'redis-horizon-long-running',
-                'queue' => 'long',
-                'balance' => 'false',
-                'processes' => 4,
-                'tries' => 3,
-                'timeout' => 36000,
-                'delay' => 1,
+            "supervisor-homolog-long-running" => [
+                "connection" => "redis-horizon-long-running",
+                "queue" => "long",
+                "balance" => "false",
+                "processes" => 4,
+                "tries" => 3,
+                "timeout" => 36000,
+                "delay" => 1,
             ],
-            'supervisor-homolog-shopify-tracking-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback-shopify-tracking',
-                'balance' => 'false',
-                'processes' => 2,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-homolog-shopify-tracking-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback-shopify-tracking",
+                "balance" => "false",
+                "processes" => 2,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
         ],
 
-        'local' => [
-            'supervisor-local' => [
-                'connection' => 'redis-horizon',
-                'queue' => ['high', 'default', 'low'],
-                'balance' => 'false',
-                'processes' => 1,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+        "local" => [
+            "supervisor-local" => [
+                "connection" => "redis-horizon",
+                "queue" => ["high", "default", "low"],
+                "balance" => "false",
+                "processes" => 1,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-local-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback',
-                'balance' => 'false',
-                'processes' => 2,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-local-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback",
+                "balance" => "false",
+                "processes" => 2,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
-            'supervisor-local-long-running' => [
-                'connection' => 'redis-horizon-long-running',
-                'queue' => 'long',
-                'balance' => 'false',
-                'processes' => 1,
-                'tries' => 3,
-                'timeout' => 36000,
-                'delay' => 1,
+            "supervisor-local-long-running" => [
+                "connection" => "redis-horizon-long-running",
+                "queue" => "long",
+                "balance" => "false",
+                "processes" => 1,
+                "tries" => 3,
+                "timeout" => 36000,
+                "delay" => 1,
             ],
-            'supervisor-local-shopify-tracking-postback' => [
-                'connection' => 'redis-horizon',
-                'queue' => 'postback-shopify-tracking',
-                'balance' => 'false',
-                'processes' => 2,
-                'tries' => 3,
-                'timeout' => 3600,
-                'delay' => 1,
+            "supervisor-local-shopify-tracking-postback" => [
+                "connection" => "redis-horizon",
+                "queue" => "postback-shopify-tracking",
+                "balance" => "false",
+                "processes" => 2,
+                "tries" => 3,
+                "timeout" => 3600,
+                "delay" => 1,
             ],
         ],
     ],
 ];
-
-

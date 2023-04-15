@@ -18,20 +18,23 @@
                             </div>
                         </div>
                         @php
-                        $user = auth()->user();
-                        $name = $user->name;
-                        if($user->is_cloudfox && $user->logged_id){
-                            $userModel = new \Modules\Core\Entities\User();
-                            $query = $userModel::select('name')->where('id',$user->logged_id)->get();
-                            $name = $query[0]->name;
-                        }
+                            $user = auth()->user();
+                            $name = $user->name;
+                            if ($user->is_cloudfox && $user->logged_id) {
+                                $userModel = new \Modules\Core\Entities\User();
+                                $query = $userModel
+                                    ::select('name')
+                                    ->where('id', $user->logged_id)
+                                    ->get();
+                                $name = $query[0]->name;
+                            }
                         @endphp
                         <div class="new-register-overlay-title">Bem vindo,
                             <strong>{{ explode(' ', trim($name))[0] }}</strong>
                         </div>
                     </div>
                     <div class="new-register-overlay-subtitle">
-                        Clique nos botões abaixo e siga o passo a passo para começar sua operação na Cloudfox
+                        Clique nos botões abaixo e siga o passo a passo para começar sua operação na Nexuspay
                     </div>
                 </div>
             </div>
@@ -305,7 +308,7 @@
                                     </div>
                                 </div>
                                 <span class="font-size-16 font-weight-600 mt-4"
-                                      style="color: #0B1D3D">Como você ficou sabendo da Cloudfox?</span>
+                                      style="color: #0B1D3D">Como você ficou sabendo da Nexuspay?</span>
                                 <div class="step-2-checkbox-container">
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
@@ -522,21 +525,24 @@
                                     <span class="font-size-24 text-center mb-3"
                                           style="color: #0B1D3D; word-wrap: break-word;">
 
-                                          @php
+                                        @php
                                             $user = auth()->user();
                                             $name = $user->name;
-                                            if($user->is_cloudfox && $user->logged_id){
+                                            if ($user->is_cloudfox && $user->logged_id) {
                                                 $userModel = new \Modules\Core\Entities\User();
-                                                $query = $userModel::select('name')->where('id',$user->logged_id)->get();
+                                                $query = $userModel
+                                                    ::select('name')
+                                                    ->where('id', $user->logged_id)
+                                                    ->get();
                                                 $name = $query[0]->name;
                                             }
-                                            @endphp
+                                        @endphp
 
                                         <strong>Obrigado, {{ explode(' ', trim($name))[0] }}</strong>
                                     </span>
                                     <p class="font-size-14 font-weight-400 text-center mb-4"
                                        style="color: #636363">As
-                                        suas respostas ajudam a Cloudfox a entender melhor o negócio de cada um
+                                        suas respostas ajudam a Nexuspay a entender melhor o negócio de cada um
                                         de nossos clientes de forma individualizada. Isso nos auxilia a desenvolver
                                         novas funcionalidades focadas no sucesso da sua operação!
                                     </p>

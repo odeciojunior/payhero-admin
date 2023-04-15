@@ -1,11 +1,8 @@
 $(document).ready(function () {
-    $(".mm-panels.scrollable.scrollable-inverse.scrollable-vertical").css(
-        "scrollbar-width",
-        "none"
+    $(".mm-panels.scrollable.scrollable-inverse.scrollable-vertical").css("scrollbar-width", "none");
+    $(".mm-panels.scrollable.scrollable-inverse.scrollable-vertical").removeClass(
+        "scrollable scrollable-inverse scrollable-vertical"
     );
-    $(
-        ".mm-panels.scrollable.scrollable-inverse.scrollable-vertical"
-    ).removeClass("scrollable scrollable-inverse scrollable-vertical");
     $(".mm-panels").css("scrollbar-width", "none");
 
     showBonusBalance();
@@ -15,17 +12,13 @@ $(document).ready(function () {
         $("#bonus-balance-modal").fadeToggle("slow", "linear");
     });
 
-    $(".init-operation-container").on(
-        "click",
-        ".redirect-to-accounts",
-        function (e) {
-            e.preventDefault();
+    $(".init-operation-container").on("click", ".redirect-to-accounts", function (e) {
+        e.preventDefault();
 
-            let url_data = $(this).attr("data-url-value");
+        let url_data = $(this).attr("data-url-value");
 
-            redirectToAccounts(url_data);
-        }
-    );
+        redirectToAccounts(url_data);
+    });
 
     $(".redirect-to-accounts").on("click", function (e) {
         e.preventDefault();
@@ -43,12 +36,9 @@ $(document).ready(function () {
         $(".alert-demo-account-overlay").fadeIn();
     });
 
-    $(".alert-demo-account-close-modal, .alert-demo-account-close-modal-x").on(
-        "click",
-        function () {
-            $(".alert-demo-account-overlay").fadeOut(400);
-        }
-    );
+    $(".alert-demo-account-close-modal, .alert-demo-account-close-modal-x").on("click", function () {
+        $(".alert-demo-account-overlay").fadeOut(400);
+    });
 
     $(".new-register-open-modal-btn")
         .parent()
@@ -84,11 +74,8 @@ $(document).ready(function () {
         }
     });
 
-    $(".init-operation-container").on(
-        "click",
-        ".extra-informations-user",
-        function () {
-            $("#new-register-first-page").hide();
+    $(".init-operation-container").on("click", ".extra-informations-user", function () {
+        $("#new-register-first-page").hide();
 
         $(".modal-top-btn").hide();
 
@@ -127,22 +114,16 @@ $(document).ready(function () {
         setStepButton(getNewRegisterStep());
     });
 
-    $(".step-2-checkbox-option input[type='checkbox']").on(
-        "click",
-        function () {
-            if ($(this).is(":checked")) {
-                setNewRegisterSavedItem($(this).attr("id"), "true");
-            } else {
-                removeNewRegisterSavedItem($(this).attr("id"));
-            }
+    $(".step-2-checkbox-option input[type='checkbox']").on("click", function () {
+        if ($(this).is(":checked")) {
+            setNewRegisterSavedItem($(this).attr("id"), "true");
+        } else {
+            removeNewRegisterSavedItem($(this).attr("id"));
         }
-    );
+    });
 
     $("input[name='step-2-other-ecommerce-check']").on("change", function () {
-        step2CheckboxOnChange(
-            $(this),
-            $("input[name='step-2-other-ecommerce']")
-        );
+        step2CheckboxOnChange($(this), $("input[name='step-2-other-ecommerce']"));
     });
 
     $("input[name='step-2-know-cloudfox-check']").on("change", function () {
@@ -224,9 +205,7 @@ $(document).ready(function () {
             return;
         }
 
-        $("#new-register-step-" + step + "-container").removeClass(
-            "d-flex flex-column"
-        );
+        $("#new-register-step-" + step + "-container").removeClass("d-flex flex-column");
 
         step--;
 
@@ -236,9 +215,7 @@ $(document).ready(function () {
 
         setStepButton(step);
 
-        $("#new-register-step-" + step + "-container").addClass(
-            "d-flex flex-column"
-        );
+        $("#new-register-step-" + step + "-container").addClass("d-flex flex-column");
     });
 
     $("#new-register-next-step").on("click", function () {
@@ -254,17 +231,13 @@ $(document).ready(function () {
 
         setNewRegisterStep(step.toString());
 
-        $("#new-register-step-" + lastStep + "-container").removeClass(
-            "d-flex flex-column"
-        );
+        $("#new-register-step-" + lastStep + "-container").removeClass("d-flex flex-column");
 
         changeProgressBar(step, "next");
 
         setStepButton(step);
 
-        $("#new-register-step-" + step + "-container").addClass(
-            "d-flex flex-column"
-        );
+        $("#new-register-step-" + step + "-container").addClass("d-flex flex-column");
     });
 
     const monthRevenueInput = document.getElementById("new-register-range");
@@ -272,7 +245,7 @@ $(document).ready(function () {
     if (monthRevenueInput) {
         monthRevenueInput.style.backgroundSize =
             ((monthRevenueInput.value - monthRevenueInput.min) * 100) /
-            (monthRevenueInput.max - monthRevenueInput.min) +
+                (monthRevenueInput.max - monthRevenueInput.min) +
             "% 100%";
     }
 
@@ -340,12 +313,10 @@ function scrollCustom(div, padding = false, type = "") {
             }
 
             var heightDivScroll = $(div).height() + valuePadding;
-            var heightDivScrollTotal =
-                $(div).children(":first").height() + valuePadding;
+            var heightDivScrollTotal = $(div).children(":first").height() + valuePadding;
 
             var heightCalculateScroll = ((heightDivScroll - 60) / 20) * 2;
-            var heightCalculateTotal =
-                ((heightDivScrollTotal - heightDivScroll) / 20) * 2;
+            var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 20) * 2;
 
             if (event.originalEvent.deltaY < 0) {
                 // wheeled up
@@ -379,25 +350,15 @@ function scrollCustom(div, padding = false, type = "") {
 }
 
 function scrollCustomX(div, addScroll = true, changePosition = false) {
-    if (
-        $(div).find(".scrollbox").length == 0 &&
-        $(div).find(".scrollbox-bar").length == 0
-    ) {
+    if ($(div).find(".scrollbox").length == 0 && $(div).find(".scrollbox-bar").length == 0) {
         $(div).css("padding-bottom", "12px");
         $(div).append('<div class="scrollbox"></div>');
         $(div).append('<div class="scrollbox-bar"></div>');
     }
 
-    if (
-        $(div).find(".scrollbox").length > 0 &&
-        $(div).find(".scrollbox-bar").length > 0
-    ) {
-        var scroll = changePosition
-            ? $(div).find(".scrollbox-bar").css("left").replace("px", "")
-            : 0;
-        var scrollDiv = changePosition
-            ? $(div).children(":first").css("margin-left").replace("px", "")
-            : 0;
+    if ($(div).find(".scrollbox").length > 0 && $(div).find(".scrollbox-bar").length > 0) {
+        var scroll = changePosition ? $(div).find(".scrollbox-bar").css("left").replace("px", "") : 0;
+        var scrollDiv = changePosition ? $(div).children(":first").css("margin-left").replace("px", "") : 0;
     }
 
     $(div).on("wheel", function (event) {
@@ -406,8 +367,7 @@ function scrollCustomX(div, addScroll = true, changePosition = false) {
             var widthDivScrollTotal = $(div).children(":first").width() - 12;
 
             var widthtCalculateScroll = ((widthDivScroll - 60) / 20) * 2;
-            var widthCalculateTotal =
-                ((widthDivScrollTotal - widthDivScroll) / 20) * 2;
+            var widthCalculateTotal = ((widthDivScrollTotal - widthDivScroll) / 20) * 2;
 
             if (event.originalEvent.deltaY < 0) {
                 // wheeled left
@@ -505,8 +465,8 @@ function loadingOnAccountsHealth(target, margin = "80px") {
         left: 0;
         ">
             <span class="loader-any" style="margin-top: ` +
-            margin +
-            `"></span>
+                margin +
+                `"></span>
         </div>`
         );
 }
@@ -530,15 +490,11 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
     if (!remove) {
         //create elements
         let container = $('<div class="loader-any-container-ellipsis"></div>');
-        let loader = $(
-            '<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>'
-        );
+        let loader = $('<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>');
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};
-        options.styles.container = options.styles.container
-            ? options.styles.container
-            : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
         options.styles.container.minWidth = options.styles.container.minWidth
             ? options.styles.container.minWidth
             : $(target).css("width");
@@ -562,10 +518,7 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
         }
     } else {
         // show target again with fix to Bootstrap tabs
-        if (
-            !target.hasClass("tab-pane") ||
-            (target.hasClass("tab-pane") && target.hasClass("active"))
-        ) {
+        if (!target.hasClass("tab-pane") || (target.hasClass("tab-pane") && target.hasClass("active"))) {
             $(target).fadeIn();
         }
     }
@@ -633,18 +586,16 @@ function loadOnNotification(whereToLoad) {
     $(whereToLoad).html("");
     $(whereToLoad).append(
         "<div class='loading' style='width:346px; height:150px'>" +
-        "<span class='loaderNotification' >" +
-        "</span>" +
-        "</div>"
+            "<span class='loaderNotification' >" +
+            "</span>" +
+            "</div>"
     );
 }
 
 function loadOnModal(whereToLoad) {
     $(whereToLoad).children().hide("fast");
     $("#modal-title").html("Carregando...");
-    $(whereToLoad).append(
-        "<div id='loaderModal' class='loadinModal'><div class='loaderModal'></div></div>"
-    );
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'><div class='loaderModal'></div></div>");
     $("#loadingOnScreen").append("<div class='blockScreen'></div>");
 }
 
@@ -702,10 +653,10 @@ function loadOnTable(whereToLoad, tableReference) {
     $(tableReference).removeClass("table-striped");
     $(whereToLoad).append(
         "<tr id='loaderLine'>" +
-        "<td colspan='12' align='center' class='loadingTable' style='height:100px'>" +
-        "<a id='loader' class='loaderTable'></a>" +
-        "</td>" +
-        "</tr>"
+            "<td colspan='12' align='center' class='loadingTable' style='height:100px'>" +
+            "<a id='loader' class='loaderTable'></a>" +
+            "</td>" +
+            "</tr>"
     );
 }
 
@@ -721,9 +672,7 @@ function loadOnAny(target, remove = false, options = {}) {
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};
-        options.styles.container = options.styles.container
-            ? options.styles.container
-            : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
         options.styles.container.minWidth = options.styles.container.minWidth
             ? options.styles.container.minWidth
             : $(target).css("width");
@@ -753,10 +702,7 @@ function loadOnAny(target, remove = false, options = {}) {
         }
     } else {
         // show target again with fix to Bootstrap tabs
-        if (
-            !target.hasClass("tab-pane") ||
-            (target.hasClass("tab-pane") && target.hasClass("active"))
-        ) {
+        if (!target.hasClass("tab-pane") || (target.hasClass("tab-pane") && target.hasClass("active"))) {
             $(target).fadeIn();
         }
     }
@@ -774,9 +720,7 @@ function loadOnAnyPage(target, remove = false, options = {}) {
 
         //apply styles or use default
         options.styles = options.styles ? options.styles : {};
-        options.styles.container = options.styles.container
-            ? options.styles.container
-            : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
         options.styles.container.minWidth = options.styles.container.minWidth
             ? options.styles.container.minWidth
             : $(target).css("width");
@@ -806,10 +750,7 @@ function loadOnAnyPage(target, remove = false, options = {}) {
         }
     } else {
         // show target again with fix to Bootstrap tabs
-        if (
-            !target.hasClass("tab-pane") ||
-            (target.hasClass("tab-pane") && target.hasClass("active"))
-        ) {
+        if (!target.hasClass("tab-pane") || (target.hasClass("tab-pane") && target.hasClass("active"))) {
             $(target).fadeIn();
         }
     }
@@ -819,14 +760,7 @@ function modalClear(modalBody) {
     $(modalBody).html("");
 }
 
-function messageSwalSuccess(
-    swalType,
-    swalTitle,
-    swalHtml,
-    swalCloseButton,
-    swalConfirmButton,
-    swalFooter
-) {
+function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swalConfirmButton, swalFooter) {
     swal({
         type: swalType,
         title: swalTitle,
@@ -849,10 +783,7 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
         case 500:
             break;
         case 413:
-            alertCustom(
-                "error",
-                "O tamanho do arquivo é maior que o limite máximo."
-            );
+            alertCustom("error", "O tamanho do arquivo é maior que o limite máximo.");
             break;
         case 422:
             break;
@@ -862,15 +793,10 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
     }
 });
 
-$(
-    ".mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled"
-).attr("overflow", "hidden");
+$(".mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled").attr("overflow", "hidden");
 
 function isMobile() {
-    var width =
-        window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth;
+    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
     return width < 500;
 }
@@ -917,12 +843,9 @@ function pagination(response, model, callback) {
                     </button>
                 `);
 
-                $(paginationContainer + " .page_" + (currentPage - x)).on(
-                    "click",
-                    function () {
-                        callback("?page=" + $(this).html());
-                    }
-                );
+                $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+                    callback("?page=" + $(this).html());
+                });
             }
         }
 
@@ -947,12 +870,9 @@ function pagination(response, model, callback) {
                     </button>`
                 );
 
-                $(paginationContainer + " .page_" + (currentPage + x)).on(
-                    "click",
-                    function () {
-                        callback("?page=" + $(this).html());
-                    }
-                );
+                $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
+                    callback("?page=" + $(this).html());
+                });
             }
         }
     }
@@ -970,12 +890,9 @@ function pagination(response, model, callback) {
                     </button>
                 `);
 
-                $(paginationContainer + " .page_" + (currentPage - x)).on(
-                    "click",
-                    function () {
-                        callback("?page=" + $(this).html());
-                    }
-                );
+                $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
+                    callback("?page=" + $(this).html());
+                });
             }
         }
 
@@ -1001,12 +918,9 @@ function pagination(response, model, callback) {
                     </button>`
                 );
 
-                $(paginationContainer + " .page_" + (currentPage + x)).on(
-                    "click",
-                    function () {
-                        callback("?page=" + $(this).html());
-                    }
-                );
+                $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
+                    callback("?page=" + $(this).html());
+                });
             }
         }
     }
@@ -1087,15 +1001,9 @@ function copyToClipboard(elem) {
 
 function errorAjaxResponse(response) {
     if (response.responseJSON) {
-        let errors = response.responseJSON.errors
-            ? response.responseJSON.errors
-            : {};
+        let errors = response.responseJSON.errors ? response.responseJSON.errors : {};
         errors = Object.values(errors).join("\n");
-        if (
-            response.status === 422 ||
-            response.status === 404 ||
-            (response.status === 403 && !isEmpty(errors))
-        ) {
+        if (response.status === 422 || response.status === 404 || (response.status === 403 && !isEmpty(errors))) {
             alertCustom("error", errors);
         } else if (response.status === 401) {
             // Não esta autenticado
@@ -1141,9 +1049,7 @@ function downloadFile(response, request) {
     let type = request.getResponseHeader("Content-Type");
     // Get file name
     let contentDisposition = request.getResponseHeader("Content-Disposition");
-    let fileName = contentDisposition.match(
-        /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-    );
+    let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
     fileName = fileName ? fileName[0].replace("filename=", "") : "";
 
     var a = document.createElement("a");
@@ -1156,36 +1062,29 @@ function downloadFile(response, request) {
     document.body.removeChild(a);
 }
 
-$(document).on(
-    "click",
-    "a[data-copy_text],a[data-copy_id]",
-    function (event, i) {
-        event.preventDefault();
-        let inputId = $(this).data("copy_id") || "#copyText";
-        let copyText =
-            inputId === "#copyText"
-                ? $(this).data("copy_text") || ""
-                : $(inputId).val() || "";
-        if (copyText === "") {
-            return false;
-        }
-        if (document.getElementById("copyText") === null) {
-            let input = document.createElement("input");
-            input.type = "text";
-            input.id = "copyText";
-            input.value = copyText;
-            document.getElementsByTagName("body")[0].appendChild(input);
-        } else {
-            document.getElementById("copyText").value = copyText;
-        }
-        document.getElementById("copyText").select();
-        document.execCommand("copy");
-        setTimeout(function () {
-            $("#copyText").remove();
-        }, 1000);
-        alert("Link " + $(inputId).val() + " copiado com Sucesso!");
+$(document).on("click", "a[data-copy_text],a[data-copy_id]", function (event, i) {
+    event.preventDefault();
+    let inputId = $(this).data("copy_id") || "#copyText";
+    let copyText = inputId === "#copyText" ? $(this).data("copy_text") || "" : $(inputId).val() || "";
+    if (copyText === "") {
+        return false;
     }
-);
+    if (document.getElementById("copyText") === null) {
+        let input = document.createElement("input");
+        input.type = "text";
+        input.id = "copyText";
+        input.value = copyText;
+        document.getElementsByTagName("body")[0].appendChild(input);
+    } else {
+        document.getElementById("copyText").value = copyText;
+    }
+    document.getElementById("copyText").select();
+    document.execCommand("copy");
+    setTimeout(function () {
+        $("#copyText").remove();
+    }, 1000);
+    alert("Link " + $(inputId).val() + " copiado com Sucesso!");
+});
 
 /* TOP ALERT */
 
@@ -1205,9 +1104,7 @@ function verifyDocumentPending() {
 
     $.ajax({
         method: "GET",
-        url:
-            "/api/core/verify-account/" +
-            $('meta[name="user-id"]').attr("content"),
+        url: "/api/core/verify-account/" + $('meta[name="user-id"]').attr("content"),
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
@@ -1216,13 +1113,11 @@ function verifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: (response) => {
-
             if (response.data.user_account !== "approved") {
-
                 let verifyAccount = localStorage.getItem("verifyAccount");
                 if (verifyAccount == null) {
-                    $('.new-register-page-open-modal-container').hide();
-                    $('.new-register-navbar-open-modal-container').fadeOut();
+                    $(".new-register-page-open-modal-container").hide();
+                    $(".new-register-navbar-open-modal-container").fadeOut();
 
                     setStepContainer();
 
@@ -1231,16 +1126,12 @@ function verifyDocumentPending() {
                     changeNewRegisterLayoutOnWindowResize();
                 }
 
-                localStorage.setItem(
-                    "verifyAccount",
-                    JSON.stringify(response.data)
-                );
+                localStorage.setItem("verifyAccount", JSON.stringify(response.data));
 
                 var card_user_info_status = "";
                 var card_user_info_icon = "";
                 var card_user_info_title = "Nos conte sobre você";
-                var card_user_info_description =
-                    "Temos algumas perguntas para conhecer melhor você e seu negócio.";
+                var card_user_info_description = "Temos algumas perguntas para conhecer melhor você e seu negócio.";
 
                 if (!response.data.informations_completed) {
                     count += 1;
@@ -1284,8 +1175,7 @@ function verifyDocumentPending() {
                     card_company_icon =
                         '<svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 3.5C3.94772 3.5 3.5 3.94772 3.5 4.5C3.5 5.05228 3.94772 5.5 4.5 5.5C5.05229 5.5 5.5 5.05228 5.5 4.5C5.5 3.94772 5.05229 3.5 4.5 3.5ZM3.5 11.5C3.5 10.9477 3.94772 10.5 4.5 10.5C5.05229 10.5 5.5 10.9477 5.5 11.5C5.5 12.0523 5.05229 12.5 4.5 12.5C3.94772 12.5 3.5 12.0523 3.5 11.5ZM4.5 7C3.94772 7 3.5 7.44771 3.5 8C3.5 8.55229 3.94772 9 4.5 9C5.05229 9 5.5 8.55229 5.5 8C5.5 7.44771 5.05229 7 4.5 7ZM7 4.5C7 3.94772 7.44771 3.5 8 3.5C8.55229 3.5 9 3.94772 9 4.5C9 5.05228 8.55229 5.5 8 5.5C7.44771 5.5 7 5.05228 7 4.5ZM8 10.5C7.44771 10.5 7 10.9477 7 11.5C7 12.0523 7.44771 12.5 8 12.5C8.55229 12.5 9 12.0523 9 11.5C9 10.9477 8.55229 10.5 8 10.5ZM10.5 11.5C10.5 10.9477 10.9477 10.5 11.5 10.5C12.0523 10.5 12.5 10.9477 12.5 11.5C12.5 12.0523 12.0523 12.5 11.5 12.5C10.9477 12.5 10.5 12.0523 10.5 11.5ZM8 7C7.44771 7 7 7.44771 7 8C7 8.55229 7.44771 9 8 9C8.55229 9 9 8.55229 9 8C9 7.44771 8.55229 7 8 7ZM2.25 0C1.00736 0 0 1.00736 0 2.25V18.75C0 19.1642 0.335786 19.5 0.75 19.5H15.2528C15.667 19.5 16.0028 19.1642 16.0028 18.75V9.7493C16.0028 8.50666 14.9954 7.4993 13.7528 7.4993H12.5V2.25C12.5 1.00736 11.4926 0 10.25 0H2.25ZM1.5 2.25C1.5 1.83579 1.83579 1.5 2.25 1.5H10.25C10.6642 1.5 11 1.83579 11 2.25V8.2493C11 8.66352 11.3358 8.9993 11.75 8.9993H13.7528C14.167 8.9993 14.5028 9.33509 14.5028 9.7493V18H12.5V15.25C12.5 14.8358 12.1642 14.5 11.75 14.5H4.25C3.83579 14.5 3.5 14.8358 3.5 15.25V18H1.5V2.25ZM11 16V18H8.75V16H11ZM7.25 16V18H5V16H7.25Z" fill="#5B5B5B"/></svg>';
                     card_company_title = "Cadastre sua empresa";
-                    card_company_description =
-                        "Na Cloudfox você pode ter uma ou mais empresas.";
+                    card_company_description = "Na Nexuspay você pode ter uma ou mais empresas.";
                     card_company_button = "";
                 } else {
                     if (response.data.company_status == "pending") {
@@ -1294,8 +1184,7 @@ function verifyDocumentPending() {
                         card_company_status = "status-info";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title =
-                            "Você cadastrou sua empresa, mas não recebemos nenhum documento";
+                        card_company_title = "Você cadastrou sua empresa, mas não recebemos nenhum documento";
                         card_company_description =
                             "Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.";
                         card_company_button =
@@ -1305,40 +1194,32 @@ function verifyDocumentPending() {
                     } else if (response.data.company_status == "analyzing") {
                         count += 1;
 
-                        card_company_status =
-                            "status-warning redirect-to-accounts";
+                        card_company_status = "status-warning redirect-to-accounts";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.523 0 20 4.478 20 10C20 15.522 15.523 20 10 20C4.477 20 0 15.522 0 10C0 4.478 4.477 0 10 0ZM10 1.667C5.405 1.667 1.667 5.405 1.667 10C1.667 14.595 5.405 18.333 10 18.333C14.595 18.333 18.333 14.595 18.333 10C18.333 5.405 14.595 1.667 10 1.667ZM9.25 4C9.6295 4 9.94346 4.28233 9.99315 4.64827L10 4.75V10H13.25C13.664 10 14 10.336 14 10.75C14 11.1295 13.7177 11.4435 13.3517 11.4931L13.25 11.5H9.25C8.8705 11.5 8.55654 11.2177 8.50685 10.8517L8.5 10.75V4.75C8.5 4.336 8.836 4 9.25 4Z" fill="#FAFAFA"/></svg>';
-                        card_company_title =
-                            "Estamos analisando seus documentos da sua empresa";
+                        card_company_title = "Estamos analisando seus documentos da sua empresa";
                         card_company_description =
                             "Esse processo de revisão leva um tempinho. Mas em breve retornaremos.";
 
                         card_company_button = "";
-
                     } else if (response.data.company_status == "refused") {
                         count += 1;
 
                         card_company_status = "status-error";
                         card_company_icon =
                             '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0ZM10 1.5C5.30558 1.5 1.5 5.30558 1.5 10C1.5 14.6944 5.30558 18.5 10 18.5C14.6944 18.5 18.5 14.6944 18.5 10C18.5 5.30558 14.6944 1.5 10 1.5ZM13.4462 6.39705L13.5303 6.46967C13.7966 6.73594 13.8208 7.1526 13.6029 7.44621L13.5303 7.53033L11.061 10L13.5303 12.4697C13.7966 12.7359 13.8208 13.1526 13.6029 13.4462L13.5303 13.5303C13.2641 13.7966 12.8474 13.8208 12.5538 13.6029L12.4697 13.5303L10 11.061L7.53033 13.5303C7.26406 13.7966 6.8474 13.8208 6.55379 13.6029L6.46967 13.5303C6.2034 13.2641 6.1792 12.8474 6.39705 12.5538L6.46967 12.4697L8.939 10L6.46967 7.53033C6.2034 7.26406 6.1792 6.8474 6.39705 6.55379L6.46967 6.46967C6.73594 6.2034 7.1526 6.1792 7.44621 6.39705L7.53033 6.46967L10 8.939L12.4697 6.46967C12.7359 6.2034 13.1526 6.1792 13.4462 6.39705Z" fill="white"/></svg>';
-                        card_company_title =
-                            "Tivemos problemas em verificar sua empresa";
-                        card_company_description =
-                            "Há um problema com seus documentos.";
+                        card_company_title = "Tivemos problemas em verificar sua empresa";
+                        card_company_description = "Há um problema com seus documentos.";
                         card_company_button =
                             '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                             card_company_link +
                             '">Reenviar documentos</button>';
                     } else if (response.data.company_status == "approved") {
-                        card_company_status =
-                            "status-check redirect-to-accounts";
+                        card_company_status = "status-check redirect-to-accounts";
                         card_company_icon =
                             '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                        card_company_title =
-                            "A documentação da sua empresa foi recebida e aprovada.";
-                        card_company_description =
-                            "Se você já aprovou seus documentos pessoais, agora é só vender!";
+                        card_company_title = "A documentação da sua empresa foi recebida e aprovada.";
+                        card_company_description = "Se você já aprovou seus documentos pessoais, agora é só vender!";
                         card_company_button = "";
                     }
                 }
@@ -1378,7 +1259,7 @@ function verifyDocumentPending() {
                         "Para reforçarmos a segurança, coletaremos seus dados. Acesse as configurações e realize a biometria.";
                     card_user_biometry_button =
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
-                    card_user_biometry_link +
+                        card_user_biometry_link +
                         '">Ir para configurações</button>';
                 } else if (response.data.user_status === "analyzing") {
                     count += 1;
@@ -1402,14 +1283,13 @@ function verifyDocumentPending() {
                         '<button class="btn btn-default redirect-to-accounts" data-url-value="' +
                         card_user_biometry_link +
                         '">Ir para configurações</button>';
-                } else if (response.data.user_status === "approved") { //
+                } else if (response.data.user_status === "approved") {
+                    //
                     card_user_biometry_status = "status-check redirect-to-accounts";
                     card_user_biometry_icon =
                         '<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6876 0.346147C16.1041 0.807675 16.1041 1.55596 15.6876 2.01749L6.08758 12.6539C5.67102 13.1154 4.99565 13.1154 4.57909 12.6539L0.312419 7.92658C-0.10414 7.46505 -0.10414 6.71677 0.312419 6.25524C0.728979 5.79371 1.40435 5.79371 1.82091 6.25524L5.33333 10.1468L14.1791 0.346147C14.5956 -0.115382 15.271 -0.115382 15.6876 0.346147Z" fill="white"/></svg>';
-                    card_user_biometry_title =
-                        "Sua identidade foi validada";
-                    card_user_biometry_description =
-                        "Seus dados biométricos foram coletados e aprovados.";
+                    card_user_biometry_title = "Sua identidade foi validada";
+                    card_user_biometry_description = "Seus dados biométricos foram coletados e aprovados.";
                     card_user_biometry_button = "";
                 }
 
@@ -1432,30 +1312,17 @@ function verifyDocumentPending() {
 
                 $(".new-register-open-modal-btn")
                     .find(".count")
-                    .html(
-                        " (" +
-                        count +
-                        (count > 1
-                            ? " itens pendentes"
-                            : " item pendente") +
-                        ")"
-                    ).promise().done(function () {
-                        $('.alert-pendings').css('display', 'inline-flex')
+                    .html(" (" + count + (count > 1 ? " itens pendentes" : " item pendente") + ")")
+                    .promise()
+                    .done(function () {
+                        $(".alert-pendings").css("display", "inline-flex");
                     });
             } else {
                 $(".new-register-navbar-open-modal-container").remove();
 
-                let verifyAccount = JSON.parse(
-                    localStorage.getItem("verifyAccount")
-                );
-                if (
-                    verifyAccount &&
-                    verifyAccount.user_status !== "approved"
-                ) {
-                    localStorage.setItem(
-                        "verifyAccount",
-                        JSON.stringify(response.data)
-                    );
+                let verifyAccount = JSON.parse(localStorage.getItem("verifyAccount"));
+                if (verifyAccount && verifyAccount.user_status !== "approved") {
+                    localStorage.setItem("verifyAccount", JSON.stringify(response.data));
                 }
             }
         },
@@ -1470,15 +1337,10 @@ function setNewRegisterSavedItem(item, value) {
     }
 
     if (item) {
-        let obj = JSON.parse(
-            localStorage.getItem("new-register-data-" + userId)
-        );
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         obj[item] = value;
 
-        localStorage.setItem(
-            "new-register-data-" + userId,
-            JSON.stringify(obj)
-        );
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
@@ -1486,15 +1348,10 @@ function removeNewRegisterSavedItem(item) {
     var userId = $('meta[name="user-id"]').attr("content");
 
     if (localStorage.getItem("new-register-data-" + userId)) {
-        let obj = JSON.parse(
-            localStorage.getItem("new-register-data-" + userId)
-        );
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
         delete obj[item];
 
-        localStorage.setItem(
-            "new-register-data-" + userId,
-            JSON.stringify(obj)
-        );
+        localStorage.setItem("new-register-data-" + userId, JSON.stringify(obj));
     }
 }
 
@@ -1526,40 +1383,22 @@ function changeProgressBar(step, action = "next") {
     switch (parseInt(step)) {
         case 1:
             $(".new-register-step[data-step*='1']").addClass("step-active");
-            $("#new-register-step-progress-bar-1").css(
-                "transition-delay",
-                action !== "next" ? "1.5s" : ""
-            );
+            $("#new-register-step-progress-bar-1").css("transition-delay", action !== "next" ? "1.5s" : "");
             $("#new-register-step-progress-bar-1").css("width", "50%");
-            $(".new-register-step[data-step*='2']").css(
-                "transition-delay",
-                action !== "next" ? "1s" : ""
-            );
+            $(".new-register-step[data-step*='2']").css("transition-delay", action !== "next" ? "1s" : "");
             $(".new-register-step[data-step*='2']").removeClass("step-active");
-            $("#new-register-step-progress-bar-2").css(
-                "transition-delay",
-                action !== "next" ? "0.5s" : ""
-            );
+            $("#new-register-step-progress-bar-2").css("transition-delay", action !== "next" ? "0.5s" : "");
             $("#new-register-step-progress-bar-2").css("width", "0");
             break;
         case 2:
             $(".new-register-step[data-step*='1']").addClass("step-active");
             $("#new-register-step-progress-bar-1").css("transition-delay", "");
             $("#new-register-step-progress-bar-1").css("width", "100%");
-            $(".new-register-step[data-step*='2']").css(
-                "transition-delay",
-                action === "next" ? "0.5s" : "1.5s"
-            );
+            $(".new-register-step[data-step*='2']").css("transition-delay", action === "next" ? "0.5s" : "1.5s");
             $(".new-register-step[data-step*='2']").addClass("step-active");
-            $("#new-register-step-progress-bar-2").css(
-                "transition-delay",
-                action === "next" ? "1s" : "1s"
-            );
+            $("#new-register-step-progress-bar-2").css("transition-delay", action === "next" ? "1s" : "1s");
             $("#new-register-step-progress-bar-2").css("width", "50%");
-            $(".new-register-step[data-step*='3']").css(
-                "transition-delay",
-                action !== "next" ? "0.5s" : ""
-            );
+            $(".new-register-step[data-step*='3']").css("transition-delay", action !== "next" ? "0.5s" : "");
             $(".new-register-step[data-step*='3']").removeClass("step-active");
             break;
         case 3:
@@ -1567,15 +1406,9 @@ function changeProgressBar(step, action = "next") {
             $(".new-register-step[data-step*='1']").addClass("step-active");
             $("#new-register-step-progress-bar-1").css("width", "100%");
             $(".new-register-step[data-step*='2']").addClass("step-active");
-            $("#new-register-step-progress-bar-2").css(
-                "transition-delay",
-                action === "next" ? "0.5s" : "1s"
-            );
+            $("#new-register-step-progress-bar-2").css("transition-delay", action === "next" ? "0.5s" : "1s");
             $("#new-register-step-progress-bar-2").css("width", "100%");
-            $(".new-register-step[data-step*='3']").css(
-                "transition-delay",
-                action === "next" ? "1s" : "0.5s"
-            );
+            $(".new-register-step[data-step*='3']").css("transition-delay", action === "next" ? "1s" : "0.5s");
             $(".new-register-step[data-step*='3']").addClass("step-active");
             break;
     }
@@ -1596,9 +1429,7 @@ function changeNewRegisterLayoutOnWindowResize() {
         });
 
         if (userNameText.length > 10) {
-            $(".new-register-overlay-title strong").text(
-                userNameText.substring(0, 9) + "..."
-            );
+            $(".new-register-overlay-title strong").text(userNameText.substring(0, 9) + "...");
         }
     } else if (window.innerWidth > 470 && window.innerWidth <= 665) {
         $(".new-register-overlay-title strong").css({
@@ -1607,9 +1438,7 @@ function changeNewRegisterLayoutOnWindowResize() {
         });
 
         if (userNameText.length > 14) {
-            $(".new-register-overlay-title strong").text(
-                userNameText.substring(0, 13) + "..."
-            );
+            $(".new-register-overlay-title strong").text(userNameText.substring(0, 13) + "...");
         }
     } else if (window.innerWidth > 665) {
         $(".new-register-overlay-title strong").css({
@@ -1618,9 +1447,7 @@ function changeNewRegisterLayoutOnWindowResize() {
         });
 
         if (userNameText.length > 20) {
-            $(".new-register-overlay-title strong").text(
-                userNameText.substring(0, 19) + "..."
-            );
+            $(".new-register-overlay-title strong").text(userNameText.substring(0, 19) + "...");
         }
     }
 
@@ -1651,8 +1478,7 @@ function validateStep(step) {
             isValid =
                 ($("input[name='step-3-sales-site-check']").is(":checked") ||
                     $("input[name='step-3-sales-site']").val()) &&
-                ($("input[name='step-3-gateway-check']").is(":checked") ||
-                    $("input[name='step-3-gateway']").val());
+                ($("input[name='step-3-gateway-check']").is(":checked") || $("input[name='step-3-gateway']").val());
             break;
         default:
             isValid = true;
@@ -1673,9 +1499,7 @@ function setStepContainer() {
 
     setStepButton(step);
 
-    $("#new-register-step-" + step + "-container").addClass(
-        "d-flex flex-column"
-    );
+    $("#new-register-step-" + step + "-container").addClass("d-flex flex-column");
 }
 
 function setStepButton(step) {
@@ -1706,8 +1530,7 @@ function setInputRangeOnInput(target) {
     const maxVal = target.max;
     let val = target.value;
 
-    target.style.backgroundSize =
-        ((val - minVal) * 100) / (maxVal - minVal) + "% 100%";
+    target.style.backgroundSize = ((val - minVal) * 100) / (maxVal - minVal) + "% 100%";
 
     val = val * 1000;
 
@@ -1728,42 +1551,27 @@ function loadNewRegisterSavedData() {
     var userId = $('meta[name="user-id"]').attr("content");
 
     if (localStorage.getItem("new-register-data-" + userId)) {
-        let obj = JSON.parse(
-            localStorage.getItem("new-register-data-" + userId)
-        );
+        let obj = JSON.parse(localStorage.getItem("new-register-data-" + userId));
 
         for (const prop in obj) {
             const element = $("#" + prop);
 
             if (element.prop("nodeName") === "DIV") {
-                element
-                    .addClass("option-selected")
-                    .attr("data-step-1-selected", 1);
+                element.addClass("option-selected").attr("data-step-1-selected", 1);
             }
 
-            if (
-                element.prop("nodeName") === "INPUT" &&
-                element.attr("type") === "checkbox"
-            ) {
+            if (element.prop("nodeName") === "INPUT" && element.attr("type") === "checkbox") {
                 element.prop("checked", true);
                 element.trigger("change");
             }
 
-            if (
-                element.prop("nodeName") === "INPUT" &&
-                element.attr("type") === "text"
-            ) {
+            if (element.prop("nodeName") === "INPUT" && element.attr("type") === "text") {
                 element.val(obj[prop]);
             }
 
-            if (
-                element.prop("nodeName") === "INPUT" &&
-                element.attr("type") === "range"
-            ) {
+            if (element.prop("nodeName") === "INPUT" && element.attr("type") === "range") {
                 element.val(obj[prop]);
-                setInputRangeOnInput(
-                    document.getElementById("new-register-range")
-                );
+                setInputRangeOnInput(document.getElementById("new-register-range"));
             }
         }
     }
@@ -1772,24 +1580,12 @@ function loadNewRegisterSavedData() {
 function saveNewRegisterData() {
     const newRegisterData = {
         niche: JSON.stringify({
-            others: $("div[data-step-1-value=others]").attr(
-                "data-step-1-selected"
-            ),
-            classes: $("div[data-step-1-value=classes]").attr(
-                "data-step-1-selected"
-            ),
-            subscriptions: $("div[data-step-1-value=subscriptions]").attr(
-                "data-step-1-selected"
-            ),
-            digitalProduct: $("div[data-step-1-value=digital-product]").attr(
-                "data-step-1-selected"
-            ),
-            physicalProduct: $("div[data-step-1-value=physical-product]").attr(
-                "data-step-1-selected"
-            ),
-            dropshippingImport: $(
-                "div[data-step-1-value=dropshipping-import]"
-            ).attr("data-step-1-selected"),
+            others: $("div[data-step-1-value=others]").attr("data-step-1-selected"),
+            classes: $("div[data-step-1-value=classes]").attr("data-step-1-selected"),
+            subscriptions: $("div[data-step-1-value=subscriptions]").attr("data-step-1-selected"),
+            digitalProduct: $("div[data-step-1-value=digital-product]").attr("data-step-1-selected"),
+            physicalProduct: $("div[data-step-1-value=physical-product]").attr("data-step-1-selected"),
+            dropshippingImport: $("div[data-step-1-value=dropshipping-import]").attr("data-step-1-selected"),
         }),
         ecommerce: JSON.stringify({
             wix: +$("#wix").is(":checked"),
@@ -1837,15 +1633,11 @@ function saveNewRegisterData() {
 
             setNewRegisterStep("4");
 
-            $("#new-register-step-3-container").removeClass(
-                "d-flex flex-column"
-            );
+            $("#new-register-step-3-container").removeClass("d-flex flex-column");
 
             $("#new-register-step-4-container").addClass("d-flex flex-column");
 
-            $("#new-register-steps-actions").removeClass(
-                "justify-content-between"
-            );
+            $("#new-register-steps-actions").removeClass("justify-content-between");
             $("#new-register-steps-actions").addClass("justify-content-center");
 
             $(".extra-informations-user").hide();
@@ -1908,10 +1700,7 @@ $.fn.shake = function () {
     let animation2 = { left: "-=" + distance * 2 };
 
     for (let i = 0; i < repeat; i++) {
-        $(this)
-            .animate(animation1, speed)
-            .animate(animation2, speed)
-            .animate(animation1, speed);
+        $(this).animate(animation1, speed).animate(animation2, speed).animate(animation1, speed);
     }
 };
 
@@ -1941,20 +1730,14 @@ function renderSiriusSelect(target) {
     $target.children("option").each(function () {
         let option = $(this);
         let attributes = Object.values(this.attributes).reduce((text, attr) => {
-            if (
-                !["id", "value", "data-value", "selected", "disabled"].includes(
-                    attr.name
-                )
-            ) {
+            if (!["id", "value", "data-value", "selected", "disabled"].includes(attr.name)) {
                 if (attr.value) return text + ` ${attr.name}="${attr.value}"`;
                 return text + ` ${attr.name}`;
             }
             return text;
         }, "");
         let disabled = option.is(":disabled") ? `class="disabled"` : "";
-        $options.append(
-            `<div data-value="${option.val()}" ${attributes} ${disabled}>${option.text()}</div>`
-        );
+        $options.append(`<div data-value="${option.val()}" ${attributes} ${disabled}>${option.text()}</div>`);
     });
     $text.text($target.children("option:selected").eq(0).text());
 }
@@ -1972,9 +1755,7 @@ $(document).ready(function () {
     var menuBarToggle = $('[data-toggle="menubar"]');
     var toggle = $('[data-toggle="menubar"].nav-link');
     menuBarToggle.off().on("click", function () {
-        bodyEl.toggleClass(
-            "site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide"
-        );
+        bodyEl.toggleClass("site-menubar-unfold site-menubar-fold site-menubar-open site-menubar-hide");
         menuBarToggle.toggleClass("hided");
         if (toggle.hasClass("hided")) {
             $("#logoIconSirius").fadeOut().addClass("d-none");
@@ -2020,15 +1801,9 @@ $(document).ready(function () {
     $.each(links, function (key, va) {
         var current = document.URL;
 
-        if (
-            va.href == document.URL ||
-            (current.match(va.href) || []).length >= 1
-        ) {
+        if (va.href == document.URL || (current.match(va.href) || []).length >= 1) {
             $(this).addClass("menu-active");
-            $(this)
-                .parents(".site-menu-item.has-sub")
-                .find("> a")
-                .addClass("menu-active");
+            $(this).parents(".site-menu-item.has-sub").find("> a").addClass("menu-active");
         }
     });
 
@@ -2045,13 +1820,9 @@ $(document).ready(function () {
         $(this).siriusSelect();
     });
 
-    $(document).on(
-        "DOMSubtreeModified propertychange change",
-        ".sirius-select-container select",
-        function () {
-            renderSiriusSelect(this);
-        }
-    );
+    $(document).on("DOMSubtreeModified propertychange change", ".sirius-select-container select", function () {
+        renderSiriusSelect(this);
+    });
 
     $(document).on("click", ".sirius-select-text", function () {
         let $target = $(this);
@@ -2068,14 +1839,8 @@ $(document).ready(function () {
         let $target = $(this);
         if (!$target.hasClass("disabled")) {
             let $wrapper = $target.parents(".sirius-select-container");
-            $wrapper
-                .find("select")
-                .val($target.data("value"))
-                .trigger("change");
-            $wrapper
-                .find(".sirius-select-text")
-                .removeClass("active")
-                .text($target.text());
+            $wrapper.find("select").val($target.data("value")).trigger("change");
+            $wrapper.find(".sirius-select-text").removeClass("active").text($target.text());
             $target.parent().fadeOut();
         }
     });
@@ -2083,9 +1848,7 @@ $(document).ready(function () {
     $(document).on("click", function (e) {
         let target = $(e.target);
         if (!target.parents(".sirius-select-container").length) {
-            $(".sirius-select-container .sirius-select-text").removeClass(
-                "active"
-            );
+            $(".sirius-select-container .sirius-select-text").removeClass("active");
             $(".sirius-select-container .sirius-select-options").fadeOut();
         }
     });
@@ -2098,10 +1861,7 @@ $(document).ready(function () {
             this.scrollLeft += e.originalEvent.deltaY;
         },
         mousedown: function (e) {
-            $(this)
-                .addClass("scrolling")
-                .data("x", e.clientX)
-                .data("left", this.scrollLeft);
+            $(this).addClass("scrolling").data("x", e.clientX).data("left", this.scrollLeft);
         },
         "mouseup mouseleave": function (e) {
             $(this).removeClass("scrolling").data("x", 0).data("left", 0);
@@ -2185,9 +1945,9 @@ function buildModalBonusBalance(bonusObject) {
                 </div>
 
 
-                <h3 class="bonus-title"><span id="bonus-username">${userName.charAt(0).toUpperCase() +
-        userName.slice(1).toLowerCase() || "Olá!"
-        }</span>, aqui está seu <b>desconto!</b></h3>
+                <h3 class="bonus-title"><span id="bonus-username">${
+                    userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase() || "Olá!"
+                }</span>, aqui está seu <b>desconto!</b></h3>
 
                 <p>
                     Você ganhou <span id="total-bonus-balance" class="bold">${totalBalance}</span> em isenção de taxa sobre suas vendas. Você vai se impressionar com toda a tecnologia embarcada em sua
@@ -2308,14 +2068,8 @@ const toggleBonusContent = function () {
 };
 
 function showBonusBalance() {
-    if (
-        getCookie($('meta[name="user-id"]').attr("content") + "_bonus_balance")
-    ) {
-        var bonus_balance = JSON.parse(
-            getCookie(
-                $('meta[name="user-id"]').attr("content") + "_bonus_balance"
-            )
-        );
+    if (getCookie($('meta[name="user-id"]').attr("content") + "_bonus_balance")) {
+        var bonus_balance = JSON.parse(getCookie($('meta[name="user-id"]').attr("content") + "_bonus_balance"));
 
         $("#total-bonus-balance").html(bonus_balance.current_bonus);
 
@@ -2334,17 +2088,12 @@ function showBonusBalance() {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: (response) => { },
+            error: (response) => {},
             success: (response) => {
                 if (response.error) {
                     return;
                 }
-                setCookie(
-                    $('meta[name="user-id"]').attr("content") +
-                    "_bonus_balance",
-                    0.083,
-                    response
-                );
+                setCookie($('meta[name="user-id"]').attr("content") + "_bonus_balance", 0.083, response);
 
                 $("#total-bonus-balance").html(response.current_bonus);
 
@@ -2383,8 +2132,7 @@ function generateJwt(userId, userName, userEmail) {
 
     var token = encodedHeader + "." + encodedData;
 
-    var secret =
-        "iA4US5NugWzhYMdpVXY9uH9TPxWhtmyDVkIoxJ1jUhRHGts4Lrkl2SrjsbmbncnDd-_UVMQSMbwkJT_tjuVfvQ";
+    var secret = "iA4US5NugWzhYMdpVXY9uH9TPxWhtmyDVkIoxJ1jUhRHGts4Lrkl2SrjsbmbncnDd-_UVMQSMbwkJT_tjuVfvQ";
 
     var signature = CryptoJS.HmacSHA256(token, secret);
     signature = base64url(signature);
@@ -2508,7 +2256,7 @@ function getCompaniesAndProjects(removeLoadingFunction = null) {
                 projects: [
                     {
                         id: "v2RmA83EbZPVpYB",
-                        name: "Loja Demonstrativa Cloudfox",
+                        name: "Loja Demonstrativa Nexuspay",
                         order_p: 1,
                         status: 1,
                     },
@@ -2536,48 +2284,40 @@ function getCompaniesAndProjects(removeLoadingFunction = null) {
 
                 for (let i = 0; i < companies.length; i++) {
                     if (company_default === companies[i].id)
-                        itemSelected =
-                            'selected="selected" style="font-weight:bold"';
+                        itemSelected = 'selected="selected" style="font-weight:bold"';
                     else itemSelected = "";
 
-                    if (
-                        companies[i].active_flag == false ||
-                        companies[i].company_document_status != "approved"
-                    )
+                    if (companies[i].active_flag == false || companies[i].company_document_status != "approved")
                         itemDisabled = 'disabled="disabled"';
                     else itemDisabled = "";
 
                     if (companies[i].company_type == "1") {
                         $(".company-navbar").append(
                             '<option value="' +
-                            companies[i].id +
-                            '" ' +
-                            itemSelected +
-                            " " +
-                            itemDisabled +
-                            ">Pessoa Física</option>"
+                                companies[i].id +
+                                '" ' +
+                                itemSelected +
+                                " " +
+                                itemDisabled +
+                                ">Pessoa Física</option>"
                         );
                     } else {
-                        if (companies[i].name.length > 20)
-                            companyName =
-                                companies[i].name.substring(0, 20) + "...";
+                        if (companies[i].name.length > 20) companyName = companies[i].name.substring(0, 20) + "...";
                         else companyName = companies[i].name;
                         $(".company-navbar").append(
                             '<option value="' +
-                            companies[i].id +
-                            '" ' +
-                            itemSelected +
-                            " " +
-                            itemDisabled +
-                            ">" +
-                            companyName +
-                            "</option>"
+                                companies[i].id +
+                                '" ' +
+                                itemSelected +
+                                " " +
+                                itemDisabled +
+                                ">" +
+                                companyName +
+                                "</option>"
                         );
                     }
                 }
-                $("#company-select")
-                    .addClass("d-sm-flex")
-                    .css("display", "block");
+                $("#company-select").addClass("d-sm-flex").css("display", "block");
                 return data;
             } else {
                 //$(".content-error").show();
@@ -2618,9 +2358,7 @@ function verifyIfCompanyIsDefault(companyId) {
         $(".alert-demo-account-overlay").fadeOut();
     }
     $(".company-navbar").val(companyId);
-    if (
-        $(".company-navbar").find("option:selected").css("font-weight") == "700"
-    ) {
+    if ($(".company-navbar").find("option:selected").css("font-weight") == "700") {
         $(".sirius-select-options").css("display", "none");
         return true;
     }

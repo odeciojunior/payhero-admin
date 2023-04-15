@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     function fillProjectsSelect(data) {
         if (data.company_default == "v2RmA83EbZPVpYB")
-            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Cloudfox" }));
+            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Nexuspay" }));
         else {
             projects = allProjects(data);
             for (let i = 0; i < projects.length; i++)
@@ -62,7 +62,7 @@ $(document).ready(function () {
     });
 
     $("#bt_filtro").on("click", function (event) {
-        $("#container-pagination").hide()
+        $("#container-pagination").hide();
         event.preventDefault();
         loadData();
     });
@@ -270,9 +270,7 @@ $(document).ready(function () {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
-                                    $(this)
-                                        .css("cursor", "pointer")
-                                        .text("Regerar");
+                                    $(this).css("cursor", "pointer").text("Regerar");
                                     $(this).css("background", "#3D4456");
                                 },
                                 function () {
@@ -379,19 +377,20 @@ $(document).ready(function () {
         });
 
         $("#table_data").append(html);
-        $('.fullInformation').bind('mouseover', function () {
+        $(".fullInformation").bind("mouseover", function () {
             var $this = $(this);
 
-            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                $this.attr({
-                    'data-toggle': "tooltip",
-                    'data-placement': "top",
-                    'data-title': $this.text()
-                }).tooltip({ container: ".container-tooltips" })
-                $this.tooltip("show")
+            if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+                $this
+                    .attr({
+                        "data-toggle": "tooltip",
+                        "data-placement": "top",
+                        "data-title": $this.text(),
+                    })
+                    .tooltip({ container: ".container-tooltips" });
+                $this.tooltip("show");
             }
         });
-
     }
 
     /**
@@ -399,13 +398,12 @@ $(document).ready(function () {
      * @param value
      */
     function createHtmlCartAbandoned(value) {
-        let date = value.date.split(" ", 1)
-        let parseDate = value.date.split(" ", 2)
-        let hours = parseDate[1]
+        let date = value.date.split(" ", 1);
+        let parseDate = value.date.split(" ", 2);
+        let hours = parseDate[1];
 
         let data = ``;
-        data =
-            `
+        data = `
             <tr>
 
                 <td class="display-sm-none display-m-none display-lg-none">
@@ -451,7 +449,9 @@ $(document).ready(function () {
 
 
                 <td class="text-center">
-                    <span class="sale_status badge badge-${statusRecovery[value.status_translate]}" status="${value.status_translate}" sale_id="${value.id}">
+                    <span class="sale_status badge badge-${statusRecovery[value.status_translate]}" status="${
+            value.status_translate
+        }" sale_id="${value.id}">
                         ${value.status_translate}
                     </span>
                 </td>
@@ -504,14 +504,13 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-        let date = value.start_date.split(" ", 1)
-        let parseDate = value.start_date.split(" ", 2)
-        let hours = parseDate[1]
+        let date = value.start_date.split(" ", 1);
+        let parseDate = value.start_date.split(" ", 2);
+        let hours = parseDate[1];
 
         let data = ``;
 
-        data =
-            `
+        data = `
             <tr>
 
                 <td class="display-sm-none display-m-none display-lg-none">
@@ -552,7 +551,9 @@ $(document).ready(function () {
 
 
                 <td class="text-center">
-                    <span class="sale_status badge badge-${statusRecovery[value.recovery_status]}" sale_id="${value.id_default}" >
+                    <span class="sale_status badge badge-${statusRecovery[value.recovery_status]}" sale_id="${
+            value.id_default
+        }" >
                         ${value.recovery_status}
                     </span>
                 </td>
@@ -589,7 +590,9 @@ $(document).ready(function () {
                 </td>
 
                 <td class="display-sm-none" align="center">
-                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${value.id_default}">
+                    <a role="button" class="details-cart-recovery" style="cursor:pointer;" data-venda="${
+                        value.id_default
+                    }">
 
                         <span class="">
                             <img src="/build/global/img/icon-eye.svg"/>
@@ -704,8 +707,8 @@ $(document).ready(function () {
         if (!isEmpty(data.link)) {
             $("#link-sale").html(
                 'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
-                data.link +
-                '" title="Copiar link"><span class="o-copy-1"></span> </a> '
+                    data.link +
+                    '" title="Copiar link"><span class="o-copy-1"></span> </a> '
             );
         } else {
             $("#link-sale").html("Link: " + data.link);

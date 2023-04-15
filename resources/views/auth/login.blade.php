@@ -279,7 +279,7 @@
             <div class="form-container"
                  id="form-forgot">
                 <p class="title">Esqueceu a senha?</p>
-                <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Cloudfox.</p>
+                <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Nexuspay.</p>
                 <form method="POST"
                       action="{{ route('password.email') }}">
                     @csrf

@@ -39,7 +39,7 @@ class HealthServiceProvider extends ServiceProvider
             //CacheCheck::new(),
         ];
 
-        if (env("APP_NAME") == "Cloudfox-cron") {
+        if (env("APP_NAME") == "Nexuspay-cron") {
             $checks[] = ScheduleCheck::new();
             $checks[] = QueueSizeCheck::new()->maxSize(10000);
             $checks[] = DatabaseConnectionCountCheck::new()

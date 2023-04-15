@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -14,38 +13,37 @@ return [
     |
     */
 
-    'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+    "mailgun" => [
+        "domain" => env("MAILGUN_DOMAIN"),
+        "secret" => env("MAILGUN_SECRET"),
     ],
 
-    'ses' => [
-        'key' => env('SES_KEY'),
-        'secret' => env('SES_SECRET'),
-        'region' => env('SES_REGION', 'us-east-1'),
+    "ses" => [
+        "key" => env("SES_KEY"),
+        "secret" => env("SES_SECRET"),
+        "region" => env("SES_REGION", "us-east-1"),
     ],
 
-    'sparkpost' => [
-        'secret' => env('SPARKPOST_SECRET'),
+    "sparkpost" => [
+        "secret" => env("SPARKPOST_SECRET"),
     ],
 
-    'stripe' => [
-        'model' => Modules\Core\Entities\User::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
+    "stripe" => [
+        "model" => Modules\Core\Entities\User::class,
+        "key" => env("STRIPE_KEY"),
+        "secret" => env("STRIPE_SECRET"),
     ],
 
-    'zenvia' => [
-        'from'    => 'Cloudfox',
-        'pretend' => false,
-        'conta'   => 'healthlab.corp',
-        'senha'   => 'hLQNVb7VQk'
+    "zenvia" => [
+        "from" => "Nexuspay",
+        "pretend" => false,
+        "conta" => "healthlab.corp",
+        "senha" => "hLQNVb7VQk",
     ],
 
-    'shopify' => [
-        'client_id' => env('SHOPIFY_KEY'),
-        'client_secret' => env('SHOPIFY_SECRET'),
-        'redirect' => env('SHOPIFY_REDIRECT'),
+    "shopify" => [
+        "client_id" => env("SHOPIFY_KEY"),
+        "client_secret" => env("SHOPIFY_SECRET"),
+        "redirect" => env("SHOPIFY_REDIRECT"),
     ],
-
 ];

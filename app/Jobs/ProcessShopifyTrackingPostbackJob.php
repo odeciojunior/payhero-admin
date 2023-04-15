@@ -36,7 +36,7 @@ class ProcessShopifyTrackingPostbackJob implements ShouldQueue
             "description" => "shopify-tracking",
         ]);
 
-        if(env("APP_NAME") != "Cloudfox-cron") {
+        if (env("APP_NAME") != "Nexuspay-cron") {
             sleep(1);
         }
 
