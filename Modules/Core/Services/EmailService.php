@@ -21,10 +21,7 @@ class EmailService
 {
     public const EMAIL_HELP_CLOUDFOX = "help@nexuspay.com.br";
 
-    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-ed70ee0df3a04153aa835e8e4f652434";
-    public const TEMPLATE_ID_EMAIL_UNDER_ATTACK = "d-d2cc6518bd8d4a88b5e4d58bb25711e6";
-    public const TEMPLATE_ID_EMAIL_CLIENT_SALE_BOLETO = "d-c521a65b247645a9b5f7be6b9b0db262";
-    public const TEMPLATE_ID_EMAIL_CLIENT_SALE_CREDIT_CARD = "d-b80c0854a9d342428532d8d4b0e2f654";
+    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-4ddac05c3a964831a15996b2a00a223a"; // done
 
     private SendgridService $sendgridService;
 
@@ -116,7 +113,7 @@ class EmailService
                 $sale->project->name,
                 $sale->customer->email,
                 $sale->customer->present()->getFirstName(),
-                "d-ed70ee0df3a04153aa835e8e4f652434",
+                "d-4ddac05c3a964831a15996b2a00a223a", // done
                 $data
             );
 
@@ -206,7 +203,7 @@ class EmailService
                     $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
-                    "d-c521a65b247645a9b5f7be6b9b0db262",
+                    "d-063fb748f8094b318001936b856f659d", // done
                     $data
                 );
             } else {
@@ -227,7 +224,7 @@ class EmailService
                     $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
-                    "d-b80c0854a9d342428532d8d4b0e2f654",
+                    "d-6e0b86370c714cf69e91bdab94b108c9", // done
                     $data
                 );
             }
@@ -292,7 +289,7 @@ class EmailService
                 "CloudFox",
                 $email,
                 "Admin/Dev",
-                "d-d2cc6518bd8d4a88b5e4d58bb25711e6",
+                "not", // done
                 $systemsStatus
             );
         }

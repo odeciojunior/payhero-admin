@@ -39,7 +39,7 @@ class BoletoPaidEmailNotifyUser implements ShouldQueue
             "cloudfox",
             $user->email,
             $user->name,
-            "d-4ce62be1218d4b258c8d1ab139d4d664",
+            "not", // done
             $data
         );
     }

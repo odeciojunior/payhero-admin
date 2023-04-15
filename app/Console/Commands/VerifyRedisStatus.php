@@ -65,7 +65,7 @@ class VerifyRedisStatus extends Command
                     $sendgridMail->addDynamicTemplateDatas([
                         "server" => "ADMIN",
                     ]);
-                    $sendgridMail->setTemplateId("d-413a13e7bfbe412a9531037402872cff");
+                    $sendgridMail->setTemplateId("not"); // done
 
                     $response = $sendgrid->send($sendgridMail);
                 } catch (Exception $e) {

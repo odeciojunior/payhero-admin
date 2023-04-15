@@ -66,7 +66,6 @@ class CoreApiController extends Controller
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
             }
 
-
             $companyStatus = null;
             $companyRedirect = null;
 
@@ -83,7 +82,6 @@ class CoreApiController extends Controller
                     $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_APPROVED);
                     $companyRedirect = "/companies";
                 } else {
-
                     $companyPending = $companyService->companyDocumentPending();
                     if (!empty($companyPending)) {
                         $companyStatus = $companyModel->present()->getStatus(CompanyDocument::STATUS_PENDING);
@@ -114,7 +112,6 @@ class CoreApiController extends Controller
                         "user_status" => $userStatus,
                         "company_status" => $companyStatus,
                         "link_company" => $companyRedirect,
-
                     ],
                 ],
                 Response::HTTP_OK
@@ -232,46 +229,49 @@ class CoreApiController extends Controller
             $user = auth()->user();
 
             $return = [
-                'company_default' => Hashids::encode(Company::DEMO_ID),
-                'company_default_name' => 'Empresa Demo',
-                'company_default_fullname' => 'Empresa Demo',
-                'has_api_integration' => false
+                "company_default" => Hashids::encode(Company::DEMO_ID),
+                "company_default_name" => "Empresa Demo",
+                "company_default_fullname" => "Empresa Demo",
+                "has_api_integration" => false,
             ];
 
             if ($user->company_default > Company::DEMO_ID) {
-                $companyDefault = cache()->remember('company-default-' . $user->company_default, 60, function () use ($user) {
-                    return Company::select('id', 'company_type', 'fantasy_name')
-                        ->where('id', $user->company_default)
+                $companyDefault = cache()->remember("company-default-" . $user->company_default, 60, function () use (
+                    $user
+                ) {
+                    return Company::select("id", "company_type", "fantasy_name")
+                        ->where("id", $user->company_default)
                         ->first();
                 });
 
-                $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
-                    $companyDefault->fantasy_name,
-                    20
-                ) ?? '';
+                $company_default_name =
+                    $companyDefault->company_type == 1
+                        ? "Pessoa física"
+                        : Str::limit($companyDefault->fantasy_name, 20) ?? "";
 
                 $user_id = auth()->user()->id;
-                if (auth()->user()->is_cloudfox)
+                if (auth()->user()->is_cloudfox) {
                     $user_id = auth()->user()->logged_id;
+                }
 
-                $return = array(
-                    'company_default' => Hashids::encode($user->company_default),
-                    'company_default_name' => $company_default_name,
-                    'company_default_fullname' => $companyDefault->fantasy_name,
-                    'has_api_integration' => false
-                );
+                $return = [
+                    "company_default" => Hashids::encode($user->company_default),
+                    "company_default_name" => $company_default_name,
+                    "company_default_fullname" => $companyDefault->fantasy_name,
+                    "has_api_integration" => false,
+                ];
             }
 
-            $companies = cache()->remember('companies-' . $user->account_owner_id, 60, function () use ($user) {
-                return Company::where('user_id', $user->account_owner_id)->get();
+            $companies = cache()->remember("companies-" . $user->account_owner_id, 60, function () use ($user) {
+                return Company::where("user_id", $user->account_owner_id)->get();
             });
 
-
-            $return['companies'] = collect(CompaniesSelectResource::collection($companies))
-                ->sortBy('order_priority')
-                ->sortByDesc('active_flag')
-                ->sortByDesc('company_is_approved')
-                ->values()->all();
+            $return["companies"] = collect(CompaniesSelectResource::collection($companies))
+                ->sortBy("order_priority")
+                ->sortByDesc("active_flag")
+                ->sortByDesc("company_is_approved")
+                ->values()
+                ->all();
 
             return $return;
         } catch (Exception $e) {
@@ -288,14 +288,13 @@ class CoreApiController extends Controller
 
     public function updateCompanyDefault(Request $request)
     {
-
         if (empty($request->company_id)) {
-            return response()->json(['message' => 'Informe a empresa selecionada'], 400);
+            return response()->json(["message" => "Informe a empresa selecionada"], 400);
         }
 
         $companyId = current(Hashids::decode($request->company_id));
         if (empty($companyId)) {
-            return response()->json(['message' => 'Não foi possivel identificar a empresa'], 400);
+            return response()->json(["message" => "Não foi possivel identificar a empresa"], 400);
         }
 
         $user = Auth::user();
@@ -304,21 +303,22 @@ class CoreApiController extends Controller
         }
 
         if ($companyId > 1) {
-            $company = Company::where('user_id', $user->account_owner_id)->where('id', $companyId)->exists();
+            $company = Company::where("user_id", $user->account_owner_id)
+                ->where("id", $companyId)
+                ->exists();
             if (empty($company)) {
-                return response()->json(['message' => 'Não foi possivel identificar a empresa'], 400);
+                return response()->json(["message" => "Não foi possivel identificar a empresa"], 400);
             }
         }
 
         try {
-
             $user->company_default = $companyId;
             $user->save();
 
-            return response()->json(['message' => 'Empresa atualizada.']);
+            return response()->json(["message" => "Empresa atualizada."]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Não foi possivel atualizar a empresa default.']);
+            return response()->json(["message" => "Não foi possivel atualizar a empresa default."]);
         }
     }
 
@@ -424,13 +424,18 @@ class CoreApiController extends Controller
     public function getZendeskToken()
     {
         $payload = [
-            'scope' => 'user',
-            'name' => auth()->user()->name,
-            'email' => auth()->user()->email,
-            'external_id' => '' . auth()->user()->id . '',
-            'iat' => time(),
+            "scope" => "user",
+            "name" => auth()->user()->name,
+            "email" => auth()->user()->email,
+            "external_id" => "" . auth()->user()->id . "",
+            "iat" => time(),
         ];
-        $token = JWT::encode($payload, 'v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg', 'HS256', 'app_630519303703d200f36b2a98');
+        $token = JWT::encode(
+            $payload,
+            "v5D7n6jaGlc2nviUtU5eYOuG9MmtIuJ_t9K8KERl5PK6a46sWNH6q5_28jsGaTU1I4eStyGmzDOUntuhdHfoGg",
+            "HS256",
+            "app_630519303703d200f36b2a98"
+        );
 
         return response()->json($token);
     }
@@ -438,7 +443,6 @@ class CoreApiController extends Controller
     public function verifyBiometry($id)
     {
         try {
-
             $user = User::find(hashids_decode($id));
             $accountOwner = User::find($user->account_owner_id);
             $checkUserBiometry = $accountOwner->biometry_status;
@@ -447,7 +451,6 @@ class CoreApiController extends Controller
                 [
                     "data" => [
                         "check_user_biometry" => $checkUserBiometry !== User::BIOMETRY_STATUS_APPROVED,
-
                     ],
                 ],
                 Response::HTTP_OK

@@ -332,7 +332,7 @@ class CheckoutService
                     $sendgridMail = new Mail();
                     $sendgridMail->setFrom("help@nexuspay.com.br", "cloudfox");
                     $sendgridMail->addTo($email, "cloudfox");
-                    $sendgridMail->setTemplateId("d-f44033c3eaec46d2a6226f796313d9fc");
+                    $sendgridMail->setTemplateId("not"); // done
 
                     $response = $sendgrid->send($sendgridMail);
                 } catch (Exception $e) {
