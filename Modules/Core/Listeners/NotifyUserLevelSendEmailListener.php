@@ -54,7 +54,7 @@ class NotifyUserLevelSendEmailListener
             "cloudfox",
             $event->user->email,
             $event->user->name,
-            "d-ee2628cce4c64ef5bbcafe3594fee27b",
+            "not", // done
             $data
         );
 
@@ -67,7 +67,7 @@ class NotifyUserLevelSendEmailListener
                 "cloudfox",
                 $event->user->email,
                 $event->user->name,
-                "d-a24d8da16e114bf295fc6bd40fdff9a7",
+                "not", // done
                 $userName
             );
         }

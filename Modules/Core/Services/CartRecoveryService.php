@@ -160,7 +160,7 @@ class CartRecoveryService
                                     "projectName" => $project->name ?? "",
                                     "clientEmail" => $customer->email,
                                     "clientName" => $customer->name ?? "",
-                                    "templateId" => "d-92937608e68b47b79dbd2641fd20fd0d",
+                                    "templateId" => "d-03ad5b50f5654118b888abceebf24a02", // done
                                     "bodyEmail" => $bodyEmail,
                                     "checkout_id" => $abandonedCart->id,
                                 ];

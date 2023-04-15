@@ -55,7 +55,7 @@ class AffiliateRequestSendEmailListener implements ShouldQueue
                     "cloudfox",
                     $producer->email,
                     $producer->name,
-                    "d-0386c841a52c466e96840eb5a663b400",
+                    "not", // done
                     $data
                 );
             }

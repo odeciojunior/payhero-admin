@@ -44,7 +44,7 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
                 "cloudfox",
                 $user->email,
                 $user->name,
-                "d-b387f185f29a45b6a2009ba94f63ed1a",
+                "d-b90af5f16e794297b3e741f5b168168f", // done
                 $data
             );
         }

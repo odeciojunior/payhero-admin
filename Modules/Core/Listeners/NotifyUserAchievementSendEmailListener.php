@@ -45,7 +45,7 @@ class NotifyUserAchievementSendEmailListener
             "cloudfox",
             $event->user->email,
             $event->user->name,
-            "d-31354085bb7e441597f76fdb6e94d182",
+            "not", // done
             $data
         );
     }

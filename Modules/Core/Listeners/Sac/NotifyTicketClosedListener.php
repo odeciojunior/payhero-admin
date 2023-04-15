@@ -42,7 +42,7 @@ class NotifyTicketClosedListener implements ShouldQueue
                     "CloudFox",
                     $ticket->owner_email,
                     $ticket->owner_name,
-                    "d-7193213493d448018fc76acf66e6dfcd",
+                    "d-f5bf90d19f724e80bef16c378163e49c", // done
                     $data
                 );
             }

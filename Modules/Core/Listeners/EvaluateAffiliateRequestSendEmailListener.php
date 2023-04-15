@@ -49,9 +49,9 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
             ];
 
             if ($affiliateRequest->status == $affiliateRequestPresenter->getStatus("approved")) {
-                $templateId = "d-f777e4ed8416473b8b2673923139db60";
+                $templateId = "not"; // done
             } else {
-                $templateId = "d-14c40a9bd9704f9e8999a5d8fdc9cf7c";
+                $templateId = "not"; // done
             }
 
             $user->load("userNotification");
