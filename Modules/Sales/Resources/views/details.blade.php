@@ -206,14 +206,14 @@
                             <h4 id="total-value"
                                 class="table-title"></h4>
                         </div>
-                        <div class='col-sm-8 col-6'>
+                        <!-- <div class='col-sm-8 col-6'>
                             <span id="cashback-label"
                                   class="text-muted ft-12 d-none">Cashback</span>
                         </div>
                         <div class='col-sm-4 col-6 text-right'>
                             <span id="cashback-value"
                                   class="text-muted ft-12 d-none">R$ </span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="row"
                          style="border-top: 1px solid #e2e2e2; padding-top: 10px; margin-top: 10px;"
@@ -588,7 +588,8 @@
                             <span id="delivery-city"
                                   class="table-title gray"></span>
                         </div>
-                        <div id='div_tracking_code' style='display:none; overflow: auto'>
+                        <div id='div_tracking_code'
+                             style='display:none; overflow: auto'>
                             <h4> Rastreio </h4>
                             <table class='table table-striped mb-10'>
                                 <thead>
@@ -613,7 +614,7 @@
                         <h4> Dados Gerais </h4>
                         <div id="details-api"
                              style="display: none; margin-bottom: 11px;">
-                            Venda realizada por integração API Sirius
+                            Venda realizada por integração API Admin
                         </div>
                         <div id="details-card"
                              style="display:none">

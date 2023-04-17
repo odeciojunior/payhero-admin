@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="modal-body text-center">
-                        <div id="title-onboarding-1">O PIX chegou no Sirius!</div>
+                        <div id="title-onboarding-1">O PIX chegou no Admin!</div>
                         <div id="description-onboarding-1">
                             O futuro dos pagamentos já está entre nós. <br />
                             A partir de hoje, você já pode vender com o PIX e receber<br />

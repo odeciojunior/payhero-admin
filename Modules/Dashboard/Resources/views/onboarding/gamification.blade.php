@@ -16,7 +16,7 @@
         <div class="col-12 col-lg-7 order-lg-1">
             <div id="title-onboarding-2">UM GAME FEITO PARA GENTE GRANDE</div>
             <div id="sub-title-onboarding-2">Agora você faz parte da tripulação <span
-                      style="color: #2E85EC">Sirius.</span></div>
+                      style="color: #2E85EC">Admin.</span></div>
             <div id="description-onboarding-2">Cashback? Suporte VIP? Taxas menores? Temos! Fature alto, suba níveis e
                 ganhe benefícios por isso!</div>
 
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                        A cada nível alcançado, <strong>Sirius libera novos benefícios</strong> para sua conta.
+                        A cada nível alcançado, <strong>Admin libera novos benefícios</strong> para sua conta.
                     </span>
                 </div>
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">

@@ -11,7 +11,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token"
           content="{{ csrf_token() }}">
-    <title>Sirius @yield('title')</title>
+    <title>Admin @yield('title')</title>
     <!-- Fonts -->
     <link rel="dns-prefetch"
           href="https://fonts.gstatic.com">

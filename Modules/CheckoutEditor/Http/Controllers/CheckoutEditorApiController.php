@@ -142,7 +142,7 @@ class CheckoutEditorApiController extends Controller
             $config->save();
 
             $verificationCode = random_int(100000, 999999);
-            $message = "Código de verificação Sirius: " . $verificationCode;
+            $message = "Código de verificação Admin: " . $verificationCode;
             $smsService = new SmsService();
             $smsService->sendSms($supportPhone, $message);
 
