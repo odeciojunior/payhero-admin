@@ -20,48 +20,44 @@ $(document).ready(function () {
         updateWithdrawals();
     });
 
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#project-empty-title").hide();
         $("#project-empty").hide();
         $("#project-not-empty").show();
-        if($('#container-config').is(':visible')){
-            hiddenConfig()
+        if ($("#container-config").is(":visible")) {
+            hiddenConfig();
         }
         resetSkeleton();
-        updateCompanyDefault().done( function(data1){
-            getCompaniesAndProjects().done(function(data2){
-                getProjects('company-navbar');
+        updateCompanyDefault().done(function (data1) {
+            getCompaniesAndProjects().done(function (data2) {
+                getProjects("company-navbar");
             });
         });
     });
 
-    function getProjects(origin='')
-    {
-        if(!origin)
-            loadingOnScreen();
+    function getProjects(origin = "") {
+        if (!origin) loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&tokens=true',
+            url: "/api/projects?select=true&tokens=true",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
-                if(!origin)
-                    loadingOnScreenRemove();
+                if (!origin) loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(!origin)
-                    loadingOnScreenRemove();
+                if (!origin) loadingOnScreenRemove();
                 if (!isEmpty(response.data)) {
                     $("#project-empty-title").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
                     resetSkeleton();
-                    getSettings($('.company-navbar').val());
+                    getSettings($(".company-navbar").val());
                     window.updateWithdrawals();
                     window.updateStatements();
                 } else {
@@ -69,13 +65,13 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                     $("#project-empty-title").show();
                 }
-            }
+            },
         });
     }
 
-    $(document).on('click','.img-gateway', function(evt){
-        let id=$(this).attr('href');
-        window.location.href ='/finances/'+id;
+    $(document).on("click", ".img-gateway", function (evt) {
+        let id = $(this).attr("href");
+        window.location.href = "/finances/" + id;
     });
 
     function getGatewayImg(nome) {
@@ -386,7 +382,7 @@ $(document).ready(function () {
                                                         </defs>
                                                     </svg>
                                                 </div>
-                                               <span> <strong> O Sirius é multiadquirente.</strong> <br/> Sempre tem espaço pra mais uma :) </span>
+                                               <span> <strong> O Admin é multiadquirente.</strong> <br/> Sempre tem espaço pra mais uma :) </span>
                                             </div>
                                         </div>
                                     </div>
@@ -541,7 +537,7 @@ $(document).ready(function () {
             success: (response) => {
                 if (response.allowed && verifyAccountFrozen() == false) {
                     $(".blocked-withdrawal").hide();
-                    checkUserBimetry()
+                    checkUserBimetry();
                 } else {
                     $(".btn-request-withdrawal").prop("disabled", true).addClass("disabled");
                     $("#blocked-withdrawal").show();

@@ -61,7 +61,7 @@ $(document).ready(function () {
         });
     };
 
-    verifyUserTerms();
+    // verifyUserTerms();
     $("#terms-cloudfox").click(function () {
         $("#accept-term").toggle();
     });

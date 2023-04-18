@@ -37,10 +37,10 @@
 
         <div class="col-12 col-lg-6 my-15">
             <div class="summary-title">CHECKOUT 2.0 <span class="summary-badge soon">EM BREVE</span></div>
-            <div class="summary-description">O novo checkout do Sirius para aumentar ainda mais a sua conversão.</div>
+            <div class="summary-description">O novo checkout do Admin para aumentar ainda mais a sua conversão.</div>
         </div>
         <div class="col-12 col-lg-6 my-15">
-            <div class="summary-title">APP SIRIUS <span class="summary-badge soon">EM BREVE</span></div>
+            <div class="summary-title">APP ADMIN <span class="summary-badge soon">EM BREVE</span></div>
             <div class="summary-description">Um app prático, rápido e fácil para consultar na tela do seu celular.</div>
         </div>
     </div>

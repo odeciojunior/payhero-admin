@@ -19,13 +19,13 @@
         <div class="sidebar">
             <img class="logo"
                  src="https://cloudfox.net/sirius/assets/img/logos/sirius-powered-cloudfox.svg"
-                 alt="Sirius Logo">
+                 alt="Admin Logo">
             <ol>
                 <li>
                     <a href="#section-1">Integração</a>
                 </li>
                 <li>
-                    <a href="#section-2">Autorizando o Sirius</a>
+                    <a href="#section-2">Autorizando o Admin</a>
                 </li>
                 <li>
                     <a href="#section-3">Cadastrando o frete</a>
@@ -41,7 +41,7 @@
                 <li id="section-1">
                     <h4>Integração</h4>
                     <div>
-                        Na sua conta no Sirius acesse: <span class="breadcrumb">Aplicativos > Melhor Envio</span> e
+                        Na sua conta no Admin acesse: <span class="breadcrumb">Aplicativos > Melhor Envio</span> e
                         Clique
                         no botão <img class="inline-img"
                              src="{{ mix('build/layouts/melhorenvio/img/step-1a.jpg') }}"
@@ -54,14 +54,14 @@
                     </div>
                 </li>
                 <li id="section-2">
-                    <h4>Autorizando o Sirius</h4>
+                    <h4>Autorizando o Admin</h4>
                     <div>
                         Você será redirecionado para a tela de autorização Melhor Envio (certifique-se que está logado
                         em
                         sua conta). Nessa etapa você pode configurar alguns detalhes da sua integração.
                         <p> É muito importante que preencha os campos <b>Inscrição Estadual Padrão</b> e <b>Agência de
                                 postagem (caso use Jadlog)</b> para que a integração funcione corretamente. Clique em
-                            <span class="btn blue">Autorizar</span> e você será redirecionado de volta ao Sirius.
+                            <span class="btn blue">Autorizar</span> e você será redirecionado de volta ao Admin.
                         </p>
                         <div class="img-container">
                             <img src="{{ mix('build/layouts/melhorenvio/img/step-2a.jpg') }}"

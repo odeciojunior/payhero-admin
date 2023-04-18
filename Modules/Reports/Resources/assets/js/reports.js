@@ -224,7 +224,7 @@ function updateReports() {
     Promise.all([
         getCommission(),
         getPending(),
-        getCashback(),
+        // getCashback(),
         getSales(),
         getTypePayments(),
         getProducts(),

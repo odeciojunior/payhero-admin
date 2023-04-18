@@ -7,7 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
-    <title>Sirius - Transportadoras Suportadas</title>
+    <title>Admin - Transportadoras Suportadas</title>
 
     <!-- Favicon -->
     <link rel="apple-touch-icon"
@@ -90,7 +90,7 @@
         <div class="header">
             <img class="logo"
                  src="{{ mix('/build/global/img/logos/2021/svg/sirius-logo.svg') }}"
-                 alt="Sirius Logo">
+                 alt="Admin Logo">
             <h1>Transportadoras compatíveis</h1>
         </div>
 

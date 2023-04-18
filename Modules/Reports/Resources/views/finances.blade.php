@@ -10,9 +10,10 @@
 
     <div class="page mb-0">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div style="display: none" class="page-header container">
+        <div style="display: none"
+             class="page-header container">
             <div class="filter-container row justify-content-between">
 
                 <div class="col-sm-12 col-lg-3 col-xl-3">
@@ -26,7 +27,8 @@
 
                 <div class=" col-sm-12 col-lg-9 col-xl-7 div-filters">
                     <div class="row justify-content-end align-items-center">
-                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store" id="box-projects">
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects margin-store"
+                             id="box-projects">
                             <select id='select_projects'
                                     class="sirius-select">
                                 {{-- JS carrega.. --}}
@@ -47,13 +49,13 @@
                         </div>
 
                         <!-- <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
-                                    <div class="inner-reports">
-                                        <a href="" class="grey lk-export">
-                                            <i class="o-download-cloud-1 mr-2"></i>
-                                            Exportar relatórios
-                                        </a>
-                                    </div>
-                                </div> -->
+                                        <div class="inner-reports">
+                                            <a href="" class="grey lk-export">
+                                                <i class="o-download-cloud-1 mr-2"></i>
+                                                Exportar relatórios
+                                            </a>
+                                        </div>
+                                    </div> -->
                     </div>
                 </div>
 
@@ -104,8 +106,8 @@
                                                name="format"
                                                value="csv"><label for="">.csv</label></div>
                                     <!-- <div class="align-middle-input"><input type="radio"
-                                               name="format"
-                                               value="xls"><label for="">.xls</label></div> -->
+                                                   name="format"
+                                                   value="xls"><label for="">.xls</label></div> -->
                                 </div>
 
                                 <div class="d-flex modal-buttons">
@@ -175,7 +177,7 @@
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
-                                    <div class="inner-comission flc">
+                                    {{-- <div class="inner-comission flc">
                                         <div class="card inner cash card-cashback card-fc"
                                              id="card-cashback">
                                             <header class="d-flex title-graph title-cash">
@@ -216,7 +218,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="inner-comission space-mobol"
                                          id="card-draw">
                                         <div class="card inner relative pad-bottom-0"

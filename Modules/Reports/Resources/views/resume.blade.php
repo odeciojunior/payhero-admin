@@ -10,9 +10,10 @@
 
     <div class="page mb-0">
 
-        @include('layouts.company-select',['version'=>'mobile'])
+        @include('layouts.company-select', ['version' => 'mobile'])
 
-        <div style="display: none" class="page-header container">
+        <div style="display: none"
+             class="page-header container">
             <div class="filter-container row justify-content-between">
 
                 <div class="col-sm-12 col-lg-3 col-xl-3">
@@ -49,13 +50,13 @@
                         </div>
 
                         <!-- <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
-                                    <div class="inner-reports">
-                                        <a href="" class="grey lk-export">
-                                            <i class="o-download-cloud-1 mr-2"></i>
-                                            Exportar relatórios
-                                        </a>
-                                    </div>
-                                </div> -->
+                                                <div class="inner-reports">
+                                                    <a href="" class="grey lk-export">
+                                                        <i class="o-download-cloud-1 mr-2"></i>
+                                                        Exportar relatórios
+                                                    </a>
+                                                </div>
+                                            </div> -->
 
                     </div>
 
@@ -108,8 +109,8 @@
                                                name="format"
                                                value="csv"><label for="">.csv</label></div>
                                     <!-- <div class="align-middle-input"><input type="radio"
-                                               name="format"
-                                               value="xls"><label for="">.xls</label></div> -->
+                                                           name="format"
+                                                           value="xls"><label for="">.xls</label></div> -->
                                 </div>
 
                                 <div class="d-flex modal-buttons">
@@ -182,11 +183,11 @@
                                                  id="card-cashback">
                                                 <div class="card-body data-content">
                                                     <div class="content-info">
-                                                        <header class="container">
-                                                            <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
-                                                        </header>
-                                                        <div class="onPreLoad"
-                                                             id="block-cash"></div>
+                                                        <!-- <header class="container">
+                                                                <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
+                                                            </header>
+                                                            <div class="onPreLoad"
+                                                                 id="block-cash"></div> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,54 +424,54 @@
                 <div class='container col-sm-12 mt-20 d-lg-block'>
                     <div class='row'>
                         <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Receita gerada </h6>
-                                        <h4 id='revenue-generated'>0</h4>
-                                    </div>
-                                    <div class="s-border-right yellow"></div>
-                                </div> -->
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Receita gerada </h6>
+                                                    <h4 id='revenue-generated'>0</h4>
+                                                </div>
+                                                <div class="s-border-right yellow"></div>
+                                            </div> -->
                         <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Aprovadas </h6>
-                                        <h4 id='qtd-aproved' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div> -->
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Aprovadas </h6>
+                                                    <h4 id='qtd-aproved' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div> -->
                         <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Pendentes </h6>
-                                        <h4 id='qtd-pending' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div> -->
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Pendentes </h6>
+                                                    <h4 id='qtd-pending' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div> -->
                         <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Canceladas </h6>
-                                        <h4 id='qtd-canceled' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div> -->
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Canceladas </h6>
+                                                    <h4 id='qtd-canceled' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div> -->
                         <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Recusadas </h6>
-                                        <h4 id='qtd-recusadas' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Reembolsos </h6>
-                                        <h4 id='qtd-reembolso' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Chargeback </h6>
-                                        <h4 id='qtd-chargeback' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12 card">
-                                    <div class="card-body">
-                                        <h6 class="font-size-14 gray-600"> Em disputa </h6>
-                                        <h4 id='qtd-dispute' class=" font-size-30 bold">0</h4>
-                                    </div>
-                                </div> -->
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Recusadas </h6>
+                                                    <h4 id='qtd-recusadas' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Reembolsos </h6>
+                                                    <h4 id='qtd-reembolso' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Chargeback </h6>
+                                                    <h4 id='qtd-chargeback' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                                <div class="card-body">
+                                                    <h6 class="font-size-14 gray-600"> Em disputa </h6>
+                                                    <h4 id='qtd-dispute' class=" font-size-30 bold">0</h4>
+                                                </div>
+                                            </div> -->
                     </div>
                 </div>
                 <div class="row justify-content-between mt-20">
@@ -535,10 +536,10 @@
                                 <!--div class="btn-group dropdown"-->
                                 <!--a href="#" class="text-body dropdown-toggle blue-grey-700" data-toggle="dropdown">PRODUCTS SALES</a-->
                                 <!--div class="dropdown-menu animate" role="menu">
-                                            <a class="dropdown-item" href="#" role="menuitem">Sales</a>
-                                            <a class="dropdown-item" href="#" role="menuitem">Total sales</a>
-                                            <a class="dropdown-item" href="#" role="menuitem">profit</a>
-                                        </div-->
+                                                        <a class="dropdown-item" href="#" role="menuitem">Sales</a>
+                                                        <a class="dropdown-item" href="#" role="menuitem">Total sales</a>
+                                                        <a class="dropdown-item" href="#" role="menuitem">profit</a>
+                                                    </div-->
                                 <!--/div-->
                                 <ul class="nav nav-pills nav-pills-rounded chart-action"
                                     style="display: none">

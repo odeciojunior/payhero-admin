@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
 
-    <title>Sirius - Login</title>
+    <title>Admin - Login</title>
 
     <!-- Favicon -->
     <link rel="apple-touch-icon"

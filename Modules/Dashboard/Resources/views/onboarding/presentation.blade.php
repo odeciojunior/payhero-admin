@@ -20,7 +20,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <div id="title-onboarding-1">Temos novidades para você, <span id="user-name"></span></div>
-                        <div id="description-onboarding-1">Você já deve ter percebido que o Sirius tem passado por
+                        <div id="description-onboarding-1">Você já deve ter percebido que o Admin tem passado por
                             diversas melhorias. Além de um novo visual, hoje queremos te apresentar algumas ferramentas
                             e funcionalidades que acabaram de chegar por aqui.</div>
                         <div id="onboarding-next-presentation"

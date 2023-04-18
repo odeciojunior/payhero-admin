@@ -56,11 +56,11 @@ $(document).ready(function () {
             messageStop: "100M",
         },
         6: {
-            name: "Sirius Major",
+            name: "Admin Major",
             description: "Nível 6",
             icon: "/build/global/adminremark/assets/images/nivel-6.png",
             storytelling:
-                "Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!",
+                "Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Admin, a estrela mais brilhante!",
             billedStart: "100000000",
             messageStart: "100M",
             billedStop: "500000000",
@@ -71,8 +71,8 @@ $(document).ready(function () {
     function nextPerformance(data) {
         removeSkeletonLoadingFromPerformance();
         $(".sirius-performance .card-indicators > .active").on("click", function () {
-            $('.performance-data').html('');
-            let card = $(this).data('slide-to')
+            $(".performance-data").html("");
+            let card = $(this).data("slide-to");
             switch (card) {
                 case 1:
                     updatePerformanceCard1(data);
@@ -89,7 +89,6 @@ $(document).ready(function () {
     }
 
     window.updatePerformance = function () {
-
         putSkeletonLoadingOnPerformance();
 
         $.ajax({
@@ -101,7 +100,7 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             data: {
-                company: $('.company-navbar').val(),
+                company: $(".company-navbar").val(),
             },
             error: function error(response) {
                 removeSkeletonLoadingFromPerformance();
@@ -112,7 +111,7 @@ $(document).ready(function () {
                 updatePerformanceCard1(data);
                 if (data.money_cashback !== "0,00") {
                     updateCashback(data.money_cashback);
-                }else{
+                } else {
                     $(".sirius-cashback > .card").addClass("d-none");
                 }
             },
@@ -281,7 +280,7 @@ $(document).ready(function () {
                     <span class="o-reload-1 cashback-container-icon"></span>
                 </div>
             </div>
-        </div>` );
+        </div>`);
         $(".sirius-cashback > .card").removeClass("d-none");
     }
 
@@ -498,12 +497,11 @@ $(document).ready(function () {
         return item;
     }
 
-    window.putSkeletonLoadingOnPerformance = function() {
+    window.putSkeletonLoadingOnPerformance = function () {
         $(".performance-card > .performance-loading").removeClass("d-none");
-    }
+    };
 
-    window.removeSkeletonLoadingFromPerformance = function() {
+    window.removeSkeletonLoadingFromPerformance = function () {
         $(".performance-card > .performance-loading").addClass("d-none");
-    }
-
+    };
 });
