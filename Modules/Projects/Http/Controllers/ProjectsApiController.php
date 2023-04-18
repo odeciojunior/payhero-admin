@@ -46,7 +46,7 @@ class ProjectsApiController extends Controller
     {
         try {
             $user = auth()->user();
-            $hasCompany = Company::where('user_id', $user->getAccountOwnerId())->exists();
+            $hasCompany = Company::where("user_id", $user->getAccountOwnerId())->exists();
 
             if ($hasCompany) {
                 $projectModel = new Project();
@@ -67,45 +67,47 @@ class ProjectsApiController extends Controller
                         ->log("Visualizou tela todos os projetos");
                 }
 
-                if($request->input('status')){
-                    if($request->input('status') == 'all')
-                    $projectStatus = [
-                        $projectModel->present()->getStatus('active'),
-                        $projectModel->present()->getStatus('disabled'),
-                    ];
-                    else
-                        $projectStatus = [$projectModel->present()->getStatus( $request->input('status') )];
-                }
-                else{
-                    $projectStatus = [$projectModel->present()->getStatus('active')];
+                if ($request->input("status")) {
+                    if ($request->input("status") == "all") {
+                        $projectStatus = [
+                            $projectModel->present()->getStatus("active"),
+                            $projectModel->present()->getStatus("disabled"),
+                        ];
+                    } else {
+                        $projectStatus = [$projectModel->present()->getStatus($request->input("status"))];
+                    }
+                } else {
+                    $projectStatus = [$projectModel->present()->getStatus("active")];
                     if ($user->deleted_project_filter) {
                         $projectStatus = [
-                            $projectModel->present()->getStatus('active'),
-                            $projectModel->present()->getStatus('disabled'),
+                            $projectModel->present()->getStatus("active"),
+                            $projectModel->present()->getStatus("disabled"),
                         ];
                     }
                 }
 
                 $companyId = $user->company_default;
-                if(!empty($request->input('company'))){
-                    $companyId = hashids_decode($request->input('company'));
+                if (!empty($request->input("company"))) {
+                    $companyId = hashids_decode($request->input("company"));
                 }
 
-                if($request->tokens){
-                    return $projectService->getUserProjectsAndTokens($pagination, $projectStatus, $affiliation, $companyId);
+                if ($request->tokens) {
+                    return $projectService->getUserProjectsAndTokens(
+                        $pagination,
+                        $projectStatus,
+                        $affiliation,
+                        $companyId
+                    );
                 }
 
                 return $projectService->getUserProjects($pagination, $projectStatus, $affiliation, $companyId);
-
             }
 
             return response()->json([
-                'data' => [],
-                'no_company' => true,
-                'message' => 'Nenhuma empresa cadastrada!'
+                "data" => [],
+                "no_company" => true,
+                "message" => "Nenhuma empresa cadastrada!",
             ]);
-
-
         } catch (Exception $e) {
             report($e);
 
@@ -123,7 +125,9 @@ class ProjectsApiController extends Controller
                 ->log("Visualizou tela criar projeto");
 
             $user = auth()->user();
-            $companies = Company::where('user_id',$user->getAccountOwnerId())->where('active_flag', true)->get();
+            $companies = Company::where("user_id", $user->getAccountOwnerId())
+                ->where("active_flag", true)
+                ->get();
 
             return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {
@@ -141,7 +145,7 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $userProjectModel = new UserProject();
             $shippingModel = new Shipping();
-            $amazonFileService = app(AmazonFileService::class);
+            // $amazonFileService = app(AmazonFileService::class);
 
             if (empty($requestValidated)) {
                 return response()->json(["message" => "Erro ao tentar salvar projeto"], 400);
@@ -337,7 +341,6 @@ class ProjectsApiController extends Controller
                 return response()->json("Projeto não encontrado", 400);
             }
             return response()->json("Sem permissão para remover projeto", 403);
-
         } catch (Exception $e) {
             report($e);
 
@@ -437,93 +440,88 @@ class ProjectsApiController extends Controller
                 ->first();
 
             if (empty($project)) {
-                return response()->json([
-                    'message' => 'Projeto não encontrado!',
-                    'account_is_approved' => (bool) auth()->user()->account_is_approved
-                ], 400);
+                return response()->json(
+                    [
+                        "message" => "Projeto não encontrado!",
+                        "account_is_approved" => (bool) auth()->user()->account_is_approved,
+                    ],
+                    400
+                );
             }
 
-            $resume = $this->getProjectResume($project->id,$userId);
+            $resume = $this->getProjectResume($project->id, $userId);
 
-            $project->chargeback_count = $resume['chargeback_count'];
-            $project->without_tracking = $resume['without_tracking'];
-            $project->approved_sales = $resume['approved_sales'];
-            $project->approved_sales_value = $resume['approved_sales_value'];
-            $project->open_tickets = $resume['open_tickets'];
-            $project->producer = $resume['producer'];
+            $project->chargeback_count = $resume["chargeback_count"];
+            $project->without_tracking = $resume["without_tracking"];
+            $project->approved_sales = $resume["approved_sales"];
+            $project->approved_sales_value = $resume["approved_sales_value"];
+            $project->open_tickets = $resume["open_tickets"];
+            $project->producer = $resume["producer"];
 
-            if (Gate::allows('show', [$project])) {
-                activity()->on((new Project()))->tap(
-                    function (Activity $activity) use ($id) {
-                        $activity->log_name = 'visualization';
+            if (Gate::allows("show", [$project])) {
+                activity()
+                    ->on(new Project())
+                    ->tap(function (Activity $activity) use ($id) {
+                        $activity->log_name = "visualization";
                         $activity->subject_id = $id;
-                    }
-                )->log('Visualizou o projeto ' . $project->name);
+                    })
+                    ->log("Visualizou o projeto " . $project->name);
 
                 return new ProjectsResource($project);
             }
 
-            return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
-
+            return response()->json(["message" => "Erro ao exibir detalhes do projeto"], 400);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+            return response()->json(["message" => "Erro ao exibir detalhes do projeto"], 400);
         }
     }
 
-    public function getProjectResume($projectId,$userOwnerId)
+    public function getProjectResume($projectId, $userOwnerId)
     {
         $resume = [
-            'chargeback_count'=>0,
-            'without_tracking'=>0,
-            'approved_sales'=>0,
-            'approved_sales_value'=>0,
-            'open_tickets'=>0,
-            'producer'=>''
+            "chargeback_count" => 0,
+            "without_tracking" => 0,
+            "approved_sales" => 0,
+            "approved_sales_value" => 0,
+            "open_tickets" => 0,
+            "producer" => "",
         ];
 
-        $resume['chargeback_count'] = Sale::where('project_id', $projectId)
-            ->where('status', Sale::STATUS_CHARGEBACK)
+        $resume["chargeback_count"] = Sale::where("project_id", $projectId)
+            ->where("status", Sale::STATUS_CHARGEBACK)
             ->count();
 
-        $resume['without_tracking'] = Sale::where('project_id', $projectId)
-            ->where('has_valid_tracking', false)
-            ->whereNotNull('delivery_id')
-            ->where('status', Sale::STATUS_APPROVED)
+        $resume["without_tracking"] = Sale::where("project_id", $projectId)
+            ->where("has_valid_tracking", false)
+            ->whereNotNull("delivery_id")
+            ->where("status", Sale::STATUS_APPROVED)
             ->count();
 
-        $resume['approved_sales'] = Sale::where('project_id', $projectId)
-            ->where('status', Sale::STATUS_APPROVED)
+        $resume["approved_sales"] = Sale::where("project_id", $projectId)
+            ->where("status", Sale::STATUS_APPROVED)
             ->count();
 
-        $resume['approved_sales_value'] = Transaction::where('user_id', $userOwnerId)
-            ->whereHas(
-                'sale',
-                function ($query) use ($projectId) {
-                    $query->where('status', Sale::STATUS_APPROVED);
-                    $query->where('project_id', $projectId);
-                }
-            )
-            ->sum('value');
+        $resume["approved_sales_value"] = Transaction::where("user_id", $userOwnerId)
+            ->whereHas("sale", function ($query) use ($projectId) {
+                $query->where("status", Sale::STATUS_APPROVED);
+                $query->where("project_id", $projectId);
+            })
+            ->sum("value");
 
-        $resume['open_tickets'] = Sale::where('project_id', $projectId)
-            ->whereHas(
-                'tickets',
-                function ($query) {
-                    $query->where('ticket_status_enum', Ticket::STATUS_OPEN);
-                }
-            )
+        $resume["open_tickets"] = Sale::where("project_id", $projectId)
+            ->whereHas("tickets", function ($query) {
+                $query->where("ticket_status_enum", Ticket::STATUS_OPEN);
+            })
             ->count();
 
-        $producer = User::select('name')->whereHas(
-            'usersProjects',
-            function ($query) use ($projectId) {
-                $query->where('project_id', $projectId)
-                    ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM);
-            }
-        )->first();
+        $producer = User::select("name")
+            ->whereHas("usersProjects", function ($query) use ($projectId) {
+                $query->where("project_id", $projectId)->where("type_enum", UserProject::TYPE_PRODUCER_ENUM);
+            })
+            ->first();
 
-        $resume['producer'] = $producer->name ?? '';
+        $resume["producer"] = $producer->name ?? "";
 
         return $resume;
     }
@@ -620,7 +618,6 @@ class ProjectsApiController extends Controller
                 return response()->json(["message" => "Configuração atualizada com sucesso"], 200);
             }
             return response()->json(["message" => "Erro ao atualizar configuração"], 400);
-
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao atualizar configuração"], 400);

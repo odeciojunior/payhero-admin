@@ -321,28 +321,27 @@
                             <span class="site-menu-title">Antifraude</span>
                         </a>
                     </li> --}}
-                    @can('trackings')
-                        <li class="site-menu-item">
-                            <a href="{{ route('trackings.index') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Rastreamentos</span>
-                            </a>
-                        </li>
-                    @endcan
-                    <!-- hasanyrole('account_owner|admin|attendance') -->
-                    @can('contestations')
-                        <li class="site-menu-item">
-                            <a href="{{ route('contestations.index') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Contestações</span>
-                            </a>
-                        </li>
-                    @endcan
+                    <li class="site-menu-item">
+                        <a href="{{ route('trackings.index') }}">
+                            <span class="bg-menu"></span>
+                            <span class="site-menu-title">Rastreamentos</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('contestations.index') }}">
+                            <span class="bg-menu"></span>
+                            <span class="site-menu-title">Contestações</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif
 
         <!-- hasanyrole('account_owner|admin') -->
+        {{-- @php
+
+            dd($user->permissions->toArray());
+        @endphp --}}
         @can('projects')
             <li class="site-menu-item has-sub">
                 <a href="/projects"
