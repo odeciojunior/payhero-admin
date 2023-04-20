@@ -38,6 +38,11 @@ class CompaniesTableSeeder extends Seeder
             "contract_document_status" => 3,
             "capture_transaction_enabled" => 1,
             "account_type" => 1,
+            "situaction" => json_encode([
+                "situation" => "active",
+                "situation_enum" => 1,
+                "date_check_situation" => now(),
+            ]),
         ]);
 
         $userStore->update([
