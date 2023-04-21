@@ -155,7 +155,7 @@ class ProductsApiController extends Controller
             $data["description"] = FoxUtils::removeSpecialChars($data["description"]);
 
             $data["status_enum"] =
-                $data["type_enum"] == "digital" ? $productModel->present()->getStatus("analyzing") : null;
+                $data["type_enum"] == "digital" ? $productModel->present()->getStatus("approved") : null;
 
             $data["type_enum"] = $productModel->present()->getType($data["type_enum"]);
 
