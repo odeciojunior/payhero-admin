@@ -83,7 +83,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                    {{-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/convertax"
                              style='width: 270px;'>
@@ -102,7 +102,7 @@
                                 <p class="card-text sm">Integre suas lojas com ConvertaX </p>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/activecampaign"
