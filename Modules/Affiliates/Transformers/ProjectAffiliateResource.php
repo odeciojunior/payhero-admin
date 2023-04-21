@@ -27,7 +27,7 @@ class ProjectAffiliateResource extends JsonResource
 
         //verifica se é o dono do projeto
         $producer = false;
-        $userProject = $this->usersProjects[0]??null;
+        $userProject = $this->usersProjects[0] ?? null;
         if ($userProject && $userProject->user_id == $userId) {
             $producer = true;
         }
@@ -68,7 +68,7 @@ class ProjectAffiliateResource extends JsonResource
             "producer" => $producer,
             "status_url_affiliates" => $this->status_url_affiliates,
             "cookie_duration" => $this->cookie_duration ?? "",
-            "billet_release_days" => $userProject->company->gateway_release_money_days ?? "",
+            "billet_release_days" => $userProject->company->bank_slip_release_money_days ?? "",
         ];
     }
 }

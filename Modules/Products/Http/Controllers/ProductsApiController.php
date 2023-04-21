@@ -52,7 +52,7 @@ class ProductsApiController extends Controller
     private function getAmazonFileService()
     {
         if (!$this->amazonFileService) {
-            $this->amazonFileService = "todo"; // app(AmazonFileService::class);
+            $this->amazonFileService = app(AmazonFileService::class);
         }
 
         return $this->amazonFileService;
@@ -165,44 +165,44 @@ class ProductsApiController extends Controller
             // $data["category_id"] = $category->id;
             $product = $productModel->create($data);
 
-            // $productPhoto = $request->file("product_photo");
+            $productPhoto = $request->file("product_photo");
 
-            // if ($productPhoto != null) {
-            // try {
-            //     $img = Image::make($productPhoto->getPathname());
-            //     // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-            //     // $img->resize(200, 200);
-            //     $img->save($productPhoto->getPathname());
+            if ($productPhoto != null) {
+                try {
+                    $img = Image::make($productPhoto->getPathname());
+                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    // $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
 
-            //     $amazonPath = $this->getAmazonFileService()->uploadFile("uploads/public/products", $productPhoto);
+                    $amazonPath = $this->getAmazonFileService()->uploadFile("uploads/public/products", $productPhoto);
 
-            //     $product->update([
-            //         "photo" => $amazonPath,
-            //     ]);
-            // } catch (Exception $e) {
-            //     Log::warning("ProductController - store - Erro ao enviar foto do product");
-            //     report($e);
-            // }
-            // }
+                    $product->update([
+                        "photo" => $amazonPath,
+                    ]);
+                } catch (Exception $e) {
+                    Log::warning("ProductController - store - Erro ao enviar foto do product");
+                    report($e);
+                }
+            }
 
-            // if (!empty($data["digital_product_url"])) {
-            // try {
-            //     $this->getAmazonFileService()->changeDisk("s3_digital_product");
-            //     $amazonPath = $this->getAmazonFileService()->uploadFile(
-            //         "products/" . Hashids::encode($product->id),
-            //         $data["digital_product_url"],
-            //         null,
-            //         false,
-            //         "private"
-            //     );
+            if (!empty($data["digital_product_url"])) {
+                try {
+                    $this->getAmazonFileService()->changeDisk("s3_digital_product");
+                    $amazonPath = $this->getAmazonFileService()->uploadFile(
+                        "products/" . Hashids::encode($product->id),
+                        $data["digital_product_url"],
+                        null,
+                        false,
+                        "private"
+                    );
 
-            //     $product->update([
-            //         "digital_product_url" => $amazonPath,
-            //     ]);
-            // } catch (Exception $e) {
-            //     report($e);
-            // }
-            // }
+                    $product->update([
+                        "digital_product_url" => $amazonPath,
+                    ]);
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
 
             return response()->json(["message" => "Produto salvo com sucesso!"], 200);
         } catch (Exception $e) {
@@ -296,7 +296,7 @@ class ProductsApiController extends Controller
             $categoryModel = new Category();
 
             $category = $categoryModel->where("name", "like", "%" . "Outros" . "%")->first();
-            $data["category"] = $category->id;
+            // $data["category"] = $category->id;
 
             $productId = current(Hashids::decode($id));
 
@@ -335,8 +335,6 @@ class ProductsApiController extends Controller
                     $this->getAmazonFileService()->deleteFile($product->photo);
 
                     $img = Image::make($productPhoto->getPathname());
-                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $productPath = $this->getAmazonFileService()->uploadFile("uploads/public/products", $productPhoto);

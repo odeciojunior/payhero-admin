@@ -232,7 +232,7 @@ class UserService
                     ->first();
 
                 if ($tax == PromotionalTax::PROMOTIONAL_TAX) {
-                    $tax = (new CompanyService())->getTax($company->gateway_release_money_days);
+                    $tax = (new CompanyService())->getTax($company->credit_card_tax);
                 }
 
                 if ($company) {

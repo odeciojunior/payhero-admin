@@ -48,7 +48,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property int $credit_card_release_money
  * @property int $account_type
  * @property int $gateway_tax
- * @property int $gateway_release_money_days
+ * @property int $credit_card_release_money_days
+ * @property int $bank_slip_release_money_days
+ * @property int $pix_release_money_days
  * @property string $document_issue_date
  * @property string $document_issuer
  * @property string $document_issuer_state
@@ -166,7 +168,9 @@ class Company extends Model
         "boleto_rule",
         "installment_tax",
         "checkout_tax",
-        "gateway_release_money_days",
+        "credit_card_release_money_days",
+        "bank_slip_release_money_days",
+        "pix_release_money_days",
         "document_issue_date",
         "document_issuer",
         "document_issuer_state",
