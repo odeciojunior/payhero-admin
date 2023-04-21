@@ -57,6 +57,14 @@ return new class extends Migration {
                 ->foreign("withdrawal_id")
                 ->references("id")
                 ->on("withdrawals");
+
+            $table
+                ->unsignedInteger("gateway_id")
+                ->nullable()
+                ->foreign("gateway_id")
+                ->references("id")
+                ->on("gateways");
+
             $table->json("data");
             $table->tinyInteger("processed_flag")->default(0);
             $table->json("machine_result")->nullable();
