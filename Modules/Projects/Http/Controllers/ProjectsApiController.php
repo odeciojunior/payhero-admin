@@ -145,7 +145,7 @@ class ProjectsApiController extends Controller
             $projectModel = new Project();
             $userProjectModel = new UserProject();
             $shippingModel = new Shipping();
-            // $amazonFileService = app(AmazonFileService::class);
+            $amazonFileService = app(AmazonFileService::class);
 
             if (empty($requestValidated)) {
                 return response()->json(["message" => "Erro ao tentar salvar projeto"], 400);
@@ -330,12 +330,9 @@ class ProjectsApiController extends Controller
                 $projectService = new ProjectService();
 
                 if ($projectId) {
-                    //n tem venda
                     if ($projectService->delete($projectId)) {
-                        //projeto removido
                         return response()->json("success", 200);
                     }
-                    //erro ao remover projeto
                     return response()->json("error", 400);
                 }
                 return response()->json("Projeto não encontrado", 400);
@@ -538,8 +535,7 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(["message" => $e->getMessage()], 400);
-            //return response()->json(['message' => 'Ocorreu um erro ao buscar os dados do projeto'], 400);
+            return response()->json(["message" => "Ocorreu um erro ao buscar os dados do projeto"], 400);
         }
     }
 
@@ -607,8 +603,6 @@ class ProjectsApiController extends Controller
         try {
             $data = $request->all();
             $user = auth()->user();
-
-            // dd($data);
 
             $updated = $user->update([
                 "deleted_project_filter" => $data["deleted_project_filter"],

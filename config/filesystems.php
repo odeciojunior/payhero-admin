@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -13,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    "default" => env("FILESYSTEM_DRIVER", "local"),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +25,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    "cloud" => env("FILESYSTEM_CLOUD", "s3"),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,79 +40,76 @@ return [
     |
     */
 
-    'disks' => [
-
-        'local' => [
-            'driver' => 'local',
-            'root' => storage_path('app'),
+    "disks" => [
+        "local" => [
+            "driver" => "local",
+            "root" => storage_path("app"),
         ],
 
-        'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+        "public" => [
+            "driver" => "local",
+            "root" => storage_path("app/public"),
+            "url" => env("APP_URL") . "/storage",
+            "visibility" => "public",
         ],
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'cloudfox-digital-products',
-            'url' => env('AWS_URL'),
+        "s3" => [
+            "driver" => "s3",
+            "key" => env("AWS_ACCESS_KEY_ID"),
+            "secret" => env("AWS_SECRET_ACCESS_KEY"),
+            "region" => env("AWS_DEFAULT_REGION"),
+            "bucket" => "nexuspay-digital-products",
+            "url" => env("AWS_URL"),
         ],
-        's3_documents' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'cloudfox-documents',
-            'url' => env('AWS_URL'),
+        "s3_documents" => [
+            "driver" => "s3",
+            "key" => env("AWS_ACCESS_KEY_ID"),
+            "secret" => env("AWS_SECRET_ACCESS_KEY"),
+            "region" => env("AWS_DEFAULT_REGION"),
+            "bucket" => "cloudfox-documents",
+            "url" => env("AWS_URL"),
         ],
-        's3_digital_product' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'cloudfox-digital-products',
-            'url' => env('AWS_URL'),
+        "s3_digital_product" => [
+            "driver" => "s3",
+            "key" => env("AWS_ACCESS_KEY_ID"),
+            "secret" => env("AWS_SECRET_ACCESS_KEY"),
+            "region" => env("AWS_DEFAULT_REGION"),
+            "bucket" => "nexuspay-digital-products",
+            "url" => env("AWS_URL"),
         ],
-        's3_chargeback' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'cloudfox-chargeback-contestations',
-            'url' => env('AWS_URL'),
+        "s3_chargeback" => [
+            "driver" => "s3",
+            "key" => env("AWS_ACCESS_KEY_ID"),
+            "secret" => env("AWS_SECRET_ACCESS_KEY"),
+            "region" => env("AWS_DEFAULT_REGION"),
+            "bucket" => "cloudfox-chargeback-contestations",
+            "url" => env("AWS_URL"),
         ],
-        's3_plans_reviews' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'plans-reviews',
-            'url' => env('AWS_URL'),
+        "s3_plans_reviews" => [
+            "driver" => "s3",
+            "key" => env("AWS_ACCESS_KEY_ID"),
+            "secret" => env("AWS_SECRET_ACCESS_KEY"),
+            "region" => env("AWS_DEFAULT_REGION"),
+            "bucket" => "plans-reviews",
+            "url" => env("AWS_URL"),
         ],
-        'downloadSpaces'     => [
-            'driver'   => 's3',
-            'key'      => env('DO_SPACES_KEY'),
-            'secret'   => env('DO_SPACES_SECRET'),
-            'endpoint' => env('DO_SPACES_ENDPOINT'),
-            'region'   => env('DO_SPACES_REGION'),
-            'bucket'   => env('DO_SPACES_BUCKET'),
-            'options'  => array(
-                'ContentDisposition' => 'attachment'
-            ),
+        "downloadSpaces" => [
+            "driver" => "s3",
+            "key" => env("DO_SPACES_KEY"),
+            "secret" => env("DO_SPACES_SECRET"),
+            "endpoint" => env("DO_SPACES_ENDPOINT"),
+            "region" => env("DO_SPACES_REGION"),
+            "bucket" => env("DO_SPACES_BUCKET"),
+            "options" => [
+                "ContentDisposition" => "attachment",
+            ],
         ],
-        'openSpaces'     => [
-            'driver'   => 's3',
-            'key'      => env('DO_SPACES_KEY'),
-            'secret'   => env('DO_SPACES_SECRET'),
-            'endpoint' => env('DO_SPACES_ENDPOINT'),
-            'region'   => env('DO_SPACES_REGION'),
-            'bucket'   => env('DO_SPACES_BUCKET'),
-
+        "openSpaces" => [
+            "driver" => "s3",
+            "key" => env("DO_SPACES_KEY"),
+            "secret" => env("DO_SPACES_SECRET"),
+            "endpoint" => env("DO_SPACES_ENDPOINT"),
+            "region" => env("DO_SPACES_REGION"),
+            "bucket" => env("DO_SPACES_BUCKET"),
         ],
     ],
-
 ];

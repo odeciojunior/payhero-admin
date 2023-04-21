@@ -146,13 +146,11 @@ class ProductsApiController extends Controller
     {
         try {
             $productModel = new Product();
-            $categoryModel = new Category();
 
             $data = $request->validated();
             $data["shopify"] = 0;
             $data["user"] = auth()->user()->account_owner_id;
             $data["user_id"] = auth()->user()->account_owner_id;
-            //            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
             $data["name"] = FoxUtils::removeSpecialChars($data["name"]);
             $data["description"] = FoxUtils::removeSpecialChars($data["description"]);
 
@@ -161,8 +159,6 @@ class ProductsApiController extends Controller
 
             $data["type_enum"] = $productModel->present()->getType($data["type_enum"]);
 
-            $category = $categoryModel->where("name", "like", "%" . "Outros" . "%")->first();
-            // $data["category_id"] = $category->id;
             $product = $productModel->create($data);
 
             $productPhoto = $request->file("product_photo");
@@ -170,8 +166,6 @@ class ProductsApiController extends Controller
             if ($productPhoto != null) {
                 try {
                     $img = Image::make($productPhoto->getPathname());
-                    // $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    // $img->resize(200, 200);
                     $img->save($productPhoto->getPathname());
 
                     $amazonPath = $this->getAmazonFileService()->uploadFile("uploads/public/products", $productPhoto);
@@ -293,10 +287,6 @@ class ProductsApiController extends Controller
         try {
             $data = $request->validated();
             $productModel = new Product();
-            $categoryModel = new Category();
-
-            $category = $categoryModel->where("name", "like", "%" . "Outros" . "%")->first();
-            // $data["category"] = $category->id;
 
             $productId = current(Hashids::decode($id));
 
@@ -332,7 +322,9 @@ class ProductsApiController extends Controller
 
             if ($productPhoto != null) {
                 try {
-                    $this->getAmazonFileService()->deleteFile($product->photo);
+                    if ($product->photo) {
+                        $this->getAmazonFileService()->deleteFile($product->photo);
+                    }
 
                     $img = Image::make($productPhoto->getPathname());
                     $img->save($productPhoto->getPathname());
