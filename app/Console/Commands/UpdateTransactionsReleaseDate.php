@@ -80,16 +80,6 @@ class UpdateTransactionsReleaseDate extends Command
                             if ($user->get_faster) {
                                 $transaction->tracking_required = false;
                             }
-                            if ($user->has_security_reserve && is_null($transaction->invitation_id)) {
-                                //reserva de segurança
-                                if ($releaseCount >= $user->security_reserve_rule) {
-                                    $releaseDate = now()->addDays(90);
-                                    $transaction->is_security_reserve = true;
-                                    $releaseCount = 0;
-                                }
-                                $user->release_count = $releaseCount;
-                                $user->save();
-                            }
                             $transaction->release_date = $releaseDate->toDateTimeString();
                             $transaction->save();
                         } else {

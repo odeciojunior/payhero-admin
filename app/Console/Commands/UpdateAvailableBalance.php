@@ -27,11 +27,11 @@ class UpdateAvailableBalance extends Command
     protected $description = "Command description";
 
     private $defaultGateways = [
-        IuguService::class,
+        // IuguService::class,
         Safe2PayService::class,
-        AsaasService::class,
-        GerencianetService::class,
-        GetnetService::class,
+        // AsaasService::class,
+        // GerencianetService::class,
+        // GetnetService::class,
         //CieloService::class,
     ];
 

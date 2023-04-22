@@ -74,7 +74,7 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property int $installment_cashback
  * @property bool $get_faster
  * @property int $release_count
- * @property bool $has_security_reserve
+ * @property int $security_reserve_tax
  * @property int $level
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
@@ -202,8 +202,7 @@ class User extends Authenticable
         "installment_cashback",
         "get_faster",
         "release_count",
-        "has_security_reserve",
-        "security_reserve_rule",
+        "security_reserve_tax",
         "contestation_penalty",
         "contestation_penalties_taxes",
         "level",
@@ -451,7 +450,7 @@ class User extends Authenticable
     {
         return $this->hasMany(UserBiometryResult::class);
     }
-    
+
     public function getRoleNames($guard = "web"): SupportCollection
     {
         return $this->roles()

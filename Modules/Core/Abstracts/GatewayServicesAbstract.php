@@ -29,10 +29,10 @@ abstract class GatewayServicesAbstract
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
-    public $gatewayName ='Vega';
-    public $companyColumnBalance='vega_balance';
+    public $gatewayName = "Vega";
+    public $companyColumnBalance = "vega_balance";
     public $companyId;
-    public $gatewayHashId = 'pqbz5KZby37dLlm';
+    public $gatewayHashId = "pqbz5KZby37dLlm";
 
     public function setCompany(Company $company)
     {
@@ -144,8 +144,8 @@ abstract class GatewayServicesAbstract
     public function existsBankAccountApproved()
     {
         //verifica se existe uma conta bancaria aprovada
-        $companyBankAccount = $this->company->getDefaultBankAccount()??null;
-        if(empty($companyBankAccount)){
+        $companyBankAccount = $this->company->getDefaultBankAccount() ?? null;
+        if (empty($companyBankAccount)) {
             return false;
         }
         $this->companyBankAccount = $companyBankAccount;
@@ -239,18 +239,18 @@ abstract class GatewayServicesAbstract
         try {
             DB::beginTransaction();
 
-            $transactions = Transaction::with("company")
+            $transactions = Transaction::with(["company", "user"])
                 ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
-                ->whereNotNull("company_id")
-                ->where(function ($where) {
-                    $where->where("tracking_required", false)->orWhereHas("sale", function ($query) {
-                        $query->where(function ($q) {
-                            $q->where("has_valid_tracking", true)->orWhereNull("delivery_id");
-                        });
-                    });
-                });
+                ->whereNotNull("company_id");
+            // ->where(function ($where) {
+            //     $where->where("tracking_required", false)->orWhereHas("sale", function ($query) {
+            //         $query->where(function ($q) {
+            //             $q->where("has_valid_tracking", true)->orWhereNull("delivery_id");
+            //         });
+            //     });
+            // });
 
             if (!empty($saleId)) {
                 $transactions->where("sale_id", $saleId);
@@ -398,9 +398,7 @@ abstract class GatewayServicesAbstract
             ->first()->company;
 
         $this->companyId = $company->id;
-        $this->apiKey = $company->getGatewayApiKey(
-            $this->getGatewayId()
-        );
+        $this->apiKey = $company->getGatewayApiKey($this->getGatewayId());
     }
 
     abstract public function getGatewayId(): int;
@@ -531,5 +529,4 @@ abstract class GatewayServicesAbstract
 
         return false;
     }
-
 }

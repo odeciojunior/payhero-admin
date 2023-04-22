@@ -438,9 +438,6 @@ class DemoSplitPayment
 
     public function isSecurityReserve(Company $company)
     {
-        if ($company->user->release_count == 0 and $company->user->has_security_reserve) {
-            return true;
-        }
         return false;
     }
 
@@ -451,23 +448,6 @@ class DemoSplitPayment
             !in_array($this->sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])
         ) {
             $today = Carbon::parse($this->sale->start_date);
-
-            if ($company->user->has_security_reserve) {
-                $releaseCount = $company->user->release_count + 1;
-
-                if ($releaseCount == 20) {
-                    $releaseDate = $today->addDays(90)->format("Y-m-d");
-                    $releaseCount = 0;
-                }
-
-                $company->user->update([
-                    "release_count" => $releaseCount,
-                ]);
-
-                if ($releaseCount == 0) {
-                    return $releaseDate;
-                }
-            }
 
             $releaseMoneyDays = 0;
 
