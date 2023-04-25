@@ -34,10 +34,14 @@ return new class extends Migration {
                     case "account_owner":
                     case "admin":
                         $role->syncPermissions([
-                            "sales_manage",
                             "dashboard",
                             "sales",
+                            "sales_manage",
                             "recovery",
+                            "trackings",
+                            "trackings_manage",
+                            "contestations",
+                            "contestations_manage",
                             "projects",
                             "projects_manage",
                             "products",
@@ -88,10 +92,14 @@ return new class extends Migration {
     public function getDefaultPermissions()
     {
         return [
-            ["sales_manage", "Vendas - Gerenciar", "web"],
             ["dashboard", "Dashboard", "web"],
             ["sales", "Vendas", "web"],
+            ["sales_manage", "Vendas - Gerenciar", "web"],
             ["recovery", "Recuperação", "web"],
+            ["trackings", "Rastreamento", "web"],
+            ["trackings_manage", "Rastreamento - Gerenciar", "web"],
+            ["contestations", "Contestações", "web"],
+            ["contestations_manage", "Contestações - Gerenciar", "web"],
             ["projects", "Lojas", "web"],
             ["projects_manage", "Lojas - Gerenciar", "web"],
             ["products", "Produtos", "web"],
