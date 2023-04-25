@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
         //usuario admin
         $user = User::create([
             "name" => "first admin user",
-            "email" => "admin@nexuspay.com.br",
+            "email" => "acesso@nexuspay.com.br",
             "password" => bcrypt("nexuspay"),
             "document" => "00000000000",
             "is_cloudfox" => true,
