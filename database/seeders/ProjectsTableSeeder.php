@@ -8,6 +8,7 @@ use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectNotificationService;
@@ -59,6 +60,19 @@ class ProjectsTableSeeder extends Seeder
         CheckoutConfig::create([
             "project_id" => $project->id,
             "company_id" => $user->company_default,
+        ]);
+
+        Shipping::create([
+            "project_id" => $project->id,
+            "name" => "Frete gratis",
+            "information" => "de 15 até 30 dias",
+            "value" => 0,
+            "type" => "static",
+            "type_enum" => 1,
+            "status" => "1",
+            "pre_selected" => "1",
+            "apply_on_plans" => '["all"]',
+            "not_apply_on_plans" => "[]",
         ]);
     }
 }

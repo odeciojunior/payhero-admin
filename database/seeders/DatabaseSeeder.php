@@ -30,5 +30,7 @@ class DatabaseSeeder extends Seeder
             $this->call(DemoDiscountCouponSeeder::class);
             $this->call(DemoAchievementUserSeeder::class);
         }
+
+        $this->call(BlockReasonsSeeder::class);
     }
 }
