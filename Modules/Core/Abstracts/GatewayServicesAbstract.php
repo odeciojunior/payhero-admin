@@ -279,52 +279,6 @@ abstract class GatewayServicesAbstract
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-
-                if ($transaction->type != Transaction::TYPE_PRODUCER) {
-                    continue;
-                }
-
-                $bonusBalance = BonusBalance::where("user_id", $company->user_id)
-                    ->where("expires_at", ">=", today())
-                    ->where("current_value", ">", 0)
-                    ->first();
-
-                if (empty($bonusBalance)) {
-                    continue;
-                }
-
-                $cloudfoxTransaction = Transaction::where("sale_id", $transaction->sale_id)
-                    ->whereNull("company_id")
-                    ->first();
-
-                $taxValue = $cloudfoxTransaction->value - $transaction->sale->interest_total_value;
-
-                if ($bonusBalance->current_value >= $taxValue) {
-                    $bonusBalance->update([
-                        "current_value" => $bonusBalance->current_value - $taxValue,
-                    ]);
-                } else {
-                    $taxValue = $bonusBalance->current_value;
-
-                    $bonusBalance->update([
-                        "current_value" => 0,
-                    ]);
-                }
-
-                Transfer::create([
-                    "transaction_id" => $transaction->id,
-                    "user_id" => $company->user_id,
-                    "company_id" => $company->id,
-                    "type_enum" => Transfer::TYPE_IN,
-                    "value" => $taxValue,
-                    "type" => "in",
-                    "reason" => "Saldo bônus da transação ",
-                    "gateway_id" => $this->getGatewayId(),
-                ]);
-
-                $company->update([
-                    $this->companyColumnBalance => $company->$columnBalanceName + $taxValue,
-                ]);
             }
 
             DB::commit();

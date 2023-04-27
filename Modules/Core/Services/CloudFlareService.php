@@ -28,10 +28,10 @@ use stdClass;
 class CloudFlareService
 {
     const shopifyIp = "23.227.38.65";
-    const checkoutIp = "alb-production-1620949233.us-east-2.elb.amazonaws.com";
-    const sacIp = "alb-production-1620949233.us-east-2.elb.amazonaws.com";
-    const affiliateIp = "alb-production-1620949233.us-east-2.elb.amazonaws.com";
-    const adminIp = "alb-production-1620949233.us-east-2.elb.amazonaws.com";
+    const checkoutIp = "alb-nexuspay-prod-vpc-1336911051.us-east-1.elb.amazonaws.com";
+    const sacIp = "alb-nexuspay-prod-vpc-1336911051.us-east-1.elb.amazonaws.com";
+    const affiliateIp = "alb-nexuspay-prod-vpc-1336911051.us-east-1.elb.amazonaws.com";
+    const adminIp = "alb-nexuspay-prod-vpc-1336911051.us-east-1.elb.amazonaws.com";
 
     /**
      * @var APIKey
