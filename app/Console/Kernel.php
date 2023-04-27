@@ -146,10 +146,6 @@ class Kernel extends ConsoleKernel
             ->command("demo:abandoned-cart-checkout")
             ->dailyAt("05:35")
             ->onOneServer();
-        $schedule
-            ->command("check:gateway-tax-company-after-month")
-            ->dailyAt("05:40")
-            ->onOneServer();
 
         $schedule
             ->command("available-balance:update")
@@ -175,10 +171,6 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("command:update-user-level")
             ->dailyAt("07:00")
-            ->onOneServer();
-        $schedule
-            ->command("updateTransactionsReleaseDate")
-            ->dailyAt("07:15")
             ->onOneServer();
 
         $schedule

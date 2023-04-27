@@ -65,7 +65,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "cloudfox-documents",
+            "bucket" => "nexuspay-documents",
             "url" => env("AWS_URL"),
         ],
         "s3_digital_product" => [
@@ -81,7 +81,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "cloudfox-chargeback-contestations",
+            "bucket" => "nexuspay-chargeback-contestations",
             "url" => env("AWS_URL"),
         ],
         "s3_plans_reviews" => [
