@@ -162,45 +162,6 @@
 
     @if (env('APP_ENV', 'production') == 'production')
         <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
-
-        <style>
-            .margin-chat-pagination {
-                display: block !important;
-                height: 20px !important;
-            }
-        </style>
-
-        @if (\Auth::user())
-            <!-- Start of cloudfoxhelp Zendesk Widget script -->
-            <script id="ze-snippet"
-                    src="https://static.zdassets.com/ekr/snippet.js?key=bb493a85-feac-4ede-b26e-1fd8c8cc9010"></script>
-            <!-- End of cloudfoxhelp Zendesk Widget script -->
-
-            <script type="text/javascript">
-                function zendeskAuthentication() {
-                    $.ajax({
-                        method: 'GET',
-                        url: '/api/core/zendesk-token',
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        error: function() {
-                            //
-                        },
-                        success: function(response) {
-                            zE('messenger', 'loginUser', function(callback) {
-                                callback(response);
-                            });
-                        }
-                    });
-
-                    return null;
-                }
-
-                // zendeskAuthentication();
-            </script>
-        @endif
     @endif
 </body>
 
