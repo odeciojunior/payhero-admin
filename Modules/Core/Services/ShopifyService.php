@@ -1327,10 +1327,10 @@ class ShopifyService
                 "quantity" => 1,
                 "requires_shipping" => true,
                 "sku" => 1234566789,
-                "title" => "Nexuspay Test",
+                "title" => "Nexus Pay Test",
                 "variant_id" => 20000,
-                "variant_title" => "Nexuspay Test",
-                "name" => "Nexuspay Test",
+                "variant_title" => "Nexus Pay Test",
+                "name" => "Nexus Pay Test",
                 "gift_card" => false,
             ];
 
@@ -1345,7 +1345,7 @@ class ShopifyService
                 "phone" => "+5524999999999",
                 "province" => "RS",
                 "zip" => "",
-                "name" => "Nexuspay",
+                "name" => "Nexus Pay",
                 "country_code" => "BR",
                 "province_code" => "",
             ];

@@ -243,7 +243,7 @@
                 <div class="modal-header p-0 pt-15 pl-15 pb-15">
                     <span class="modal-title p-0"
                           id="exampleModalLabel">
-                        <strong>Termos de uso Nexuspay atualizados</strong>
+                        <strong>Termos de uso Nexus Pay atualizados</strong>
                     </span>
                 </div>
                 <hr style="margin-top: 0%; color: #F4F6FB; height: 1px">
@@ -251,7 +251,7 @@
 
                     <div class="row form-group col-md-12 pl-15 pr-15 m-0 pb-20 text-modal">
                         Atualizamos recentemente os Termos de Uso da nossa plataforma e produtos. Para continuar
-                        utilizando os serviços Nexuspay é necessario ler e estar de acordo com o termo.
+                        utilizando os serviços Nexus Pay é necessario ler e estar de acordo com o termo.
                     </div>
 
                     <div class="modal-terms">
