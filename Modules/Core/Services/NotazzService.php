@@ -1047,7 +1047,7 @@ class NotazzService
 
             $sendGridService->sendEmail(
                 "help@nexuspay.com.br",
-                "Nexuspay",
+                "Nexus Pay",
                 $notazzInvoice->sale->user->email,
                 $notazzInvoice->sale->user->name,
                 "not", // done

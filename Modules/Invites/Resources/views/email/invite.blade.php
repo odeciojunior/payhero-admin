@@ -47,7 +47,7 @@
             <tr style='color: #444444;padding-bottom: 40px;margin-bottom: 40px;'>
                 <td>
                     <p style='padding-bottom:20px;'>
-                        Você recebeu um convite para se cadastrar na Nexuspay e agora chegou a sua hora de fazer parte
+                        Você recebeu um convite para se cadastrar na Nexus Pay e agora chegou a sua hora de fazer parte
                         da
                         <strong> nossa revolução!</strong>
                         <br><br> Nosso trabalho é construir uma plataforma com a sua cara. Venha construir essa história

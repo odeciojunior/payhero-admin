@@ -51,7 +51,7 @@ class LoginController extends Controller
             }
 
             if (env("ACCOUNT_FRONT_URL")) {
-                $url = env("ACCOUNT_FRONT_URL") . "/?from=sirius";
+                $url = env("ACCOUNT_FRONT_URL") . "/?from=admin";
                 return Redirect::to($url);
             }
         }

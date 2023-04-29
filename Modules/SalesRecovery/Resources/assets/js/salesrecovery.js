@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     function fillProjectsSelect(data) {
         if (data.company_default == "v2RmA83EbZPVpYB")
-            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Nexuspay" }));
+            $("#project").append($("<option>", { value: "v2RmA83EbZPVpYB", text: "Loja Demonstrativa Nexus Pay" }));
         else {
             projects = allProjects(data);
             for (let i = 0; i < projects.length; i++)

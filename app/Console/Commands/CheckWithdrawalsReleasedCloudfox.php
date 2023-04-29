@@ -119,7 +119,7 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                         $sale->id .
                                         ", Transaction id: " .
                                         $transaction->id .
-                                        ", Transaction Nexuspay id: " .
+                                        ", Transaction Nexus Pay id: " .
                                         $transactionCloudfox->id
                                 );
                             }
