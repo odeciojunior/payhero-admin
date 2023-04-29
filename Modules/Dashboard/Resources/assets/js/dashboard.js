@@ -274,7 +274,7 @@ $(document).ready(function () {
                 let $titleAvailableMoney = onlyNumbers(data.available_balance) > 0 ? "Disponível" : "Saldo Atual";
                 $("#title_available_money").html($titleAvailableMoney);
 
-                let title = "Valor incluindo o saldo retido de R$ " + data.blocked_balance_total;
+                let title = "Valor incluindo o saldo da reserva de segurança de R$ " + data.security_reserve_balance;
 
                 $("#info-total-balance").attr("title", title).tooltip({ placement: "bottom" });
 

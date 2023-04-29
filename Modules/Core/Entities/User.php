@@ -75,6 +75,7 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property bool $get_faster
  * @property int $release_count
  * @property int $security_reserve_tax
+ * @property int $security_reserve_days
  * @property int $level
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
@@ -203,6 +204,7 @@ class User extends Authenticable
         "get_faster",
         "release_count",
         "security_reserve_tax",
+        "security_reserve_days",
         "contestation_penalty",
         "contestation_penalties_taxes",
         "level",

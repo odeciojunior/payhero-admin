@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SecurityReserve extends Model
 {
-    use SoftDeletes;
-
     const STATUS_PENDING = 1;
     const STATUS_TRANSFERRED = 2;
 

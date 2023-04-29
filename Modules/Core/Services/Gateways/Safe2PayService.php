@@ -8,21 +8,17 @@ class Safe2PayService extends GatewayServicesAbstract
 {
     public function __construct()
     {
-        $this->gatewayIds = [
-            Gateway::SAFE2PAY_PRODUCTION_ID,
-            Gateway::SAFE2PAY_SANDBOX_ID
-        ];
+        $this->gatewayIds = [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID];
 
-        $this->gatewayName = 'Vega';
+        $this->gatewayName = "Vega";
 
-        $this->companyColumnBalance = 'vega_balance';
+        $this->companyColumnBalance = "vega_balance";
 
-        $this->gatewayHashId = 'BeYEwR3AdgdKykA';
+        $this->gatewayHashId = "BeYEwR3AdgdKykA";
     }
 
-    public function getGatewayId():int
+    public function getGatewayId(): int
     {
-        return foxutils()->isProduction()?Gateway::SAFE2PAY_PRODUCTION_ID:Gateway::SAFE2PAY_SANDBOX_ID;
+        return foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
     }
-
 }

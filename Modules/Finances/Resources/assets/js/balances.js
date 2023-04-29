@@ -35,7 +35,7 @@ window.updateBalances = function (company_code = "") {
 
     loadOnTable("#withdrawals-table-data", "#withdrawalsTable");
 
-    let companyCode = company_code ? company_code :  $('.company-navbar').val();
+    let companyCode = company_code ? company_code : $(".company-navbar").val();
     $.ajax({
         url: "/api/finances/getbalances",
         type: "GET",
@@ -63,8 +63,16 @@ window.updateBalances = function (company_code = "") {
             $(".available-balance").html(removeMoneyCurrency(response.available_balance));
             $(".available-balance-mobile").html(removeMoneyCurrency(response.available_balance));
             $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
+            if (onlyNumbers(response.security_reserve_balance) > 0) {
+                $(".reserve-balance").html(removeMoneyCurrency(response.security_reserve_balance));
+                $("#security-reserve-balance-div").show();
+            }
+            if (onlyNumbers(response.blocked_balance) > 0) {
+                $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
+                $("#blocked-balance-div").show();
+            }
+
             $(".total-balance").html(removeMoneyCurrency(response.total_balance));
-            $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
             $(".debt-balance").html(removeMoneyCurrency(response.pending_debt_balance));
 
             if (onlyNumbers(response.pending_debt_balance) != "000") {

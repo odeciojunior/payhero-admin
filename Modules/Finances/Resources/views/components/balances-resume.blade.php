@@ -14,7 +14,23 @@
                 </div>
             </div>
         </div>
-        <div style="background-color: #FFF4F6; border: 1px solid #ED1C24;"
+        <div id="security-reserve-balance-div"
+             style="background-color: #FFFDFA; border: 1px solid #f3d633; display: none"
+             class="col-md col-xs-12 card p-0 mx-md-5 balance-resume">
+            <div class="card-body">
+                <div class="price-holder">
+                    <h5 class="font-size-14"
+                        style="color: #636363"> Reserva de segurança </h5>
+                    <h4 class="number saldoPendente">
+                        <span style="color:#9E9E9E">R$ </span><span class="font-size-24 bold reserve-balance"
+                              style="color: #f3d633">0,00</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <div id="blocked-balance-div"
+             style="background-color: #FFF4F6; border: 1px solid #ED1C24; display: none"
              class="col-md col-xs-12 card p-0 mx-md-5 balance-resume">
             <div class="card-body">
                 <div class="price-holder">

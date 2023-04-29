@@ -84,12 +84,18 @@ class DashboardApiController extends Controller
             $availableBalance = array_sum(array_column($balancesResume, "available_balance"));
             $pendingBalance = array_sum(array_column($balancesResume, "pending_balance"));
             $blockedBalance = array_sum(array_column($balancesResume, "blocked_balance"));
+            $securityReserveBalance = array_sum(array_column($balancesResume, "security_reserve_balance"));
             $totalBalance = array_sum(array_column($balancesResume, "total_balance"));
 
             return response()->json([
                 "available_balance" => number_format($availableBalance / 100, 2, ",", "."),
                 "pending_balance" => number_format($pendingBalance / 100, 2, ",", "."),
-                "blocked_balance_total" => number_format($blockedBalance / 100, 2, ",", "."),
+                "security_reserve_balance" => number_format(
+                    ($blockedBalance + $securityReserveBalance) / 100,
+                    2,
+                    ",",
+                    "."
+                ),
                 "total_balance" => number_format($totalBalance / 100, 2, ",", "."),
                 "today_balance" => number_format($todayBalance / 100, 2, ",", "."),
             ]);
