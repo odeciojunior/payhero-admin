@@ -144,11 +144,7 @@ class CheckoutService
     {
         try {
             $idEncoded = hashids_encode($sale->id, "sale_id");
-            if (foxutils()->isProduction()) {
-                $urlCancelPayment = "https://checkout.cloudfox.net/api/payment/cancel/{$idEncoded}";
-            } else {
-                $urlCancelPayment = env("CHECKOUT_URL") . "/api/payment/cancel/{$idEncoded}";
-            }
+            $urlCancelPayment = env("CHECKOUT_URL") . "/api/payment/cancel/{$idEncoded}";
 
             $response = $this->runCurl($urlCancelPayment, "POST");
 
