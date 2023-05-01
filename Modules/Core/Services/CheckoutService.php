@@ -130,10 +130,13 @@ class CheckoutService
     public function getSubTotal($checkoutPlans = null)
     {
         $total = 0;
-        foreach ($checkoutPlans as $checkoutPlan) {
-            if (!empty($checkoutPlan->plan)) {
-                $total +=
-                    intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+        if ($checkoutPlans) {
+            foreach ($checkoutPlans as $checkoutPlan) {
+                if (!empty($checkoutPlan->plan)) {
+                    $total +=
+                        intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) *
+                        intval($checkoutPlan->amount);
+                }
             }
         }
 
@@ -144,11 +147,7 @@ class CheckoutService
     {
         try {
             $idEncoded = hashids_encode($sale->id, "sale_id");
-            if (foxutils()->isProduction()) {
-                $urlCancelPayment = "https://checkout.nexuspay.vip/api/payment/cancel/{$idEncoded}";
-            } else {
-                $urlCancelPayment = env("CHECKOUT_URL") . "/api/payment/cancel/{$idEncoded}";
-            }
+            $urlCancelPayment = env("CHECKOUT_URL") . "/api/payment/cancel/{$idEncoded}";
 
             $response = $this->runCurl($urlCancelPayment, "POST");
 
