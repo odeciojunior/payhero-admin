@@ -72,20 +72,20 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "products/create",
-                "address" => "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id),
+                "address" => "https://admin.nexuspay.vip/postback/shopify/" . Hashids::encode($this->project->id),
                 "format" => "json",
             ]);
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "products/update",
-                "address" => "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id),
+                "address" => "https://admin.nexuspay.vip/postback/shopify/" . Hashids::encode($this->project->id),
                 "format" => "json",
             ]);
 
             $this->shopifyService->createShopWebhook([
                 "topic" => "orders/updated",
                 "address" =>
-                    "https://sirius.cloudfox.net/postback/shopify/" . Hashids::encode($this->project->id) . "/tracking",
+                    "https://admin.nexuspay.vip/postback/shopify/" . Hashids::encode($this->project->id) . "/tracking",
                 "format" => "json",
             ]);
         }

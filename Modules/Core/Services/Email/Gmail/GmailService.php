@@ -442,9 +442,7 @@ class GmailService
         $userId = "me";
         $maxResults = $limit;
         $pageToken = null;
-        $q =
-            "from:(monitoria_marketplace@getnet.com.br) [MGM GETNET] E-Request CLOUDFOX INTERMEDIACAO DE SERVICOS E NEGOCIOS after:" .
-            $date_after;
+        $q = "from:(monitoria_marketplace@getnet.com.br) [MGM GETNET] E-Request nexuspay after:" . $date_after;
         $labelIds = ["INBOX"]; //CHAT - SENT - INBOX - IMPORTANT - TRASH - DRAFT - SPAM - CATEGORY_FORUMS - CATEGORY_UPDATES - CATEGORY_PERSONAL - CATEGORY_PROMOTIONS - CATEGORY_SOCIAL - STARRED - UNREAD
         $includeSpamTrash = false;
         $alt = "json";

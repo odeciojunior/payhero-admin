@@ -8,7 +8,7 @@
             <div class="page-content d-flex flex-column justify-content-center">
                 <div class="logobar text-center">
                     <img src="{{ asset('build/global/adminremark/assets/images/logo-oficial.svg') }}"
-                         alt="CloudFox">
+                         alt="NexusPay">
                 </div>
                 <div class="clearfix"></div>
                 <div class="panel">
@@ -124,7 +124,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <a class="linkfooter"
                        target="_blank"
-                       href="https://cloudfox.net/terms"
+                       href="https://nexuspay.vip/terms"
                        style="font-size: 11px">
                         Terms & Conditions</a>
                     <div class="oval"></div>

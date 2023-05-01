@@ -18,7 +18,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
 {
-
     public static function validateEmail($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -279,9 +278,9 @@ class FoxUtils
     public static function urlCheckout()
     {
         if (self::isProduction()) {
-            $url = "https://checkout.cloudfox.net";
+            $url = "https://checkout.nexuspay.vip";
         } else {
-            $url = "http://checkout.devcloudfox.net";
+            $url = "http://checkout.devnexuspay.vip";
         }
 
         return $url;
@@ -417,7 +416,7 @@ class FoxUtils
     {
         try {
             if (!empty($url)) {
-                $urlKey = str_replace("https://cloudfox-${type}.s3.amazonaws.com/", "", $url);
+                $urlKey = str_replace("https://nexuspay-${type}.s3.amazonaws.com/", "", $url);
 
                 $client = new S3Client([
                     "credentials" => [
@@ -429,7 +428,7 @@ class FoxUtils
                 ]);
 
                 $command = $client->getCommand("GetObject", [
-                    "Bucket" => "cloudfox-${type}",
+                    "Bucket" => "nexuspay-${type}",
                     "Key" => $urlKey,
                 ]);
 
@@ -773,8 +772,8 @@ class FoxUtils
 
     public static function getCookieAffiliate(int $projectId)
     {
-        if (!empty(request()->cookie('affiliate_cf-' . $projectId))) {
-            $affiliate = Affiliate::find(request()->cookie('affiliate_cf-' . $projectId));
+        if (!empty(request()->cookie("affiliate_cf-" . $projectId))) {
+            $affiliate = Affiliate::find(request()->cookie("affiliate_cf-" . $projectId));
             if (!empty($affiliate) && $affiliate->status_enum == Affiliate::STATUS_ACTIVE) {
                 return $affiliate->id;
             }

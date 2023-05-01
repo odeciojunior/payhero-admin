@@ -49,7 +49,7 @@
                            placeholder="Digite o Token Webhook"
                            value=''>
                     <small>Endereço de configuração do webhook da notazz</small>
-                    <small>https://sirius.cloudfox.net/postback/notazz</small>
+                    <small>https://admin.nexuspay.vip/postback/notazz</small>
                 </div>
             </div>
             {{-- <div class='form-group col-12'>

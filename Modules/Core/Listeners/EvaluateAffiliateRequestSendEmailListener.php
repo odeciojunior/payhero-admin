@@ -62,7 +62,7 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
             if ($user->userNotification->affiliation) {
                 $sendGridService->sendEmail(
                     "help@nexuspay.com.br",
-                    "cloudfox",
+                    "NexusPay",
                     $user->email,
                     $user->name,
                     $templateId,

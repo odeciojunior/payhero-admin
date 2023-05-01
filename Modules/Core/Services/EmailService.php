@@ -47,9 +47,9 @@ class EmailService
             }
 
             $email = new Mail();
-            $email->setFrom("help@nexuspay.com.br", "Cloudfox");
-            $email->setSubject("Convite para o CloudFox");
-            $email->addTo($to, "CloudFox");
+            $email->setFrom("help@nexuspay.com.br", "NexusPay");
+            $email->setSubject("Convite para o NexusPay");
+            $email->addTo($to, "NexusPay");
             $email->addContent("text/html", $emailLayout->render());
             $sendgrid = new SendGrid(getenv("SENDGRID_API_KEY"));
 
@@ -170,7 +170,7 @@ class EmailService
             $shipmentValue = preg_replace("/[^0-9]/", "", $sale->shipment_value);
             $shipmentValue = substr_replace($shipmentValue, ",", strlen($shipmentValue) - 2, 0);
 
-            $domainName = $domain->name ?? "cloudfox.net";
+            $domainName = $domain->name ?? "nexuspay.vip";
             $boletoLink =
                 "https://checkout.{$domainName}/order/" .
                 Hashids::connection("sale_id")->encode($sale->id) .
@@ -286,7 +286,7 @@ class EmailService
         foreach ($emailList as $email) {
             (new SendgridService())->sendEmail(
                 "help@nexuspay.com.br",
-                "CloudFox",
+                "NexusPay",
                 $email,
                 "Admin/Dev",
                 "not", // done
@@ -317,7 +317,7 @@ class EmailService
 
         $this->sendgridService->sendEmail(
             self::EMAIL_HELP_CLOUDFOX,
-            "CloudFox",
+            "NexusPay",
             $user->email,
             $user->name,
             self::TEMPLATE_ID_EMAIL_CHARGEBACK,

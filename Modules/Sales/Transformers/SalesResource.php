@@ -37,18 +37,18 @@ class SalesResource extends JsonResource
             $userPermissionRefunded = true;
         }
 
-        $hashSaleId =  Hashids::connection('sale_id')->encode($this->id);
+        $hashSaleId = Hashids::connection("sale_id")->encode($this->id);
 
-        $thankPageUrl = '';
-        $thankLabelText = 'Link página de obrigado:';
+        $thankPageUrl = "";
+        $thankLabelText = "Link página de obrigado:";
 
         $domain = Domain::select("name")
             ->where("project_id", $this->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "cloudfox.net";
+        $domainName = $domain->name ?? "nexuspay.vip";
 
-        $urlCheckout ="https://checkout.{$domainName}/order/";
+        $urlCheckout = "https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
             $thankPageUrl = "https://checkout.{$domain->name}/order/" . hashids_encode($this->id, "sale_id");
         }
@@ -57,10 +57,10 @@ class SalesResource extends JsonResource
                 env("CHECKOUT_URL", "http://dev.checkout.com") . "/order/" . hashids_encode($this->id, "sale_id");
         }
 
-        if($user->company_default==Company::DEMO_ID){
-            $urlCheckout = "https://demo.cloudfox.net/order/";
-            if(env('APP_ENV') == 'local'){
-                $urlCheckout = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/order/';
+        if ($user->company_default == Company::DEMO_ID) {
+            $urlCheckout = "https://demo.nexuspay.vip/order/";
+            if (env("APP_ENV") == "local") {
+                $urlCheckout = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/order/";
             }
             $thankPageUrl = $urlCheckout . $hashSaleId;
         }

@@ -548,7 +548,7 @@ class ShopifyApiController extends Controller
                 ->find($projectId);
 
             /*$domain = new \stdClass();
-             $domain->name = 'cloudfox.net';*/
+             $domain->name = 'nexuspay.vip';*/
             if (\foxutils()->isProduction()) {
                 $domain = $project->domains->where("status", $domainModel->present()->getStatus("approved"))->first();
             }

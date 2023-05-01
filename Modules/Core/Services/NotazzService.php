@@ -816,7 +816,7 @@ class NotazzService
                 "date_pending" => Carbon::now(),
             ]);
             $notazzInvoice->update([
-                "external_id" => "cloudfox-" . $notazzInvoice->id,
+                "external_id" => "nexuspay-" . $notazzInvoice->id,
             ]);
 
             if ($notazzInvoice) {

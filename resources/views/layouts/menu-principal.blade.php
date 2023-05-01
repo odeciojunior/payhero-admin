@@ -11,7 +11,7 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- CLOUDFOX LOGO -->
+    <!-- NEXUSPAY LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
          data-toggle="gridmenu"
          style="background-color: #ffffff; overflow: hidden; top:0px; box-shadow:none;">

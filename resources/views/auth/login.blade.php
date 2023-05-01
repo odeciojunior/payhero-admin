@@ -271,7 +271,7 @@
                     <button id="btn-forgot-password"
                             class="btn-link-secondary">Esqueci minha senha</button>
                     <a class="btn-signup"
-                       href="https://cloudfox.net/sirius">
+                       href="https://admin.nexuspay.vip">
                         <p>Não tem conta? CADASTRE-SE</p>
                     </a>
                 </div>

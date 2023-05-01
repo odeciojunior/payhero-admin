@@ -11,7 +11,9 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_projects_edit">Selecione sua loja</label>
-                    <select id="select_projects_edit" name="select_projects_edit" disabled> </select>
+                    <select id="select_projects_edit"
+                            name="select_projects_edit"
+                            disabled> </select>
                 </div>
             </div>
             <div class="col-12">
@@ -49,7 +51,7 @@
                            placeholder="Digite o Token Webhook"
                            value=''>
                     <small>Endereço de configuração do webhook da notazz</small>
-                    <small>https://sirius.cloudfox.net/postback/notazz</small>
+                    <small>https://admin.nexuspay.vip/postback/notazz</small>
                 </div>
             </div>
             <div class='form-group col-12'>

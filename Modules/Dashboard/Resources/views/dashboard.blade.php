@@ -239,7 +239,7 @@
          data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-simple"
              role="document">
-            <div class="modal-content modal-terms-cloudfox">
+            <div class="modal-content modal-terms-nexuspay">
                 <div class="modal-header p-0 pt-15 pl-15 pb-15">
                     <span class="modal-title p-0"
                           id="exampleModalLabel">
@@ -255,7 +255,7 @@
                     </div>
 
                     <div class="modal-terms">
-                        <a href="//cloudfox.net/use-terms-and-privacy-policy.html"
+                        <a href="//nexuspay.vip/use-terms-and-privacy-policy.html"
                            target="_blank"
                            class="button-modal-term">
                             <span>
@@ -267,7 +267,7 @@
                     </div>
                     <br>
                     <span class="pl-15">
-                        <input id="terms-cloudfox"
+                        <input id="terms-nexuspay"
                                type="checkbox"><span class="pl-2">Li e estou de acordo.</span>
                     </span>
 

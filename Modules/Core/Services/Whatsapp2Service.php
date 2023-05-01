@@ -123,7 +123,7 @@ class Whatsapp2Service
                     foxutils()->onlyNumbers($sale->sub_total) + foxutils()->onlyNumbers($sale->shipment_value);
                 $totalValue = foxutils()->floatFormat($totalValue);
 
-                $domainName = $domain->name ?? "cloudfox.net";
+                $domainName = $domain->name ?? "nexuspay.vip";
                 $boletoLink =
                     "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
@@ -135,7 +135,7 @@ class Whatsapp2Service
                         "token" => hashids_encode($sale->checkout_id),
                         "financial_status" => $status,
                         "billet_url" => $boletoLink,
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "checkout_url" =>
                             "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                         "id" => $sale->checkout_id,
@@ -210,7 +210,7 @@ class Whatsapp2Service
             $domain = Domain::where("status", Domain::STATUS_APPROVED)
                 ->where("project_id", $sale->project_id)
                 ->first();
-            $domainName = $domain->name ?? "cloudfox.net";
+            $domainName = $domain->name ?? "nexuspay.vip";
             $link = "https://checkout.$domainName/pix/" . hashids_encode($sale->id, "sale_id");
 
             $totalValue = foxutils()->onlyNumbers($sale->sub_total) + foxutils()->onlyNumbers($sale->shipment_value);
@@ -224,7 +224,7 @@ class Whatsapp2Service
                     "token" => hashids_encode($sale->checkout_id),
                     "financial_status" => Whatsapp2Integration::STATUS_CANCELLED,
                     "billet_url" => $link,
-                    "gateway" => "cloudfox",
+                    "gateway" => "nexuspay",
                     "checkout_url" =>
                         "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                     "id" => $sale->checkout_id,

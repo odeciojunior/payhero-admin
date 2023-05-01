@@ -42,7 +42,9 @@ class ContestationService
 
     function getQuery($filters)
     {
-        $account_owner_id = auth()->user()->getAccountOwnerId();
+        $account_owner_id = auth()
+            ->user()
+            ->getAccountOwnerId();
 
         $contestations = SaleContestation::select(
             "sale_contestations.*",
@@ -67,10 +69,10 @@ class ContestationService
             ->join("transactions", function ($query) {
                 $query->on("sales.id", "=", "transactions.sale_id")->where("transactions.type", "=", 2);
             })
-            ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-            ->join('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
-            ->where('checkout_configs.company_id', hashids_decode(request('company')))
-            ->where('sales.owner_id', $account_owner_id);
+            ->leftJoin("customers", "sales.customer_id", "=", "customers.id")
+            ->join("checkout_configs", "sales.project_id", "=", "checkout_configs.project_id")
+            ->where("checkout_configs.company_id", hashids_decode(request("company")))
+            ->where("sales.owner_id", $account_owner_id);
 
         $contestations->when(request("date_type"), function ($query, $search) {
             $dateRange = FoxUtils::validateDateRange(request("date_range"));
@@ -154,8 +156,8 @@ class ContestationService
         });
 
         $contestations->when(request("project"), function ($query, $search) {
-            $showFromApi = str_starts_with($search,'TOKEN');
-            $projectId = current(Hashids::decode(str_replace('TOKEN_','',$search)));
+            $showFromApi = str_starts_with($search, "TOKEN");
+            $projectId = current(Hashids::decode(str_replace("TOKEN_", "", $search)));
             return $query->where($showFromApi ? "sales.api_token_id" : "sales.project_id", $projectId);
         });
 
@@ -204,9 +206,9 @@ class ContestationService
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-        $totalSaleApproved = Sale::where('payment_method', 1)
-            ->whereIn('status', [1, 4, 7, 24])
-            ->where('sales.owner_id', \Auth::user()->getAccountOwnerId());
+        $totalSaleApproved = Sale::where("payment_method", 1)
+            ->whereIn("status", [1, 4, 7, 24])
+            ->where("sales.owner_id", \Auth::user()->getAccountOwnerId());
 
         $totalSaleApproved->whereBetween("sales.start_date", [
             $dateRange[0] . " 00:00:00",
@@ -297,7 +299,7 @@ class ContestationService
         $trackings = [];
         foreach ($saleTrackings as $saleTracking) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://tracking.cloudfox.net/api/tracking/detail/" . $saleTracking);
+            curl_setopt($ch, CURLOPT_URL, "https://tracking.nexuspay.vip/api/tracking/detail/" . $saleTracking);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             $return = json_decode(curl_exec($ch));
             curl_close($ch);
@@ -422,26 +424,34 @@ class ContestationService
     public static function getprojectsWithContestations()
     {
         $companyId = auth()->user()->company_default;
-        $userId = auth()->user()->getAccountOwnerId();
+        $userId = auth()
+            ->user()
+            ->getAccountOwnerId();
 
-        $sales = Sale::select('sales.project_id',DB::Raw("'' as prefix"))
+        $sales = Sale::select("sales.project_id", DB::Raw("'' as prefix"))
             ->distinct()
-            ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->join('sale_contestations','sale_contestations.sale_id','sales.id')
-            ->where('transactions.company_id', $companyId)
-            ->where('sales.owner_id',auth()->user()->getAccountOwnerId())
-            ->whereIn('sale_contestations.status',[1,2,3])
+            ->join("transactions", "transactions.sale_id", "=", "sales.id")
+            ->join("sale_contestations", "sale_contestations.sale_id", "sales.id")
+            ->where("transactions.company_id", $companyId)
+            ->where(
+                "sales.owner_id",
+                auth()
+                    ->user()
+                    ->getAccountOwnerId()
+            )
+            ->whereIn("sale_contestations.status", [1, 2, 3])
             ->get();
 
-        $tokens = DB::table('sales')->select('api.id as project_id',DB::Raw("'TOKEN-' as prefix"))
+        $tokens = DB::table("sales")
+            ->select("api.id as project_id", DB::Raw("'TOKEN-' as prefix"))
             ->distinct()
-            ->join('sale_contestations','sale_contestations.sale_id','sales.id')
-            ->join('api_tokens as api', 'api.id','=', 'sales.api_token_id')
-            ->where('api.user_id',$userId)
-            ->whereIn('api.integration_type_enum',[4,5])
-            ->whereNull('api.deleted_at')
-            ->where('api.company_id',$companyId)
-            ->whereIn('sale_contestations.status',[1,2,3])
+            ->join("sale_contestations", "sale_contestations.sale_id", "sales.id")
+            ->join("api_tokens as api", "api.id", "=", "sales.api_token_id")
+            ->where("api.user_id", $userId)
+            ->whereIn("api.integration_type_enum", [4, 5])
+            ->whereNull("api.deleted_at")
+            ->where("api.company_id", $companyId)
+            ->whereIn("sale_contestations.status", [1, 2, 3])
             ->get();
 
         return $sales->merge($tokens);

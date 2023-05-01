@@ -1,3 +1,3 @@
 # Admin
 
-Repositório para o sistema administrativo do CloudFox.
+Repositório para o sistema administrativo da NexusPay.

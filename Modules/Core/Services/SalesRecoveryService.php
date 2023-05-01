@@ -74,28 +74,36 @@ class SalesRecoveryService
         array $plans = null,
         int $company_id = null
     ) {
-
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
 
-        $salesExpired = Sale::select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
-                'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
-            ->leftJoin('plans_sales as plan_sale', function ($join) {
-                $join->on('plan_sale.sale_id', '=', 'sales.id');
-            })->leftJoin('checkouts as checkout', function ($join) {
-                $join->on('sales.checkout_id', '=', 'checkout.id');
-            })->leftJoin('customers as customer', function ($join) {
-                $join->on('sales.customer_id', '=', 'customer.id');
-            // })->leftJoin('checkout_configs as checkout_config', function ($join) {
-            //     $join->on('sales.project_id', '=', 'checkout_config.project_id');
-            // })
-            // ->where('checkout_config.company_id', $company_id)
-            })->leftJoin('transactions as transaction', function ($join) {
-                $join->on('sales.id', '=', 'transaction.sale_id');
+        $salesExpired = Sale::select(
+            "sales.*",
+            "checkout.email_sent_amount",
+            "checkout.sms_sent_amount",
+            "checkout.id as checkout_id",
+            "checkout.id_log_session",
+            DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value")
+        )
+            ->leftJoin("plans_sales as plan_sale", function ($join) {
+                $join->on("plan_sale.sale_id", "=", "sales.id");
             })
-            ->where('transaction.company_id', $company_id)
-            ->whereIn('sales.status', $status)
-            ->where('sales.payment_method', $paymentMethod)
+            ->leftJoin("checkouts as checkout", function ($join) {
+                $join->on("sales.checkout_id", "=", "checkout.id");
+            })
+            ->leftJoin("customers as customer", function ($join) {
+                $join->on("sales.customer_id", "=", "customer.id");
+                // })->leftJoin('checkout_configs as checkout_config', function ($join) {
+                //     $join->on('sales.project_id', '=', 'checkout_config.project_id');
+                // })
+                // ->where('checkout_config.company_id', $company_id)
+            })
+            ->leftJoin("transactions as transaction", function ($join) {
+                $join->on("sales.id", "=", "transaction.sale_id");
+            })
+            ->where("transaction.company_id", $company_id)
+            ->whereIn("sales.status", $status)
+            ->where("sales.payment_method", $paymentMethod)
             ->with([
                 "project",
                 "customer",
@@ -135,24 +143,29 @@ class SalesRecoveryService
 
         $tokensIds = [];
         if (!empty($projectIds) && !in_array("all", $projectIds)) {
-            foreach ($projectIds as $key=>$projectId) {
-                if(str_starts_with($projectId,'TOKEN')){
-                    $tokensIds[] = str_replace('TOKEN-','',$projectId);
+            foreach ($projectIds as $key => $projectId) {
+                if (str_starts_with($projectId, "TOKEN")) {
+                    $tokensIds[] = str_replace("TOKEN-", "", $projectId);
                     unset($projectIds[$key]);
                 }
             }
         } else {
-            $projectIds = $userProjectsModel->where([
-                ['user_id', auth()->user()->getAccountOwnerId()],
-                [
-                    'type_enum',UserProject::TYPE_PRODUCER_ENUM,
-                ],
-            ])->pluck('project_id')->toArray();
+            $projectIds = $userProjectsModel
+                ->where([
+                    [
+                        "user_id",
+                        auth()
+                            ->user()
+                            ->getAccountOwnerId(),
+                    ],
+                    ["type_enum", UserProject::TYPE_PRODUCER_ENUM],
+                ])
+                ->pluck("project_id")
+                ->toArray();
         }
 
-        $salesExpired->where(function($qr) use($projectIds,$tokensIds){
-            $qr->whereIn("sales.project_id", $projectIds)
-            ->orWhere("sales.api_token_id",$tokensIds);
+        $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
+            $qr->whereIn("sales.project_id", $projectIds)->orWhere("sales.api_token_id", $tokensIds);
         });
 
         if (!empty($dateStart) && !empty($dateEnd)) {
@@ -231,22 +244,22 @@ class SalesRecoveryService
 
         $domain = $domainModel->where([["status", 3], ["project_id", $checkout->project_id]])->first();
 
-        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
-        if(!foxutils()->isProduction()) {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
+        $link = isset($domain) ? "https://checkout." . $domain->name : "";
+        if (!foxutils()->isProduction()) {
+            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br");
         }
 
         $user = Auth::user();
-        if($user->company_default==Company::DEMO_ID){
-            $link = "https://demo.cloudfox.net";
+        if ($user->company_default == Company::DEMO_ID) {
+            $link = "https://demo.nexuspay.vip";
         }
 
-        if(empty($link)){
-            $link = 'Domínio removido';
+        if (empty($link)) {
+            $link = "Domínio removido";
             goto jump;
         }
 
-        $link.= '/recovery/' . Hashids::encode($checkout->id);
+        $link .= "/recovery/" . Hashids::encode($checkout->id);
 
         jump:
 
@@ -276,7 +289,7 @@ class SalesRecoveryService
         $saleService = new SaleService();
         $delivery = $sale->delivery;
         $customer = $sale->customer;
-        $checkout = $sale->checkout??Checkout::find($sale->checkout_id);
+        $checkout = $sale->checkout ?? Checkout::find($sale->checkout_id);
 
         if (!empty($customer->telephone)) {
             $customer->telephone = preg_replace("/[^0-9]/", "", $customer->telephone);
@@ -323,7 +336,7 @@ class SalesRecoveryService
 
             if (empty($log->error)) {
                 $customer->error = "Saldo insuficiente!";
-                if($sale->payment_method == Sale::PAYMENT_TYPE_PIX){
+                if ($sale->payment_method == Sale::PAYMENT_TYPE_PIX) {
                     $customer->error = "Expirado!";
                 }
             } elseif ($log->error == "CARTÃO RECUSADO !") {
@@ -348,28 +361,27 @@ class SalesRecoveryService
             ->where("status", $domainModel->present()->getStatus("approved"))
             ->first();
 
-        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
-        if(!foxutils()->isProduction()) {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
+        $link = isset($domain) ? "https://checkout." . $domain->name : "";
+        if (!foxutils()->isProduction()) {
+            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br");
         }
 
         $user = Auth::user();
-        if($user->company_default==Company::DEMO_ID){
-            $link = "https://demo.cloudfox.net";
+        if ($user->company_default == Company::DEMO_ID) {
+            $link = "https://demo.nexuspay.vip";
         }
 
-        if(empty($link)){
-            $link = 'Domínio removido';
+        if (empty($link)) {
+            $link = "Domínio removido";
             goto jump;
         }
 
-        if($sale->payment_method === Sale::PIX_PAYMENT)
-        {
-            $link.='/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+        if ($sale->payment_method === Sale::PIX_PAYMENT) {
+            $link .= "/pix/" . Hashids::connection("sale_id")->encode($sale->id);
             goto jump;
         }
 
-        $link.= '/recovery/' . Hashids::encode($checkout->id);
+        $link .= "/recovery/" . Hashids::encode($checkout->id);
 
         jump:
 
@@ -391,23 +403,39 @@ class SalesRecoveryService
         ];
     }
 
-    public static function getProjectsWithRecovery(){
-        $first = Sale::select('project_id')
+    public static function getProjectsWithRecovery()
+    {
+        $first = Sale::select("project_id")
             ->distinct()
-            ->where('owner_id',auth()->user()->getAccountOwnerId())
-            ->where('status',3);
+            ->where(
+                "owner_id",
+                auth()
+                    ->user()
+                    ->getAccountOwnerId()
+            )
+            ->where("status", 3);
 
-        $s = Checkout::select('checkouts.project_id')
+        $s = Checkout::select("checkouts.project_id")
             ->distinct()
-            ->leftjoin('checkout_configs','checkout_configs.project_id','checkouts.project_id')
-            ->leftjoin('companies','companies.id','checkout_configs.company_id')
-            ->leftjoin('affiliates','affiliates.id','checkouts.affiliate_id')
-            ->where(function($query) {
+            ->leftjoin("checkout_configs", "checkout_configs.project_id", "checkouts.project_id")
+            ->leftjoin("companies", "companies.id", "checkout_configs.company_id")
+            ->leftjoin("affiliates", "affiliates.id", "checkouts.affiliate_id")
+            ->where(function ($query) {
                 $query
-                ->where('affiliates.user_id', auth()->user()->getAccountOwnerId())
-                ->orWhere('companies.user_id',auth()->user()->getAccountOwnerId());
+                    ->where(
+                        "affiliates.user_id",
+                        auth()
+                            ->user()
+                            ->getAccountOwnerId()
+                    )
+                    ->orWhere(
+                        "companies.user_id",
+                        auth()
+                            ->user()
+                            ->getAccountOwnerId()
+                    );
             })
-            ->where('checkouts.status_enum',2)
+            ->where("checkouts.status_enum", 2)
             ->union($first)
             ->get();
         return $s;

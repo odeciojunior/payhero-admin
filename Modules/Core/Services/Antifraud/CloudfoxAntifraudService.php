@@ -103,7 +103,7 @@ class CloudfoxAntifraudService
 
             if (foxutils()->isProduction()) {
                 $urlCancelPayment =
-                    "https://checkout.cloudfox.net/api/payment/antifraud/" . $statusType . "/" . $saleHashId;
+                    "https://checkout.nexuspay.vip/api/payment/antifraud/" . $statusType . "/" . $saleHashId;
             } else {
                 $urlCancelPayment =
                     getenv("CHECKOUT_URL") . "/api/payment/antifraud/" . $statusType . "/" . $saleHashId;

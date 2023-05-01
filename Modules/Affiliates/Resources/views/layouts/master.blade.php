@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-    <title>CloudFox - Admin</title>
+    <title>NexusPay - Admin</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible"
           content="IE=edge">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
-          content="cloudfox">
+          content="nexuspay">
     <meta name="msapplication-TileColor"
           content="#603cba">
     <meta name="theme-color"

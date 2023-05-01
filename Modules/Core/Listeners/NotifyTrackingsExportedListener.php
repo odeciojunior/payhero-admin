@@ -47,7 +47,7 @@ class NotifyTrackingsExportedListener implements ShouldQueue
 
             $sendGridService->sendEmail(
                 "help@nexuspay.com.br",
-                "CloudFox",
+                "NexusPay",
                 $userEmail,
                 $userName,
                 "d-367113d653654dfd84abd5134f232d99", // done

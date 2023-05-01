@@ -71,7 +71,7 @@
                     @if (!foxutils()->isProduction())
                         <form id="form-cart-shopify"
                               method="post"
-                              action="{{ env('CHECKOUT_URL', 'https://checkout.cloudfox.net') }}"
+                              action="{{ env('CHECKOUT_URL', 'https://checkout.nexuspay.vip') }}"
                               target="_blank">
                             <button class="btn btn-success float-right d-flex py-1 px-2"
                                     type="submit">
