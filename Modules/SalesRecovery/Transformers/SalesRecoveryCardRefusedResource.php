@@ -34,28 +34,27 @@ class SalesRecoveryCardRefusedResource extends JsonResource
             $type = "cart_refundend";
         }
 
-        $link = isset($domain) ? 'https://checkout.' . $domain->name : '';
-        if(!foxutils()->isProduction()) {
-            $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br');
+        $link = isset($domain) ? "https://checkout." . $domain->name : "";
+        if (!foxutils()->isProduction()) {
+            $link = env("CHECKOUT_URL", "http://dev.checkout.com.br");
         }
 
         $user = Auth::user();
-        if($user->company_default==Company::DEMO_ID){
-            $link = "https://demo.cloudfox.net";
+        if ($user->company_default == Company::DEMO_ID) {
+            $link = "https://demo.nexuspay.vip";
         }
 
-        if(empty($link)){
-            $link = 'Domínio removido';
+        if (empty($link)) {
+            $link = "Domínio removido";
             goto jump;
         }
 
-        if($this->payment_method === Sale::PIX_PAYMENT)
-        {
-            $link.='/pix/' . Hashids::connection('sale_id')->encode($this->id);
+        if ($this->payment_method === Sale::PIX_PAYMENT) {
+            $link .= "/pix/" . Hashids::connection("sale_id")->encode($this->id);
             goto jump;
         }
 
-        $link.= '/recovery/' . Hashids::encode($this->checkout_id);
+        $link .= "/recovery/" . Hashids::encode($this->checkout_id);
 
         jump:
 

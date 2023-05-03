@@ -36,12 +36,12 @@ class UpdateCompanyGetnetSendEmailListener implements ShouldQueue
             $data = [
                 "first_name" => explode(" ", $user->name)[0],
                 "company_name" => $company->fantasy_name,
-                "companies_url" => "https://sirius.cloudfox.net/companies",
+                "companies_url" => "https://admin.nexuspay.vip/companies",
             ];
 
             $emailService->sendEmail(
                 "help@nexuspay.com.br",
-                "cloudfox",
+                "nexuspay",
                 $user->email,
                 $user->name,
                 "d-8d2e3cdfae534616be1f885510d29b0a", // done

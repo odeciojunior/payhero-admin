@@ -469,15 +469,16 @@
                 </li>
                 @endif
                 <!-- hasanyrole('account_owner')         -->
-                {{-- @can('invitations')
+                @can('invitations')
                     <li class="site-menu-item has-sub">
                         <a href="{{ route('invitations.index') }}">
                             <span class="bg-menu">
-                                <img src="{{ mix('build/global/img/svg/convites.svg') }}" alt="Convites">
+                                <img src="{{ mix('build/global/img/svg/convites.svg') }}"
+                                     alt="Convites">
                             </span>
                             <span class="site-menu-title">Convites</span>
                         </a>
                     </li>
-                @endcan --}}
+                @endcan
             </ul>
         </div>

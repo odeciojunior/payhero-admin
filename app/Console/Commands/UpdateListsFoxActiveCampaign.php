@@ -14,9 +14,9 @@ class UpdateListsFoxActiveCampaign extends Command
 {
     protected $signature = "command:UpdateListsFoxActiveCampaign";
 
-    protected $description = "Atualiza lista de contatos da CloudFox no ActiveCAmpaign";
+    protected $description = "Atualiza lista de contatos da Nexus Pay no ActiveCAmpaign";
 
-    private $apiUrlFox = "https://cloudfox.api-us1.com";
+    private $apiUrlFox = "https://nexuspay.api-us1.com";
     // private $apiUrlFox = 'https://vpc1549909684.api-us1.com'; // teste
 
     private $apiKeyFox = "d516ef3da2fed7a6b0fd033e4d692273419b539451bab1dd98748ea34fc61d7bfc79df05";

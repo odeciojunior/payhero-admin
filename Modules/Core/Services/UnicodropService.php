@@ -29,7 +29,7 @@ class UnicodropService
                 ->where("project_id", $sale->project_id)
                 ->where("status", 3)
                 ->first();
-            $domainName = $domain->name ?? "cloudfox.net";
+            $domainName = $domain->name ?? "nexuspay.vip";
             $boletoLink =
                 "https://checkout.{$domainName}/order/" .
                 Hashids::connection("sale_id")->encode($sale->id) .
@@ -73,7 +73,7 @@ class UnicodropService
                 ->first();
             $pixLink =
                 "https://checkout." .
-                ($domain ? $domain->name : "cloudfox.net") .
+                ($domain ? $domain->name : "nexuspay.vip") .
                 "/order/" .
                 hashids_encode($sale->id, "sale_id");
             $comission = $sale->transactions->where("type", Transaction::TYPE_PRODUCER)->first()->value;

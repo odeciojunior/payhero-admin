@@ -15,13 +15,12 @@ let disabledCompany = false;
 let companyVerification = true;
 
 $(document).ready(function () {
-
-    $('.company-navbar').change(function () {
+    $(".company-navbar").change(function () {
         if (verifyIfCompanyIsDefault($(this).val())) return;
         $("#content-error").hide();
-        $("#store-invite").attr('disabled', 'disabled');
-        loadOnTable('#table-body-invites', '#table_invites');
-        loadOnAny('.number', false, {
+        $("#store-invite").attr("disabled", "disabled");
+        loadOnTable("#table-body-invites", "#table_invites");
+        loadOnAny(".number", false, {
             styles: {
                 container: {
                     minHeight: "32px",
@@ -36,20 +35,20 @@ $(document).ready(function () {
         });
         updateCompanyDefault().done(function (data) {
             getCompaniesAndProjects().done(function (data2) {
-                companiesAndProjects = data2
-                $("#store-invite").removeAttr('disabled');
-                $('.company_name').val(companiesAndProjects.company_default_fullname);
+                companiesAndProjects = data2;
+                $("#store-invite").removeAttr("disabled");
+                $(".company_name").val(companiesAndProjects.company_default_fullname);
                 getInvitationData();
                 updateInvitesAfterChangeCompany();
-            })
-        })
+            });
+        });
     });
 
-    var companiesAndProjects = ''
+    var companiesAndProjects = "";
 
     getCompaniesAndProjects().done(function (data) {
-        companiesAndProjects = data
-        $('.company_name').val(companiesAndProjects.company_default_fullname);
+        companiesAndProjects = data;
+        $(".company_name").val(companiesAndProjects.company_default_fullname);
         updateInvites();
     });
 
@@ -62,9 +61,9 @@ $(document).ready(function () {
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations' + '?company=' + $('.company-navbar').val();
+            link = "/api/invitations" + "?company=" + $(".company-navbar").val();
         } else {
-            link = '/api/invitations' + link + '?company=' + $('.company-navbar').val();
+            link = "/api/invitations" + link + "?company=" + $(".company-navbar").val();
         }
 
         $.ajax({
@@ -108,9 +107,13 @@ $(document).ready(function () {
                                 "</button></td>";
                         }
                         dados +=
-                            '<td class="text-center ellipsis-text" style="vertical-align: middle;">' + value.email_invited + "</td>";
+                            '<td class="text-center ellipsis-text" style="vertical-align: middle;">' +
+                            value.email_invited +
+                            "</td>";
                         dados +=
-                            '<td class="text-center ellipsis-text" style="vertical-align: middle;">' + value.company_name + "</td>";
+                            '<td class="text-center ellipsis-text" style="vertical-align: middle;">' +
+                            value.company_name +
+                            "</td>";
                         dados += '<td class="text-center" style="vertical-align: middle;">';
                         dados +=
                             '<span class="badge badge-' +
@@ -206,8 +209,8 @@ $(document).ready(function () {
                             success: (response) => {
                                 loadingOnScreenRemove();
                                 updateInvites();
-                                alertCustom('success', response.message);
-                            }
+                                alertCustom("success", response.message);
+                            },
                         });
                     });
                     //     var cont = 0;
@@ -340,14 +343,14 @@ $(document).ready(function () {
                     //                     $("#table-body-invites").append(dados);
                 });
 
-                loadingOnScreenRemove()
-            }
+                loadingOnScreenRemove();
+            },
         });
     }
 
     function updateInvitesAfterChangeCompany() {
-        loadOnTable('#table-body-invites', '#table_invites');
-        loadOnAny('.number', false, {
+        loadOnTable("#table-body-invites", "#table_invites");
+        loadOnAny(".number", false, {
             styles: {
                 container: {
                     minHeight: "32px",
@@ -363,11 +366,11 @@ $(document).ready(function () {
         var cont = 0;
         $.ajax({
             method: "GET",
-            url: '/api/invitations?company=' + $('.company-navbar').val(),
+            url: "/api/invitations?company=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: (response) => {
                 loadingOnScreenRemove();
@@ -381,45 +384,74 @@ $(document).ready(function () {
                 } else {
                     $("#content-error").hide();
                     $("#table_invites").show();
-                    $("#card-table-invite").css('display', 'block');
-                    $("#card-invitation-data").css('display', 'block');
+                    $("#card-table-invite").css("display", "block");
+                    $("#card-invitation-data").css("display", "block");
 
                     // $("#text-info").css('display', 'block');
-                    $("#card-table-invite").css('display', 'block');
-                    $("#table-body-invites").html('');
+                    $("#card-table-invite").css("display", "block");
+                    $("#table-body-invites").html("");
 
                     $.each(response.data, function (index, value) {
-                        dados = '';
-                        dados += '<tr>';
+                        dados = "";
+                        dados += "<tr>";
                         if (index != 9) {
-                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (currentPage - 1) + (cont += 1) + '</button></td>';
+                            dados +=
+                                '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' +
+                                (currentPage - 1) +
+                                (cont += 1) +
+                                "</button></td>";
                         } else {
-                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + response.meta.to + '</button></td>';
+                            dados +=
+                                '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' +
+                                response.meta.to +
+                                "</button></td>";
                         }
-                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
-                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.company_name + "</td>";
                         dados += '<td class="text-center" style="vertical-align: middle;">';
-                        dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
-                        dados += '</td>';
-                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
-                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
-                        if (value.status != '2' || verifyAccountFrozen()) {
-                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-reload-1'></span></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><span class='o-bin-1'></span></button></td>";
-
+                        dados +=
+                            '<span class="badge badge-' +
+                            statusInvite[value.status] +
+                            ' text-center">' +
+                            value.status_translated +
+                            "</span>";
+                        dados += "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' + value.register_date + "</td>";
+                        dados +=
+                            '<td class="text-center" style="vertical-align: middle;">' +
+                            value.expiration_date +
+                            "</td>";
+                        if (value.status != "2" || verifyAccountFrozen()) {
+                            dados +=
+                                "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "' disabled><span class='o-reload-1'></span></button></td>";
+                            dados +=
+                                "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "' disabled><span class='o-bin-1'></span></button></td>";
                         } else {
-                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-reload-1'></span></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><span class='o-bin-1'></span></button></td>";
+                            dados +=
+                                "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "'><span class='o-reload-1'></span></button></td>";
+                            dados +=
+                                "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" +
+                                value.id +
+                                "'><span class='o-bin-1'></span></button></td>";
                         }
-                        dados += '</tr>';
+                        dados += "</tr>";
                         $("#table-body-invites").append(dados);
                     });
 
-                    pagination(response, 'invites');
+                    pagination(response, "invites");
                 }
 
                 loadingOnScreenRemove();
-            }
+            },
         });
     }
 
@@ -501,14 +533,14 @@ $(document).ready(function () {
 
                             $("#company-list").html("").append(selCompany);
 
-                            var linkInvite = '';
-                            var companyId = $('.company-navbar').val();
-                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId;
+                            var linkInvite = "";
+                            var companyId = $(".company-navbar").val();
+                            linkInvite = "https://accounts.nexuspay.vip/signup?i=" + companyId;
 
                             $("#invite-link").val(linkInvite);
 
                             $("#select-company-list").on("change", function () {
-                                linkInvite = "https://accounts.cloudfox.net/signup?i=" + $(this).val();
+                                linkInvite = "https://accounts.nexuspay.vip/signup?i=" + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();
                             });
@@ -574,16 +606,16 @@ $(document).ready(function () {
     function getInvitationData() {
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata' + '?company=' + $('.company-navbar').val(),
+            url: "/api/invitations/getinvitationdata" + "?company=" + $(".company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             error: (response) => {
-                errorAjaxResponse(response)
+                errorAjaxResponse(response);
                 loadingOnScreenRemove();
-                loadOnAny('.number', true);
+                loadOnAny(".number", true);
             },
             success: (response) => {
                 $("#invitations_accepted").html("" + response.data.invitation_accepted_count + "");
@@ -600,14 +632,14 @@ $(document).ready(function () {
                 if (verifyAccountFrozen()) {
                     $("#store-invite").attr("disabled", true);
                 }
-                loadOnAny('.number', true);
-            }
+                loadOnAny(".number", true);
+            },
         });
     }
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
-            $("#pagination-invites").css({ "background": "#f4f4f4" })
+            $("#pagination-invites").css({ background: "#f4f4f4" });
             $("#pagination-" + model).html("");
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();
@@ -619,7 +651,7 @@ $(document).ready(function () {
             $("#pagination-" + model).append(first_page);
 
             if (response.meta.current_page == 1) {
-                $("#pagination-invites").css({ "background": "#ffffff" })
+                $("#pagination-invites").css({ background: "#ffffff" });
                 $("#first_page").attr("disabled", true).addClass("nav-btn").addClass("active");
             }
 
@@ -635,10 +667,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
+                        (response.meta.current_page - x) +
+                        "' class='btn nav-btn'>" +
+                        (response.meta.current_page - x) +
+                        "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page - x)).on("click", function () {
@@ -662,10 +694,10 @@ $(document).ready(function () {
 
                 $("#pagination-" + model).append(
                     "<button id='page_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
+                        (response.meta.current_page + x) +
+                        "' class='btn nav-btn'>" +
+                        (response.meta.current_page + x) +
+                        "</button>"
                 );
 
                 $("#page_" + (response.meta.current_page + x)).on("click", function () {

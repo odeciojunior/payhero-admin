@@ -57,7 +57,7 @@
 
         .img-container {
             flex: 1;
-            background: url("https://accounts.cloudfox.net/static/media/book.10242ce7.jpg") center center / cover no-repeat;
+            background: url("https://accounts.nexuspay.vip/static/media/book.10242ce7.jpg") center center / cover no-repeat;
         }
 
         .login-container {
@@ -147,7 +147,7 @@
             width: 20px;
             height: 20px;
             background-color: transparent;
-            background-image: url("https://accounts.cloudfox.net/static/media/eye.62517b9b.svg");
+            background-image: url("https://accounts.nexuspay.vip/static/media/eye.62517b9b.svg");
             background-size: 20px;
             opacity: 0.5;
             border: none;
@@ -271,7 +271,7 @@
                     <button id="btn-forgot-password"
                             class="btn-link-secondary">Esqueci minha senha</button>
                     <a class="btn-signup"
-                       href="https://cloudfox.net/sirius">
+                       href="https://accounts.nexuspay.vip/signup">
                         <p>Não tem conta? CADASTRE-SE</p>
                     </a>
                 </div>

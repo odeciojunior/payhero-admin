@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>CloudFox - Admin</title>
+    <title>Nexus Pay - Admin</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible"
           content="IE=edge">

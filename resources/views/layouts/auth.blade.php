@@ -65,7 +65,7 @@
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            background: url(https://sirius.cloudfox.net/build/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
+            background: url(https://admin.nexuspay.vip/build/global/adminremark/assets/images/gradient-bg.png) bottom left no-repeat;
         }
     </style>
     @yield('content')

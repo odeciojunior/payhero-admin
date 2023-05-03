@@ -51,6 +51,7 @@ class UsersTableSeeder extends Seeder
             "document" => "00000000000",
             "account_is_approved" => true,
             "cellphone" => "5566999999999",
+            "account_is_approved" => true,
             "personal_document_status" => 3,
             "biometry_status" => 3,
             "address_document_status" => 3,

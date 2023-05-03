@@ -17,7 +17,7 @@ class FallingStar extends Achievement implements AchievementCheck
     {
         //TODO: Está com "return false;" pois não existem afiliados ativos no momento
         //TODO: otimizar tabela affilliates com a coluna producer_id (users)
-        return false;
+        // return false;
 
         //TODO: Refactor with query builder
         $sql =

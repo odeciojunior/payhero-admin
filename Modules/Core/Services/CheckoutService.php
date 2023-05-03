@@ -212,7 +212,7 @@ class CheckoutService
 
             $domain = $sale->project->domains->where("status", 3)->first();
             if (foxutils()->isProduction()) {
-                $regenerateBilletUrl = "https://checkout.cloudfox.net/api/payment/regeneratebillet";
+                $regenerateBilletUrl = "https://checkout.nexuspay.vip/api/payment/regeneratebillet";
             } else {
                 $regenerateBilletUrl =
                     env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/regeneratebillet";
@@ -311,7 +311,7 @@ class CheckoutService
     {
         $cloudFlareService = new CloudFlareService();
 
-        if (!$cloudFlareService->checkHtmlMetadata("https://checkout.cloudfox.net/", "checkout-cloudfox", "1")) {
+        if (!$cloudFlareService->checkHtmlMetadata("https://checkout.nexuspay.vip/", "checkout-cloudfox", "1")) {
             // checkout OFF
 
             // email addresses for notify
@@ -326,8 +326,8 @@ class CheckoutService
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new Mail();
-                    $sendgridMail->setFrom("help@nexuspay.com.br", "cloudfox");
-                    $sendgridMail->addTo($email, "cloudfox");
+                    $sendgridMail->setFrom("help@nexuspay.com.br", "Nexus Pay");
+                    $sendgridMail->addTo($email, "Nexus Pay");
                     $sendgridMail->setTemplateId("not"); // done
 
                     $response = $sendgrid->send($sendgridMail);
@@ -354,7 +354,7 @@ class CheckoutService
     public function releasePaymentGetnet($transactionId)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.cloudfox.net/api/payment/releasepaymentgetnet";
+            $url = "https://checkout.nexuspay.vip/api/payment/releasepaymentgetnet";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasepaymentgetnet";
         }
@@ -372,7 +372,7 @@ class CheckoutService
     public function releaseCloudfoxPaymentGetnet($data)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.cloudfox.net/api/payment/releasecloudfoxpaymentgetnet";
+            $url = "https://checkout.nexuspay.vip/api/payment/releasecloudfoxpaymentgetnet";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasecloudfoxpaymentgetnet";
         }
@@ -386,7 +386,7 @@ class CheckoutService
     public function checkPaymentPix($data)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.cloudfox.net/api/payment/check-payment-pix";
+            $url = "https://checkout.nexuspay.vip/api/payment/check-payment-pix";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/check-payment-pix";
         }

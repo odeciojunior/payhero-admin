@@ -126,7 +126,7 @@ class ReportanaService
                 );
                 $subtotal = number_format($sale->sub_total, 2, ".", "");
 
-                $domainName = $domain->name ?? "cloudfox.net";
+                $domainName = $domain->name ?? "nexuspay.com.br";
                 $boletoLink =
                     "https://checkout.{$domainName}/order/" .
                     Hashids::connection("sale_id")->encode($sale->id) .
@@ -139,7 +139,7 @@ class ReportanaService
                     "order" => [
                         "financial_status" => $status,
                         "billet_url" => $boletoLink,
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "checkout_url" =>
                             "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
                         "id" => $sale->checkout_id,

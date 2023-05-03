@@ -22,13 +22,10 @@ class SalesUnicodropExternalResource extends JsonResource
     {
         $amount = preg_replace("/[^0-9]/", "", $this->details->total) / 100;
 
-        $netAmount =
-            preg_replace("/[^0-9]/", "", $this->details->comission) / 100;
+        $netAmount = preg_replace("/[^0-9]/", "", $this->details->comission) / 100;
 
         $fee = preg_replace("/[^0-9]/", "", $this->details->taxaReal) / 100;
-        $fee +=
-            preg_replace("/[^0-9]/", "", $this->installment_tax_value ?? 0) /
-            100;
+        $fee += preg_replace("/[^0-9]/", "", $this->installment_tax_value ?? 0) / 100;
 
         $pixCharge = PixCharge::where("sale_id", $this->id)
             ->orderBy("id", "DESC")
@@ -38,7 +35,7 @@ class SalesUnicodropExternalResource extends JsonResource
             ->where("project_id", $this->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "cloudfox.net";
+        $domainName = $domain->name ?? "nexuspay.vip";
 
         $boletoLink =
             "https://checkout.{$domainName}/order/" .

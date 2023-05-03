@@ -18,7 +18,7 @@
     <main>
         <div class="sidebar">
             <img class="logo"
-                 src="https://cloudfox.net/sirius/assets/img/logos/sirius-powered-cloudfox.svg"
+                 src="https://nexuspay.vip/sirius/assets/img/logos/sirius-powered-cloudfox.svg"
                  alt="Admin Logo">
             <ol>
                 <li>

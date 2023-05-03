@@ -79,19 +79,17 @@ class CheckoutPresenter extends Presenter
             $companyDefault = Auth()->user()->company_default;
         }
 
-        if($companyDefault == Company::DEMO_ID)
-        {
-            return "https://demo.cloudfox.net". '/recovery/' . $hashCheckoutId;
+        if ($companyDefault == Company::DEMO_ID) {
+            return "https://demo.nexuspay.vip" . "/recovery/" . $hashCheckoutId;
         }
 
-        $link = 'Domínio não configurado';
+        $link = "Domínio não configurado";
 
-        if(isset($domain))
-        {
-            if(FoxUtils::isProduction()) {
-                $link = 'https://checkout.' . $domain->name. '/recovery/' . $hashCheckoutId;
+        if (isset($domain)) {
+            if (FoxUtils::isProduction()) {
+                $link = "https://checkout." . $domain->name . "/recovery/" . $hashCheckoutId;
             } else {
-                $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/recovery/' . $hashCheckoutId;
+                $link = env("CHECKOUT_URL", "http://dev.checkout.com") . "/recovery/" . $hashCheckoutId;
             }
         }
 

@@ -421,7 +421,7 @@ class ShopifyService
         }
 
         if (FoxUtils::isProduction()) {
-            $this->createShopifyIntegrationWebhook($projectId, "https://sirius.cloudfox.net/postback/shopify/");
+            $this->createShopifyIntegrationWebhook($projectId, "https://admin.nexuspay.vip/postback/shopify/");
         }
 
         $user = User::find($userId);

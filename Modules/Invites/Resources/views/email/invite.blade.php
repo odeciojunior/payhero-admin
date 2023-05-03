@@ -32,7 +32,7 @@
                cellspacing="0">
             <tr>
                 <td style="padding-top: 20px;text-align:center">
-                    <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/beta-tester.png">
+                    <img src="https://nexuspay-documents.s3.amazonaws.com/nexuspay/defaults/beta-tester.png">
                 </td>
             </tr>
             <tr>

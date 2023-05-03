@@ -36,7 +36,7 @@ class BoletoPaidEmailNotifyUser implements ShouldQueue
         $data = $event->data;
         $sendGridService->sendEmail(
             "help@nexuspay.com.br",
-            "cloudfox",
+            "nexuspay",
             $user->email,
             $user->name,
             "not", // done

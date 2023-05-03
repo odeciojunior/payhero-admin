@@ -124,7 +124,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <a class="linkfooter"
                        target="_blank"
-                       href="https://cloudfox.net/terms"
+                       href="https://nexuspay.vip/terms"
                        style="font-size: 11px">
                         Terms & Conditions</a>
                     <div class="oval"></div>

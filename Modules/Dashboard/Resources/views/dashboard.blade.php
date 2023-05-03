@@ -255,7 +255,7 @@
                     </div>
 
                     <div class="modal-terms">
-                        <a href="//cloudfox.net/use-terms-and-privacy-policy.html"
+                        <a href="//nexuspay.vip/use-terms-and-privacy-policy.html"
                            target="_blank"
                            class="button-modal-term">
                             <span>

@@ -35,7 +35,7 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
 
     public function handle()
     {
-        $knownInvalidCodes = ["CLOUDFOX000XX", "ALIEXPRESS"];
+        $knownInvalidCodes = ["NEXUSPAY000XX", "ALIEXPRESS"];
         if (!in_array($this->trackingCode, $knownInvalidCodes)) {
             foreach ($this->productPlanSales as $productPlanSale) {
                 $this->trackingService->createOrUpdateTracking(

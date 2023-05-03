@@ -50,7 +50,7 @@ class RestartShopifyWebhooks extends Command
                 $shopifyService->createShopWebhook([
                     "topic" => "products/create",
                     "address" =>
-                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        "https://admin.nexuspay.vip/postback/shopify/" .
                         Hashids::encode($shopifyIntegration->project_id),
                     "format" => "json",
                 ]);
@@ -58,7 +58,7 @@ class RestartShopifyWebhooks extends Command
                 $shopifyService->createShopWebhook([
                     "topic" => "products/update",
                     "address" =>
-                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        "https://admin.nexuspay.vip/postback/shopify/" .
                         Hashids::encode($shopifyIntegration->project_id),
                     "format" => "json",
                 ]);
@@ -66,7 +66,7 @@ class RestartShopifyWebhooks extends Command
                 $shopifyService->createShopWebhook([
                     "topic" => "orders/updated",
                     "address" =>
-                        "https://sirius.cloudfox.net/postback/shopify/" .
+                        "https://admin.nexuspay.vip/postback/shopify/" .
                         Hashids::encode($shopifyIntegration->project_id) .
                         "/tracking",
                     "format" => "json",

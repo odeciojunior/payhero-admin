@@ -77,14 +77,14 @@
                                      aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item"
-                                       href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox.zip">Adiciona
+                                       href="https://admin.nexuspay.vip/build/layouts/woocommerce/plugins/plugin_cloudfox.zip">Adiciona
                                         ao carrinho de compras</a>
                                     <a class="dropdown-item"
-                                       href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
+                                       href="https://admin.nexuspay.vip/build/layouts/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
                                         direto para o checkout</a>
 
                                     <a class="dropdown-item"
-                                       href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin-cloudfox-geteway.zip">
+                                       href="https://admin.nexuspay.vip/build/layouts/woocommerce/plugins/plugin-cloudfox-geteway.zip">
                                         Checkout API</a>
                                 </div>
                             </div>

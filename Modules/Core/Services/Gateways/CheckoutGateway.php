@@ -18,7 +18,7 @@ class CheckoutGateway extends GatewayAbstract
 
         $this->baseUrl = getenv("CHECKOUT_URL") . "/api/";
         if (FoxUtils::isProduction()) {
-            $this->baseUrl = "https://checkout.cloudfox.net/api/";
+            $this->baseUrl = "https://checkout.nexuspay.vip/api/";
         }
 
         $this->gatewayId = $gatewayId;
@@ -166,10 +166,11 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
-    public function processPostbackEthoca($postbackId){
+    public function processPostbackEthoca($postbackId)
+    {
         $options = new GatewayCurlOptions([
             "endpoint" => "processPostbackEthoca",
-            "data"=>['postback_id'=>$postbackId]
+            "data" => ["postback_id" => $postbackId],
         ]);
         return json_decode($this->requestHttp($options));
     }
@@ -243,10 +244,10 @@ class CheckoutGateway extends GatewayAbstract
                 "route" => "withdrawal/safe2pay/anticipation",
                 "method" => "GET",
             ],
-            "processPostbackEthoca"=>[
+            "processPostbackEthoca" => [
                 "route" => "postback/process/ethoca",
                 "method" => "POST",
-            ]
+            ],
         ];
     }
 

@@ -46,11 +46,11 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
             $sufixHomolog = "";
         }
 
-        $url = "https://accounts{$sufixHomolog}.cloudfox.net/personal-info";
+        $url = "https://accounts{$sufixHomolog}.nexuspay.vip/personal-info";
 
         if (!empty($data["companyId"])) {
             $url =
-                "https://accounts{$sufixHomolog}.cloudfox.net/companies/company-detail/" .
+                "https://accounts{$sufixHomolog}.nexuspay.vip/companies/company-detail/" .
                 Hashids::encode($data["companyId"]);
         }
 
