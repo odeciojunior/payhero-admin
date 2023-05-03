@@ -135,7 +135,7 @@ class Whatsapp2Service
                         "token" => hashids_encode($sale->checkout_id),
                         "financial_status" => $status,
                         "billet_url" => $boletoLink,
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "checkout_url" =>
                             "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                         "id" => $sale->checkout_id,
@@ -224,7 +224,7 @@ class Whatsapp2Service
                     "token" => hashids_encode($sale->checkout_id),
                     "financial_status" => Whatsapp2Integration::STATUS_CANCELLED,
                     "billet_url" => $link,
-                    "gateway" => "cloudfox",
+                    "gateway" => "nexuspay",
                     "checkout_url" =>
                         "https://checkout." . $domain->name . "/recovery/" . hashids_encode($sale->checkout_id),
                     "id" => $sale->checkout_id,

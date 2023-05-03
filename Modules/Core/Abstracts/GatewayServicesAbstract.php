@@ -7,16 +7,15 @@ use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
-use Modules\Core\Entities\BonusBalance;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\SecurityReserve;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -60,6 +59,16 @@ abstract class GatewayServicesAbstract
                 ->whereIn("transactions.gateway_id", $this->gatewayIds)
                 ->sum("transactions.value");
         });
+    }
+
+    public function getSecurityReserveBalance(): int
+    {
+        // $cacheName = "balance-security-reserve-{$this->gatewayName}-{$this->company->id}";
+        // return cache()->remember($cacheName, 120, function () {
+        return SecurityReserve::where("company_id", $this->company->id)
+            ->where("status", SecurityReserve::STATUS_PENDING)
+            ->sum("value");
+        // });
     }
 
     public function getPendingBalanceCount(): int
@@ -259,25 +268,43 @@ abstract class GatewayServicesAbstract
             $columnBalanceName = $this->companyColumnBalance;
 
             foreach ($transactions->cursor() as $transaction) {
-                $company = $transaction->company;
+                $transaction->update([
+                    "status" => "transfered",
+                    "status_enum" => Transaction::STATUS_TRANSFERRED,
+                ]);
 
-                Transfer::create([
+                $company = $transaction->company;
+                $user = $transaction->user;
+
+                $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                $transferValue = $transaction->value - $reserveValue;
+
+                $company->update([
+                    $this->companyColumnBalance => $company->$columnBalanceName + $transferValue,
+                ]);
+
+                $transfer = Transfer::create([
                     "transaction_id" => $transaction->id,
                     "user_id" => $company->user_id,
                     "company_id" => $company->id,
                     "type_enum" => Transfer::TYPE_IN,
-                    "value" => $transaction->value,
+                    "value" => $transferValue,
                     "type" => "in",
                     "gateway_id" => $this->getGatewayId(),
                 ]);
 
-                $company->update([
-                    $this->companyColumnBalance => $company->$columnBalanceName + $transaction->value,
-                ]);
-
-                $transaction->update([
-                    "status" => "transfered",
-                    "status_enum" => Transaction::STATUS_TRANSFERRED,
+                SecurityReserve::create([
+                    "company_id" => $company->id,
+                    "sale_id" => $transaction->sale_id,
+                    "transaction_id" => $transaction->id,
+                    "transfer_id" => $transfer->id,
+                    "user_id" => $transaction->user_id,
+                    "tax" => $user->security_reserve_tax,
+                    "value" => $reserveValue,
+                    "release_date" => Carbon::now()
+                        ->addDays($user->security_reserve_days)
+                        ->format("Y-m-d"),
+                    "status" => SecurityReserve::STATUS_PENDING,
                 ]);
             }
 
@@ -311,9 +338,10 @@ abstract class GatewayServicesAbstract
             $blockedBalance = $this->getBlockedBalance();
             $blockedBalanceCount = $this->getBlockedBalanceCount();
             $pendingBalance = $this->getPendingBalance();
+            $securityReserveBalance = $this->getSecurityReserveBalance();
             $pendingBalanceCount = $this->getPendingBalanceCount();
             $availableBalance = $this->getAvailableBalance();
-            $totalBalance = $availableBalance + $pendingBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $securityReserveBalance;
 
             (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
@@ -321,6 +349,7 @@ abstract class GatewayServicesAbstract
                 "name" => $this->gatewayName,
                 "available_balance" => $availableBalance,
                 "pending_balance" => $pendingBalance,
+                "security_reserve_balance" => $securityReserveBalance,
                 "pending_balance_count" => $pendingBalanceCount,
                 "blocked_balance" => $blockedBalance,
                 "blocked_balance_count" => $blockedBalanceCount,

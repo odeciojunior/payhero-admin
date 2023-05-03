@@ -23,7 +23,6 @@ class FinancesApiController extends Controller
 {
     public function getBalances(Request $request): JsonResponse
     {
-
         $pixel = new Pixel();
 
         try {
@@ -34,8 +33,8 @@ class FinancesApiController extends Controller
                 return response()->json(["message" => "Ocorreu algum erro, tente novamente!"], 400);
             }
 
-            if ($company->id <> Company::DEMO_ID && Gate::denies('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            if ($company->id != Company::DEMO_ID && Gate::denies("edit", [$company])) {
+                return response()->json(["message" => "Sem permissão"], Response::HTTP_FORBIDDEN);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId);
@@ -47,6 +46,9 @@ class FinancesApiController extends Controller
                 "available_balance" => foxutils()->formatMoney(($balanceResume["available_balance"] ?? 0) / 100),
                 "total_balance" => foxutils()->formatMoney(($balanceResume["total_balance"] ?? 0) / 100),
                 "pending_balance" => foxutils()->formatMoney(($balanceResume["pending_balance"] ?? 0) / 100),
+                "security_reserve_balance" => foxutils()->formatMoney(
+                    ($balanceResume["security_reserve_balance"] ?? 0) / 100
+                ),
                 "blocked_balance" => foxutils()->formatMoney(($balanceResume["blocked_balance"] ?? 0) / 100),
                 "pending_debt_balance" => foxutils()->formatMoney(($balanceResume["pending_debt_balance"] ?? 0) / 100),
             ]);
@@ -96,9 +98,11 @@ class FinancesApiController extends Controller
     {
         $companies = null;
         if (empty($companyId)) {
-            $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
+            $companies = Company::with("user")
+                ->where("user_id", auth()->user()->account_owner_id)
+                ->get();
         } else {
-            $companies = Company::where('id', hashids_decode($companyId))->get();
+            $companies = Company::where("id", hashids_decode($companyId))->get();
         }
         $gatewayIds = [];
 

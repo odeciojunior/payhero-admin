@@ -142,7 +142,7 @@ class PostBackEbanxController extends Controller
                         $transactionUpdate = [
                             "kind" => "sale",
                             "source" => "external",
-                            "gateway" => "cloudfox",
+                            "gateway" => "Nexuspay",
                             "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                         ];
                         //                        if ($sale['payment_method'] == 2) {

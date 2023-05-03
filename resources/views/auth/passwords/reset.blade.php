@@ -8,7 +8,7 @@
             <div class="page-content d-flex flex-column justify-content-center">
                 <div class="logobar text-center">
                     <img src="{{ asset('build/global/adminremark/assets/images/logo-oficial.svg') }}"
-                         alt="CloudFox">
+                         alt="NexusPay">
                 </div>
                 <div class="clearfix"></div>
                 <div class="panel">

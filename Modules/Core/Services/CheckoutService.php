@@ -130,10 +130,13 @@ class CheckoutService
     public function getSubTotal($checkoutPlans = null)
     {
         $total = 0;
-        foreach ($checkoutPlans as $checkoutPlan) {
-            if (!empty($checkoutPlan->plan)) {
-                $total +=
-                    intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+        if ($checkoutPlans) {
+            foreach ($checkoutPlans as $checkoutPlan) {
+                if (!empty($checkoutPlan->plan)) {
+                    $total +=
+                        intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) *
+                        intval($checkoutPlan->amount);
+                }
             }
         }
 

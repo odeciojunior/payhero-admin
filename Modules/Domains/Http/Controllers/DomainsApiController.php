@@ -56,8 +56,7 @@ class DomainsApiController extends Controller
 
             $domains = Domain::with("project")->where("project_id", $projectId);
 
-            return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
-
+            return DomainResource::collection($domains->orderBy("id", "DESC")->paginate(5));
         } catch (Exception $e) {
             report($e);
 
@@ -253,7 +252,7 @@ class DomainsApiController extends Controller
                             case $cloudFlareService::adminIp:
                             case $cloudFlareService::sacIp:
                             case $cloudFlareService::affiliateIp:
-                                $content = "Servidores CloudFox";
+                                $content = "Servidores Nexuspay";
                                 break;
                             default:
                                 $content = $record->content;
@@ -360,7 +359,7 @@ class DomainsApiController extends Controller
                 })
                 ->log("Verificação domínio: " . $domain->name);
 
-            if (!$cloudFlareService->checkHtmlMetadata("https://checkout." . $domain->name, "checkout-cloudfox", "1")) {
+            if (!$cloudFlareService->checkHtmlMetadata("https://checkout." . $domain->name, "checkout-nexuspay", "1")) {
                 $domain->update(["status" => Domain::STATUS_PENDING]);
 
                 return response()->json(
@@ -397,16 +396,19 @@ class DomainsApiController extends Controller
             try {
                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
 
-                $basicTheme = $shopifyIntegration->present()->getThemeType('basic_theme');
+                $basicTheme = $shopifyIntegration->present()->getThemeType("basic_theme");
 
-                $integrationTemplate = $shopify->templateService->makeTemplateIntegration($shopifyIntegration, $domain, $basicTheme);
+                $integrationTemplate = $shopify->templateService->makeTemplateIntegration(
+                    $shopifyIntegration,
+                    $domain,
+                    $basicTheme
+                );
 
-                if ($integrationTemplate['failed']) {
-                    return response()->json(['message' => $integrationTemplate['message']], Response::HTTP_BAD_REQUEST);
+                if ($integrationTemplate["failed"]) {
+                    return response()->json(["message" => $integrationTemplate["message"]], Response::HTTP_BAD_REQUEST);
                 }
 
                 return response()->json(["message" => "Domínio validado com sucesso"], 200);
-
             } catch (Exception $e) {
                 report($e);
 
@@ -426,7 +428,6 @@ class DomainsApiController extends Controller
                     400
                 );
             }
-
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
 

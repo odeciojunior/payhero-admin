@@ -40,7 +40,7 @@ class NotifySalesExportedListener
 
             $sendGridService->sendEmail(
                 "help@nexuspay.com.br",
-                "nexuspay",
+                "NexusPay",
                 $userEmail,
                 $userName,
                 "d-367113d653654dfd84abd5134f232d99", // done

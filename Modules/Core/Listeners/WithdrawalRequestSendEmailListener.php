@@ -37,7 +37,7 @@ class WithdrawalRequestSendEmailListener implements ShouldQueue
         ];
         $sendGridService->sendEmail(
             "help@nexuspay.com.br",
-            "nexuspay",
+            "NexusPay",
             $event->withdrawal->company->user->email,
             $userName,
             "d-2548bf18de634ee1ab6bc23cf4d7ba25", // done

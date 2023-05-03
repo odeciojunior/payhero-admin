@@ -131,7 +131,7 @@ class PostBackPagarmeController extends Controller
         //                         $transactionUpdate = [
         //                             "kind" => "sale",
         //                             "source" => "external",
-        //                             "gateway" => "cloudfox",
+        //                             "gateway" => "nexuspay",
         //                             "authorization" => Hashids::connection('sale_id')->encode($sale->id),
         //                         ];
         // //                        if ($sale->payment_method == 2) {

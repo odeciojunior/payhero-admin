@@ -135,7 +135,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "discount" => $discount,
             ];
 
-            $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.com.br");
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.vip");
             $sendGridService->sendEmail(
                 $fromEmail,
                 $project["name"],

@@ -73,8 +73,8 @@ class NotifyMediation extends Command
                         ];
 
                         $sendGridService->sendEmail(
-                            "noreply@cloudox.net",
-                            "CloudFox",
+                            "noreply@nexuspay.com.br",
+                            "Nexuspay",
                             $customerEmail,
                             $customerName,
                             "d-16d46e19ed20447e91876506d22ebe0f", // done

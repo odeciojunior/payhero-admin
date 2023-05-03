@@ -51,7 +51,7 @@ class NotifyUserLevelSendEmailListener
 
         $sendgrindService->sendEmail(
             "help@nexuspay.com.br",
-            "nexuspay",
+            "NexusPay",
             $event->user->email,
             $event->user->name,
             "not", // done
@@ -64,7 +64,7 @@ class NotifyUserLevelSendEmailListener
             ];
             $sendgrindService->sendEmail(
                 "help@nexuspay.com.br",
-                "nexuspay",
+                "cloudfox",
                 $event->user->email,
                 $event->user->name,
                 "not", // done

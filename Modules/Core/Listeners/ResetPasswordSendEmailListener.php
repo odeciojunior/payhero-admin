@@ -35,7 +35,7 @@ class ResetPasswordSendEmailListener implements ShouldQueue
         ];
         $sendGridService->sendEmail(
             "help@nexuspay.com.br",
-            "nexuspay",
+            "NexusPay",
             $userEmail,
             $userName,
             "d-7589cbbe04f643eead0925c47b44c9d1", // done

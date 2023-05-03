@@ -24,21 +24,21 @@ use Slince\Shopify\PublicAppCredential;
 
 class ShopifyTemplateService
 {
-    public const LAYOUT_THEME_LIQUID = 'layout/theme.liquid';
+    public const LAYOUT_THEME_LIQUID = "layout/theme.liquid";
 
-    public const SECTION_UTM = 'utm';
+    public const SECTION_UTM = "utm";
 
-    public const SECTION_CART = 'cart';
+    public const SECTION_CART = "cart";
 
-    public const SECTION_SKIP_TO_CART = 'skip to cart';
+    public const SECTION_SKIP_TO_CART = "skip to cart";
 
-    public const STUBS_TEMPLATE_UTM = 'CloudfoxUtmScriptSnnipet.liquid';
+    public const STUBS_TEMPLATE_UTM = "NexuspayUtmScriptSnnipet.liquid";
 
-    public const STUBS_TEMPLATE_CART = 'CloudfoxCartScriptSnippet.liquid';
+    public const STUBS_TEMPLATE_CART = "NexuspayCartScriptSnippet.liquid";
 
-    public const STUBS_TEMPLATE_SKIP_TO_CART = 'CloudfoxSkipToCartScriptSnippet.liquid';
+    public const STUBS_TEMPLATE_SKIP_TO_CART = "NexuspaySkipToCartScriptSnippet.liquid";
 
-    private $stubsTemplateFolder = __DIR__ . './../../Shopify/Stubs/';
+    private $stubsTemplateFolder = __DIR__ . "./../../Shopify/Stubs/";
 
     private $cacheDir;
 
@@ -53,20 +53,16 @@ class ShopifyTemplateService
     public function __construct(string $urlStore, string $token, $getThemes = true)
     {
         if (!$this->cacheDir) {
-            $cache = '/var/tmp';
+            $cache = "/var/tmp";
             //$cache = storage_path();
         } else {
             $cache = $this->cacheDir;
         }
 
         $this->credential = new PublicAppCredential($token);
-        $this->client = new Client(
-            $urlStore,
-            $this->credential,
-            [
-                'meta_cache_dir' => $cache // Metadata cache dir, required
-            ]
-        );
+        $this->client = new Client($urlStore, $this->credential, [
+            "meta_cache_dir" => $cache, // Metadata cache dir, required
+        ]);
 
         if ($getThemes) {
             sleep(1);
@@ -146,7 +142,7 @@ class ShopifyTemplateService
         if ($this->theme) {
             return $this->theme->getName();
         }
-        return ''; //throwl
+        return ""; //throwl
     }
 
     /**
@@ -200,47 +196,32 @@ class ShopifyTemplateService
     {
         $this->removeIntegrationInAllThemes();
 
-        $this->setThemeByRole('main');
+        $this->setThemeByRole("main");
 
         $htmlBody = $this->getTemplateHtml();
 
-
         if (empty($htmlBody)) {
             return [
-                'failed' => true,
-                'message' => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado'
+                "failed" => true,
+                "message" => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado',
             ];
         }
 
-        $shopifyIntegration->update(
-            [
-                'theme_type' => $theme,
-                'theme_name' => $this->getThemeName(),
-                'theme_file' => $this::LAYOUT_THEME_LIQUID,
-                'theme_html' => $htmlBody,
-            ]
-        );
+        $shopifyIntegration->update([
+            "theme_type" => $theme,
+            "theme_name" => $this->getThemeName(),
+            "theme_file" => $this::LAYOUT_THEME_LIQUID,
+            "theme_html" => $htmlBody,
+        ]);
 
-        $shopifyIntegration->update(
-            [
-                'layout_theme_html' => $htmlBody,
-            ]
-        );
+        $shopifyIntegration->update([
+            "layout_theme_html" => $htmlBody,
+        ]);
 
-        $newHtmlBody = $this->insertScript(
-            $htmlBody,
-            self::SECTION_UTM,
-            $domain->name,
-            self::STUBS_TEMPLATE_UTM
-        );
-        $newHtmlBody = $this->insertScript(
-            $newHtmlBody,
-            self::SECTION_CART,
-            $domain->name,
-            self::STUBS_TEMPLATE_CART
-        );
+        $newHtmlBody = $this->insertScript($htmlBody, self::SECTION_UTM, $domain->name, self::STUBS_TEMPLATE_UTM);
+        $newHtmlBody = $this->insertScript($newHtmlBody, self::SECTION_CART, $domain->name, self::STUBS_TEMPLATE_CART);
 
-        if($shopifyIntegration->skip_to_cart) {
+        if ($shopifyIntegration->skip_to_cart) {
             $newHtmlBody = $this->insertScript(
                 $newHtmlBody,
                 self::SECTION_SKIP_TO_CART,
@@ -251,28 +232,23 @@ class ShopifyTemplateService
 
         $this->updateTemplateLiquid($newHtmlBody);
 
-        $shopifyIntegration->update(
-            [
-                'status' => $shopifyIntegration->present()->getStatus('approved'),
-            ]
-        );
+        $shopifyIntegration->update([
+            "status" => $shopifyIntegration->present()->getStatus("approved"),
+        ]);
 
         return [
-            'failed' => false,
-            'message' => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado'
+            "failed" => false,
+            "message" => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado',
         ];
     }
 
     public function updateTemplateLiquid(string $newHtml, string $templateKeyName = self::LAYOUT_THEME_LIQUID)
     {
         if (!empty($this->theme)) {
-            $asset = $this->client->getAssetManager()->update(
-                $this->theme->getId(),
-                [
-                    "key" => $templateKeyName,
-                    "value" => $newHtml,
-                ]
-            );
+            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key" => $templateKeyName,
+                "value" => $newHtml,
+            ]);
 
             if ($asset) {
                 return true;
@@ -282,12 +258,11 @@ class ShopifyTemplateService
         return false; //throwl
     }
 
-
     public function insertScript(string $oldHtml, string $scriptName, string $domain, string $stubLiquidSnippet)
     {
         $html = $this->removeScript($oldHtml, $scriptName);
 
-        $strPos = strpos($html, '</body>');
+        $strPos = strpos($html, "</body>");
 
         $scriptFox = file_get_contents("{$this->stubsTemplateFolder}{$stubLiquidSnippet}");
         $scriptFox = $this->changeDomainSnippets($scriptFox, $domain);
@@ -299,8 +274,8 @@ class ShopifyTemplateService
 
     public function removeScript(string $html, string $scriptName)
     {
-        $starComment = "<!-- start cloudfox {$scriptName} script -->";
-        $endComment = "<!-- end cloudfox {$scriptName} script -->";
+        $starComment = "<!-- start nexuspay {$scriptName} script -->";
+        $endComment = "<!-- end nexuspay {$scriptName} script -->";
 
         $startScriptPos = strpos($html, $starComment);
         $endScriptPos = strpos($html, $endComment);
@@ -309,9 +284,9 @@ class ShopifyTemplateService
 
         if ($startScriptPos !== false) {
             //script já existe, remove
-            $size = ($endScriptPos + $countEndCharacters) - $startScriptPos;
+            $size = $endScriptPos + $countEndCharacters - $startScriptPos;
 
-            $html = substr_replace($html, '', $startScriptPos, $size);
+            $html = substr_replace($html, "", $startScriptPos, $size);
         }
 
         return $html;
@@ -339,8 +314,7 @@ class ShopifyTemplateService
             $templateFiles = $this->client->getAssetManager()->findAll($this->theme->getId());
             foreach ($templateFiles as $file) {
                 if ($file->getKey() == $templateKeyName) {
-                    $htmlCart = $this->client->getAssetManager()
-                        ->find($this->theme->getId(), $templateKeyName);
+                    $htmlCart = $this->client->getAssetManager()->find($this->theme->getId(), $templateKeyName);
 
                     return $htmlCart->getValue();
                 }
@@ -371,8 +345,8 @@ class ShopifyTemplateService
         }
     }
 
-    private function changeDomainSnippets($text, $domain, $oldDomain = 'localhost:8081')
+    private function changeDomainSnippets($text, $domain, $oldDomain = "localhost:8081")
     {
-        return str_replace($oldDomain,$domain,$text);
+        return str_replace($oldDomain, $domain, $text);
     }
 }

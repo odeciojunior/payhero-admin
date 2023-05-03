@@ -34,10 +34,6 @@
 
                 <div id="discount"
                      class="w-100 d-inline mr-30 pointer">
-                    {{-- <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                             data-value=""
-                             alt=""> --}}
 
                     <svg class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                          width="80"
@@ -99,10 +95,6 @@
 
                 <div id="coupon"
                      class="w-100 d-inline ml-30 pointer">
-                    {{-- <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
-                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                             data-value=""
-                             alt=""> --}}
 
                     <svg class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
                          width="80"

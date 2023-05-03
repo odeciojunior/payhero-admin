@@ -42,7 +42,7 @@ class NotifyUserAchievementSendEmailListener
 
         $sendgrindService->sendEmail(
             "help@nexuspay.com.br",
-            "nexuspay",
+            "NexusPay",
             $event->user->email,
             $event->user->name,
             "not", // done

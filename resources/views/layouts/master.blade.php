@@ -9,7 +9,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
-          content="cloudfox">
+          content="Nexuspay">
     <meta name="app-debug"
           content="{{ getenv('APP_DEBUG') }}">
     <meta name="msapplication-TileColor"
@@ -149,8 +149,9 @@
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
 
-    @if ((!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
-        auth()->user()->is_cloudfox)
+    @if (
+        (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
+            auth()->user()->is_cloudfox)
         @include('utils.documents-pending')
         <script>
             verifyDocumentPending();

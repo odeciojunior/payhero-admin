@@ -291,7 +291,7 @@ class ProjectNotificationService
                         ->where("project_id", $sale->project_id)
                         ->where("status", 3)
                         ->first();
-                    $domainName = $domain->name ?? "nexuspay.com.br";
+                    $domainName = $domain->name ?? "nexuspay.vip";
                 }
 
                 if (strpos($message, "{url_boleto}") !== false && !empty($sale)) {

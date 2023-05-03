@@ -99,7 +99,7 @@ class DomainsController extends Controller
                             case $cloudFlareService::adminIp:
                             case $cloudFlareService::sacIp:
                             case $cloudFlareService::affiliateIp:
-                                $content = "Servidores CloudFox";
+                                $content = "Servidores NexusPay";
                                 break;
                             default:
                                 $content = $record->content;

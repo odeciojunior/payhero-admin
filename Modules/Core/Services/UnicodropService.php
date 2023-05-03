@@ -12,7 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class UnicodropService
 {
-    const API_ENDPOINT = "https://www.unicodrop.com.br/integracoes/cloudfox/default.asp?t=1&u=";
+    const API_ENDPOINT = "https://www.unicodrop.com.br/integracoes/nexuspay/default.asp?t=1&u=";
 
     public UnicodropIntegration $integration;
 
@@ -113,7 +113,7 @@ class UnicodropService
         $curl = curl_init();
         $url = self::API_ENDPOINT . $this->integration->token;
 
-        // $url = 'https://www.unicodrop.com.br/integracoes/cloudfox/default.asp?t=1&u=6F8DD99B-BAC4-4436-9EC1-E0E285987B0B';
+        // $url = 'https://www.unicodrop.com.br/integracoes/nexuspay/default.asp?t=1&u=6F8DD99B-BAC4-4436-9EC1-E0E285987B0B';
 
         curl_setopt_array($curl, [
             CURLOPT_URL => $url,

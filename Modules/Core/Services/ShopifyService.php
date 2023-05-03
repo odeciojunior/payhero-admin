@@ -825,7 +825,7 @@ class ShopifyService
             "billing_address" => $billingAddress,
             "shipping_lines" => $shipping,
             "note_attributes" => [
-                "token_cloudfox" => hashids_encode($sale->checkout_id),
+                "token_nexuspay" => hashids_encode($sale->checkout_id),
             ],
             "total_price" => substr_replace($totalValue, ".", strlen($totalValue) - 2, 0),
         ];
@@ -836,7 +836,7 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "sale",
                         "status" => "success",
@@ -852,7 +852,7 @@ class ShopifyService
                     "financial_status" => $sale->status == 1 ? "paid" : "pending",
                     "transactions" => [
                         [
-                            "gateway" => "cloudfox",
+                            "gateway" => "nexuspay",
                             "authorization" => hashids_encode($sale->id, "sale_id"),
                             "kind" => "sale",
                             "status" => $sale->status == 1 ? "success" : "pending",
@@ -1033,7 +1033,7 @@ class ShopifyService
                 $orderData["total_price"] = $orderPrice + $totalValue;
                 if ($sale->payment_method == 1) {
                     $orderData["transactions"][] = [
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "sale",
                         "status" => "success",
@@ -1137,7 +1137,7 @@ class ShopifyService
                     //                    $this->receivedData = $result;
                 } else {
                     $transaction = [
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "refund",
                         "source" => "external",
@@ -1365,7 +1365,7 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
-                        "gateway" => "cloudfox",
+                        "gateway" => "nexuspay",
                         "authorization" => "PERMISSIONS_TEST",
                         "kind" => "sale",
                         "status" => "success",
