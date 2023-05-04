@@ -149,9 +149,8 @@
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
 
-    @if (
-        (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
-            auth()->user()->is_cloudfox)
+    @if ((!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
+        auth()->user()->is_cloudfox)
         @include('utils.documents-pending')
         <script>
             verifyDocumentPending();
@@ -163,6 +162,19 @@
 
     @if (env('APP_ENV', 'production') == 'production')
         <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
+        @if (\Auth::user())
+            <script type="text/javascript">
+                window.$crisp = [];
+                window.CRISP_WEBSITE_ID = "906ce701-62be-4b4c-91e1-a8b71a74e82a";
+                (function() {
+                    d = document;
+                    s = d.createElement("script");
+                    s.src = "https://client.crisp.chat/l.js";
+                    s.async = 1;
+                    d.getElementsByTagName("head")[0].appendChild(s);
+                })();
+            </script>
+        @endif
     @endif
 </body>
 
