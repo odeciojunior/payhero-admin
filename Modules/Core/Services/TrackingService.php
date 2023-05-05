@@ -397,6 +397,7 @@ class TrackingService
             $join
                 ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
                 ->whereIn("s.status", $saleStatus)
+                ->where("s.payment_method", Sale::CREDIT_CARD_PAYMENT)
                 ->where("s.owner_id", $userId);
 
             if (!empty($filters["sale"])) {
