@@ -1,44 +1,20 @@
 <?php
 
-namespace App\Console\Commands;
-
-use Illuminate\Console\Command;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewayFlag;
 use Modules\Core\Entities\GatewayFlagTax;
 
-class GenericCommand extends Command
-{
+return new class extends Migration {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = "generic {name?}";
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = "Command description";
-
-    /**
-     * Create a new command instance.
+     * Run the migrations.
      *
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
+    public function up()
     {
         $taxes = [
             1 => 1.95,
@@ -60,7 +36,6 @@ class GenericCommand extends Command
             Gateway::SAFE2PAY_SANDBOX_ID,
         ])->get();
         foreach ($flags as $flag) {
-            $this->info($flag->id);
             $installments = GatewayFlagTax::where("gateway_flag_id", $flag->id)->get();
             foreach ($installments as $item) {
                 $item->update([
@@ -69,4 +44,14 @@ class GenericCommand extends Command
             }
         }
     }
-}
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+};
