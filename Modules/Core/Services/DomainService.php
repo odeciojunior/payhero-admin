@@ -184,87 +184,19 @@ class DomainService
                                     $shopifyIntegration->url_store,
                                     $shopifyIntegration->token
                                 );
+                                $basicTheme = $shopifyIntegration->present()->getThemeType("basic_theme");
 
-                                $shopify->setThemeByRole("main");
-
-                                $htmlCart = null;
-                                $templateKeyName = null;
-                                foreach ($shopify::templateKeyNames as $template) {
-                                    $templateKeyName = $template;
-                                    $htmlCart = $shopify->getTemplateHtml($template);
-                                    if ($htmlCart) {
-                                        break;
-                                    }
-                                }
-
-                                if ($htmlCart) {
-                                    //template normal
-
-                                    if ($shopify->checkCartTemplate($htmlCart)) {
-                                        $domain->update([
-                                            "status" => $this->getDomainModel()
-                                                ->present()
-                                                ->getStatus("approved"),
-                                        ]);
-                                        TaskService::setCompletedTask(
-                                            $domain->project->users->first(),
-                                            Task::find(Task::TASK_DOMAIN_APPROVED)
-                                        );
-
-                                        return true;
-                                    } else {
-                                        //template normal
-                                        $shopifyIntegration->update([
-                                            "theme_type" => $this->getShopifyIntegrationModel()
-                                                ->present()
-                                                ->getThemeType("basic_theme"),
-                                            "theme_name" => $shopify->getThemeName(),
-                                            "theme_file" => $templateKeyName,
-                                            "theme_html" => $htmlCart,
-                                        ]);
-
-                                        $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name);
-                                    }
-                                } else {
-                                    //template ajax
-
-                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
-
-                                    $shopifyIntegration->update([
-                                        "theme_type" => $this->getShopifyIntegrationModel()
-                                            ->present()
-                                            ->getThemeType("ajax_theme"),
-                                        "theme_name" => $shopify->getThemeName(),
-                                        "theme_file" => $shopify::templateAjaxKeyName,
-                                        "theme_html" => $htmlCart,
-                                    ]);
-
-                                    $shopify->updateTemplateHtml(
-                                        $shopify::templateAjaxKeyName,
-                                        $htmlCart,
-                                        $domain->name,
-                                        true
-                                    );
-                                }
-
-                                //inserir o javascript para o trackeamento (src, utm)
-                                $htmlBody = $shopify->getTemplateHtml("layout/theme.liquid");
-                                if ($htmlBody) {
-                                    //template do layout
-                                    $shopifyIntegration->update([
-                                        "layout_theme_html" => $htmlBody,
-                                    ]);
-
-                                    $shopify->insertUtmTracking("layout/theme.liquid", $htmlBody);
-                                }
+                                $shopify->templateService->makeTemplateIntegration(
+                                    $shopifyIntegration,
+                                    $domain,
+                                    $basicTheme
+                                );
                             } catch (\Exception $e) {
                                 report($e);
-                                //throwl
                             }
                         }
                     }
 
-                    //integracao no shopify funcionou? aprova o dominio
                     $domain->update([
                         "status" => $this->getDomainModel()
                             ->present()
