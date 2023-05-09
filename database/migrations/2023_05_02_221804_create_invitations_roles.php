@@ -76,6 +76,10 @@ return new class extends Migration {
     public function getNewPermissions()
     {
         return [
+            ["trackings", "Rastreamento", "web"],
+            ["trackings_manage", "Rastreamento - Gerenciar", "web"],
+            ["contestations", "Contestações", "web"],
+            ["contestations_manage", "Contestações - Gerenciar", "web"],
             ["invitations", "Convites", "web"],
             ["invitations_manage", "Convites - Gerenciar", "web"],
             ["affiliates", "Afiliados", "web"],
