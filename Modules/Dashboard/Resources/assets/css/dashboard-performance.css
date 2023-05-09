@@ -1,7 +1,7 @@
 /*Tamanho do card*/
 .page.dashboard .performance-card {
     /*min-height: 230px;*/
-    min-height: 370px;
+    min-height: 150px;
 }
 
 /*CSS card 1*/

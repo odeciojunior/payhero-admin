@@ -167,27 +167,6 @@
                                 <div class="performance-loading">
                                     <div class="skeleton-loading title"></div>
                                     <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
-                                        <div class="level-icon-container row">
-                                            <div class="skeleton-loading col level-image"></div>
-                                            <div class="col">
-                                                <div class="skeleton-loading level-title"></div>
-                                                <div class="skeleton-loading level-subtitle"></div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                            <div class="skeleton-loading col-2 achievements"></div>
-                                        </div>
                                         <div class="skeleton-loading invoicing"></div>
                                     </div>
                                 </div>
@@ -196,10 +175,10 @@
                             </div>
                         </div>
 
-                        <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-1 sirius-cashback">
+                        {{-- <div class="col-12 d-flex align-items-stretch font-size-12 order-1 order-sm-1 sirius-cashback">
                             <div class="card pb-15 bg-white w-full d-none">
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div
                              class="col-12 mb-10 d-flex align-items-stretch font-size-12 order-2 order-sm-2 sirius-account">

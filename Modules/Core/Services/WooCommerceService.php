@@ -220,7 +220,7 @@ class WooCommerceService
 
             if ($productExists->price != $_product->price) {
                 $productExists->price = $_product->price;
-                if($_product->on_sale && $_product->sale_price){
+                if ($_product->on_sale && $_product->sale_price) {
                     $productExists->price = $_product->sale_price;
                 }
                 $newValues = true;
@@ -292,8 +292,6 @@ class WooCommerceService
                 "description" => mb_substr($description, 0, 100),
                 "guarantee" => "0",
                 "format" => 1,
-                "category_id" => "11",
-
                 "price" => $_product->price,
                 "shopify_id" => $variationId,
                 "shopify_variant_id" => $shopifyVariantId,

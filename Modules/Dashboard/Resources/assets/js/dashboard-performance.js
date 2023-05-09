@@ -124,34 +124,11 @@ $(document).ready(function () {
         let item = `
                 <div class="card-header mt-10 pb-0 d-flex justify-content-between align-items-center bg-white">
                     <div class="font-size-14 gray-600 mr-auto">
-                        <span class="ml-0">Seu desempenho</span>
+                        <span class="ml-0">Seu faturamento</span>
                     </div>
-                    <ol class="card-indicators mb-0 d-flex justify-content-end align-items-center align-self-center">
-                        <li class="active" data-slide-to="1"></li>
-                        <li class="" data-slide-to="2"></li>
-                        <li class="" data-slide-to="3"></li>
-                        <i class="o-angle-down-1 control-prev active" data-slide-to="3"></i>
-                        <i class="o-angle-down-1 control-next active" data-slide-to="2"></i>
-                    </ol>
                 </div>
                 <div class="card-body pb-5 pt-0 mt-15 d-flex flex-column justify-content-start ">
 
-                    <div class="level-icon-container">
-                      <img src="${currentLevel.icon}" alt="${currentLevel.name}">
-                      <div>
-                        <strong>${currentLevel.name}</strong>
-                        <p>
-                          ${currentLevel.description}
-                        </p>
-                      </div>
-                    </div>
-                    <div id="achievements">
-                    </div>
-
-                    <div id="tasks">
-                        <div class="d-flex flex-column justify-content-start align-items-start">
-                        </div>
-                    </div>
                     <div id="progress" class="mt-15 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-stretch">
                         <div class="d-flex flex-row flex-nowrap justify-content-between align-items-start align-self-stretch">
                             <span id="progress-message-1"></span>
@@ -171,9 +148,9 @@ $(document).ready(function () {
 
         $(".performance-card > .performance-data").append(item);
 
-        UpdateAchievements(data.achievements);
+        // UpdateAchievements(data.achievements);
 
-        updateTasks(data.level, data.tasks);
+        // updateTasks(data.level, data.tasks);
 
         updateProgressBar(data.billed, currentLevel);
 

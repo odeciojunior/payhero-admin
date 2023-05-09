@@ -263,7 +263,6 @@ class ShopifyService
                         "description" => mb_substr($description, 0, 100),
                         "guarantee" => "0",
                         "format" => 1,
-                        "category_id" => "11",
                         "shopify" => true,
                         "price" => "",
                         "shopify_id" => $storeProduct->getId(),
