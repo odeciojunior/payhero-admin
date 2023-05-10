@@ -30,7 +30,7 @@
          data-toggle="gridmenu">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
-             src="{{ mix('build/global/img/logos/2021/svg/icon-secundary.svg') }}"
+             src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}"
              style="height:  2.7rem;">
     </div>
 
