@@ -55,6 +55,10 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes()
             ->onOneServer();
         $schedule
+            ->command("available-balance:update")
+            ->everyThirtyMinutes()
+            ->onOneServer();
+        $schedule
             ->command("verify:abandonedcarts")
             ->everyFifteenMinutes()
             ->withoutOverlapping()
@@ -145,11 +149,6 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("demo:abandoned-cart-checkout")
             ->dailyAt("05:35")
-            ->onOneServer();
-
-        $schedule
-            ->command("available-balance:update")
-            ->dailyAt("06:15")
             ->onOneServer();
         $schedule
             ->command("demo:update-financial-fake-data")
