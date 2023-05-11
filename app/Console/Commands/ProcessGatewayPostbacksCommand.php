@@ -24,8 +24,8 @@ class ProcessGatewayPostbacksCommand extends Command
     public function handle()
     {
         try {
-            $this->processPostBackGetnet();
-            $this->processPostbackAsaas();
+            // $this->processPostBackGetnet();
+            // $this->processPostbackAsaas();
             $this->processPostbackSafe2pay();
             $this->processPostbackIugu();
         } catch (Exception $e) {
@@ -86,7 +86,7 @@ class ProcessGatewayPostbacksCommand extends Command
         try {
             $postbacks = GatewayPostback::select("id")
                 ->where("processed_flag", false)
-                ->where("gateway_id", 21)
+                ->where("gateway_id", 3)
                 ->orderBy("id", "asc")
                 ->limit(100)
                 ->get()
@@ -107,7 +107,7 @@ class ProcessGatewayPostbacksCommand extends Command
         try {
             $postbacks = GatewayPostback::select("id")
                 ->where("processed_flag", false)
-                ->where("gateway_id", 23)
+                ->where("gateway_id", 7)
                 ->orderBy("id", "asc")
                 ->limit(100)
                 ->get()
