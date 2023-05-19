@@ -15,7 +15,7 @@ class LinkShortenerService
         }
 
         $data = [
-            "domain" => "mud.ae",
+            "domain" => "nxpy.me",
             "originalURL" => $url,
             "allowDuplicates" => false,
         ];
