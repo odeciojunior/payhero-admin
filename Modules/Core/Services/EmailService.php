@@ -19,7 +19,7 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class EmailService
 {
-    public const EMAIL_HELP_CLOUDFOX = "help@nexuspay.com.br";
+    public const EMAIL_HELP_CLOUDFOX = "noreply@nexuspay.com.br";
 
     public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-4ddac05c3a964831a15996b2a00a223a"; // done
 
@@ -47,7 +47,7 @@ class EmailService
             }
 
             $email = new Mail();
-            $email->setFrom("help@nexuspay.com.br", "Nexus Pay");
+            $email->setFrom("noreply@nexuspay.com.br", "Nexus Pay");
             $email->setSubject("Convite para o Nexus Pay");
             $email->addTo($to, "Nexus Pay");
             $email->addContent("text/html", $emailLayout->render());
@@ -285,7 +285,7 @@ class EmailService
 
         foreach ($emailList as $email) {
             (new SendgridService())->sendEmail(
-                "help@nexuspay.com.br",
+                "noreply@nexuspay.com.br",
                 "NexusPay",
                 $email,
                 "Admin/Dev",

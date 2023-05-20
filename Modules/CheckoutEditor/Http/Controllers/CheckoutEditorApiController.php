@@ -228,7 +228,7 @@ class CheckoutEditorApiController extends Controller
 
             $sendgridService = app(SendgridService::class);
             $sendgridService->sendEmail(
-                "help@nexuspay.com.br",
+                "noreply@nexuspay.com.br",
                 "Nexus Pay",
                 $supportEmail,
                 auth()->user()->name,

@@ -208,7 +208,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ];
 
                 $sendGridService->sendEmail(
-                    "help@nexuspay.com.br",
+                    "noreply@nexuspay.com.br",
                     "NexusPay",
                     $userEmail,
                     $userName,

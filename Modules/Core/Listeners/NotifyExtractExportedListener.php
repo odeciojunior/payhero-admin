@@ -39,7 +39,7 @@ class NotifyExtractExportedListener
             ];
 
             $sendGridService->sendEmail(
-                "help@nexuspay.com.br",
+                "noreply@nexuspay.com.br",
                 "Nexus Pay - Relatório extrato financeiro",
                 $userEmail,
                 $userName,

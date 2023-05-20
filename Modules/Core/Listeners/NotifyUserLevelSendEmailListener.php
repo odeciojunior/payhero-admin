@@ -50,7 +50,7 @@ class NotifyUserLevelSendEmailListener
         }
 
         $sendgrindService->sendEmail(
-            "help@nexuspay.com.br",
+            "noreply@nexuspay.com.br",
             "NexusPay",
             $event->user->email,
             $event->user->name,
@@ -63,7 +63,7 @@ class NotifyUserLevelSendEmailListener
                 "nome" => ucfirst(strtolower(current(explode(" ", $event->user->name)))),
             ];
             $sendgrindService->sendEmail(
-                "help@nexuspay.com.br",
+                "noreply@nexuspay.com.br",
                 "cloudfox",
                 $event->user->email,
                 $event->user->name,

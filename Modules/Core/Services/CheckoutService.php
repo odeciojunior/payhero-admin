@@ -329,7 +329,7 @@ class CheckoutService
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new Mail();
-                    $sendgridMail->setFrom("help@nexuspay.com.br", "Nexus Pay");
+                    $sendgridMail->setFrom("noreply@nexuspay.com.br", "Nexus Pay");
                     $sendgridMail->addTo($email, "Nexus Pay");
                     $sendgridMail->setTemplateId("not"); // done
 
