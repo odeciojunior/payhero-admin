@@ -186,7 +186,7 @@ class TrackingService
                     return;
                 }
             } catch (Exception $e) {
-                report(new Exception("Erro na nova logica de rastreios"));
+                report($e);
             }
 
             if (!empty($tracking)) {
@@ -304,7 +304,7 @@ class TrackingService
                     return null;
                 }
             } catch (Exception $e) {
-                report(new Exception("Erro na nova logica de rastreios"));
+                report($e);
             }
 
             $productPlanSale = ProductPlanSale::select([
