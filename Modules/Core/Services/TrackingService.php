@@ -182,7 +182,6 @@ class TrackingService
 
             try {
                 if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
-                    report(new Exception("Nao vai ser enviado para o trackingmore " . $tracking->id));
                     return;
                 }
             } catch (Exception $e) {
@@ -300,7 +299,6 @@ class TrackingService
                     ->first();
 
                 if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
-                    report(new Exception("Nao vai ser enviado para o trackingmore " . $tracking->id));
                     return null;
                 }
             } catch (Exception $e) {
