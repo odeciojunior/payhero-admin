@@ -51,7 +51,7 @@ class AffiliateRequestSendEmailListener implements ShouldQueue
 
             if ($producer->userNotification->affiliation) {
                 $sendGridService->sendEmail(
-                    "help@nexuspay.com.br",
+                    "noreply@nexuspay.com.br",
                     "nexuspay",
                     $producer->email,
                     $producer->name,

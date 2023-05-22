@@ -176,7 +176,17 @@ class TrackingService
         try {
             $trackingIdDecode = current(Hashids::decode($trackingId));
 
-            $tracking = Tracking::where("id", $trackingIdDecode)->first();
+            $tracking = Tracking::with("sale")
+                ->where("id", $trackingIdDecode)
+                ->first();
+
+            try {
+                if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
+                    return;
+                }
+            } catch (Exception $e) {
+                report($e);
+            }
 
             if (!empty($tracking)) {
                 if ($tracking->tracking_status_enum == Tracking::STATUS_DELIVERED) {
@@ -282,6 +292,18 @@ class TrackingService
 
             $trackingCode = preg_replace("/[^a-zA-Z0-9]/", "", $trackingCode);
             $trackingCode = strtoupper($trackingCode);
+
+            try {
+                $tracking = Tracking::with("sale")
+                    ->where("tracking_code", $trackingCode)
+                    ->first();
+
+                if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
+                    return null;
+                }
+            } catch (Exception $e) {
+                report($e);
+            }
 
             $productPlanSale = ProductPlanSale::select([
                 "products_plans_sales.id",
@@ -397,7 +419,6 @@ class TrackingService
             $join
                 ->whereBetween("s.end_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
                 ->whereIn("s.status", $saleStatus)
-                ->where("s.payment_method", Sale::CREDIT_CARD_PAYMENT)
                 ->where("s.owner_id", $userId);
 
             if (!empty($filters["sale"])) {
@@ -591,7 +612,6 @@ class TrackingService
             DB::raw("ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime")
         )
             ->join("sales", "sales.id", "=", "trackings.sale_id")
-            ->where("sales.payment_method", Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn("sales.status", [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_CHARGEBACK,
