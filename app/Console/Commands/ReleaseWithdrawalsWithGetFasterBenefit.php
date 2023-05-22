@@ -12,13 +12,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
     protected $signature = "withdrawals:release-get-faster";
 
     protected $description = "Libera o saque dos usuário que possuem o benefício 'Receba + rápido' habilitado";
-    private $gatewayIds = [
-        Gateway::GETNET_PRODUCTION_ID,
-        Gateway::ASAAS_PRODUCTION_ID,
-        Gateway::GERENCIANET_PRODUCTION_ID,
-        Gateway::SAFE2PAY_PRODUCTION_ID,
-        Gateway::VEGA_PRODUCTION_ID,
-    ];
+    private $gatewayIds = [Gateway::IUGU_PRODUCTION_ID, Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::VEGA_PRODUCTION_ID];
 
     public function __construct()
     {
