@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ProcessTrackingmorePostbackJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ProductPlanSale;
 
@@ -39,8 +40,7 @@ class PostBackTrackingmoreController extends Controller
             return response()->json(["message" => "Postback received!"]);
         } catch (\Exception $ex) {
             report($ex);
-            Log:
-            info($ex->getMessage());
+            Log::info($ex->getMessage());
             return response()->json(["message" => "Postback listerner error"]);
         }
     }

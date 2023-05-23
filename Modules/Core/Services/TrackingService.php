@@ -293,17 +293,17 @@ class TrackingService
             $trackingCode = preg_replace("/[^a-zA-Z0-9]/", "", $trackingCode);
             $trackingCode = strtoupper($trackingCode);
 
-            try {
-                $tracking = Tracking::with("sale")
-                    ->where("tracking_code", $trackingCode)
-                    ->first();
+            // try {
+            //     $tracking = Tracking::with("sale")
+            //         ->where("tracking_code", $trackingCode)
+            //         ->first();
 
-                if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
-                    return null;
-                }
-            } catch (Exception $e) {
-                report($e);
-            }
+            //     if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
+            //         return null;
+            //     }
+            // } catch (Exception $e) {
+            //     report($e);
+            // }
 
             $productPlanSale = ProductPlanSale::select([
                 "products_plans_sales.id",
