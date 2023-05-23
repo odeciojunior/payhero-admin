@@ -15,9 +15,13 @@ Route::group(
 
         Route::post("/trackingmore", "PostBackTrackingmoreController@postBackListener");
 
-        Route::post("/shopify/{project_id}/tracking", "PostBackShopifyController@postBackTracking");
+        Route::post("/shopify/{project_id}/tracking", "PostBackShopifyController@postBackTracking")->middleware(
+            "throttle:240,1"
+        );
 
-        Route::post("/shopify/{project_id}", "PostBackShopifyController@postBackListener");
+        Route::post("/shopify/{project_id}", "PostBackShopifyController@postBackListener")->middleware(
+            "throttle:240,1"
+        );
 
         Route::any("/getnet", "PostBackGetnetController@postBackGetnet");
 
