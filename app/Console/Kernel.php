@@ -49,11 +49,11 @@ class Kernel extends ConsoleKernel
             ->everyTenMinutes()
             ->withoutOverlapping()
             ->onOneServer();
-        $schedule
-            ->command("withdrawals:release-get-faster")
-            ->withoutOverlapping()
-            ->everyThirtyMinutes()
-            ->onOneServer();
+        // $schedule
+        //     ->command("withdrawals:release-get-faster")
+        //     ->withoutOverlapping()
+        //     ->everyThirtyMinutes()
+        //     ->onOneServer();
         $schedule
             ->command("available-balance:update")
             ->everyThirtyMinutes()

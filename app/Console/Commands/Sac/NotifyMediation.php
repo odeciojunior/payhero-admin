@@ -83,7 +83,7 @@ class NotifyMediation extends Command
                     } else {
                         $smsService->sendSms(
                             $customer->telephone,
-                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://ajuda.nexuspay.vip e solicite mediação."
+                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.nexuspay.vip e solicite mediação."
                         );
                     }
 
