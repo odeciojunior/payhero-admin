@@ -320,7 +320,11 @@ class TrackingService
 
             $apiResult = $this->sendTrackingToApi($trackingCode);
 
-            $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
+            $status = "";
+            if (!empty($apiResult->data) && empty($apiResult->data->items)) $status = $apiResult->data->status;
+            if (!empty($apiResult->data) && !empty($apiResult->data->items)) $status = $apiResult->data->items[0]->status;
+
+            $statusEnum = $this->parseStatusApi($status);
 
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
