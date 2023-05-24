@@ -320,11 +320,7 @@ class TrackingService
 
             $apiResult = $this->sendTrackingToApi($trackingCode);
 
-            $status = "";
-            if (!empty($apiResult->data) && empty($apiResult->data->items)) $status = $apiResult->data->status;
-            if (!empty($apiResult->data) && !empty($apiResult->data->items)) $status = $apiResult->data->items[0]->status;
-
-            $statusEnum = $this->parseStatusApi($status);
+            $statusEnum = $this->parseStatusApi($apiResult->status);
 
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
@@ -391,9 +387,7 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()
-                ->user()
-                ->getAccountOwnerId();
+            $userId = auth()->user()->getAccountOwnerId();
         }
 
         $companyId = Company::DEMO_ID;
