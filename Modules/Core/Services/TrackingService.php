@@ -130,7 +130,7 @@ class TrackingService
                 if ($postDate->lt($productPlanSale->created_at)) {
                     $systemStatusEnum = Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE;
                 }
-            } elseif ($apiResult->status !== "delivered") {
+            } elseif ($apiResult->status !== "delivered" && $apiResult->status !== "transit") {
                 $systemStatusEnum = Tracking::SYSTEM_STATUS_NO_TRACKING_INFO;
             }
         } else {
@@ -293,17 +293,17 @@ class TrackingService
             $trackingCode = preg_replace("/[^a-zA-Z0-9]/", "", $trackingCode);
             $trackingCode = strtoupper($trackingCode);
 
-            try {
-                $tracking = Tracking::with("sale")
-                    ->where("tracking_code", $trackingCode)
-                    ->first();
+            // try {
+            //     $tracking = Tracking::with("sale")
+            //         ->where("tracking_code", $trackingCode)
+            //         ->first();
 
-                if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
-                    return null;
-                }
-            } catch (Exception $e) {
-                report($e);
-            }
+            //     if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
+            //         return null;
+            //     }
+            // } catch (Exception $e) {
+            //     report($e);
+            // }
 
             $productPlanSale = ProductPlanSale::select([
                 "products_plans_sales.id",
@@ -320,7 +320,7 @@ class TrackingService
 
             $apiResult = $this->sendTrackingToApi($trackingCode);
 
-            $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
+            $statusEnum = $this->parseStatusApi($apiResult->status);
 
             $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
@@ -387,9 +387,7 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()
-                ->user()
-                ->getAccountOwnerId();
+            $userId = auth()->user()->getAccountOwnerId();
         }
 
         $companyId = Company::DEMO_ID;

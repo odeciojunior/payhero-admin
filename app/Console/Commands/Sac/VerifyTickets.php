@@ -40,7 +40,7 @@ class VerifyTickets extends Command
      */
     public function handle()
     {
-        $daysWithoutUserResponse = 3;
+        $daysWithoutUserResponse = 2;
         $systemMessage = "Não houve interação sua nos últimos {$daysWithoutUserResponse} dias, por isso, entendemos que o problema já foi resolvido e encerramos o chamado automaticamente. Você pode reabri-lo sempre que preciso.";
 
         $query = Ticket::where("ticket_status_enum", Ticket::STATUS_OPEN)
