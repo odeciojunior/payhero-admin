@@ -206,7 +206,7 @@ class User extends Authenticable
         "security_reserve_tax",
         "security_reserve_days",
         "contestation_penalty",
-        "contestation_penalties_taxes",
+        "contestation_penalty_tax",
         "level",
         "ignore_automatic_benefits_updates",
         "total_commission_value",

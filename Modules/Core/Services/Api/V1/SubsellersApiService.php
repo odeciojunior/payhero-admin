@@ -28,11 +28,7 @@ class SubsellersApiService
         $requestData["password"] = bcrypt($requestData["password"]);
         $requestData["level"] = self::DEFAULT_LEVEL;
 
-        $penaltyValues = [
-            "contestation_penalty_level_1" => "4000",
-        ];
-
-        $requestData["contestation_penalties_taxes"] = json_encode($penaltyValues);
+        $requestData["contestation_penalty_tax"] = 4000;
 
         return $requestData;
     }
