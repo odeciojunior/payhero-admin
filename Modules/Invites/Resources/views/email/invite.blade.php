@@ -21,7 +21,7 @@
                align="center">
             <tr>
                 <td style="width:100px;text-align:center">
-                    <img src="http://cdn.mcauto-images-production.sendgrid.net/1b082ee166c12f3d/444211e2-b0ef-4df6-a7fa-ecb86b760c35/261x44.png"
+                    <img src="{{ $logo }}"
                          width="120px">
                 </td>
             </tr>
@@ -60,7 +60,7 @@
                 <td>
                     <a href="{!! $link !!}"
                        target="_blank"
-                       style='width:100%; text-decoration: none;  color: #fff; background-color: #f2571f; font-weight: 400; text-align: center; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .475rem .85rem; font-size: 14px; line-height: 1.5; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;'>FINALIZAR
+                       style='width:100%; text-decoration: none;  color: #fff; background-color: #01cd79; font-weight: 400; text-align: center; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .475rem .85rem; font-size: 14px; line-height: 1.5; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;'>FINALIZAR
                         CADASTRO
 
                     </a>

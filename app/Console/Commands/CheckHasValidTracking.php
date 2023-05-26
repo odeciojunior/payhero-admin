@@ -30,6 +30,7 @@ class CheckHasValidTracking extends Command
                         ->on("pps.id", "=", "t.product_plan_sale_id")
                         ->whereIn("t.system_status_enum", [
                             Tracking::SYSTEM_STATUS_VALID,
+                            Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
                             Tracking::SYSTEM_STATUS_CHECKED_MANUALLY,
                         ]);
                 })
