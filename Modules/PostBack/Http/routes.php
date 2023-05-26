@@ -20,7 +20,7 @@ Route::group(
         );
 
         Route::post("/shopify/{project_id}", "PostBackShopifyController@postBackListener")->middleware(
-            "throttle:240,1"
+            "throttle:400,1"
         );
 
         Route::any("/getnet", "PostBackGetnetController@postBackGetnet");
