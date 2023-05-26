@@ -93,7 +93,7 @@
                                                    id="update_cost_shopify"
                                                    name="check-values"
                                                    class="check"
-                                                   value="0">
+                                                   value="1">
                                             <span class="slider round"></span>
                                         </label>
                                         <label for="update_cost_shopify_selector"
