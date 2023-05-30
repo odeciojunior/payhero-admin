@@ -80,7 +80,7 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-sm-6 div-cost_shopify">
+                                {{-- <div class="form-group col-sm-6 div-cost_shopify">
                                     <label for="update_cost_shopify"
                                            class="d-flex align-items-center label-text">
                                         <div class="mr-10">Atualizar de acordo com Shopify</div>
@@ -99,7 +99,7 @@
                                         <label for="update_cost_shopify_selector"
                                                style="margin: 0;">Ativado</label>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div id="check-custom"
