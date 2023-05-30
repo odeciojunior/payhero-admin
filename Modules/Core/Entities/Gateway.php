@@ -57,7 +57,9 @@ class Gateway extends Model
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;
-    public const ASAAS_SANDBOX_ID = 888;
+    public const ASAAS_SANDBOX_ID = 998;
+    public const GETNET_PRODUCTION_ID = 888;
+    public const GETNET_SANDBOX_ID = 887;
 
     /**
      * @var string
