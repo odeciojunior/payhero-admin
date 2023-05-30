@@ -54,8 +54,6 @@ class Gateway extends Model
     public const IUGU_PRODUCTION_ID = 7;
     public const IUGU_SANDBOX_ID = 8;
 
-    // disabled
-
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     /**
