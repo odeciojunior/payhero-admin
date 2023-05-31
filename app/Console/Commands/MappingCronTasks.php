@@ -261,7 +261,6 @@ class MappingCronTasks extends Command
             ],
             ["command" => "user:benefits:update", "time" => "22:30", "repeat" => 1, "frequently" => "day"],
             ["command" => "verify:boletopaid", "time" => "10:30", "repeat" => 1, "frequently" => "day"],
-            ["command" => "asaas:transfers-chargebacks", "time" => "00:20", "repeat" => 1, "frequently" => "day"],
             ["command" => "available-balance:update", "time" => "06:15", "repeat" => 1, "frequently" => "day"],
             [
                 "command" => "command:WoocommerceRetryFailedRequests",

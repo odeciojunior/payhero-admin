@@ -160,9 +160,6 @@ class SalesResource extends JsonResource
         }
 
         $data["asaas_amount_refund"] = "";
-        if (in_array($this->gateway_id, [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID])) {
-            $data["asaas_amount_refund"] = $this->getSalesTaxesChargeback();
-        }
 
         $data["has_shopify_integration"] = null;
         if (count($shopifyIntegrations) > 0) {

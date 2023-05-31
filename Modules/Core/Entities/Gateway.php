@@ -54,21 +54,12 @@ class Gateway extends Model
     public const IUGU_PRODUCTION_ID = 7;
     public const IUGU_SANDBOX_ID = 8;
 
-    // disabled
-    // public const PAGARME_PRODUCTION_ID = 1;
-    // public const PAGARME_SANDBOX_ID = 2;
-    // public const ZOOP_PRODUCTION_ID = 3;
-    // public const ZOOP_SANDBOX_ID = 4;
-    public const CIELO_PRODUCTION_ID = 5;
-    public const CIELO_SANDBOX_ID = 6;
-    public const GETNET_PRODUCTION_ID = 15;
-    public const GETNET_SANDBOX_ID = 14;
-    public const GERENCIANET_PRODUCTION_ID = 18;
-    public const GERENCIANET_SANDBOX_ID = 19;
-    public const ASAAS_PRODUCTION_ID = 8;
-    public const ASAAS_SANDBOX_ID = 20;
-
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
+
+    public const ASAAS_PRODUCTION_ID = 999;
+    public const ASAAS_SANDBOX_ID = 998;
+    public const GETNET_PRODUCTION_ID = 888;
+    public const GETNET_SANDBOX_ID = 887;
 
     /**
      * @var string
@@ -118,22 +109,6 @@ class Gateway extends Model
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:
                 return new VegaService();
-
-            case self::ASAAS_PRODUCTION_ID:
-            case self::ASAAS_SANDBOX_ID:
-                return new AsaasService();
-
-            case self::GERENCIANET_PRODUCTION_ID:
-            case self::GERENCIANET_SANDBOX_ID:
-                return new GerencianetService();
-
-            case self::GETNET_PRODUCTION_ID:
-            case self::GETNET_SANDBOX_ID:
-                return new GetnetService();
-
-            case self::CIELO_PRODUCTION_ID:
-            case self::CIELO_SANDBOX_ID:
-                return new CieloService();
 
             default:
                 throw new LogicException("Gateway {self->name} não encontrado");
