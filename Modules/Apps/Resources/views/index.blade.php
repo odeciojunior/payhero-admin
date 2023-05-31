@@ -227,7 +227,8 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                    {{--
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/melhorenvio"
                              style='width: 270px;'>
@@ -268,6 +269,7 @@
                             </div>
                         </div>
                     </div>
+                    --}}
 
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
@@ -291,6 +293,7 @@
                         </div>
                     </div>
 
+                    {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
                              data-url="/apps/notificacoesinteligentes"
