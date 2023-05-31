@@ -1,0 +1,64 @@
+# This workflow deploys to production by pushing changes to the main branch or manually.
+# It's a very simple script that makes an API call on AWS Systems Manager via CLI and invokes the execution of a script document (passing the commands) that will be executed by SSM.
+
+name: App Admin
+
+run-name: Workflow initiated by ${{ github.actor }}
+
+on:
+  # Triggers the workflow on push for the main branch
+  push:
+    branch: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: "us-east-1"
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Deploy to EC2
+        run: |
+          aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --document-version "1" \
+          --targets Key=tag:Name,Values=app-admin-nxp-prd \
+          --parameters '
+                {
+                    "commands": [
+                        "echo cfpDeploy Logs - Deploy performed in: $(date)",
+                        "echo",
+                        "echo '"'"'> Atualizando o GIT'"'"'",
+                        "service nginx stop",
+                        "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.nexuspay.com.br/.git --work-tree=/var/www/html/admin.nexuspay.com.br reset --hard'"'"'",
+                        "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.nexuspay.com.br/.git --work-tree=/var/www/html/admin.nexuspay.com.br pull'"'"'",
+                        "rm -rf /var/www/html/admin.nexuspay.com.br/storage",
+                        "sudo -H -u ubuntu bash -c '"'"'ln -s /var/www/html/efs-admin-nxp-prd/storage /var/www/html/admin.nexuspay.com.br/storage'"'"'",
+                        "chown ubuntu:www-data /var/www/html/admin.nexuspay.com.br/storage",
+                        "service nginx start",
+                        "echo '"'"'> Resetando o Supervisor'"'"'",
+                        "supervisorctl restart all",
+                        "echo '"'"'> Executando Migratins'"'"'",
+                        "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.nexuspay.com.br/artisan migrate --force'"'"'",
+                        "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.nexuspay.com.br/artisan migrate --database=demo --force'"'"'",
+                        "echo '"'"'> Fim do script'"'"'",
+                        "echo"
+                    ],
+                    "workingDirectory": ["/var/www/html/admin.nexuspay.com.br"],
+                    "executionTimeout": ["3600"]
+                }
+                ' \
+          --timeout-seconds 600 \
+          --max-concurrency "50" \
+          --comment "Deploy App Admin" \
+          --max-errors "0"
+          
