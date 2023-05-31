@@ -58,7 +58,7 @@ class StatementService
     public function queryBuilderFilters($companyId, $gatewayIds, $filters)
     {
         $transfers = Transfer::leftJoin("transactions as transaction", "transaction.id", "transfers.transaction_id")
-            ->whereIn("transfers.gateway_id", $gatewayIds)
+            // ->whereIn("transfers.gateway_id", $gatewayIds)
             ->where("transfers.company_id", $companyId);
 
         $saleId = str_replace("#", "", $filters["transaction"]);

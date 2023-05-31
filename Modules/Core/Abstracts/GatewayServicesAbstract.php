@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyBankAccount;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SecurityReserve;
@@ -56,7 +57,7 @@ abstract class GatewayServicesAbstract
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
-                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                // ->whereIn("transactions.gateway_id", $this->gatewayIds)
                 ->sum("transactions.value");
         });
     }
@@ -77,7 +78,7 @@ abstract class GatewayServicesAbstract
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
-                ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                // ->whereIn("transactions.gateway_id", $this->gatewayIds)
                 ->count();
         });
     }
@@ -87,7 +88,7 @@ abstract class GatewayServicesAbstract
         $cacheName = "balance-blocked-{$this->gatewayName}-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
-                ->whereIn("gateway_id", $this->gatewayIds)
+                // ->whereIn("gateway_id", $this->gatewayIds)
                 ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
                 ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
                 ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
@@ -100,7 +101,7 @@ abstract class GatewayServicesAbstract
         $cacheName = "balance-blocked-count-{$this->gatewayName}-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
-                ->whereIn("gateway_id", $this->gatewayIds)
+                // ->whereIn("gateway_id", $this->gatewayIds)
                 ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
                 ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
                 ->count();
@@ -131,7 +132,7 @@ abstract class GatewayServicesAbstract
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where("company_id", $this->company->id)
-            ->whereIn("gateway_id", $this->gatewayIds)
+            // ->whereIn("gateway_id", $this->gatewayIds)
             ->orderBy("id", "DESC");
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
@@ -404,13 +405,6 @@ abstract class GatewayServicesAbstract
                 "user_id" => auth()->user()->account_owner_id ?? $sale->owner_id,
             ]);
 
-            $saleService = new SaleService();
-            $saleTax = 0;
-
-            $cashbackValue = $sale->cashback()->first()->value ?? 0;
-            $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
-
-            $totalSale = $saleService->getSaleTotalValue($sale);
             $gatewayBalance = 0;
             foreach ($sale->transactions as $refundTransaction) {
                 if (empty($refundTransaction->company_id)) {
@@ -437,15 +431,37 @@ abstract class GatewayServicesAbstract
                     $refundTransaction->company->update([
                         $this->companyColumnBalance => $gatewayBalance,
                     ]);
+                } else {
+                    $securityReserve = SecurityReserve::where([
+                        "sale_id" => $sale->id,
+                        "status" => SecurityReserve::STATUS_PENDING,
+                    ])->first();
+
+                    if ($securityReserve) {
+                        Transfer::create([
+                            "transaction_id" => $securityReserve->transaction_id,
+                            "user_id" => $securityReserve->user_id,
+                            "company_id" => $refundTransaction->company->id,
+                            "type_enum" => Transfer::TYPE_IN,
+                            "value" => $securityReserve->value,
+                            "type" => Transfer::TYPE_IN,
+                            "reason" => "Liberação de reserva de segurança",
+                            "gateway_id" => foxutils()->isProduction()
+                                ? Gateway::SAFE2PAY_PRODUCTION_ID
+                                : Gateway::SAFE2PAY_SANDBOX_ID,
+                        ]);
+
+                        $gatewayBalance += $securityReserve->value;
+
+                        $refundTransaction->company->update([
+                            $this->companyColumnBalance => $gatewayBalance,
+                        ]);
+                    }
                 }
 
                 $refundValue = $refundTransaction->value;
                 if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                    $refundValue += $saleTax;
-                }
-
-                if ($refundValue > $totalSale) {
-                    $refundValue = $totalSale;
+                    $refundValue = foxutils()->onlyNumbers($sale->total_paid_value);
                 }
 
                 Transfer::create([

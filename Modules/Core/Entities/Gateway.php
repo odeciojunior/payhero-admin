@@ -107,6 +107,18 @@ class Gateway extends Model
     public static function getServiceById($gatewayId)
     {
         switch ($gatewayId) {
+            case self::SAFE2PAY_PRODUCTION_ID:
+            case self::SAFE2PAY_SANDBOX_ID:
+                return new Safe2PayService();
+
+            case self::IUGU_PRODUCTION_ID:
+            case self::IUGU_SANDBOX_ID:
+                return new IuguService();
+
+            case self::VEGA_PRODUCTION_ID:
+            case self::VEGA_SANDBOX_ID:
+                return new VegaService();
+
             case self::ASAAS_PRODUCTION_ID:
             case self::ASAAS_SANDBOX_ID:
                 return new AsaasService();
@@ -122,18 +134,6 @@ class Gateway extends Model
             case self::CIELO_PRODUCTION_ID:
             case self::CIELO_SANDBOX_ID:
                 return new CieloService();
-
-            case self::SAFE2PAY_PRODUCTION_ID:
-            case self::SAFE2PAY_SANDBOX_ID:
-                return new Safe2PayService();
-
-            case self::IUGU_PRODUCTION_ID:
-            case self::IUGU_SANDBOX_ID:
-                return new IuguService();
-
-            case self::VEGA_PRODUCTION_ID:
-            case self::VEGA_SANDBOX_ID:
-                return new VegaService();
 
             default:
                 throw new LogicException("Gateway {self->name} não encontrado");

@@ -282,7 +282,8 @@ class SaleService
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
                               sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
                 )
-            )->first()
+            )
+            ->first()
             ->toArray();
 
         $resume["commission"] = number_format($resume["commission"], 2, ",", ".");
@@ -1208,9 +1209,12 @@ class SaleService
                 return [Gateway::CIELO_PRODUCTION_ID, Gateway::CIELO_SANDBOX_ID];
             case "Vega":
                 return [
-                    Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID,
-                    Gateway::IUGU_PRODUCTION_ID, Gateway::IUGU_SANDBOX_ID,
-                    Gateway::VEGA_PRODUCTION_ID, Gateway::VEGA_SANDBOX_ID
+                    Gateway::SAFE2PAY_PRODUCTION_ID,
+                    Gateway::SAFE2PAY_SANDBOX_ID,
+                    Gateway::IUGU_PRODUCTION_ID,
+                    Gateway::IUGU_SANDBOX_ID,
+                    Gateway::VEGA_PRODUCTION_ID,
+                    Gateway::VEGA_SANDBOX_ID,
                 ];
         }
         return [];
@@ -1225,7 +1229,7 @@ class SaleService
         $saleInfo = DB::table("sale_informations")
             ->select("customer_name", "last_four_digits")
             ->where("sale_id", "=", $transaction->sale_id)
-            ->orderByDesc('id')
+            ->orderByDesc("id")
             ->first();
 
         $arr = explode(" ", trim($saleInfo->customer_name));

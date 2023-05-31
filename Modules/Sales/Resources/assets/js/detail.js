@@ -219,11 +219,11 @@ $(() => {
                     $("#modal-refund-transaction").modal("show");
 
                     $("#asaas_message").html("");
-                    if (response.data.asaas_amount_refund != "") {
-                        $("#asaas_message").html(
-                            `<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`
-                        );
-                    }
+                    // if (response.data.asaas_amount_refund != "") {
+                    //     $("#asaas_message").html(
+                    //         `<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`
+                    //     );
+                    // }
 
                     $("#radioTotalRefund").on("click", function () {
                         $(".value-partial-refund").hide();

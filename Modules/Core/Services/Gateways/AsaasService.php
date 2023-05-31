@@ -33,9 +33,9 @@ class AsaasService extends GatewayServicesAbstract
     public function __construct()
     {
         $this->gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID];
-        $this->gatewayName = 'Assas';
+        $this->gatewayName = "Assas";
 
-        $this->companyColumnBalance = 'asaas_balance';
+        $this->companyColumnBalance = "asaas_balance";
     }
 
     public function getPendingBalance(): int
