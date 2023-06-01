@@ -58,8 +58,12 @@ class Gateway extends Model
 
     public const ASAAS_PRODUCTION_ID = 999;
     public const ASAAS_SANDBOX_ID = 998;
-    public const GETNET_PRODUCTION_ID = 888;
-    public const GETNET_SANDBOX_ID = 887;
+    public const GETNET_PRODUCTION_ID = 997;
+    public const GETNET_SANDBOX_ID = 996;
+    public const GERENCIANET_PRODUCTION_ID = 995;
+    public const GERENCIANET_SANDBOX_ID = 994;
+    public const CIELO_PRODUCTION_ID = 993;
+    public const CIELO_SANDBOX_ID = 992;
 
     /**
      * @var string
