@@ -16,14 +16,14 @@ class ProcessPostbackEthoca extends Command
      *
      * @var string
      */
-    protected $signature = 'ethoca:proccess-postback';
+    protected $signature = "ethoca:proccess-postback";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Command description";
 
     /**
      * Create a new command instance.
@@ -42,20 +42,20 @@ class ProcessPostbackEthoca extends Command
      */
     public function handle()
     {
-        try{
-            $rows = DB::table('ethoca_postbacks')->select('id')
-                    ->where('is_cloudfox',true)
-                    ->where('processed_flag',false)
-                    ->orderBy('id','ASC')
-                    ->limit(10)->get();
+        try {
+            $rows = DB::table("ethoca_postbacks")
+                ->select("id")
+                ->where("processed_flag", false)
+                ->orderBy("id", "ASC")
+                ->limit(10)
+                ->get();
 
-            if(count($rows) > 0){
-                $checkout = new CheckoutGateway(Gateway::SAFE2PAY_PRODUCTION_ID);
+            if (count($rows) > 0) {
+                $checkout = new CheckoutGateway(Gateway::IUGU_PRODUCTION_ID);
                 foreach ($rows as $row) {
                     $checkout->processPostbackEthoca(Hashids::encode($row->id));
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }
