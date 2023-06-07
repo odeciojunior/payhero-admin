@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners\Reportana;
+namespace Modules\Core\Listeners;
 
 use Exception;
 

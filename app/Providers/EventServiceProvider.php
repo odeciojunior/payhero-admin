@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Listeners\IntegrationOrderCancelListener;
-use App\Listeners\Reportana\ReportanaSaleRecoveryListener;
 use App\Observers\TransactionObserver;
 use App\Observers\TransferObserver;
 use App\Observers\WithdrawalObserver;
@@ -75,6 +74,7 @@ use Modules\Core\Listeners\PixExpiredSendEmailListener;
 use Modules\Core\Listeners\PixExpiredUnicodropListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ReportanaSaleListener;
+use Modules\Core\Listeners\ReportanaSaleRecoveryListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sac\NotifyTicketClosedListener;
 use Modules\Core\Listeners\Sac\NotifyTicketMediationListener;
