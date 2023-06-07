@@ -232,6 +232,8 @@ class Sale extends Model
         "observation",
         "original_total_paid_value",
         "antifraud_warning_level",
+        "antifraud_observation",
+        "reportana_recovery_flag"
     ];
 
     public function getActivitylogOptions(): LogOptions

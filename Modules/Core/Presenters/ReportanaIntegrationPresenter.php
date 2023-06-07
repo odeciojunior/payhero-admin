@@ -3,6 +3,7 @@
 namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\Sale;
 
 class ReportanaIntegrationPresenter extends Presenter
 {
@@ -37,5 +38,19 @@ class ReportanaIntegrationPresenter extends Presenter
     public function getSentStatus($status)
     {
         return (is_numeric($status) ? $this->sentStatus[$status] : array_search($status, $this->sentStatus)) ?? "";
+    }
+
+    public static function getSearchEvent(int $paymentMethod)
+    {
+        switch ($paymentMethod) {
+            case Sale::CREDIT_CARD_PAYMENT:
+                return "credit_card_refused";
+            case Sale::BILLET_PAYMENT:
+                return "billet_expired";
+            case Sale::PIX_PAYMENT:
+                return "pix_expired";
+            default:
+                return "credit_card_refused";
+        }
     }
 }

@@ -358,6 +358,11 @@ class FoxUtils
         return $formatter->formatCurrency($value, $currency);
     }
 
+    public static function moneyFormat($value)
+    {
+        return number_format($value, 2, ",", ".");
+    }
+
     /**
      * @param $value
      * @return int|null
@@ -392,8 +397,8 @@ class FoxUtils
         $name = trim($value);
         $last_name =
             strpos($name, " ") === false
-                ? ""
-                : preg_replace('#.*\s([\wáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\'\s]*)$#', '$1', $name);
+            ? ""
+            : preg_replace('#.*\s([\wáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\'\s]*)$#', '$1', $name);
         if ($last_name == $name) {
             return [$name, $name];
         }

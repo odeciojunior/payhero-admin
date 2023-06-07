@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\IntegrationOrderCancelListener;
+use App\Listeners\Reportana\ReportanaSaleRecoveryListener;
 use App\Observers\TransactionObserver;
 use App\Observers\TransferObserver;
 use App\Observers\WithdrawalObserver;
@@ -110,6 +111,7 @@ class EventServiceProvider extends ServiceProvider
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
+            ReportanaSaleRecoveryListener::class
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
@@ -169,6 +171,7 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
+            ReportanaSaleRecoveryListener::class
         ],
         CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
         NewChargebackEvent::class => [
