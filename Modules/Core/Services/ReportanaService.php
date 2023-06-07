@@ -266,9 +266,9 @@ class ReportanaService
                     break;
             }
 
-            $totalValue = number_format(preg_replace("/[,]/", ".", preg_replace("/[^0-9,]/", "", $sale->original_total_paid_value - $sale->interest_total_value)));
+            $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, ".", "");
 
-            $subtotal = number_format(preg_replace("/[,]/", ".", preg_replace("/[^0-9,]/", "", $sale->sub_total)));
+            $subtotal = number_format($sale->sub_total, 2, ".", "");
 
             $domainName = $domain->name ?? "nexuspay.vip";
 
@@ -325,7 +325,7 @@ class ReportanaService
                 "subtotal_price" => $subtotal,
                 "payment_status" => $status, // PAID, PENDING, NOT_PAID
                 "payment_method" => $paymentMethod, // BOLETO, CREDIT_CARD, DEPOSIT, PIX, OTHER
-                "tracking_numbers" => !empty($trackingCodes) ? json_encode($trackingCodes) : null,
+                "tracking_numbers" => !empty($trackingCodes) ? implode(",", $trackingCodes) : null,
                 "referring_site" => "https://" . $domainName,
                 "status_url" => $checkoutLink,
                 "billet_url" => $boletoLink,
@@ -417,12 +417,7 @@ class ReportanaService
                         break;
                 }
 
-                $totalValue = number_format(
-                    ($sale->original_total_paid_value - $sale->interest_total_value) / 100,
-                    2,
-                    ".",
-                    ""
-                );
+                $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, ".", "");
                 $subtotal = number_format($sale->sub_total, 2, ".", "");
 
                 $domainName = $domain->name ?? "nexuspay.vip";
