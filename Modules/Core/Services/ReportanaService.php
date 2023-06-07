@@ -6,7 +6,7 @@ use Exception;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
-use Modules\Core\Entities\Log;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ReportanaSent;
 use Modules\Core\Entities\ReportanaIntegration;
 
