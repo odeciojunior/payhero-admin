@@ -198,7 +198,7 @@ class ReportanaService
 
             $return = $this->sendPostApi($data);
 
-            if (isset($return["result"]->success) && $return["result"]->success == true) {
+            if (isset($return["result"]["success"]) && $return["result"]["success"] == true) {
                 $sentStatus = 2;
             } else {
                 $sentStatus = 1;
@@ -336,7 +336,7 @@ class ReportanaService
 
             $return = $this->sendPostApi($data);
 
-            if (isset($return["result"]->success) && $return["result"]->success == true) {
+            if (isset($return["result"]["success"]) && $return["result"]["success"] == true) {
                 $sale->update([
                     "reportana_recovery_flag" => true
                 ]);
@@ -351,7 +351,7 @@ class ReportanaService
                 "response" => json_encode($return),
                 "sent_status" => $sentStatus,
                 "instance_id" => $sale->id,
-                "instance" => "checkout",
+                "instance" => "sale",
                 "event_sale" => (new ReportanaIntegration())->present()->getEvent($eventSale),
                 "reportana_integration_id" => $this->integrationId,
             ]);
