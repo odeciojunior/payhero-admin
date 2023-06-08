@@ -40,17 +40,36 @@ class ReportanaIntegrationPresenter extends Presenter
         return (is_numeric($status) ? $this->sentStatus[$status] : array_search($status, $this->sentStatus)) ?? "";
     }
 
-    public static function getSearchEvent(int $paymentMethod)
+    public static function getSearchEvent(int $paymentMethod, int $status)
     {
         switch ($paymentMethod) {
             case Sale::CREDIT_CARD_PAYMENT:
-                return "credit_card_refused";
+                if ($status == Sale::STATUS_APPROVED) {
+                    return "credit_card_paid";
+                }
+                if (in_array($status, [Sale::STATUS_REFUSED, Sale::STATUS_CANCELED_ANTIFRAUD])) {
+                    return "credit_card_refused";
+                }
             case Sale::BILLET_PAYMENT:
-                return "billet_expired";
+                if ($status == Sale::STATUS_APPROVED) {
+                    return "billet_paid";
+                }
+                if ($status == Sale::STATUS_PENDING) {
+                    return "billet_pending";
+                }
+                if ($status == Sale::STATUS_CANCELED) {
+                    return "billet_expired";
+                }
             case Sale::PIX_PAYMENT:
-                return "pix_expired";
-            default:
-                return "credit_card_refused";
+                if ($status == Sale::STATUS_APPROVED) {
+                    return "pix_paid";
+                }
+                if ($status == Sale::STATUS_PENDING) {
+                    return "pix_pending";
+                }
+                if ($status == Sale::STATUS_CANCELED) {
+                    return "pix_expired";
+                }
         }
     }
 }

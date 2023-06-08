@@ -36,7 +36,7 @@ class ReportanaSaleRecoveryListener implements ShouldQueue
 
                     $domain = Domain::where("status", 3)->where("project_id", $sale->project_id)->first();
 
-                    $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method);
+                    $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
 
                     $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
                 }
