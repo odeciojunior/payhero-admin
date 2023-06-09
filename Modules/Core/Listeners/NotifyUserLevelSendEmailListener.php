@@ -64,7 +64,7 @@ class NotifyUserLevelSendEmailListener
             ];
             $sendgrindService->sendEmail(
                 "noreply@nexuspay.com.br",
-                "cloudfox",
+                "NexusPay",
                 $event->user->email,
                 $event->user->name,
                 "not", // done

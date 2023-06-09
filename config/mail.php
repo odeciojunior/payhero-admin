@@ -56,7 +56,7 @@ return [
 
     "from" => [
         "address" => "noreply@nexuspay.com.br",
-        "name" => "Nexuspay",
+        "name" => "NexusPay",
     ],
 
     /*
