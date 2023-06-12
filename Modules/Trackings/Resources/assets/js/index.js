@@ -592,15 +592,7 @@ $(() => {
                         : ``
                         }`;
 
-                    dados += `${tracking.tracking_status_enum && tracking.tracking_status_enum == 3 && tracking.system_status_enum != 5
-                        ? `<div class="col-7 pt-5">${tracking.tracking_code}</div>
-                        <div class="edit-detail" style="margin-top:-5px; text-align:right; margin-left: 62px;">
-                            <a class='tracking-detail pointer col-5' title="Visualizar" tracking='${tracking.id}' style="margin-right: 0;">
-                                <span class="o-eye-1"></span>
-                            </a>
-                        </div>`
-                        : ``
-                        }`;
+
 
                     dados += `</div>
                         </td>`;
