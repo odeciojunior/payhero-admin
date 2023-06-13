@@ -14,6 +14,7 @@ use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -166,6 +167,28 @@ class ProjectsApiController extends Controller
             if (empty($project)) {
                 return response()->json(["message" => "Erro ao tentar salvar projeto"], 400);
             }
+
+            DiscountCoupon::create([
+                "project_id"            => $project->id,
+                "name"                  => "Desconto 10%",
+                "type"                  => 0,
+                "value"                 => 10,
+                "code"                  => "NEXX10",
+                "status"                => 1,
+                "rule_value"            => 0,
+                "recovery_flag"         => true,
+            ]);
+
+            DiscountCoupon::create([
+                "project_id"            => $project->id,
+                "name"                  => "Desconto 20%",
+                "type"                  => 0,
+                "value"                 => 20,
+                "code"                  => "NEXX20",
+                "status"                => 1,
+                "rule_value"            => 0,
+                "recovery_flag"         => true,
+            ]);
 
             $company = Company::find(hashids_decode($requestValidated["company"]));
             $bankAccount = $company->getDefaultBankAccount();

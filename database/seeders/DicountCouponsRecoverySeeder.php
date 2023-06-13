@@ -27,7 +27,7 @@ class DicountCouponsRecoverySeeder extends Seeder
                 "project_id"            => $project->id,
                 "name"                  => "Desconto 20%",
                 "type"                  => 0,
-                "value"                 => 10,
+                "value"                 => 20,
                 "code"                  => "NEXX20",
                 "status"                => 1,
                 "rule_value"            => 0,

@@ -95,11 +95,8 @@ class DiscountCouponsApiController extends Controller
     public function store(DiscountCouponsStoreRequest $request, $projectId)
     {
         try {
-            dd("aqui");
             if (isset($projectId)) {
                 $requestData = $request->validated();
-
-                dd($requestData);
 
                 $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData["value"] = preg_replace("/[^0-9]/", "", $requestData["value"]);
