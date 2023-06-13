@@ -49,7 +49,8 @@ class DiscountCouponsApiController extends Controller
                     $projectId = $project->id;
                     $coupons = $discountCouponsModel->whereHas("project", function ($query) use ($projectId) {
                         $query->where("project_id", $projectId);
-                    });
+                    })->where("recovery_flag", false);
+
                     if (!empty($request["name"])) {
                         $coupons = $coupons
                             ->where("name", "like", "%" . $request["name"] . "%")
@@ -94,8 +95,12 @@ class DiscountCouponsApiController extends Controller
     public function store(DiscountCouponsStoreRequest $request, $projectId)
     {
         try {
+            dd("aqui");
             if (isset($projectId)) {
                 $requestData = $request->validated();
+
+                dd($requestData);
+
                 $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData["value"] = preg_replace("/[^0-9]/", "", $requestData["value"]);
                 $requestData["rule_value"] = preg_replace("/[^0-9]/", "", $requestData["rule_value"]);
@@ -132,12 +137,10 @@ class DiscountCouponsApiController extends Controller
                         ->where("status", 1)
                         ->where("code", $requestData["code"])
                         ->get();
+
                     if (!empty($result)) {
                         foreach ($result as $couponsData) {
-                            if (
-                                empty($couponsData->expires) ||
-                                (!empty($couponsData->expires) && strtotime($couponsData->expires) >= time())
-                            ) {
+                            if (empty($couponsData->expires) || (!empty($couponsData->expires) && strtotime($couponsData->expires) >= time())) {
                                 return response()->json(
                                     [
                                         "message" => 'Já existe um cupom de código "' . $request["code"] . '"!',
@@ -162,6 +165,7 @@ class DiscountCouponsApiController extends Controller
 
                     $requestData["expires"] = $date;
                 }
+
                 if ($request["nao_vence"]) {
                     $requestData["expires"] = null;
                 }

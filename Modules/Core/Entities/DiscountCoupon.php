@@ -55,6 +55,7 @@ class DiscountCoupon extends Model
         "discount",
         "expires",
         "rule_value",
+        "recovery_flag",
         "created_at",
         "updated_at",
         "deleted_at",

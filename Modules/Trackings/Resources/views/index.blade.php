@@ -68,8 +68,9 @@
                                     <div class="d-flex align-items-center">
                                         <span class="o-download-cloud-1 mr-2"></span>
                                         <div class="btn-group" role="group">
-                                            <!-- <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
-                                            </button> -->
+                                            <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">
+                                                .XLS
+                                            </button>
                                             <button type="button" class="btn btn-round btn-default btn-outline btn-pill">
                                                 .CSV
                                             </button>
