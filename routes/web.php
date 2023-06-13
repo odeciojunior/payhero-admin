@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Project;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 /*
@@ -19,8 +21,36 @@ use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::get("/", "\App\Http\Controllers\Auth\LoginController@showLoginForm");
 
-Route::get("/up", function(){
+Route::get("/up", function () {
     return 'System is up';
+});
+
+Route::get("/discount-coupons-recovery", function () {
+    $projects = Project::where("status", Project::STATUS_ACTIVE)->get();
+
+    foreach ($projects as $project) {
+        DiscountCoupon::create([
+            "project_id"            => $project->id,
+            "name"                  => "Desconto 10%",
+            "type"                  => 0,
+            "value"                 => 10,
+            "code"                  => "NEXX10",
+            "status"                => 1,
+            "rule_value"            => 0,
+            "recovery_flag"         => true,
+        ]);
+
+        DiscountCoupon::create([
+            "project_id"            => $project->id,
+            "name"                  => "Desconto 20%",
+            "type"                  => 0,
+            "value"                 => 20,
+            "code"                  => "NEXX20",
+            "status"                => 1,
+            "rule_value"            => 0,
+            "recovery_flag"         => true,
+        ]);
+    }
 });
 
 Route::get("/termos", function () {

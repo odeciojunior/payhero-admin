@@ -220,8 +220,8 @@ class TrackingsApiController extends Controller
                                 "tracking_status" => Lang::get(
                                     "definitions.enum.tracking.tracking_status_enum." .
                                         $trackingModel
-                                            ->present()
-                                            ->getTrackingStatusEnum($tracking->tracking_status_enum)
+                                        ->present()
+                                        ->getTrackingStatusEnum($tracking->tracking_status_enum)
                                 ),
                             ],
                         ],
@@ -308,13 +308,11 @@ class TrackingsApiController extends Controller
                 ->log("Importou código de rastreio");
 
             if ($request->hasFile("import_xlsx")) {
-                $extension = strtolower(
-                    request()
-                        ->file("import_xlsx")
-                        ->getClientOriginalExtension()
-                );
+                $extension = strtolower(request()->file("import_xlsx")->getClientOriginalExtension());
+
                 if (in_array($extension, ["csv", "xlsx"])) {
                     $user = auth()->user();
+
                     Excel::queueImport(new TrackingsImport($user), request()->file("import_xlsx"))->allOnQueue("long");
 
                     return response()->json([
@@ -322,7 +320,9 @@ class TrackingsApiController extends Controller
                     ]);
                 }
 
-                return response()->json(["message" => "Formato de arquivo inválido!"], 400);
+                return response()->json([
+                    "message" => "Formato de arquivo inválido!"
+                ], 400);
             }
 
             return response()->json(["message" => "Arquivo inválido"], 400);
