@@ -341,10 +341,6 @@ class ReportanaService
             $return = $this->sendPostApi($data);
 
             if (isset($return["result"]["success"]) && $return["result"]["success"] == true) {
-                $sale->update([
-                    "reportana_recovery_flag" => true
-                ]);
-
                 $sentStatus = 2;
             } else {
                 $sentStatus = 1;

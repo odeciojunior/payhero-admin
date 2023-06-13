@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -127,6 +128,7 @@ return new class extends Migration {
             ["financial", "manager"],
             ["document_evaluation", "manager"],
             ["antifraud_analysis", "manager"],
+            ["recovery", "manager"]
         ];
     }
 };
