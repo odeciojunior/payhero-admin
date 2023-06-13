@@ -272,7 +272,7 @@ class ReportanaService
 
             $domainName = $domain->name ?? "nexuspay.vip";
 
-            $checkoutLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id");
+            $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code;
 
             $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
