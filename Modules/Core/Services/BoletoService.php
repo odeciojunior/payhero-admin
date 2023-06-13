@@ -109,7 +109,7 @@ class BoletoService
                                 }
                                 $product->photo = foxutils()->checkFileExistUrl($product->photo)
                                     ? $product->photo
-                                    : "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png";
+                                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.png";
                             }
 
                             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);

@@ -881,7 +881,7 @@ function loadFrequenteSales() {
                     $("#block-sales").addClass("scroll-212");
                     $("#block-sales").append(salesBlock);
                     $(".photo").on("error", function () {
-                        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                        $(this).attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg");
                     });
                     $('[data-toggle="tooltip"]').tooltip({
                         container: "#block-sales",

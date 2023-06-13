@@ -186,8 +186,8 @@
                                 <img class='img-user-menu-principal'
                                      src="{!! \Auth::user()->photo
                                          ? \Auth::user()->photo
-                                         : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}"
-                                     onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'"
+                                         : 'https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png' !!}"
+                                     onerror="this.onerror=null; this.src='https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png'"
                                      alt=""
                                      title="">
                                 <i></i>

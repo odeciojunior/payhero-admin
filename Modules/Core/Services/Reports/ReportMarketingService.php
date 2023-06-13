@@ -32,58 +32,64 @@ class ReportMarketingService
     public function getResumeMarketing($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
-        $cacheName = 'marketing-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId,$user)
-        {
+        $cacheName = "marketing-resume-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters, $ownerId, $user) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters["project_id"]);
 
-            $affiliate =  DB::table('affiliates')->select('id')
-                            ->where('user_id',$user->id)->where('project_id',$projectId)->whereNull('deleted_at')
-                            ->first();
+            $affiliate = DB::table("affiliates")
+                ->select("id")
+                ->where("user_id", $user->id)
+                ->where("project_id", $projectId)
+                ->whereNull("deleted_at")
+                ->first();
 
-            $checkoutsQr =  Checkout::where('project_id', $projectId)
-                            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+            $checkoutsQr = Checkout::where("project_id", $projectId)->whereBetween("created_at", [
+                $dateRange[0] . " 00:00:00",
+                $dateRange[1] . " 23:59:59",
+            ]);
 
-            if(!empty($affiliate)){
-                $checkoutsQr = $checkoutsQr->where('affiliate_id',$affiliate->id);
+            if (!empty($affiliate)) {
+                $checkoutsQr = $checkoutsQr->where("affiliate_id", $affiliate->id);
             }
 
             $checkoutsCount = $checkoutsQr->count();
 
-            $salesQr =   Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
-                            ->where('t.company_id',$filters['company_id'])
-                            ->where('owner_id', $ownerId)
-                            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                            ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->where('sales.project_id', $projectId);
+            $salesQr = Sale::join("transactions as t", "t.sale_id", "=", "sales.id")
+                ->where("t.company_id", $filters["company_id"])
+                ->where("owner_id", $ownerId)
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->where("sales.status", Sale::STATUS_APPROVED)
+                ->where("sales.project_id", $projectId);
 
-            if(!empty($affiliate)){
-                $salesQr = $salesQr->where('sales.affiliate_id',$affiliate->id);
+            if (!empty($affiliate)) {
+                $salesQr = $salesQr->where("sales.affiliate_id", $affiliate->id);
             }
             $salesCount = $salesQr->count();
 
-            $salesValue =   Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                            ->where('user_id', $ownerId)
-                            ->where('company_id',$filters['company_id'])
-                            ->where('project_id', $projectId)
-                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                            ->whereNull('invitation_id')
-                            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                            ->sum('transactions.value');
+            $salesValue = Transaction::join("sales", "sales.id", "transactions.sale_id")
+                ->where("user_id", $ownerId)
+                ->where("company_id", $filters["company_id"])
+                ->where("project_id", $projectId)
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->whereNull("invitation_id")
+                ->whereIn("status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                ->sum("transactions.value");
 
             if ($checkoutsCount == 0 && $salesCount == 0 && $salesValue == 0) {
                 return null;
             }
 
             return [
-                'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
-                'sales_count' => number_format($salesCount, 0, '.', '.'),
-                'sales_value' => foxutils()->formatMoney($salesValue / 100),
-                'conversion' => !empty($checkoutsCount) ? number_format(($salesCount * 100) / $checkoutsCount, 1, '.', '.') . '%' : '0%'
+                "checkouts_count" => number_format($checkoutsCount, 0, ".", "."),
+                "sales_count" => number_format($salesCount, 0, ".", "."),
+                "sales_value" => foxutils()->formatMoney($salesValue / 100),
+                "conversion" => !empty($checkoutsCount)
+                    ? number_format(($salesCount * 100) / $checkoutsCount, 1, ".", ".") . "%"
+                    : "0%",
             ];
         });
     }
@@ -91,31 +97,31 @@ class ReportMarketingService
     public function getSalesByState($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
-        $cacheName = 'sales-by-state-'. json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
+        $cacheName = "sales-by-state-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters, $ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
-            $data = Sale::select(DB::raw('delivery.state, count(*) as sales_amount, SUM(transaction.value) as value'))
-                    ->join('transactions as transaction', function ($join) use($ownerId) {
-                        $join->on('transaction.sale_id', '=', 'sales.id');
-                        $join->where('transaction.user_id', $ownerId);
-                    })
-                    ->join('deliveries as delivery', function ($join) {
-                        $join->on('delivery.id', '=', 'sales.delivery_id');
-                    })
-                    ->where('transaction.company_id',$filters['company_id'])
-                    ->where('sales.status', Sale::STATUS_APPROVED)
-                    ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                    ->where('value', '>', 0)
-                    ->where('sales.project_id', $projectId)
-                    ->groupBy('delivery.state')
-                    ->orderBy('value', 'DESC')
-                    ->get()
-                    ->toArray();
+            $data = Sale::select(DB::raw("delivery.state, count(*) as sales_amount, SUM(transaction.value) as value"))
+                ->join("transactions as transaction", function ($join) use ($ownerId) {
+                    $join->on("transaction.sale_id", "=", "sales.id");
+                    $join->where("transaction.user_id", $ownerId);
+                })
+                ->join("deliveries as delivery", function ($join) {
+                    $join->on("delivery.id", "=", "sales.delivery_id");
+                })
+                ->where("transaction.company_id", $filters["company_id"])
+                ->where("sales.status", Sale::STATUS_APPROVED)
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->where("value", ">", 0)
+                ->where("sales.project_id", $projectId)
+                ->groupBy("delivery.state")
+                ->orderBy("value", "DESC")
+                ->get()
+                ->toArray();
 
             $totalValue = 0;
             $totalSales = 0;
@@ -153,51 +159,64 @@ class ReportMarketingService
     public function getMostFrequentSales($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
 
-        $cacheName = 'frequent-sales-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
+        $cacheName = "frequent-sales-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $showFromApi = str_starts_with($filters['project_id'],'TOKEN');
-            $projectId = hashids_decode(str_replace('TOKEN-','',$filters['project_id']));
+            $showFromApi = str_starts_with($filters["project_id"], "TOKEN");
+            $projectId = hashids_decode(str_replace("TOKEN-", "", $filters["project_id"]));
 
-            if(!$showFromApi){
-                $data = Plan::select(DB::raw('plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value'))
-                        ->with('products')
-                        ->join('plans_sales as plan_sale', function ($join) {
-                            $join->on('plan_sale.plan_id', 'plans.id');
-                        })
-                        ->join('sales as sale', function ($join) {
-                            $join->on('plan_sale.sale_id', 'sale.id');
-                        })
-                        ->join('transactions as transaction', function ($join) {
-                            $join->on('transaction.sale_id', 'sale.id');
-                        })
-                        ->where('transaction.company_id',$filters['company_id'])
-                        ->where('sale.status', Sale::STATUS_APPROVED)
-                        ->whereIn('transaction.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                        ->whereBetween('sale.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                        ->where('sale.project_id', $projectId)
-                        ->where('transaction.user_id', auth()->user()->getAccountOwnerId())
-                        ->whereNull('invitation_id')
-                        ->groupBy('plans.id')
-                        ->orderBy('value', 'DESC')
-                        ->limit(10)
-                        ->get();
-            }else{
-                $data = ProductSaleApi::join('sales', 'products_sales_api.sale_id', 'sales.id')
-                        ->join('transactions as t', 't.sale_id', '=', 'sales.id')
-                        ->where('t.company_id',$filters['company_id'])
-                        ->where('sales.status', Sale::STATUS_APPROVED)
-                        ->whereIn('t.status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-                        ->where('sales.api_token_id',$projectId)
-                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                        ->select(DB::raw('products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as sales_amount, cast(sum(products_sales_api.price) as unsigned) as value'))
-                        ->groupBy('products_sales_api.item_id')
-                        ->groupBy('products_sales_api.name')
-                        ->orderBy('value', 'DESC')
-                        ->limit(8)
-                        ->get();
+            if (!$showFromApi) {
+                $data = Plan::select(
+                    DB::raw(
+                        "plans.id, plans.name, plans.description, count(*) as sales_amount, cast(sum(plan_sale.plan_value) as unsigned) as value"
+                    )
+                )
+                    ->with("products")
+                    ->join("plans_sales as plan_sale", function ($join) {
+                        $join->on("plan_sale.plan_id", "plans.id");
+                    })
+                    ->join("sales as sale", function ($join) {
+                        $join->on("plan_sale.sale_id", "sale.id");
+                    })
+                    ->join("transactions as transaction", function ($join) {
+                        $join->on("transaction.sale_id", "sale.id");
+                    })
+                    ->where("transaction.company_id", $filters["company_id"])
+                    ->where("sale.status", Sale::STATUS_APPROVED)
+                    ->whereIn("transaction.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                    ->whereBetween("sale.start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                    ->where("sale.project_id", $projectId)
+                    ->where(
+                        "transaction.user_id",
+                        auth()
+                            ->user()
+                            ->getAccountOwnerId()
+                    )
+                    ->whereNull("invitation_id")
+                    ->groupBy("plans.id")
+                    ->orderBy("value", "DESC")
+                    ->limit(10)
+                    ->get();
+            } else {
+                $data = ProductSaleApi::join("sales", "products_sales_api.sale_id", "sales.id")
+                    ->join("transactions as t", "t.sale_id", "=", "sales.id")
+                    ->where("t.company_id", $filters["company_id"])
+                    ->where("sales.status", Sale::STATUS_APPROVED)
+                    ->whereIn("t.status_enum", [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                    ->where("sales.api_token_id", $projectId)
+                    ->whereBetween("sales.start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                    ->select(
+                        DB::raw(
+                            'products_sales_api.name, products_sales_api.item_id, "" as description, "" as image, COUNT(*) as sales_amount, cast(sum(products_sales_api.price) as unsigned) as value'
+                        )
+                    )
+                    ->groupBy("products_sales_api.item_id")
+                    ->groupBy("products_sales_api.name")
+                    ->orderBy("value", "DESC")
+                    ->limit(8)
+                    ->get();
             }
 
             if (count($data) == 0) {
@@ -205,12 +224,12 @@ class ReportMarketingService
             }
 
             foreach ($data as &$plan) {
-                $plan->photo = "https://cloudfox-files.s3.amazonaws.com/produto.svg";
-                if(!$showFromApi){
+                $plan->photo = "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg";
+                if (!$showFromApi) {
                     $plan->photo = $plan->products()->first()->photo;
                 }
                 $plan->sales_amount = number_format($plan->sales_amount, 0, ".", ".");
-                $plan->value = foxutils()->formatMoney($showFromApi?$plan->value/100:$plan->value);
+                $plan->value = foxutils()->formatMoney($showFromApi ? $plan->value / 100 : $plan->value);
             }
 
             return $data->toArray();
@@ -220,37 +239,39 @@ class ReportMarketingService
     public function getDevices($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
-        $cacheName = 'devices-'. json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
+        $cacheName = "devices-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters, $ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters["project_id"]);
 
-            $data = Sale::selectRaw("COUNT(*) AS total,
+            $data = Sale::selectRaw(
+                "COUNT(*) AS total,
                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS count_mobile,
                         SUM(CASE WHEN checkout.is_mobile = 1 and sales.status = 1 THEN 1 ELSE 0 END) AS count_mobile_approved,
                         SUM(CASE WHEN checkout.is_mobile = 1 THEN transaction.value ELSE 0 END) AS value_mobile,
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS count_desktop,
                         SUM(CASE WHEN checkout.is_mobile = 0 and sales.status = 1 THEN 1 ELSE 0 END) AS count_desktop_approved,
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN transaction.value ELSE 0 END) AS value_desktop
-                    ")
-                    ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                    ->join('checkouts as checkout', function ($join) {
-                        $join->on('sales.checkout_id', '=', 'checkout.id');
-                    })
-                    ->join('transactions as transaction', function ($join) use($ownerId) {
-                        $join->on('transaction.sale_id', '=', 'sales.id');
-                        $join->where('transaction.user_id', $ownerId);
-                    })
-                    ->where('transaction.company_id',$filters['company_id'])
-                    ->where('owner_id', $ownerId)
-                    ->where('sales.project_id', $projectId)
-                    ->first()
-                    ->toArray();
+                    "
+            )
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->join("checkouts as checkout", function ($join) {
+                    $join->on("sales.checkout_id", "=", "checkout.id");
+                })
+                ->join("transactions as transaction", function ($join) use ($ownerId) {
+                    $join->on("transaction.sale_id", "=", "sales.id");
+                    $join->where("transaction.user_id", $ownerId);
+                })
+                ->where("transaction.company_id", $filters["company_id"])
+                ->where("owner_id", $ownerId)
+                ->where("sales.project_id", $projectId)
+                ->first()
+                ->toArray();
 
-            if(empty($data['count_mobile']) && empty($data['count_desktop'])) {
+            if (empty($data["count_mobile"]) && empty($data["count_desktop"])) {
                 return null;
             }
 
@@ -335,23 +356,28 @@ class ReportMarketingService
     public function getOperationalSystems($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
 
-        $cacheName = 'operational-systems-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
+        $cacheName = "operational-systems-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
-            $data = Checkout::select(DB::raw('os_enum, count(*) as sales_amount'))
-                    ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
-                    ->where('s.status', Sale::STATUS_APPROVED)
-                    ->where('s.owner_id', auth()->user()->getAccountOwnerId())
-                    ->whereBetween('s.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                    ->where('checkouts.project_id', $projectId)
-                    ->groupBy('os_enum')
-                    ->orderBy('sales_amount', 'desc')
-                    ->get()
-                    ->toArray();
+            $data = Checkout::select(DB::raw("os_enum, count(*) as sales_amount"))
+                ->leftJoin("sales as s", "s.checkout_id", "=", "checkouts.id")
+                ->where("s.status", Sale::STATUS_APPROVED)
+                ->where(
+                    "s.owner_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId()
+                )
+                ->whereBetween("s.start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->where("checkouts.project_id", $projectId)
+                ->groupBy("os_enum")
+                ->orderBy("sales_amount", "desc")
+                ->get()
+                ->toArray();
 
             if (empty($data)) {
                 return null;
@@ -392,44 +418,42 @@ class ReportMarketingService
     public function getStateDetail($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
         $ownerId = $user->getAccountOwnerId();
 
-        $cacheName = 'state-detail-'. json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters,$ownerId) {
+        $cacheName = "state-detail-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters, $ownerId) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
-            $totalValue = Sale::join('transactions as transaction', function ($join) use ($ownerId) {
-                                    $join->on('transaction.sale_id', '=', 'sales.id');
-                                    $join->where('transaction.user_id', $ownerId);
-                                })
-                                ->join('deliveries as delivery', function ($join) use ($filters) {
-                                    $join->on('delivery.id', '=', 'sales.delivery_id')
-                                        ->where('delivery.state', $filters['state']);
-                                })
-                                ->where('transaction.company_id',$filters['company_id'])
-                                ->where('sales.status', Sale::STATUS_APPROVED)
-                                ->where('project_id', $projectId)
-                                ->where('owner_id', $ownerId)
-                                ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->sum('transaction.value');
+            $totalValue = Sale::join("transactions as transaction", function ($join) use ($ownerId) {
+                $join->on("transaction.sale_id", "=", "sales.id");
+                $join->where("transaction.user_id", $ownerId);
+            })
+                ->join("deliveries as delivery", function ($join) use ($filters) {
+                    $join->on("delivery.id", "=", "sales.delivery_id")->where("delivery.state", $filters["state"]);
+                })
+                ->where("transaction.company_id", $filters["company_id"])
+                ->where("sales.status", Sale::STATUS_APPROVED)
+                ->where("project_id", $projectId)
+                ->where("owner_id", $ownerId)
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->sum("transaction.value");
 
-            $totalSales = Sale::join('deliveries as delivery', function ($join) use ($filters) {
-                                $join->on('delivery.id', '=', 'sales.delivery_id')
-                                    ->where('delivery.state', $filters['state']);
-                            })
-                            ->join('transactions as t', 't.sale_id', '=', 'sales.id')
-                            ->where('t.company_id',$filters['company_id'])
-                            ->where('project_id', $projectId)
-                            ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->where('owner_id', $ownerId)
-                            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                            ->count();
+            $totalSales = Sale::join("deliveries as delivery", function ($join) use ($filters) {
+                $join->on("delivery.id", "=", "sales.delivery_id")->where("delivery.state", $filters["state"]);
+            })
+                ->join("transactions as t", "t.sale_id", "=", "sales.id")
+                ->where("t.company_id", $filters["company_id"])
+                ->where("project_id", $projectId)
+                ->where("sales.status", Sale::STATUS_APPROVED)
+                ->where("owner_id", $ownerId)
+                ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->count();
 
-            $accesses = Checkout::where('project_id', $projectId)
-                                ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                                ->count();
+            $accesses = Checkout::where("project_id", $projectId)
+                ->whereBetween("created_at", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->count();
 
             return [
                 "total_value" => foxutils()->formatMoney($totalValue / 100),
@@ -444,24 +468,24 @@ class ReportMarketingService
     public function getResumeCoupons($filters)
     {
         $user = Auth::user();
-        $filters['company_id'] = $user->company_default;
+        $filters["company_id"] = $user->company_default;
 
-        $cacheName = 'coupons-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 180, function() use($filters){
+        $cacheName = "coupons-resume-" . json_encode($filters);
+        return cache()->remember($cacheName, 180, function () use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = hashids_decode($filters['project_id']);
+            $projectId = hashids_decode($filters["project_id"]);
 
-            $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
-                            ->join('transactions as t', 't.sale_id', '=', 'sales.id')
-                            ->where('t.company_id', $filters['company_id'])
-                            ->where('sales.status', Sale::STATUS_APPROVED)
-                            ->where('sales.project_id', $projectId)
-                            ->where('sales.cupom_code', '<>', '')
-                            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-                            ->groupBy('sales.cupom_code')
-                            ->orderByDesc('amount')
-                            ->limit(4)
-                            ->get();
+            $coupons = Sale::select(DB::raw("sales.cupom_code as coupon, COUNT(*) as amount"))
+                ->join("transactions as t", "t.sale_id", "=", "sales.id")
+                ->where("t.company_id", $filters["company_id"])
+                ->where("sales.status", Sale::STATUS_APPROVED)
+                ->where("sales.project_id", $projectId)
+                ->where("sales.cupom_code", "<>", "")
+                ->whereBetween("sales.start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->groupBy("sales.cupom_code")
+                ->orderByDesc("amount")
+                ->limit(4)
+                ->get();
 
             $total = 0;
             foreach ($coupons as $coupon) {
@@ -488,12 +512,12 @@ class ReportMarketingService
 
     public function getResumeRegions($filters)
     {
-        $filters['company_id'] = Auth::user()->company_default;
+        $filters["company_id"] = Auth::user()->company_default;
 
-        $cacheName = 'regions-resume-'.json_encode($filters);
-        return cache()->remember($cacheName, 300, function() use ($filters) {
+        $cacheName = "regions-resume-" . json_encode($filters);
+        return cache()->remember($cacheName, 300, function () use ($filters) {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $projectId = current(Hashids::decode($filters['project_id']));
+            $projectId = current(Hashids::decode($filters["project_id"]));
 
             $regions = Checkout::select(
                 DB::raw('
@@ -502,21 +526,49 @@ class ReportMarketingService
                     COUNT(CASE WHEN checkouts.status_enum in (4, 3) then 1 end) as conversion
                 ')
             )
-            ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
-            ->join('transactions as t', 't.sale_id', '=', 's.id')
-            ->where('t.company_id',  $filters['company_id'])
-            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->where('checkouts.project_id', $projectId)
-            ->whereNotNull('checkouts.ip_state')
-            ->groupBy('region')
-            ->having('conversion', '>', 0)
-            ->orderBy('conversion', 'desc')
-            ->get()
-            ->toArray();
+                ->leftJoin("sales as s", "s.checkout_id", "=", "checkouts.id")
+                ->join("transactions as t", "t.sale_id", "=", "s.id")
+                ->where("t.company_id", $filters["company_id"])
+                ->whereBetween("checkouts.created_at", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+                ->where("checkouts.project_id", $projectId)
+                ->whereNotNull("checkouts.ip_state")
+                ->groupBy("region")
+                ->having("conversion", ">", 0)
+                ->orderBy("conversion", "desc")
+                ->get()
+                ->toArray();
 
-            $brasilianStates = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
-            foreach($regions as $key => &$region) {
-                if(!in_array($region['region'], $brasilianStates)){
+            $brasilianStates = [
+                "AC",
+                "AL",
+                "AP",
+                "AM",
+                "BA",
+                "CE",
+                "DF",
+                "ES",
+                "GO",
+                "MA",
+                "MT",
+                "MS",
+                "MG",
+                "PA",
+                "PB",
+                "PR",
+                "PE",
+                "PI",
+                "RJ",
+                "RN",
+                "RS",
+                "RO",
+                "RR",
+                "SC",
+                "SP",
+                "SE",
+                "TO",
+            ];
+            foreach ($regions as $key => &$region) {
+                if (!in_array($region["region"], $brasilianStates)) {
                     unset($regions[$key]);
                     continue;
                 }
@@ -536,30 +588,38 @@ class ReportMarketingService
 
     public function getResumeOrigins($filters)
     {
-        $projectId = hashids_decode($filters['project_id']);
+        $projectId = hashids_decode($filters["project_id"]);
 
-        $filters['company_id'] = Auth::user()->company_default;
+        $filters["company_id"] = Auth::user()->company_default;
 
-        $userId = auth()->user()->getAccountOwnerId();
+        $userId = auth()
+            ->user()
+            ->getAccountOwnerId();
         $status = Sale::STATUS_APPROVED;
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-        $originsData = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
-        ->leftJoin('transactions as transaction', function ($join) use ($userId,$filters) {
-            $join->on('transaction.sale_id', '=', 'sales.id');
-            $join->where('transaction.user_id', $userId);
-            $join->where('transaction.company_id', $filters['company_id']);
-        })
-        ->leftJoin('checkouts as checkout', function ($join) {
-            $join->on('checkout.id', '=', 'sales.checkout_id');
-        })
-        ->where('sales.status', $status)
-        ->where('sales.project_id', $projectId)
-        ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-        ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
-        ->whereNotNull('checkout.'.$filters['origin'])
-        ->groupBy('checkout.'.$filters['origin'])
-        ->orderBy('sales_amount', 'DESC');
+        $originsData = Sale::select(
+            DB::raw(
+                "count(*) as sales_amount, SUM(transaction.value) as value, checkout." .
+                    $filters["origin"] .
+                    " as origin"
+            )
+        )
+            ->leftJoin("transactions as transaction", function ($join) use ($userId, $filters) {
+                $join->on("transaction.sale_id", "=", "sales.id");
+                $join->where("transaction.user_id", $userId);
+                $join->where("transaction.company_id", $filters["company_id"]);
+            })
+            ->leftJoin("checkouts as checkout", function ($join) {
+                $join->on("checkout.id", "=", "sales.checkout_id");
+            })
+            ->where("sales.status", $status)
+            ->where("sales.project_id", $projectId)
+            ->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"])
+            ->whereNotIn("checkout." . $filters["origin"], ["", "null"])
+            ->whereNotNull("checkout." . $filters["origin"])
+            ->groupBy("checkout." . $filters["origin"])
+            ->orderBy("sales_amount", "DESC");
 
         return $originsData;
     }

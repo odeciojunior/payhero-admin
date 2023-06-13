@@ -21,7 +21,7 @@
                     style="color:#787878">Selecione a plataforma</h4>
                 <div class="row text-center">
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/analytics.png"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="google_analytics"
                              alt="logo analytics">
@@ -29,7 +29,7 @@
                              style="font: normal normal normal 11px Inter;">Google Analytics</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/old-analytics.png"
                              class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                              data-value="google_analytics_four"
                              alt="logo analytics four">
@@ -37,7 +37,7 @@
                              style="font: normal normal normal 11px Inter;">Google Analytics 4</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/google-ads.png"
                              class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                              data-value="google_adwords"
                              alt="logo google adwords">
@@ -45,7 +45,7 @@
                              style="font: normal normal normal 11px Inter;">Google Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/facebook.png"
                              class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                              data-value="facebook"
                              alt="logo facebook">
@@ -53,7 +53,7 @@
                              style="font: normal normal normal 11px Inter;">Facebook</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/outbrain.png"
                              class="rounded-circle img-fluid  logo-pixels logo-pixels-create pointer"
                              data-value="outbrain"
                              alt="logo outbrain">
@@ -61,7 +61,7 @@
                              style="font: normal normal normal 11px Inter;">Outbrain</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/taboola.png"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="taboola"
                              alt="logo taboola">
@@ -69,7 +69,7 @@
                              style="font: normal normal normal 11px Inter;">Taboola</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/pinterest"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="pinterest"
                              alt="logo pinterest">
@@ -77,7 +77,7 @@
                              style="font: normal normal normal 11px Inter;">Pinterest</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/uol-ads.png"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="uol_ads"
                              alt="logo uol ads">
@@ -85,7 +85,7 @@
                              style="font: normal normal normal 11px Inter;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/tiktok"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="tiktok"
                              alt="logo uol ads">
@@ -95,7 +95,7 @@
                 </div>
                 <div class="row text-center">
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai"
+                        <img src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/kwai"
                              class="rounded-circle img-fluid logo-pixels logo-pixels-create pointer"
                              data-value="kwai"
                              alt="logo kwai ads">
@@ -162,7 +162,9 @@
                            id="platform"
                            value="">
                     <div class="container-fluid">
-                        <div class="panel" data-plugin="matchHeight" style="box-shadow: none;">
+                        <div class="panel"
+                             data-plugin="matchHeight"
+                             style="box-shadow: none;">
                             <div style="width:100%">
                                 <div class="row">
                                     {{-- INPUT RADIO FACEBOOK-API --}}
@@ -399,14 +401,14 @@
                                             <div class="col-3">
                                                 <div class="switch-holder">
                                                     <label for="checkout"
-                                                        class='mb-10'>Initiate Checkout<br>(venda)</label>
+                                                           class='mb-10'>Initiate Checkout<br>(venda)</label>
                                                     <br>
                                                     <label class="switch">
                                                         <input type="checkbox"
-                                                            value=""
-                                                            name='checkout'
-                                                            class='checkout'
-                                                            checked>
+                                                               value=""
+                                                               name='checkout'
+                                                               class='checkout'
+                                                               checked>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
@@ -417,10 +419,10 @@
                                                     <br>
                                                     <label class='switch'>
                                                         <input type="checkbox"
-                                                            value=""
-                                                            name='purchase_card'
-                                                            class='purchase-card'
-                                                            checked>
+                                                               value=""
+                                                               name='purchase_card'
+                                                               class='purchase-card'
+                                                               checked>
                                                         <span class='slider round'></span>
                                                     </label>
                                                 </div>
@@ -430,10 +432,10 @@
                                                     <label for="purchase_boleto">Purchase<br>(boleto)</label>
                                                     <label class='switch'>
                                                         <input type="checkbox"
-                                                            value=""
-                                                            name='purchase_boleto'
-                                                            class='purchase-boleto'
-                                                            checked>
+                                                               value=""
+                                                               name='purchase_boleto'
+                                                               class='purchase-boleto'
+                                                               checked>
                                                         <span class='slider round'></span>
                                                     </label>
                                                 </div>
@@ -443,10 +445,10 @@
                                                     <label for="pix">Purchase<br>(pix)</label>
                                                     <label class='switch'>
                                                         <input type="checkbox"
-                                                            value=""
-                                                            name='purchase_pix'
-                                                            class='purchase-pix'
-                                                            checked>
+                                                               value=""
+                                                               name='purchase_pix'
+                                                               class='purchase-pix'
+                                                               checked>
                                                         <span class='slider round'></span>
                                                     </label>
                                                 </div>

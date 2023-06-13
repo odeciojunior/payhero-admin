@@ -4,16 +4,16 @@ const statusPixel = {
 };
 
 const srcPlatforms = {
-    google_analytics: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics",
-    google_analytics_four: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics",
-    google_adwords: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads",
-    facebook: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook",
-    outbrain: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain",
-    taboola: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola",
-    pinterest: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest",
-    uol_ads: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads",
-    tiktok: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok",
-    kwai: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai",
+    google_analytics: "https://nexuspay-digital-products.s3.amazonaws.com/admin/old-analytics.png",
+    google_analytics_four: "https://nexuspay-digital-products.s3.amazonaws.com/admin/analytics.png",
+    google_adwords: "https://nexuspay-digital-products.s3.amazonaws.com/admin/google-ads.png",
+    facebook: "https://nexuspay-digital-products.s3.amazonaws.com/admin/facebook.png",
+    outbrain: "https://nexuspay-digital-products.s3.amazonaws.com/admin/outbrain.png",
+    taboola: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/taboola.png",
+    pinterest: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/pinterest",
+    uol_ads: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/uol-ads.png",
+    tiktok: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/tiktok",
+    kwai: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/kwai",
 };
 
 $(function () {
@@ -65,7 +65,7 @@ $(function () {
         $("#table-pixel").find("thead").css("display", "none");
 
         loadOnTable("#data-table-pixel", "#table-pixel");
-        $("#pagination-pixels").children().attr("disabled","disabled");
+        $("#pagination-pixels").children().attr("disabled", "disabled");
 
         $.ajax({
             method: "GET",

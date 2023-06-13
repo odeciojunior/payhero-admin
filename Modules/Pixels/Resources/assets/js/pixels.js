@@ -4,16 +4,16 @@ const statusPixel = {
 };
 
 const srcPlatforms = {
-    google_analytics: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics",
-    google_analytics_four: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics",
-    google_adwords: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads",
-    facebook: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook",
-    outbrain: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain",
-    taboola: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola",
-    pinterest: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest",
-    uol_ads: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads",
-    tiktok: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok",
-    kwai: "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/kwai",
+    google_analytics: "https://nexuspay-digital-products.s3.amazonaws.com/admin/old-analytics.png",
+    google_analytics_four: "https://nexuspay-digital-products.s3.amazonaws.com/admin/analytics.png",
+    google_adwords: "https://nexuspay-digital-products.s3.amazonaws.com/admin/google-ads.png",
+    facebook: "https://nexuspay-digital-products.s3.amazonaws.com/admin/facebook.png",
+    outbrain: "https://nexuspay-digital-products.s3.amazonaws.com/admin/outbrain.png",
+    taboola: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/taboola.png",
+    pinterest: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/pinterest",
+    uol_ads: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/uol-ads.png",
+    tiktok: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/tiktok",
+    kwai: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/kwai",
 };
 
 $(function () {
@@ -79,7 +79,7 @@ $(function () {
                 $("#data-table-pixel, #pagination-pixels").html("");
 
                 if (response.data == "") {
-                    $("#pagination-container-pixel").addClass("d-none").removeClass("d-flex")
+                    $("#pagination-container-pixel").addClass("d-none").removeClass("d-flex");
 
                     $("#table-pixel").addClass("table-striped");
                     $("#data-table-pixel").html(`
@@ -98,7 +98,7 @@ $(function () {
                         </tr>
                     `);
                 } else {
-                    $("#pagination-container-pixel").addClass("d-flex").removeClass("d-none")
+                    $("#pagination-container-pixel").addClass("d-flex").removeClass("d-none");
 
                     $("#tab_pixels-panel").find(".no-gutters").css("display", "flex");
                     $("#table-pixel").find("thead").css("display", "contents");
@@ -150,7 +150,9 @@ $(function () {
 
                                     <div class='d-flex justify-content-end align-items-center'>
 
-                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'>
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${
+                                            value.id
+                                        }' data-target='#modal-details-pixel' data-toggle='modal'>
 
                                             <span class="">
                                                 <img src='/build/global/img/icon-eye.svg'/>
@@ -158,7 +160,9 @@ $(function () {
 
                                         </a>
 
-                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'>
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${
+                                            value.id
+                                        }' data-toggle='modal' type='a'>
 
                                             <span class="">
                                                 <img src='/build/global/img/pencil-icon.svg'/>
@@ -166,7 +170,9 @@ $(function () {
 
                                         </a>
 
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${
+                                            value.id
+                                        }' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
                                             <span class=''>
                                                 <img src='/build/global/img/icon-trash-tale.svg'/>
                                             </span>
@@ -181,17 +187,18 @@ $(function () {
                         $("#table-pixel").addClass("table-striped");
                     });
 
-
-                    $('.fullInformation-pixel').bind('mouseover', function () {
+                    $(".fullInformation-pixel").bind("mouseover", function () {
                         var $this = $(this);
 
-                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                            $this.attr({
-                                'data-toggle': "tooltip",
-                                'data-placement': "top",
-                                'data-title': $this.text()
-                            }).tooltip({ container: ".container-tooltips-pixel" })
-                            $this.tooltip("show")
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+                            $this
+                                .attr({
+                                    "data-toggle": "tooltip",
+                                    "data-placement": "top",
+                                    "data-title": $this.text(),
+                                })
+                                .tooltip({ container: ".container-tooltips-pixel" });
+                            $this.tooltip("show");
                         }
                     });
 

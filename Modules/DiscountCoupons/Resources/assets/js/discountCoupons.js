@@ -68,7 +68,7 @@ function count_plans_coupons(qtde) {
 
                 var img = response.thumbnails[i].products[0].photo
                     ? response.thumbnails[i].products[0].photo
-                    : "https://cloudfox-files.s3.amazonaws.com/produto.svg";
+                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg";
 
                 html_show_plans +=
                     `
@@ -78,7 +78,7 @@ function count_plans_coupons(qtde) {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important;  background-image: url('` +
                     img +
-                    `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');  "></span>
+                    `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');  "></span>
 
                 `;
             }
@@ -94,9 +94,7 @@ function count_plans_coupons(qtde) {
 
             if (response.total > 8) {
                 var rest = response.total - 8;
-                $("#c-show_plans").append(
-                    '<div class="plans_rest">+' + rest + "</div>"
-                );
+                $("#c-show_plans").append('<div class="plans_rest">+' + rest + "</div>");
             }
         },
     });
@@ -104,10 +102,7 @@ function count_plans_coupons(qtde) {
 
 function plans_count2() {
     if (items_selected.length > 0 && items_selected.length < 11) {
-        var plans_count =
-            items_selected.length +
-            " plano" +
-            (items_selected.length > 1 ? "s" : "");
+        var plans_count = items_selected.length + " plano" + (items_selected.length > 1 ? "s" : "");
         $("#planos-count2, #planos-count-edit2").html(plans_count);
 
         $("#c-show_plans").css("margin-top", "10px");
@@ -127,10 +122,7 @@ function plans_count2() {
         $("#c-show_plans").css("margin-top", "20px");
 
         if (items_selected.length > 10) {
-            var plans_count =
-                items_selected.length +
-                " plano" +
-                (items_selected.length > 1 ? "s" : "");
+            var plans_count = items_selected.length + " plano" + (items_selected.length > 1 ? "s" : "");
             $("#planos-count2, #planos-count-edit2").html(plans_count);
         } else {
             $("#planos-count2, #planos-count-edit2").html("Todos os planos");
@@ -164,10 +156,7 @@ function coupon_rules(data) {
             expires = '<span id="c-expire-label" style="color:">Vencido</span>';
         }
         if (data.expires_days > 0) {
-            expires =
-                '<span style="color:">Vence em ' +
-                data.expires_days +
-                " dia(s)</span>";
+            expires = '<span style="color:">Vence em ' + data.expires_days + " dia(s)</span>";
         }
         if (data.expires_days == 0) {
             expires = '<span style="color:">Vence hoje</span>';
@@ -212,7 +201,7 @@ function show_plans() {
             background-repeat: no-repeat; background-position: center center;
             background-size: cover !important; background: url('` +
                 items_selected[i].image +
-                `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`;
+                `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
         }
 
         $("#show_plans, #c-show_plans").removeClass("mostrar_mais_detalhes");
@@ -227,9 +216,7 @@ function show_plans() {
         });
 
         var rest = items_selected.length - 8;
-        $("#show_plans, #c-show_plans").append(
-            '<div class="plans_rest">+' + rest + "</div>"
-        );
+        $("#show_plans, #c-show_plans").append('<div class="plans_rest">+' + rest + "</div>");
 
         $("#c-show_plans, #show_plans").css("height", 48);
         return false;
@@ -253,11 +240,11 @@ function show_plans() {
         show_plans +=
             `<div ${toolTip} class="item_raw" >
 
-            <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+            <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
                 <span style="background-image: url(` +
             (items_selected[i].image
                 ? items_selected[i].image
-                : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+                : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
             `)" class="image2"></span>
             </span>
 
@@ -290,10 +277,7 @@ noDiscountsFound = `<div class="mt-20 d-flex justify-content-center align-items-
 
 var page = null;
 function atualizarCoupon() {
-    var link =
-        arguments.length > 0 && arguments[0] !== undefined
-            ? arguments[0]
-            : null;
+    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
     if (link == null) {
         link = page;
     }
@@ -323,9 +307,7 @@ function atualizarCoupon() {
             $("#data-table-coupon").html("");
 
             if (response.data == "" && !$("#search-name").val()) {
-                $("#pagination-container-coupon")
-                    .removeClass("d-flex")
-                    .addClass("d-none");
+                $("#pagination-container-coupon").removeClass("d-flex").addClass("d-none");
                 pagination(response, "coupons", atualizarCoupon);
                 $("#data-table-coupon").html(noDiscountsFound);
                 $(".add-desconto").on("click", function () {
@@ -336,9 +318,7 @@ function atualizarCoupon() {
             } else {
                 $("#tabela-coupon thead").show();
                 $("#coupon-panel").show();
-                $("#pagination-container-coupon")
-                    .removeClass("d-none")
-                    .addClass("d-flex");
+                $("#pagination-container-coupon").removeClass("d-none").addClass("d-flex");
 
                 $("#count-coupons").html(response.meta.total);
 
@@ -375,9 +355,7 @@ function atualizarCoupon() {
 
 
                         <td class="" style="vertical-align: middle; text-align:center">
-                            <span class="badge badge-${
-                                statusCupons[value.status]
-                            }">${value.status_translated}</span>
+                            <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                         </td>
 
 
@@ -419,10 +397,7 @@ function atualizarCoupon() {
                 $(".fullInformation-coupon").bind("mouseover", function () {
                     var $this = $(this);
 
-                    if (
-                        this.offsetWidth < this.scrollWidth &&
-                        !$this.attr("title")
-                    ) {
+                    if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
                         $this
                             .attr({
                                 "data-toggle": "tooltip",
@@ -529,12 +504,12 @@ function run_search(search, now) {
                         data[plan].description +
                         `" >
 
-                                    <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+                                    <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
 
                                         <span style="background-image: url(` +
                         (data[plan].photo
                             ? data[plan].photo
-                            : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+                            : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
                         `)" class="image2"></span>
                                     </span>
 
@@ -551,21 +526,15 @@ function run_search(search, now) {
                 }
                 //console.log(items.length , items_saved);
                 if (items || items_saved.length) {
-                    $("#search_result, #search_result2").html(
-                        items_saved + items
-                    );
+                    $("#search_result, #search_result2").html(items_saved + items);
 
-                    $("#search_result, #search_result2").mCustomScrollbar(
-                        "destroy"
-                    );
+                    $("#search_result, #search_result2").mCustomScrollbar("destroy");
 
                     $("#search_result, #search_result2").mCustomScrollbar();
 
                     set_item_click();
                 } else {
-                    $("#search_result, #search_result2").mCustomScrollbar(
-                        "destroy"
-                    );
+                    $("#search_result, #search_result2").mCustomScrollbar("destroy");
 
                     $("#search_result, #search_result2").html(`
                     <div class="not-found">
@@ -597,20 +566,16 @@ $(function () {
                 ` itens</strong>,
                             aplicar desconto de <strong>
                             ` +
-                (rules[i].type == "percent"
-                    ? rules[i].value + "%"
-                    : "R$" + rules[i].value) +
+                (rules[i].type == "percent" ? rules[i].value + "%" : "R$" + rules[i].value) +
                 `
                             </strong>
                         </li>`;
         }
         rules_html += "</ol>";
 
-        if (rules_html.indexOf("%") > 0)
-            $(".rules-label").html("Por Valor em Porcentagem");
+        if (rules_html.indexOf("%") > 0) $(".rules-label").html("Por Valor em Porcentagem");
 
-        if (rules_html.indexOf("R$") > 0)
-            $(".rules-label").html("Por Valor em R$");
+        if (rules_html.indexOf("R$") > 0) $(".rules-label").html("Por Valor em R$");
 
         if (rules_html.indexOf("%") > 0 && rules_html.indexOf("R$") > 0)
             $(".rules-label").html("Por Valor em R$ e Porcentagem");
@@ -702,13 +667,9 @@ $(function () {
                 $("#modal-detail-coupon .coupon-code").html(response.data.code);
                 $("#modal-detail-coupon .coupon-type").html(response.data.type);
                 $("#modal-detail-coupon .coupon-value").html(
-                    response.data.type == "Valor"
-                        ? "R$ " + response.data.value
-                        : response.data.value + "%"
+                    response.data.type == "Valor" ? "R$ " + response.data.value : response.data.value + "%"
                 );
-                $("#modal-detail-coupon .rule-value").html(
-                    "R$ " + response.data.rule_value
-                );
+                $("#modal-detail-coupon .rule-value").html("R$ " + response.data.rule_value);
                 $("#modal-detail-coupon .coupon-status").html(
                     response.data.status == "1"
                         ? '<span class="badge badge-success text-left">Ativo</span>'
@@ -878,10 +839,7 @@ $(function () {
             return false;
         }
 
-        if (
-            $("#type_percent-edit").prop("checked") &&
-            (!$("#percent-edit").val() || $("#percent-edit").val() == 0)
-        ) {
+        if ($("#type_percent-edit").prop("checked") && (!$("#percent-edit").val() || $("#percent-edit").val() == 0)) {
             $("#percent-edit").focus();
             $("#percent-edit").addClass("warning-input");
             alertCustom("error", "Digite um valor acima de 0");
@@ -890,8 +848,7 @@ $(function () {
 
         if (
             $("#type_value-edit").prop("checked") &&
-            (!$("#value-edit").val() ||
-                $("#value-edit").val().replace(",", "").replace(".", "") == 0)
+            (!$("#value-edit").val() || $("#value-edit").val().replace(",", "").replace(".", "") == 0)
         ) {
             $("#value-edit").focus();
             $("#value-edit").addClass("warning-input");
@@ -904,9 +861,7 @@ $(function () {
             buy: $("#buy-edit").val(),
             type: $("#type_percent-edit").prop("checked") ? "percent" : "value",
             qtde: $("#qtde-edit").val(),
-            value: $("#type_percent-edit").prop("checked")
-                ? $("#percent-edit").val()
-                : $("#value-edit").val(),
+            value: $("#type_percent-edit").prop("checked") ? $("#percent-edit").val() : $("#value-edit").val(),
         });
 
         toggleDiscountRulesAlert(1);
@@ -928,9 +883,7 @@ $(function () {
                 ` itens</strong>,
                                     aplicar desconto de <strong>
                                     ` +
-                (rules[i].type == "percent"
-                    ? rules[i].value + "%"
-                    : "R$" + rules[i].value) +
+                (rules[i].type == "percent" ? rules[i].value + "%" : "R$" + rules[i].value) +
                 `
                                     </strong>
 
@@ -1083,10 +1036,7 @@ $(function () {
                     return false;
                 }
             } else {
-                if (
-                    !go(".value").val() ||
-                    go(".value").val().replace(",", "").replace(".", "") == 0
-                ) {
+                if (!go(".value").val() || go(".value").val().replace(",", "").replace(".", "") == 0) {
                     go(".value").focus();
                     go(".value").addClass("warning-input");
                     alertCustom("error", "Digite um valor acima de 0");
@@ -1097,9 +1047,7 @@ $(function () {
             (edit_rules[editingRule].buy = go("#buy").val()),
                 (edit_rules[editingRule].qtde = go(".qtde").val()),
                 (edit_rules[editingRule].value =
-                    edit_rules[editingRule].type == "percent"
-                        ? go(".percent").val()
-                        : go(".value").val());
+                    edit_rules[editingRule].type == "percent" ? go(".percent").val() : go(".value").val());
             mount_rules(edit_rules, 1);
 
             $(".btn-save-edit-rules").prop("disabled", false);
@@ -1147,9 +1095,7 @@ $(function () {
     });
 
     $("#save_name_edit").on("click", function () {
-        let formData = new FormData(
-            document.getElementById("form-update-discount")
-        );
+        let formData = new FormData(document.getElementById("form-update-discount"));
         let id = $("#discount-id").val();
         $("#edit-name-box").animate({ height: 44 });
 
@@ -1179,8 +1125,7 @@ $(function () {
                 $("#display_name_edit").hide();
                 $("#display_name").show();
 
-                if ($("#name-edit").val())
-                    $("#d-name").html($("#name-edit").val());
+                if ($("#name-edit").val()) $("#d-name").html($("#name-edit").val());
 
                 show_plans();
                 show_rules(edit_rules);
@@ -1230,31 +1175,19 @@ $(function () {
                 },
                 {
                     name: "7 dias",
-                    dates: () => [
-                        moment().add(6, "days").toDate(),
-                        moment().add(6, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(6, "days").toDate(), moment().add(6, "days").toDate()],
                 },
                 {
                     name: "15 dias",
-                    dates: () => [
-                        moment().add(14, "days").toDate(),
-                        moment().add(14, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(14, "days").toDate(), moment().add(14, "days").toDate()],
                 },
                 {
                     name: "1 mês",
-                    dates: () => [
-                        moment().add(30, "days").toDate(),
-                        moment().add(30, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(30, "days").toDate(), moment().add(30, "days").toDate()],
                 },
                 {
                     name: "3 meses",
-                    dates: () => [
-                        moment().add(90, "days").toDate(),
-                        moment().add(90, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(90, "days").toDate(), moment().add(90, "days").toDate()],
                 },
             ],
         })
@@ -1277,12 +1210,7 @@ $(function () {
 
         $.ajax({
             method: "GET",
-            url:
-                "/api/project/" +
-                projectId +
-                "/couponsdiscounts/" +
-                coupon +
-                "/edit",
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon + "/edit",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -1462,7 +1390,7 @@ $(function () {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important; background: url('` +
                         response.thumbnails[i].products[0].photo +
-                        `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`;
+                        `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
                 }
 
                 $(".edit-plans-thumbs").html(html_show_plans);
@@ -1476,9 +1404,7 @@ $(function () {
                 if (response.total > 8) {
                     var rest = response.total - 8;
                     $(".edit-plans-thumbs").append(
-                        '<div style="margin-top:14px" class="plans_rest">+' +
-                            rest +
-                            "</div>"
+                        '<div style="margin-top:14px" class="plans_rest">+' + rest + "</div>"
                     );
                 }
             },
@@ -1487,10 +1413,7 @@ $(function () {
 
     function plans_count() {
         if (items_selected.length > 0) {
-            var plans_count =
-                items_selected.length +
-                " plano" +
-                (items_selected.length > 1 ? "s" : "");
+            var plans_count = items_selected.length + " plano" + (items_selected.length > 1 ? "s" : "");
             $("#planos-count, #planos-count-edit").html(plans_count);
 
             $("#plans_holder").css("height", "auto");
@@ -1519,9 +1442,7 @@ $(function () {
 
     //cria novo cupom
     $("#modal-create-coupon .btn-save").on("click", function () {
-        let formData = new FormData(
-            document.getElementById("form-register-coupon")
-        );
+        let formData = new FormData(document.getElementById("form-register-coupon"));
 
         $.ajax({
             method: "POST",
@@ -1549,9 +1470,7 @@ $(function () {
 
     //atualizar cupom
     $("#modal-edit-coupon .btn-update").on("click", function () {
-        let formData = new FormData(
-            document.getElementById("form-update-coupon")
-        );
+        let formData = new FormData(document.getElementById("form-update-coupon"));
         let coupon = $("#modal-edit-coupon .coupon-id").val();
 
         $.ajax({
@@ -1653,7 +1572,7 @@ function count_plans() {
                 background-repeat: no-repeat; background-position: center center;
                 background-size: cover !important; background: url('` +
                     response.thumbnails[i].products[0].photo +
-                    `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`;
+                    `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
             }
 
             $("#show_plans").removeClass("mostrar_mais_detalhes");
@@ -1668,9 +1587,7 @@ function count_plans() {
 
             if (response.total > 8) {
                 var rest = response.total - 8;
-                $("#show_plans").append(
-                    '<div class="plans_rest">+' + rest + "</div>"
-                );
+                $("#show_plans").append('<div class="plans_rest">+' + rest + "</div>");
             }
         },
     });
@@ -1702,18 +1619,9 @@ function set_item_click() {
     $(".item").on("click", function () {
         var iqde = 190; //limite máximo de planos em um desconto.
 
-        if (
-            items_selected.length >= iqde &&
-            !$(".selected_check", this).is(":visible")
-        ) {
-            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
-                "disabled",
-                false
-            );
-            alertCustom(
-                "error",
-                "É possível selecionar no máximo " + iqde + " planos."
-            );
+        if (items_selected.length >= iqde && !$(".selected_check", this).is(":visible")) {
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop("disabled", false);
+            alertCustom("error", "É possível selecionar no máximo " + iqde + " planos.");
             return false;
         }
 
@@ -1734,23 +1642,13 @@ function set_item_click() {
         }
 
         if (items_selected.length > 0 && items_selected.length <= iqde) {
-            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
-                "disabled",
-                false
-            );
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop("disabled", false);
         } else {
-            $(".next-btn, .coupon-next, .c-edit-plans-save").prop(
-                "disabled",
-                true
-            );
+            $(".next-btn, .coupon-next, .c-edit-plans-save").prop("disabled", true);
         }
 
         if (item_click_count == 16) {
-            $(this)
-                .parents(".step1, #step1, #c-edit_step1, #edit_step1")
-                .find("input")
-                .first()
-                .trigger("keyup");
+            $(this).parents(".step1, #step1, #c-edit_step1, #edit_step1").find("input").first().trigger("keyup");
         }
     });
 
@@ -1770,20 +1668,12 @@ function mount_selected_items(search, search2) {
 
     for (i in items_selected) {
         if (search) {
-            if (
-                items_selected[i].name
-                    .toLowerCase()
-                    .search(search.toLowerCase()) < 0
-            ) {
+            if (items_selected[i].name.toLowerCase().search(search.toLowerCase()) < 0) {
                 continue;
             }
         }
         if (search2) {
-            if (
-                items_selected[i].description
-                    .toLowerCase()
-                    .search(search2.toLowerCase()) < 0
-            ) {
+            if (items_selected[i].description.toLowerCase().search(search2.toLowerCase()) < 0) {
                 continue;
             }
         }
@@ -1810,11 +1700,11 @@ function mount_selected_items(search, search2) {
             items_selected[i].description +
             `" >
 
-                        <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+                        <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
                             <span style="background-image: url(` +
             (items_selected[i].image
                 ? items_selected[i].image
-                : "https://cloudfox-files.s3.amazonaws.com/produto.svg") +
+                : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
             `)" class="image2"></span>
                         </span>
                         <span class="title text-overflow-title">` +
@@ -1838,9 +1728,7 @@ var items_selected = [];
 
 $(function () {
     $("#bt-search").click(function () {
-        $("#pagination-container-coupon")
-            .removeClass("d-flex")
-            .addClass("d-none");
+        $("#pagination-container-coupon").removeClass("d-flex").addClass("d-none");
         atualizarCoupon();
     });
 
@@ -1871,10 +1759,7 @@ $(function () {
             return false;
         }
 
-        if (
-            $("#type_percent").prop("checked") &&
-            (!$("#percent").val() || $("#percent").val() == 0)
-        ) {
+        if ($("#type_percent").prop("checked") && (!$("#percent").val() || $("#percent").val() == 0)) {
             $("#percent").focus();
             $("#percent").addClass("warning-input");
             alertCustom("error", "Digite um valor acima de 0");
@@ -1883,8 +1768,7 @@ $(function () {
 
         if (
             $("#type_value").prop("checked") &&
-            (!$("#value").val() ||
-                $("#value").val().replace(",", "").replace(".", "") == 0)
+            (!$("#value").val() || $("#value").val().replace(",", "").replace(".", "") == 0)
         ) {
             $("#value").focus();
             $("#value").addClass("warning-input");
@@ -1896,9 +1780,7 @@ $(function () {
             buy: $("#buy").val(),
             type: $("#type_percent").prop("checked") ? "percent" : "value",
             qtde: $("#qtde").val(),
-            value: $("#type_percent").prop("checked")
-                ? $("#percent").val()
-                : $("#value").val(),
+            value: $("#type_percent").prop("checked") ? $("#percent").val() : $("#value").val(),
         });
 
         toggleDiscountRulesAlert(1);
@@ -1922,9 +1804,7 @@ $(function () {
                 ` itens</strong>,
                                 aplicar desconto de <strong>
                                 ` +
-                (rules[i].type == "percent"
-                    ? rules[i].value + "%"
-                    : "R$" + rules[i].value) +
+                (rules[i].type == "percent" ? rules[i].value + "%" : "R$" + rules[i].value) +
                 `
                                 </strong>
 
@@ -2028,9 +1908,7 @@ $(function () {
         $("#discount_rules").val(JSON.stringify(rules));
         $("#discount_plans").val(JSON.stringify(items_selected));
 
-        let formData = new FormData(
-            document.getElementById("form-register-discount")
-        );
+        let formData = new FormData(document.getElementById("form-register-discount"));
 
         $(".finish-btn").attr("disabled", true);
 
@@ -2116,10 +1994,7 @@ $(function () {
                     return false;
                 }
             } else {
-                if (
-                    !go(".value").val() ||
-                    go(".value").val().replace(",", "").replace(".", "") == 0
-                ) {
+                if (!go(".value").val() || go(".value").val().replace(",", "").replace(".", "") == 0) {
                     go(".value").focus();
                     go(".value").addClass("warning-input");
                     alertCustom("error", "Digite um valor acima de 0");
@@ -2130,9 +2005,7 @@ $(function () {
             (rules[editingRule1].buy = go("#buy1").val()),
                 (rules[editingRule1].qtde = go(".qtde").val()),
                 (rules[editingRule1].value =
-                    rules[editingRule1].type == "percent"
-                        ? go(".percent").val()
-                        : go(".value").val());
+                    rules[editingRule1].type == "percent" ? go(".percent").val() : go(".value").val());
             mount_rules(rules, 1);
 
             $(".finish-btn").prop("disabled", false);
@@ -2238,12 +2111,7 @@ $(function () {
     });
 
     $("#discount").on("click", function () {
-        $("#select-type-body").animate(
-            { height: "417px" },
-            "400",
-            "swing",
-            slide_name
-        );
+        $("#select-type-body").animate({ height: "417px" }, "400", "swing", slide_name);
 
         function slide_name(params) {
             $("#create_name").fadeIn();
@@ -2375,9 +2243,9 @@ $(function () {
 
     //                     var item = `<div ${toolTip} class="item" data-id="`+data[plan].id+`" data-image="`+data[plan].photo+`" data-name="`+data[plan].name+`" data-description="`+data[plan].description+`" >
 
-    //                                     <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+    //                                     <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
 
-    //                                         <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
+    //                                         <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')+`)" class="image2"></span>
     //                                     </span>
 
     //                                     <span class="title text-overflow-title">`+data[plan].name+`</span>
@@ -2501,11 +2369,9 @@ $(function () {
 
         if (!$("#minimum_value").val()) ok = false;
 
-        if ($("#c_type_value").prop("checked") && !$("#discount_value").val())
-            ok = false;
+        if ($("#c_type_value").prop("checked") && !$("#discount_value").val()) ok = false;
 
-        if ($("#c_type_percent").prop("checked") && !$("#percent_value").val())
-            ok = false;
+        if ($("#c_type_percent").prop("checked") && !$("#percent_value").val()) ok = false;
 
         //
         // if(ok){
@@ -2538,28 +2404,20 @@ $(function () {
 
         if (
             $("#c_type_value").prop("checked") &&
-            (!$("#discount_value").val() ||
-                $("#discount_value").val().replace(",", "").replace(".", "") ==
-                    0)
+            (!$("#discount_value").val() || $("#discount_value").val().replace(",", "").replace(".", "") == 0)
         ) {
             $("#discount_value").focus().addClass("warning-input");
 
             alertCustom("error", "Preencha um valor acima de R$ 0,00");
             return false;
         }
-        if (
-            $("#c_type_percent").prop("checked") &&
-            (!$("#percent_value").val() || $("#percent_value").val() == 0)
-        ) {
+        if ($("#c_type_percent").prop("checked") && (!$("#percent_value").val() || $("#percent_value").val() == 0)) {
             $("#percent_value").focus().addClass("warning-input");
             alertCustom("error", "Preencha um valor acima de 0");
 
             return false;
         }
-        if (
-            !$("#minimum_value").val() ||
-            $("#minimum_value").val().replace(",", "").replace(".", "") == 0
-        ) {
+        if (!$("#minimum_value").val() || $("#minimum_value").val().replace(",", "").replace(".", "") == 0) {
             alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
             $("#minimum_value").focus().addClass("warning-input");
@@ -2568,23 +2426,16 @@ $(function () {
         // console.log($('#date_range').val(), $('#nao_vence').is(':checked')); return false;
         if ($("#date_range").val() == "" && !$("#nao_vence").is(":checked")) {
             $("#date_range").focus().addClass("warning-input");
-            alertCustom(
-                "error",
-                'Preencha uma data de vencimento ou marque "Não vence"'
-            );
+            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
             return false;
         }
 
-        if ($("#c_type_value").prop("checked"))
-            $("#c_value").val($("#discount_value").val());
+        if ($("#c_type_value").prop("checked")) $("#c_value").val($("#discount_value").val());
 
-        if ($("#c_type_percent").prop("checked"))
-            $("#c_value").val($("#percent_value").val());
+        if ($("#c_type_percent").prop("checked")) $("#c_value").val($("#percent_value").val());
 
         $("#c_plans").val(JSON.stringify(items_selected));
-        let formData = new FormData(
-            document.getElementById("form-register-coupon")
-        );
+        let formData = new FormData(document.getElementById("form-register-coupon"));
 
         $(".add-coupon").attr("disabled", true);
 
@@ -2649,9 +2500,7 @@ $(function () {
 
     var cupom_data = [];
     $("#c-save_name_edit").on("click", function () {
-        let formData = new FormData(
-            document.getElementById("form-update-coupon")
-        );
+        let formData = new FormData(document.getElementById("form-update-coupon"));
         let id = $("#coupon-id2").val();
         $("#c-cancel_name_edit").click();
         $.ajax({
@@ -2680,11 +2529,9 @@ $(function () {
                 $("#c-display_name_edit").hide();
                 $("#c-display_name").show();
 
-                if ($("#c-name-edit").val())
-                    $("#c-d-name").html($("#c-name-edit").val());
+                if ($("#c-name-edit").val()) $("#c-d-name").html($("#c-name-edit").val());
 
-                if ($("#c-code-edit").val())
-                    $("#d-code").html($("#c-code-edit").val());
+                if ($("#c-code-edit").val()) $("#d-code").html($("#c-code-edit").val());
 
                 show_plans();
                 $(".c-plans-back").click();
@@ -2744,7 +2591,7 @@ $(function () {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important; background: url('` +
                         response.thumbnails[i].products[0].photo +
-                        `'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`;
+                        `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
                 }
 
                 $(".edit-plans-thumbs").html(html_show_plans);
@@ -2758,9 +2605,7 @@ $(function () {
                 if (response.total > 8) {
                     var rest = response.total - 8;
                     $(".edit-plans-thumbs").append(
-                        '<div style="margin-top:14px" class="plans_rest">+' +
-                            rest +
-                            "</div>"
+                        '<div style="margin-top:14px" class="plans_rest">+' + rest + "</div>"
                     );
                 }
             },
@@ -2850,10 +2695,7 @@ $(function () {
 
     function plans_count() {
         if (items_selected.length > 0) {
-            var plans_count =
-                items_selected.length +
-                " plano" +
-                (items_selected.length > 1 ? "s" : "");
+            var plans_count = items_selected.length + " plano" + (items_selected.length > 1 ? "s" : "");
             $("#planos-count, #planos-count-edit").html(plans_count);
 
             $("#plans_holder").css("height", "auto");
@@ -2910,28 +2752,20 @@ $(function () {
     $(".update-rule-coupon").click(function () {
         if (
             $("#2c_type_value").prop("checked") &&
-            (!$("#2discount_value").val() ||
-                $("#2discount_value").val().replace(",", "").replace(".", "") ==
-                    0)
+            (!$("#2discount_value").val() || $("#2discount_value").val().replace(",", "").replace(".", "") == 0)
         ) {
             $("#2discount_value").focus().addClass("warning-input");
             alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
             return false;
         }
-        if (
-            $("#2c_type_percent").prop("checked") &&
-            (!$("#2percent_value").val() || $("#2percent_value").val() == 0)
-        ) {
+        if ($("#2c_type_percent").prop("checked") && (!$("#2percent_value").val() || $("#2percent_value").val() == 0)) {
             $("#2percent_value").focus().addClass("warning-input");
             alertCustom("error", "Preencha um valor acima de 0");
 
             return false;
         }
-        if (
-            !$("#2minimum_value").val() ||
-            $("#2minimum_value").val().replace(",", "").replace(".", "") == 0
-        ) {
+        if (!$("#2minimum_value").val() || $("#2minimum_value").val().replace(",", "").replace(".", "") == 0) {
             $("#2minimum_value").focus().addClass("warning-input");
             alertCustom("error", "Preencha um valor acima de R$ 0,00");
 
@@ -2940,26 +2774,19 @@ $(function () {
 
         if ($("#date_range2").val() == "" && !$("#nao_vence2").is(":checked")) {
             //$('#date_range2').focus().addClass('warning-input')
-            alertCustom(
-                "error",
-                'Preencha uma data de vencimento ou marque "Não vence"'
-            );
+            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
             return false;
         }
 
-        if ($("#2c_type_value").prop("checked"))
-            $("#2c_value").val($("#2discount_value").val());
+        if ($("#2c_type_value").prop("checked")) $("#2c_value").val($("#2discount_value").val());
 
-        if ($("#2c_type_percent").prop("checked"))
-            $("#2c_value").val($("#2percent_value").val());
+        if ($("#2c_type_percent").prop("checked")) $("#2c_value").val($("#2percent_value").val());
 
         cupom_data.nao_vence = $("#nao_vence2").prop("checked") ? 1 : 0;
         cupom_data.value = $("#2c_value").val();
         cupom_data.rule_value = $("#2minimum_value").val();
         cupom_data.type = $("#2c_type_value").prop("checked") ? 1 : 0;
-        cupom_data.expires = $("#date_range2").val()
-            ? " " + $("#date_range2").val()
-            : null;
+        cupom_data.expires = $("#date_range2").val() ? " " + $("#date_range2").val() : null;
 
         if (cupom_data.expires) {
             var da = moment(cupom_data.expires, "DD/MM/YYYY");
@@ -3041,31 +2868,19 @@ $(function () {
                 },
                 {
                     name: "7 dias",
-                    dates: () => [
-                        moment().add(6, "days").toDate(),
-                        moment().add(6, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(6, "days").toDate(), moment().add(6, "days").toDate()],
                 },
                 {
                     name: "15 dias",
-                    dates: () => [
-                        moment().add(14, "days").toDate(),
-                        moment().add(14, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(14, "days").toDate(), moment().add(14, "days").toDate()],
                 },
                 {
                     name: "1 mês",
-                    dates: () => [
-                        moment().add(30, "days").toDate(),
-                        moment().add(30, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(30, "days").toDate(), moment().add(30, "days").toDate()],
                 },
                 {
                     name: "3 meses",
-                    dates: () => [
-                        moment().add(90, "days").toDate(),
-                        moment().add(90, "days").toDate(),
-                    ],
+                    dates: () => [moment().add(90, "days").toDate(), moment().add(90, "days").toDate()],
                 },
             ],
         })

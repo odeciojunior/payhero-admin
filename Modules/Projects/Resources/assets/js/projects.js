@@ -1,11 +1,10 @@
 $(() => {
-
-    getCompaniesAndProjects().done( function (data){
-        $('.site-navbar .sirius-select-container').addClass('disabled');
+    getCompaniesAndProjects().done(function (data) {
+        $(".site-navbar .sirius-select-container").addClass("disabled");
     });
 
-    $(document).on('select2:select', function (e) {
-        const selection = $(e.target).parent().find('.select2-selection--multiple')[0];
+    $(document).on("select2:select", function (e) {
+        const selection = $(e.target).parent().find(".select2-selection--multiple")[0];
         if (selection) selection.scrollTop = selection.scrollHeight;
     });
 
@@ -223,7 +222,7 @@ $(() => {
 
     // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
     $("img").on("error", function () {
-        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+        $(this).attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg");
     });
 
     // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
@@ -301,26 +300,25 @@ $(() => {
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
-            $('.cookie-duration').prop("selectedIndex", 0).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 0).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("Eterno");
-
         } else if (project.cookie_duration == 7) {
-            $(".cookie-duration").prop("selectedIndex", 1).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 1).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("7 dias");
         } else if (project.cookie_duration == 15) {
-            $(".cookie-duration").prop("selectedIndex", 2).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 2).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("15 dias");
         } else if (project.cookie_duration == 30) {
-            $(".cookie-duration").prop("selectedIndex", 3).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 3).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("1 mês");
         } else if (project.cookie_duration == 60) {
-            $(".cookie-duration").prop("selectedIndex", 4).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 4).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("2 meses");
         } else if (project.cookie_duration == 180) {
-            $(".cookie-duration").prop("selectedIndex", 5).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 5).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("6 meses");
         } else if (project.cookie_duration == 365) {
-            $('.cookie-duration').prop("selectedIndex", 6).change();//.sirius-select
+            $(".cookie-duration").prop("selectedIndex", 6).change(); //.sirius-select
             $(".cookie-duration .sirius-select-text").text("1 ano");
         }
 
@@ -563,7 +561,8 @@ $(() => {
                     errorAjaxResponse(response);
                     $(".loader").hide();
                     $(".final-card").hide();
-                }, success: function (response) {
+                },
+                success: function (response) {
                     localStorage.setItem("photo_remove", false);
                     updateConfiguracoes();
                     $("html, body").animate({

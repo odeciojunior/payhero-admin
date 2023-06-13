@@ -42,7 +42,10 @@ class ProductsResource extends JsonResource
             "id_view" => $this->id_view, //($this->shopify == 1 ? $this->shopify_id : $this->id_code),
             "name" => $this->name,
             "description" => $this->description,
-            "image" => $this->photo == "" ? "https://cloudfox-files.s3.amazonaws.com/produto.svg" : $this->photo,
+            "image" =>
+                $this->photo == ""
+                    ? "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                    : $this->photo,
             "link" => "/api/products/" . $this->id_code . "/edit",
             "created_at" => Carbon::parse($this->created_at)->format("d/m/Y"),
             "type_enum" => $this->type_enum,

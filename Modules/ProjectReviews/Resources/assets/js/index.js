@@ -139,7 +139,7 @@ $(document).ready(function () {
                 dataTable.html("");
 
                 if (response.data == "") {
-                    $("#pagination-container-reviews").removeClass("d-flex").addClass("d-none")
+                    $("#pagination-container-reviews").removeClass("d-flex").addClass("d-none");
                     dataTable.html(`
                         <tr class='text-center'>
                             <td colspan='11' style='height: 70px;vertical-align: middle'>
@@ -159,8 +159,7 @@ $(document).ready(function () {
                     let data = "";
                     $("#tab_project_reviews").find(".no-gutters").css("display", "flex");
                     $("#table-reviews").find("thead").css("display", "contents");
-                    $("#pagination-container-reviews").removeClass("d-none").addClass("d-flex")
-
+                    $("#pagination-container-reviews").removeClass("d-none").addClass("d-flex");
 
                     $("#count-project-reviews").html(response.meta.total);
 
@@ -170,7 +169,10 @@ $(document).ready(function () {
                             <td>
 
                                 <div class="fullInformation-reviwe ellipsis-text" style="height:35px;">
-                                    <img src="${value.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"}" class="img-fluid rounded-circle mr-2" width="35" height="35">
+                                    <img src="${
+                                        value.photo ||
+                                        "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
+                                    }" class="img-fluid rounded-circle mr-2" width="35" height="35">
                                     ${value.name}
                                 </div>
 
@@ -193,14 +195,15 @@ $(document).ready(function () {
 
                             <td class='text-center'>
 
-                                ${value.active_flag
-                                ? `<span class="badge badge-success">
+                                ${
+                                    value.active_flag
+                                        ? `<span class="badge badge-success">
                                     Ativo
                                 </span>`
-
-                                : `<span class="badge badge-disable">
+                                        : `<span class="badge badge-disable">
                                     Desativado
-                                </span>`}
+                                </span>`
+                                }
 
                             </td>
 
@@ -208,19 +211,25 @@ $(document).ready(function () {
 
                                 <div class='d-flex justify-content-end align-items-center'>
 
-                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${
+                                        value.id
+                                    }" data-target='#modal-detail-review' data-toggle='modal'>
                                         <span class="">
                                             <img src='/build/global/img/icon-eye.svg'/>
                                         </span>
                                     </a>
 
-                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}">
+                                    <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${
+                                        value.id
+                                    }">
                                         <span class=''>
                                             <img src='/build/global/img/pencil-icon.svg'/>
                                         </span>
                                     </a>
 
-                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${value.id}" data-toggle="modal" data-target="#modal-delete-review">
+                                    <a role='button' title='Excluir' class='pointer delete-review mg-responsive' data-review="${
+                                        value.id
+                                    }" data-toggle="modal" data-target="#modal-delete-review">
                                         <span class=''>
                                             <img src='/build/global/img/icon-trash-tale.svg'/>
                                         </span>
@@ -235,16 +244,18 @@ $(document).ready(function () {
                         initStarsPlugin("#stars-" + value.id);
                     });
 
-                    $('.fullInformation-reviwe').bind('mouseover', function () {
+                    $(".fullInformation-reviwe").bind("mouseover", function () {
                         var $this = $(this);
 
-                        if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
-                            $this.attr({
-                                'data-toggle': "tooltip",
-                                'data-placement': "top",
-                                'data-title': $this.text()
-                            }).tooltip({ container: ".container-tooltips-reviwe" })
-                            $this.tooltip("show")
+                        if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+                            $this
+                                .attr({
+                                    "data-toggle": "tooltip",
+                                    "data-placement": "top",
+                                    "data-title": $this.text(),
+                                })
+                                .tooltip({ container: ".container-tooltips-reviwe" });
+                            $this.tooltip("show");
                         }
                     });
 
@@ -334,7 +345,7 @@ $(document).ready(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            error: function (response) { },
+            error: function (response) {},
             success: function (response) {
                 let review = response.data;
                 form.trigger("reset");
@@ -349,7 +360,8 @@ $(document).ready(function () {
                 for (let plan of review.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     form.find("#review_apply_on_plans").append(
-                        `<option value="${plan.id}">${plan.name + (plan.description ? " - " + plan.description : "")
+                        `<option value="${plan.id}">${
+                            plan.name + (plan.description ? " - " + plan.description : "")
                         }</option>`
                     );
                 }
@@ -456,14 +468,16 @@ $(document).ready(function () {
 
                 $(".review-photo").attr(
                     "src",
-                    review.photo || "https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png"
+                    review.photo ||
+                        "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
                 );
                 $(".review-name").html(review.name);
                 $(".review-description").html(review.description);
                 $(".review-status").html(
-                    `${review.active_flag
-                        ? `<span class="badge badge-success">Ativo</span>`
-                        : `<span class="badge badge-danger">Desativado</span>`
+                    `${
+                        review.active_flag
+                            ? `<span class="badge badge-success">Ativo</span>`
+                            : `<span class="badge badge-danger">Desativado</span>`
                     }`
                 );
 

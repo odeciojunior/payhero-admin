@@ -57,7 +57,7 @@
 
         .img-container {
             flex: 1;
-            background: url("https://accounts.nexuspay.vip/static/media/book.10242ce7.jpg") center center / cover no-repeat;
+            background: url("https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/book.10242ce7.jpg") center center / cover no-repeat;
         }
 
         .login-container {

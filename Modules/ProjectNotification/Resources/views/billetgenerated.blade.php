@@ -8,7 +8,7 @@
                  alt="Image"
                  border="0"
                  class=""
-                 src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/success-boleto.png"
+                 src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/success-boleto.png"
                  style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 70px; width: 100%; width: 80px; display: block;"
                  title="Image"
                  width="125" />
