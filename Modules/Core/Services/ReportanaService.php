@@ -276,6 +276,10 @@ class ReportanaService
 
             $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
+            if ($sale->status !== Sale::STATUS_APPROVED) {
+                "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code;
+            }
+
             $firstName = $sale->customer->name ? explode(" ", $sale->customer->name)[0] : "";
             $lastName = $sale->customer->name ? explode(" ", $sale->customer->name)[count(explode(" ", $sale->customer->name)) - 1] : "";
 
