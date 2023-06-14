@@ -149,7 +149,7 @@ class ReportanaService
 
             $data = [
                 "reference_id" => $checkout->id_code,
-                "number" => $checkout->id,
+                "number" => strval($checkout->id),
                 "customer_name" => $log->name ?? "",
                 "customer_email" => $log->email ?? "",
                 "customer_phone" => $log->telephone ?? "",
@@ -285,7 +285,7 @@ class ReportanaService
 
             $data = [
                 "reference_id" => hashids_encode($sale->id, "sale_id"),
-                "number" => $sale->id,
+                "number" => strval($sale->id),
                 "customer_name" => $sale->customer->name ?? "",
                 "customer_email" => $sale->customer->email ?? "",
                 "customer_phone" => $sale->customer->telephone ?? "",
