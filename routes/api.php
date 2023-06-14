@@ -19,19 +19,23 @@ use Modules\Core\Services\ReportanaService;
 */
 
 Route::post("/reportana-update-sales", function () {
-    $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereIn("payment_method", [Sale::CREDIT_CARD_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP, Sale::PAYMENT_TYPE_PIX])->whereDate("created_at", ">", "2023-05-07 00:00:00")->orderBy("id", "desc")->get();
+    try {
+        $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereIn("payment_method", [Sale::CREDIT_CARD_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP, Sale::PAYMENT_TYPE_PIX])->whereDate("created_at", ">", "2023-05-07 00:00:00")->orderBy("id", "desc")->get();
 
-    foreach ($sales as $sale) {
-        $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
+        foreach ($sales as $sale) {
+            $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
 
-        $domain = Domain::where("status", 3)->where("project_id", $sale->project_id)->first();
+            $domain = Domain::where("status", 3)->where("project_id", $sale->project_id)->first();
 
-        $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
+            $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
 
-        $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
+            $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
 
-        $result = $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
+            $result = $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
 
-        echo json_encode($result["result"]) . "<br><br>";
+            echo json_encode($result["result"]) . "<br><br>";
+        }
+    } catch (Exception $e) {
+        report($e);
     }
 });
