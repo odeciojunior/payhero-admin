@@ -17,7 +17,7 @@ class UpdateSaleReportana extends Command
      *
      * @var string
      */
-    protected $signature = 'reportana:update-sales';
+    protected $signature = 'reportana:update-sales {paymentMethod?}';
 
     /**
      * The console command description.
@@ -34,7 +34,11 @@ class UpdateSaleReportana extends Command
     public function handle()
     {
         try {
-            $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereDate("created_at", ">", "2023-05-07 00:00:00")->get();
+            $paymentMethod = $this->argument('paymentMethod');
+
+            $paymentMethodArray = !empty($paymentMethod) ? [$paymentMethod] : [Sale::CREDIT_CARD_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP, Sale::PAYMENT_TYPE_PIX];
+
+            $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereIn("payment_method", $paymentMethodArray)->whereDate("created_at", ">", "2023-05-07 00:00:00")->get();
             foreach ($sales as $sale) {
                 if ($sale->api_flag) {
                     return;
@@ -48,7 +52,10 @@ class UpdateSaleReportana extends Command
 
                 $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
 
-                $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
+                $result = $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
+
+                $this->line($result["result"]);
+                $this->newLine();
             }
         } catch (Exception $e) {
             report($e);
