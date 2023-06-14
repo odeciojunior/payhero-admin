@@ -249,18 +249,43 @@ class ReportanaService
                     $paymentMethod = "CREDIT_CARD";
 
                     break;
+                case "credit_card_paid":
+                    $status = "PAID";
+                    $paymentMethod = "CREDIT_CARD";
+
+                    break;
                 case "abandoned_cart":
                     $status = "NOT_PAID";
                     $paymentMethod = "OTHER";
 
                     break;
-                case "billet_expired":
+                case "billet_paid":
+                    $status = "PAID";
+                    $paymentMethod = "BOLETO";
+
+                    break;
+                case "billet_pending":
                     $status = "PENDING";
                     $paymentMethod = "BOLETO";
 
                     break;
-                case "pix_expired":
+                case "billet_expired":
+                    $status = "NOT_PAID";
+                    $paymentMethod = "BOLETO";
+
+                    break;
+                case "pix_paid":
+                    $status = "PAID";
+                    $paymentMethod = "PIX";
+
+                    break;
+                case "pix_pending":
                     $status = "PENDING";
+                    $paymentMethod = "PIX";
+
+                    break;
+                case "pix_expired":
+                    $status = "NOT_PAID";
                     $paymentMethod = "PIX";
 
                     break;
