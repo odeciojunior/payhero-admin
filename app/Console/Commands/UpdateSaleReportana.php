@@ -34,25 +34,21 @@ class UpdateSaleReportana extends Command
     public function handle()
     {
         try {
-            $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereDate("created_at", ">", "2022-05-07 00:00:00")->get();
+            $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereDate("created_at", ">", "2023-05-07 00:00:00")->get();
             foreach ($sales as $sale) {
                 if ($sale->api_flag) {
                     return;
                 }
 
-                $isShopify = ShopifyIntegration::where("project_id", $sale->project_id)->where("status", ShopifyIntegration::STATUS_APPROVED)->exists();
+                $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
 
-                if (!$isShopify || $sale->shopify_order || in_array($sale->status, [Sale::STATUS_REFUSED, Sale::STATUS_CANCELED_ANTIFRAUD]) || $sale->reportana_recovery_flag) {
-                    $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
+                $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
 
-                    $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
+                $domain = Domain::where("status", 3)->where("project_id", $sale->project_id)->first();
 
-                    $domain = Domain::where("status", 3)->where("project_id", $sale->project_id)->first();
+                $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
 
-                    $eventName = ReportanaIntegrationPresenter::getSearchEvent($sale->payment_method, $sale->status);
-
-                    $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
-                }
+                $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
             }
         } catch (Exception $e) {
             report($e);
