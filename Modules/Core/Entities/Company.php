@@ -182,6 +182,8 @@ class Company extends Model
         "block_checkout",
         "annual_income",
         "situation",
+        "fantasy_name_custom",
+        "document_custom",
         "created_at",
         "updated_at",
         "deleted_at",

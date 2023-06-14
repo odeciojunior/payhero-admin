@@ -38,7 +38,7 @@ class UpdateSaleReportana extends Command
 
             $paymentMethodArray = !empty($paymentMethod) ? [$paymentMethod] : [Sale::CREDIT_CARD_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP, Sale::PAYMENT_TYPE_PIX];
 
-            $sales = Sale::whereIn("payment_method", $paymentMethodArray)->whereDate("created_at", ">", "2023-05-07 00:00:00")->get();
+            $sales = Sale::where("status", Sale::STATUS_APPROVED)->whereIn("payment_method", $paymentMethodArray)->whereDate("created_at", ">", "2023-05-07 00:00:00")->get();
             foreach ($sales as $sale) {
                 if ($sale->api_flag) {
                     return;
