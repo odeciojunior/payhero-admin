@@ -29,7 +29,7 @@ class ReportanaSaleRecoveryListener implements ShouldQueue
 
                 $isShopify = ShopifyIntegration::where("project_id", $sale->project_id)->where("status", ShopifyIntegration::STATUS_APPROVED)->exists();
 
-                if (!$isShopify || $sale->shopify_order || in_array($sale->status, [Sale::STATUS_REFUSED, Sale::STATUS_CANCELED_ANTIFRAUD]) || $sale->reportana_recovery_flag) {
+                if (!$isShopify || $sale->shopify_order || in_array($sale->status, [Sale::STATUS_REFUSED, Sale::STATUS_CANCELED_ANTIFRAUD, Sale::STATUS_CANCELED, Sale::STATUS_PENDING]) || $sale->reportana_recovery_flag) {
                     $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
 
                     $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
