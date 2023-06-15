@@ -208,14 +208,14 @@ class TrackingService
                     ->join("sales as s", "products_plans_sales.sale_id", "=", "s.id")
                     ->find($tracking->product_plan_sale_id);
 
-                $apiResult = $this->sendTrackingToApi($trackingCode);
-                $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
-                $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
+                // $apiResult = $this->sendTrackingToApi($trackingCode);
+                // $statusEnum = $this->parseStatusApi($apiResult->status ?? "");
+                // $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
                 $tracking->fill([
                     "tracking_code" => $trackingCode,
-                    "tracking_status_enum" => $statusEnum,
-                    "system_status_enum" => $systemStatusEnum,
+                    "tracking_status_enum" => Tracking::STATUS_POSTED,
+                    "system_status_enum" => Tracking::SYSTEM_STATUS_VALID,
                 ]);
 
                 if ($tracking->isDirty()) {
@@ -293,18 +293,6 @@ class TrackingService
             $trackingCode = preg_replace("/[^a-zA-Z0-9]/", "", $trackingCode);
             $trackingCode = strtoupper($trackingCode);
 
-            // try {
-            //     $tracking = Tracking::with("sale")
-            //         ->where("tracking_code", $trackingCode)
-            //         ->first();
-
-            //     if ($tracking->sale->payment_method !== Sale::CREDIT_CARD_PAYMENT) {
-            //         return null;
-            //     }
-            // } catch (Exception $e) {
-            //     report($e);
-            // }
-
             $productPlanSale = ProductPlanSale::select([
                 "products_plans_sales.id",
                 "products_plans_sales.sale_id",
@@ -318,11 +306,11 @@ class TrackingService
                 ->join("sales as s", "products_plans_sales.sale_id", "=", "s.id")
                 ->find($productPlanSaleId);
 
-            $apiResult = $this->sendTrackingToApi($trackingCode);
+            // $apiResult = $this->sendTrackingToApi($trackingCode);
 
-            $statusEnum = $this->parseStatusApi($apiResult->status);
+            // $statusEnum = $this->parseStatusApi($apiResult->status);
 
-            $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
+            // $systemStatusEnum = $this->getSystemStatus($trackingCode, $apiResult, $productPlanSale);
 
             $commonAttributes = [
                 "sale_id" => $productPlanSale->sale_id,
@@ -334,8 +322,8 @@ class TrackingService
 
             $newAttributes = [
                 "tracking_code" => $trackingCode,
-                "tracking_status_enum" => $statusEnum,
-                "system_status_enum" => $systemStatusEnum,
+                "tracking_status_enum" => Tracking::STATUS_POSTED,
+                "system_status_enum" => Tracking::SYSTEM_STATUS_VALID,
             ];
 
             $tracking = Tracking::where($commonAttributes)->first();
@@ -387,7 +375,9 @@ class TrackingService
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         if (!$userId) {
-            $userId = auth()->user()->getAccountOwnerId();
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
         }
 
         $companyId = Company::DEMO_ID;
