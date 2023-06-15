@@ -253,14 +253,7 @@ abstract class GatewayServicesAbstract
                 ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
-                ->whereNotNull("company_id")
-                ->where(function ($where) {
-                    $where->where("tracking_required", false)->orWhereHas("sale", function ($query) {
-                        $query->where(function ($q) {
-                            $q->where("has_valid_tracking", true)->orWhereNull("delivery_id");
-                        });
-                    });
-                });
+                ->whereNotNull("company_id");
 
             if (!empty($saleId)) {
                 $transactions->where("sale_id", $saleId);
