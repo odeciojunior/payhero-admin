@@ -61,9 +61,11 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                             ->orWhere("products_sales_api_id", $productId);
                     })
                     ->first();
-                if (!empty($pps->tracking_status_enum) && $pps->tracking_status_enum == 3) {
-                    continue;
-                }
+
+                // if (!empty($pps->tracking_status_enum) && $pps->tracking_status_enum == 3) {
+                //     continue;
+                // }
+
                 if (!empty($pps) && !empty($trackingCode)) {
                     $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
                 }

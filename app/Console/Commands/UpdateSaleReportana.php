@@ -39,7 +39,7 @@ class UpdateSaleReportana extends Command
 
             $paymentMethodArray = !empty($paymentMethod) ? [$paymentMethod] : [Sale::CREDIT_CARD_PAYMENT, Sale::PAYMENT_TYPE_BANK_SLIP, Sale::PAYMENT_TYPE_PIX];
 
-            $sales = Sale::where("status", $saleStatus)->whereIn("payment_method", $paymentMethodArray)->where("created_at", ">", "2023-05-07 00:00:00")->orderBy("id", "desc")->get();
+            $sales = Sale::where("status", $saleStatus)->whereIn("payment_method", $paymentMethodArray)->where("created_at", ">", "2023-06-14 00:00:00")->orderBy("id", "desc")->get();
 
             foreach ($sales as $sale) {
                 $reportanaService = new ReportanaService("https://api.reportana.com/2022-05/orders", 31);
@@ -52,9 +52,12 @@ class UpdateSaleReportana extends Command
 
                 $result = $reportanaService->sendSaleApi($sale, $sale->plansSales, $domain, $eventName);
 
-                $this->line(json_encode($result["result"]));
+                $this->line($sale->id . " - " . json_encode($result["result"]));
+
                 $this->newLine();
             }
+
+            $this->line("FINISH");
         } catch (Exception $e) {
             report($e);
         }
