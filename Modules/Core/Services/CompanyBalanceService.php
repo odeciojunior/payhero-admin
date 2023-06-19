@@ -15,7 +15,7 @@ class CompanyBalanceService
 {
     private Company $company;
 
-    private $defaultGateways = [VegaService::class, IuguService::class];
+    private $defaultGateways = [VegaService::class];
 
     public function __construct(Company $company)
     {
