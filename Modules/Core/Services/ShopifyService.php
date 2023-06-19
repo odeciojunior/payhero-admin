@@ -15,23 +15,9 @@ use Modules\Core\Entities\SaleShopifyRequest;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
-use PHPHtmlParser\Dom;
-use PHPHtmlParser\Dom\HtmlNode;
-use PHPHtmlParser\Dom\TextNode;
-use PHPHtmlParser\Exceptions\ChildNotFoundException;
-use PHPHtmlParser\Exceptions\CircularException;
-use PHPHtmlParser\Exceptions\CurlException;
-use PHPHtmlParser\Exceptions\LogicalException;
-use PHPHtmlParser\Exceptions\NotLoadedException;
-use PHPHtmlParser\Exceptions\StrictException;
-use PHPHtmlParser\Exceptions\UnknownChildTypeException;
-use PHPHtmlParser\Selector\Parser;
-use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\Client;
-use Slince\Shopify\Manager\Asset\Asset;
 use Slince\Shopify\Manager\ProductImage\Image;
 use Slince\Shopify\Manager\ProductVariant\Variant;
-use Slince\Shopify\Manager\Theme\Theme;
 use Slince\Shopify\Manager\Webhook\Webhook;
 use Slince\Shopify\PublicAppCredential;
 
@@ -453,17 +439,18 @@ class ShopifyService
             "format" => "json",
         ]);
 
+        sleep(1);
         $this->createShopWebhook([
             "topic" => "products/update",
             "address" => $postbackUrl . hashids_encode($projectId),
             "format" => "json",
         ]);
 
-        $this->createShopWebhook([
-            "topic" => "orders/updated",
-            "address" => $postbackUrl . hashids_encode($projectId) . "/tracking",
-            "format" => "json",
-        ]);
+        // $this->createShopWebhook([
+        //     "topic" => "orders/updated",
+        //     "address" => $postbackUrl . hashids_encode($projectId) . "/tracking",
+        //     "format" => "json",
+        // ]);
 
         return true;
     }
@@ -636,9 +623,9 @@ class ShopifyService
             $webhooks = $this->getShopWebhook();
             foreach ($webhooks as $webhook) {
                 $this->client->getWebhookManager()->remove($webhook->getId());
+                sleep(1);
             }
 
-            // return $this->client->getWebhookManager()->findAll();
             return [];
         } catch (Exception $e) {
             if (method_exists($e, "getCode") && in_array($e->getCode(), [401, 402, 403, 404, 406, 423, 429, 503])) {
