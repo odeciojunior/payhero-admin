@@ -142,7 +142,7 @@ class ReportanaService
 
             $domainName = $domain->name ?? "nexuspay.vip";
 
-            $checkoutLink = "https://checkout." . $domainName . "/recovery/" . $checkout->id_code;
+            $checkoutLink = "https://checkout." . $domainName . "/recovery/" . $checkout->id_code . "?recovery=true";
 
             $firstName = $log->name ? explode(" ", $log->name)[0] : "";
             $lastName = $log->name ? explode(" ", $log->name)[count(explode(" ", $log->name)) - 1] : "";
@@ -297,12 +297,12 @@ class ReportanaService
 
             $domainName = $domain->name ?? "nexuspay.vip";
 
-            $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code;
+            $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
 
             $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
             if ($sale->status !== Sale::STATUS_APPROVED) {
-                $boletoLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code;
+                $boletoLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
             }
 
             $firstName = $sale->customer->name ? explode(" ", $sale->customer->name)[0] : "";
