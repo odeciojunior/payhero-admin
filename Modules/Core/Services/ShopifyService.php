@@ -74,218 +74,114 @@ class ShopifyService
 
     public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
-        try {
-            $storeProduct = $this->getShopProduct($shopifyProductId);
-            sleep(1);
+        $storeProduct = $this->getShopProduct($shopifyProductId);
+        sleep(1);
 
-            if (empty($storeProduct)) {
-                return false;
-            }
+        if (empty($storeProduct)) {
+            return false;
+        }
 
-            // $notazzConfig = Project::select("notazz_configs")->find($projectId)->notazz_configs ?? null;
-            // $updateCostShopify = !is_null($notazzConfig) ? json_decode($notazzConfig) : null;
+        // $notazzConfig = Project::select("notazz_configs")->find($projectId)->notazz_configs ?? null;
+        // $updateCostShopify = !is_null($notazzConfig) ? json_decode($notazzConfig) : null;
 
-            $products = Product::with("productsPlans.plan")
-                ->where("project_id", $projectId)
-                ->get();
+        $products = Product::with("productsPlans.plan")
+            ->where("project_id", $projectId)
+            ->get();
 
-            $statusProductShopify = 1;
-            // try {
-            //     $result = $this->client->createRequest(
-            //         "GET",
-            //         "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json"
-            //     );
+        $statusProductShopify = 1;
+        // try {
+        //     $result = $this->client->createRequest(
+        //         "GET",
+        //         "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json"
+        //     );
 
-            //     if (
-            //         !empty($result) &&
-            //         isset($result["product"]["status"]) &&
-            //         $result["product"]["status"] != "active"
-            //     ) {
-            //         $statusProductShopify = 0;
-            //     }
-            // } catch (Exception $e) {
-            //     report($e);
-            // }
+        //     if (
+        //         !empty($result) &&
+        //         isset($result["product"]["status"]) &&
+        //         $result["product"]["status"] != "active"
+        //     ) {
+        //         $statusProductShopify = 0;
+        //     }
+        // } catch (Exception $e) {
+        //     report($e);
+        // }
 
-            $productsArray = [];
-            foreach ($storeProduct->getVariants() as $variant) {
-                $title = "";
-                $description = "";
+        $productsArray = [];
+        foreach ($storeProduct->getVariants() as $variant) {
+            $title = "";
+            $description = "";
 
-                try {
-                    $description = $variant->getOption1();
-                    if ($description == "Default Title") {
-                        $description = "";
-                    }
-                    if ($variant->getOption2() != "") {
-                        $description .= " - " . $variant->getOption2();
-                    }
-                    if ($variant->getOption3() != "") {
-                        $description .= " - " . $variant->getOption3();
-                    }
-                    if (empty($storeProduct->getTitle())) {
-                        $title = "Produto sem nome";
-                    } else {
-                        $title = mb_substr($storeProduct->getTitle(), 0, 100);
-                    }
-                } catch (Exception $e) {
-                    //
+            try {
+                $description = $variant->getOption1();
+                if ($description == "Default Title") {
+                    $description = "";
                 }
-                $product = $products
-                    ->where("shopify_id", $storeProduct->getId())
-                    ->where("shopify_variant_id", $variant->getId())
-                    ->where("project_id", $projectId)
-                    ->first();
-
-                if ($product) {
-                    $productsArray[] = $product->id;
-                    $product->fill([
-                        "name" => $title,
-                        "description" => mb_substr($description, 0, 100),
-                        "weight" => $variant->getWeight(),
-                        "shopify_id" => $storeProduct->getId(),
-                        "shopify_variant_id" => $variant->getId(),
-                        "sku" => $variant->getSku(),
-                        "project_id" => $projectId,
-                        "active_flag" => $statusProductShopify,
-                    ]);
-
-                    $productPlan = $product->productsPlans
-                        ->where("amount", 1)
-                        ->sortBy("id")
-                        ->first();
-                    if (!empty($productPlan)) {
-                        // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                        //     $costProduct = $this->getCostShopify($variant);
-                        //     if ($costProduct !== "") {
-                        //         $productPlan->fill(["cost" => $costProduct * 100]);
-                        //         if ($productPlan->isDirty()) {
-                        //             $productPlan->save();
-                        //         }
-                        //     }
-                        // }
-
-                        $plan = $productPlan->plan;
-                        $plan->fill([
-                            "name" => $title,
-                            "description" => mb_substr($description, 0, 100),
-                            "price" => $variant->getPrice(),
-                            "status" => "1",
-                            "active_flag" => $statusProductShopify,
-                            "project_id" => $projectId,
-                            "name" => $title,
-                            "description" => mb_substr($description, 0, 100),
-                            "price" => $variant->getPrice(),
-                            "status" => "1",
-                            "active_flag" => $statusProductShopify,
-                            "project_id" => $projectId,
-                        ]);
-                        if ($plan->isDirty()) {
-                            $plan->save();
-                        }
-
-                        $photo = "";
-                        if (count($storeProduct->getVariants()) > 1) {
-                            foreach ($storeProduct->getImages() as $image) {
-                                $variantIds = $image->getVariantIds();
-                                foreach ($variantIds as $variantId) {
-                                    if ($variantId == $variant->getId()) {
-                                        if ($image->getSrc() != "") {
-                                            $photo = $image->getSrc();
-                                        } else {
-                                            $photo = $storeProduct->getImage()->getSrc();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (empty($photo)) {
-                            $image = $storeProduct->getImage();
-                            if (!empty($image)) {
-                                try {
-                                    $photo = $image->getSrc();
-                                } catch (Exception $e) {
-                                    report($e);
-                                }
-                            }
-                        }
-                        $product->fill(["photo" => $photo]);
-
-                        if ($product->isDirty()) {
-                            $product->save();
-                        }
-                    } else {
-                        $plan = Plan::create([
-                            "shopify_id" => $storeProduct->getId(),
-                            "shopify_variant_id" => $variant->getId(),
-                            "project_id" => $projectId,
-                            "name" => $title,
-                            "description" => mb_substr($description, 0, 100),
-                            "code" => "",
-                            "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
-                            "status" => "1",
-                            "active_flag" => $statusProductShopify,
-                        ]);
-
-                        $dataProductPlan = [
-                            "product_id" => $product->id,
-                            "plan_id" => $plan->id,
-                            "amount" => 1,
-                        ];
-                        // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                        //     $costShopify = $this->getCostShopify($variant);
-                        //     if ($costShopify !== "") {
-                        //         $dataProductPlan["cost"] = $costShopify * 100;
-                        //     }
-                        // }
-
-                        ProductPlan::create($dataProductPlan);
-
-                        $plan->update(["code" => hashids_encode($plan->id)]);
-                    }
+                if ($variant->getOption2() != "") {
+                    $description .= " - " . $variant->getOption2();
+                }
+                if ($variant->getOption3() != "") {
+                    $description .= " - " . $variant->getOption3();
+                }
+                if (empty($storeProduct->getTitle())) {
+                    $title = "Produto sem nome";
                 } else {
-                    $product = Product::create([
-                        "user_id" => $userId,
-                        "name" => $title,
-                        "description" => mb_substr($description, 0, 100),
-                        "guarantee" => "0",
-                        "format" => 1,
-                        "shopify" => true,
-                        "price" => "",
-                        "shopify_id" => $storeProduct->getId(),
-                        "shopify_variant_id" => $variant->getId(),
-                        "sku" => $variant->getSku(),
-                        "project_id" => $projectId,
-                        "active_flag" => $statusProductShopify,
-                    ]);
+                    $title = mb_substr($storeProduct->getTitle(), 0, 100);
+                }
+            } catch (Exception $e) {
+                //
+            }
+            $product = $products
+                ->where("shopify_id", $storeProduct->getId())
+                ->where("shopify_variant_id", $variant->getId())
+                ->where("project_id", $projectId)
+                ->first();
 
-                    $productsArray[] = $product->id;
-                    $plan = Plan::create([
-                        "shopify_id" => $storeProduct->getId(),
-                        "shopify_variant_id" => $variant->getId(),
-                        "project_id" => $projectId,
-                        "name" => $title,
-                        "description" => mb_substr($description, 0, 100),
-                        "code" => "",
-                        "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
-                        "status" => "1",
-                        "active_flag" => $statusProductShopify,
-                    ]);
-                    $plan->update(["code" => hashids_encode($plan->id)]);
+            if ($product) {
+                $productsArray[] = $product->id;
+                $product->fill([
+                    "name" => $title,
+                    "description" => mb_substr($description, 0, 100),
+                    "weight" => $variant->getWeight(),
+                    "shopify_id" => $storeProduct->getId(),
+                    "shopify_variant_id" => $variant->getId(),
+                    "sku" => $variant->getSku(),
+                    "project_id" => $projectId,
+                    "active_flag" => $statusProductShopify,
+                ]);
 
-                    $dataProductPlan = [
-                        "product_id" => $product->id,
-                        "plan_id" => $plan->id,
-                        "amount" => "1",
-                    ];
+                $productPlan = $product->productsPlans
+                    ->where("amount", 1)
+                    ->sortBy("id")
+                    ->first();
+                if (!empty($productPlan)) {
                     // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                    //     $costShopify = $this->getCostShopify($variant);
-                    //     if ($costShopify !== "") {
-                    //         $dataProductPlan["cost"] = $costShopify * 100;
+                    //     $costProduct = $this->getCostShopify($variant);
+                    //     if ($costProduct !== "") {
+                    //         $productPlan->fill(["cost" => $costProduct * 100]);
+                    //         if ($productPlan->isDirty()) {
+                    //             $productPlan->save();
+                    //         }
                     //     }
                     // }
 
-                    ProductPlan::create($dataProductPlan);
+                    $plan = $productPlan->plan;
+                    $plan->fill([
+                        "name" => $title,
+                        "description" => mb_substr($description, 0, 100),
+                        "price" => $variant->getPrice(),
+                        "status" => "1",
+                        "active_flag" => $statusProductShopify,
+                        "project_id" => $projectId,
+                        "name" => $title,
+                        "description" => mb_substr($description, 0, 100),
+                        "price" => $variant->getPrice(),
+                        "status" => "1",
+                        "active_flag" => $statusProductShopify,
+                        "project_id" => $projectId,
+                    ]);
+                    if ($plan->isDirty()) {
+                        $plan->save();
+                    }
 
                     $photo = "";
                     if (count($storeProduct->getVariants()) > 1) {
@@ -312,64 +208,163 @@ class ShopifyService
                             }
                         }
                     }
-                    $product->update(["photo" => $photo]);
+                    $product->fill(["photo" => $photo]);
+
+                    if ($product->isDirty()) {
+                        $product->save();
+                    }
+                } else {
+                    $plan = Plan::create([
+                        "shopify_id" => $storeProduct->getId(),
+                        "shopify_variant_id" => $variant->getId(),
+                        "project_id" => $projectId,
+                        "name" => $title,
+                        "description" => mb_substr($description, 0, 100),
+                        "code" => "",
+                        "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
+                        "status" => "1",
+                        "active_flag" => $statusProductShopify,
+                    ]);
+
+                    $dataProductPlan = [
+                        "product_id" => $product->id,
+                        "plan_id" => $plan->id,
+                        "amount" => 1,
+                    ];
+                    // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    //     $costShopify = $this->getCostShopify($variant);
+                    //     if ($costShopify !== "") {
+                    //         $dataProductPlan["cost"] = $costShopify * 100;
+                    //     }
+                    // }
+
+                    ProductPlan::create($dataProductPlan);
+
+                    $plan->update(["code" => hashids_encode($plan->id)]);
                 }
-            }
+            } else {
+                $product = Product::create([
+                    "user_id" => $userId,
+                    "name" => $title,
+                    "description" => mb_substr($description, 0, 100),
+                    "guarantee" => "0",
+                    "format" => 1,
+                    "shopify" => true,
+                    "price" => "",
+                    "shopify_id" => $storeProduct->getId(),
+                    "shopify_variant_id" => $variant->getId(),
+                    "sku" => $variant->getSku(),
+                    "project_id" => $projectId,
+                    "active_flag" => $statusProductShopify,
+                ]);
 
-            $products = Product::where("project_id", $projectId)
-                ->where("shopify_id", $shopifyProductId)
-                ->whereNotIn("id", collect($productsArray))
-                ->get();
+                $productsArray[] = $product->id;
+                $plan = Plan::create([
+                    "shopify_id" => $storeProduct->getId(),
+                    "shopify_variant_id" => $variant->getId(),
+                    "project_id" => $projectId,
+                    "name" => $title,
+                    "description" => mb_substr($description, 0, 100),
+                    "code" => "",
+                    "price" => $variant->getPrice() > 100000 ? 100 : $variant->getPrice(),
+                    "status" => "1",
+                    "active_flag" => $statusProductShopify,
+                ]);
+                $plan->update(["code" => hashids_encode($plan->id)]);
 
-            if ($products->count()) {
-                $productIds = $products->pluck("id");
+                $dataProductPlan = [
+                    "product_id" => $product->id,
+                    "plan_id" => $plan->id,
+                    "amount" => "1",
+                ];
+                // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                //     $costShopify = $this->getCostShopify($variant);
+                //     if ($costShopify !== "") {
+                //         $dataProductPlan["cost"] = $costShopify * 100;
+                //     }
+                // }
 
-                $plans = Plan::select(DB::raw("plans.*"))
-                    ->with([
-                        "plansSales",
-                        "affiliateLinks",
-                        "productsPlans" => function ($query) use ($productIds) {
-                            $query->whereIn("product_id", $productIds);
-                        },
-                    ])
-                    ->join("products_plans", "products_plans.plan_id", "=", "plans.id")
-                    ->whereNull("products_plans.deleted_at")
-                    ->whereIn("products_plans.product_id", $productIds)
-                    ->get();
+                ProductPlan::create($dataProductPlan);
 
-                $arrayDelete = [];
-                foreach ($plans as $plan) {
-                    if (count($plan->plansSales) == 0) {
-                        $productPlans = $plan->productsPlans;
-                        $othersProducts = $productPlans->whereNotIn("product_id", $productIds);
-                        if (count($othersProducts) == 0) {
-                            foreach ($plan->productsPlans as $productPlan) {
-                                $arrayDelete[] = $productPlan->product_id;
-                                $productPlan->delete();
-                            }
-                            if (count($plan->affiliateLinks) > 0) {
-                                foreach ($plan->affiliateLinks as $affiliateLink) {
-                                    $affiliateLink->delete();
+                $photo = "";
+                if (count($storeProduct->getVariants()) > 1) {
+                    foreach ($storeProduct->getImages() as $image) {
+                        $variantIds = $image->getVariantIds();
+                        foreach ($variantIds as $variantId) {
+                            if ($variantId == $variant->getId()) {
+                                if ($image->getSrc() != "") {
+                                    $photo = $image->getSrc();
+                                } else {
+                                    $photo = $storeProduct->getImage()->getSrc();
                                 }
                             }
-                            $plan->delete();
                         }
                     }
                 }
+                if (empty($photo)) {
+                    $image = $storeProduct->getImage();
+                    if (!empty($image)) {
+                        try {
+                            $photo = $image->getSrc();
+                        } catch (Exception $e) {
+                            report($e);
+                        }
+                    }
+                }
+                $product->update(["photo" => $photo]);
+            }
+        }
 
-                Product::whereIn("products.id", collect($arrayDelete))
-                    ->leftJoin("products_plans as pp", function ($join) {
-                        $join->on("pp.product_id", "=", "products.id")->whereNull("pp.deleted_at");
-                    })
-                    ->whereNull("pp.id")
-                    ->delete();
+        $products = Product::where("project_id", $projectId)
+            ->where("shopify_id", $shopifyProductId)
+            ->whereNotIn("id", collect($productsArray))
+            ->get();
+
+        if ($products->count()) {
+            $productIds = $products->pluck("id");
+
+            $plans = Plan::select(DB::raw("plans.*"))
+                ->with([
+                    "plansSales",
+                    "affiliateLinks",
+                    "productsPlans" => function ($query) use ($productIds) {
+                        $query->whereIn("product_id", $productIds);
+                    },
+                ])
+                ->join("products_plans", "products_plans.plan_id", "=", "plans.id")
+                ->whereNull("products_plans.deleted_at")
+                ->whereIn("products_plans.product_id", $productIds)
+                ->get();
+
+            $arrayDelete = [];
+            foreach ($plans as $plan) {
+                if (count($plan->plansSales) == 0) {
+                    $productPlans = $plan->productsPlans;
+                    $othersProducts = $productPlans->whereNotIn("product_id", $productIds);
+                    if (count($othersProducts) == 0) {
+                        foreach ($plan->productsPlans as $productPlan) {
+                            $arrayDelete[] = $productPlan->product_id;
+                            $productPlan->delete();
+                        }
+                        if (count($plan->affiliateLinks) > 0) {
+                            foreach ($plan->affiliateLinks as $affiliateLink) {
+                                $affiliateLink->delete();
+                            }
+                        }
+                        $plan->delete();
+                    }
+                }
             }
 
-            return true;
-        } catch (Exception $e) {
-            report($e);
-            return false;
+            Product::whereIn("products.id", collect($arrayDelete))
+                ->leftJoin("products_plans as pp", function ($join) {
+                    $join->on("pp.product_id", "=", "products.id")->whereNull("pp.deleted_at");
+                })
+                ->whereNull("pp.id")
+                ->delete();
         }
+
+        return true;
     }
 
     public function importShopifyStore($projectId, $userId)
