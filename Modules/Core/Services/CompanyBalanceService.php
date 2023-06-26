@@ -4,7 +4,6 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Company;
 
-use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\VegaService;
 
 /**

@@ -82,30 +82,30 @@ class ShopifyService
                 return false;
             }
 
-            $notazzConfig = Project::select("notazz_configs")->find($projectId)->notazz_configs ?? null;
-            $updateCostShopify = !is_null($notazzConfig) ? json_decode($notazzConfig) : null;
+            // $notazzConfig = Project::select("notazz_configs")->find($projectId)->notazz_configs ?? null;
+            // $updateCostShopify = !is_null($notazzConfig) ? json_decode($notazzConfig) : null;
 
             $products = Product::with("productsPlans.plan")
                 ->where("project_id", $projectId)
                 ->get();
 
             $statusProductShopify = 1;
-            try {
-                $result = $this->client->createRequest(
-                    "GET",
-                    "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json"
-                );
+            // try {
+            //     $result = $this->client->createRequest(
+            //         "GET",
+            //         "https://{$this->urlStore}/admin/api/2022-04/products/{$shopifyProductId}.json"
+            //     );
 
-                if (
-                    !empty($result) &&
-                    isset($result["product"]["status"]) &&
-                    $result["product"]["status"] != "active"
-                ) {
-                    $statusProductShopify = 0;
-                }
-            } catch (Exception $e) {
-                report($e);
-            }
+            //     if (
+            //         !empty($result) &&
+            //         isset($result["product"]["status"]) &&
+            //         $result["product"]["status"] != "active"
+            //     ) {
+            //         $statusProductShopify = 0;
+            //     }
+            // } catch (Exception $e) {
+            //     report($e);
+            // }
 
             $productsArray = [];
             foreach ($storeProduct->getVariants() as $variant) {
@@ -136,6 +136,7 @@ class ShopifyService
                     ->where("shopify_variant_id", $variant->getId())
                     ->where("project_id", $projectId)
                     ->first();
+
                 if ($product) {
                     $productsArray[] = $product->id;
                     $product->fill([
@@ -154,15 +155,15 @@ class ShopifyService
                         ->sortBy("id")
                         ->first();
                     if (!empty($productPlan)) {
-                        if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                            $costProduct = $this->getCostShopify($variant);
-                            if ($costProduct !== "") {
-                                $productPlan->fill(["cost" => $costProduct * 100]);
-                                if ($productPlan->isDirty()) {
-                                    $productPlan->save();
-                                }
-                            }
-                        }
+                        // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        //     $costProduct = $this->getCostShopify($variant);
+                        //     if ($costProduct !== "") {
+                        //         $productPlan->fill(["cost" => $costProduct * 100]);
+                        //         if ($productPlan->isDirty()) {
+                        //             $productPlan->save();
+                        //         }
+                        //     }
+                        // }
 
                         $plan = $productPlan->plan;
                         $plan->fill([
@@ -231,12 +232,12 @@ class ShopifyService
                             "plan_id" => $plan->id,
                             "amount" => 1,
                         ];
-                        if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                            $costShopify = $this->getCostShopify($variant);
-                            if ($costShopify !== "") {
-                                $dataProductPlan["cost"] = $costShopify * 100;
-                            }
-                        }
+                        // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                        //     $costShopify = $this->getCostShopify($variant);
+                        //     if ($costShopify !== "") {
+                        //         $dataProductPlan["cost"] = $costShopify * 100;
+                        //     }
+                        // }
 
                         ProductPlan::create($dataProductPlan);
 
@@ -277,12 +278,12 @@ class ShopifyService
                         "plan_id" => $plan->id,
                         "amount" => "1",
                     ];
-                    if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
-                        $costShopify = $this->getCostShopify($variant);
-                        if ($costShopify !== "") {
-                            $dataProductPlan["cost"] = $costShopify * 100;
-                        }
-                    }
+                    // if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
+                    //     $costShopify = $this->getCostShopify($variant);
+                    //     if ($costShopify !== "") {
+                    //         $dataProductPlan["cost"] = $costShopify * 100;
+                    //     }
+                    // }
 
                     ProductPlan::create($dataProductPlan);
 

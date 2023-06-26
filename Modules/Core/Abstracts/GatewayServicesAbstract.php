@@ -57,19 +57,19 @@ abstract class GatewayServicesAbstract
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
-                // ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
                 ->sum("transactions.value");
         });
     }
 
     public function getSecurityReserveBalance(): int
     {
-        // $cacheName = "balance-security-reserve-{$this->gatewayName}-{$this->company->id}";
-        // return cache()->remember($cacheName, 120, function () {
-        return SecurityReserve::where("company_id", $this->company->id)
-            ->where("status", SecurityReserve::STATUS_PENDING)
-            ->sum("value");
-        // });
+        $cacheName = "balance-security-reserve-{$this->gatewayName}-{$this->company->id}";
+        return cache()->remember($cacheName, 120, function () {
+            return SecurityReserve::where("company_id", $this->company->id)
+                ->where("status", SecurityReserve::STATUS_PENDING)
+                ->sum("value");
+        });
     }
 
     public function getPendingBalanceCount(): int
@@ -78,7 +78,7 @@ abstract class GatewayServicesAbstract
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("transactions.company_id", $this->company->id)
                 ->where("transactions.status_enum", Transaction::STATUS_PAID)
-                // ->whereIn("transactions.gateway_id", $this->gatewayIds)
+                ->whereIn("transactions.gateway_id", $this->gatewayIds)
                 ->count();
         });
     }
@@ -88,7 +88,7 @@ abstract class GatewayServicesAbstract
         $cacheName = "balance-blocked-{$this->gatewayName}-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
-                // ->whereIn("gateway_id", $this->gatewayIds)
+                ->whereIn("gateway_id", $this->gatewayIds)
                 ->whereIn("status_enum", [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
                 ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
                 ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
@@ -101,7 +101,7 @@ abstract class GatewayServicesAbstract
         $cacheName = "balance-blocked-count-{$this->gatewayName}-{$this->company->id}";
         return cache()->remember($cacheName, 120, function () {
             return Transaction::where("company_id", $this->company->id)
-                // ->whereIn("gateway_id", $this->gatewayIds)
+                ->whereIn("gateway_id", $this->gatewayIds)
                 ->join("block_reason_sales", "block_reason_sales.sale_id", "=", "transactions.sale_id")
                 ->where("block_reason_sales.status", BlockReasonSale::STATUS_BLOCKED)
                 ->count();
@@ -132,7 +132,7 @@ abstract class GatewayServicesAbstract
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where("company_id", $this->company->id)
-            // ->whereIn("gateway_id", $this->gatewayIds)
+            ->whereIn("gateway_id", $this->gatewayIds)
             ->orderBy("id", "DESC");
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
@@ -153,7 +153,6 @@ abstract class GatewayServicesAbstract
 
     public function existsBankAccountApproved()
     {
-        //verifica se existe uma conta bancaria aprovada
         $companyBankAccount = $this->company->getDefaultBankAccount() ?? null;
         if (empty($companyBankAccount)) {
             return false;
