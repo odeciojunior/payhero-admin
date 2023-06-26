@@ -9,7 +9,7 @@ class TrackingsRule
     protected static $rules = [
         'sale_id' => 'required',
         'product_id' => 'required',
-        'tracking_code' => 'required|min:9|max:18'
+        'tracking_code' => 'required|min:9|max:30'
     ];
 
     public static function storeTrackings()
@@ -35,7 +35,7 @@ class TrackingsRule
             'product_id.required' => 'O id do produto é obrigatório.',
             'tracking_code.required' => 'O código de rastreio é obrigatório.',
             'tracking_code.min' => 'O código de rastreio deve ter pelo menos 9 caracteres.',
-            'tracking_code.max' => 'O código de rastreio não pode ter mais de 18 caracteres.',
+            'tracking_code.max' => 'O código de rastreio não pode ter mais de 30 caracteres.',
             'tracking_code.regex' => 'O código de rastreio é inválido.'
         ];
     }
