@@ -147,7 +147,7 @@ return [
                 "connection" => "redis-horizon",
                 "queue" => ["high", "default", "low"],
                 "balance" => "false",
-                "processes" => 30,
+                "processes" => 40,
                 "tries" => 3,
                 "timeout" => 3600,
                 "delay" => 1,
