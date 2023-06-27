@@ -300,7 +300,7 @@
                                                     <li>Inventory -> Read access</li>
                                                 </ul>
                                                 <img class='img-thumbnail thumbnail'
-                                                     src='Link nexuspay -> https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/shoify-integration-step-4-2.png'
+                                                     src='https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/shoify-integration-step-4-2.png'
                                                      style='width:100%'>
                                             </span>
                                         </div>
