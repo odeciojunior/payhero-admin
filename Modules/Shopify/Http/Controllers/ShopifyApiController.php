@@ -16,6 +16,7 @@ use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
@@ -202,6 +203,40 @@ class ShopifyApiController extends Controller
                 );
             }
 
+            $discountCoupon10 = DiscountCoupon::create([
+                "project_id"            => $projectCreated->id,
+                "name"                  => "Desconto 10%",
+                "type"                  => 0,
+                "value"                 => 10,
+                "code"                  => "NEXX10",
+                "status"                => 1,
+                "rule_value"            => 0,
+                "recovery_flag"         => true,
+            ]);
+
+            $discountCoupon20 = DiscountCoupon::create([
+                "project_id"            => $projectCreated->id,
+                "name"                  => "Desconto 20%",
+                "type"                  => 0,
+                "value"                 => 20,
+                "code"                  => "NEXX20",
+                "status"                => 1,
+                "rule_value"            => 0,
+                "recovery_flag"         => true,
+            ]);
+
+            if (empty($discountCoupon10) || empty($discountCoupon20)) {
+                $shippingCreated->delete();
+                $projectCreated->delete();
+
+                return response()->json(
+                    [
+                        "message" => "Problema ao criar integração, tente novamente mais tarde",
+                    ],
+                    400
+                );
+            }
+
             $shopifyIntegrationCreated = ShopifyIntegration::create([
                 "token" => $dataRequest["token"],
                 "shared_secret" => "",
@@ -213,6 +248,8 @@ class ShopifyApiController extends Controller
 
             if (empty($shopifyIntegrationCreated)) {
                 $shippingCreated->delete();
+                $discountCoupon10->delete();
+                $discountCoupon20->delete();
                 $projectCreated->delete();
 
                 return response()->json(
@@ -239,6 +276,8 @@ class ShopifyApiController extends Controller
             if (empty($userProjectCreated)) {
                 $shopifyIntegrationCreated->delete();
                 $shippingCreated->delete();
+                $discountCoupon10->delete();
+                $discountCoupon20->delete();
                 $projectCreated->delete();
 
                 return response()->json(
@@ -426,7 +465,7 @@ class ShopifyApiController extends Controller
                     return response()->json(
                         [
                             "message" =>
-                                "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
+                            "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
                         ],
                         Response::HTTP_OK
                     );
