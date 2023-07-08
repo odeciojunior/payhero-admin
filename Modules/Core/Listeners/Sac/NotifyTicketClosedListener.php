@@ -42,7 +42,7 @@ class NotifyTicketClosedListener implements ShouldQueue
                     "NexusPay",
                     $ticket->owner_email,
                     $ticket->owner_name,
-                    "d-f5bf90d19f724e80bef16c378163e49c", // done
+                    "d-cae8497d2f434f6797f231407f71ebe4", /// done
                     $data
                 );
             }

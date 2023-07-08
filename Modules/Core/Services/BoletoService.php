@@ -235,7 +235,7 @@ class BoletoService
                                             "projectName" => $projectData->name ?? "",
                                             "clientEmail" => $sale->customer_email,
                                             "clientName" => $customerFirstName ?? "",
-                                            "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                            "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                             "bodyEmail" => $data,
                                             "checkout_id" => $sale->checkout_id,
                                         ];
@@ -425,7 +425,7 @@ class BoletoService
                                         "projectName" => $project["name"] ?? "",
                                         "clientEmail" => $clientEmail,
                                         "clientName" => $clientNameExploded[0] ?? "",
-                                        "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                        "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                         "bodyEmail" => $data,
                                         "checkout_id" => $checkout->id,
                                     ];
@@ -594,7 +594,7 @@ class BoletoService
                                                 "projectName" => $project["name"] ?? "",
                                                 "clientEmail" => $clientEmail,
                                                 "clientName" => $clientNameExploded[0] ?? "",
-                                                "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                                "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                                 "bodyEmail" => $data,
                                                 "checkout_id" => $checkout->id,
                                             ];

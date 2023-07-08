@@ -90,7 +90,8 @@ class CartRecoveryService
                         ];
 
                         $domain = $abandonedCart->domain ?? "nexuspay.vip";
-                        $linkCheckout = "https://checkout." . $domain . "/recovery/" . hashids_encode($abandonedCart->id);
+                        $linkCheckout =
+                            "https://checkout." . $domain . "/recovery/" . hashids_encode($abandonedCart->id);
 
                         $customerFirstName = current(explode(" ", $customer->name));
                         $customerPhone = "+55" . preg_replace("/[^0-9]/", "", $customer->phone);
@@ -159,7 +160,7 @@ class CartRecoveryService
                                     "projectName" => $project->name ?? "",
                                     "clientEmail" => $customer->email,
                                     "clientName" => $customer->name ?? "",
-                                    "templateId" => "d-03ad5b50f5654118b888abceebf24a02", // done
+                                    "templateId" => "d-11809e70516d438aa087c4740d42f352", /// done
                                     "bodyEmail" => $bodyEmail,
                                     "checkout_id" => $abandonedCart->id,
                                 ];

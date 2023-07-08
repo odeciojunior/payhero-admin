@@ -44,7 +44,7 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
                 "NexusPay",
                 $user->email,
                 $user->name,
-                "d-b90af5f16e794297b3e741f5b168168f", // done
+                "d-720ab073ed954115a8662071555fae14", /// done
                 $data
             );
         }

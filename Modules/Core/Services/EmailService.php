@@ -21,7 +21,7 @@ class EmailService
 {
     public const EMAIL_HELP_CLOUDFOX = "noreply@nexuspay.com.br";
 
-    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-4ddac05c3a964831a15996b2a00a223a"; // done
+    public const TEMPLATE_ID_EMAIL_CHARGEBACK = "d-b202c8d57c2445658fc5e53a74f32ba0"; /// done
 
     private SendgridService $sendgridService;
 
@@ -116,7 +116,7 @@ class EmailService
                 $sale->project->name,
                 $sale->customer->email,
                 $sale->customer->present()->getFirstName(),
-                "d-4ddac05c3a964831a15996b2a00a223a", // done
+                "d-b202c8d57c2445658fc5e53a74f32ba0", /// done
                 $data
             );
 
@@ -206,7 +206,7 @@ class EmailService
                     $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
-                    "d-063fb748f8094b318001936b856f659d", // done
+                    "d-60753ac1274b448490aae28e81474aad", /// done
                     $data
                 );
             } else {
@@ -227,7 +227,7 @@ class EmailService
                     $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
-                    "d-6e0b86370c714cf69e91bdab94b108c9", // done
+                    "d-9bd7cd4c3651497aa8c268e2a3314657", /// done
                     $data
                 );
             }
