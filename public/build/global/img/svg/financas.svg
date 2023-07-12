@@ -3,10 +3,10 @@ aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Currency</title>
   <desc>A line styled icon from Orion Icon Library.</desc>
   <ellipse data-name="layer1"
-  cx="42" cy="33" rx="12" ry="4" fill="none" stroke="#3DD9AD" stroke-miterlimit="10"
+  cx="42" cy="33" rx="12" ry="4" fill="none" stroke="#ff7a20" stroke-miterlimit="10"
   stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></ellipse>
   <path data-name="layer1" d="M54 41c0 2.2-5.4 4-12 4s-12-1.8-12-4m24 8c0 2.2-5.4 4-12 4s-12-1.8-12-4"
-  fill="none" stroke="#3DD9AD" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
+  fill="none" stroke="#ff7a20" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
   stroke-linecap="round"></path>
   <path data-name="layer2" fill="none" stroke="#ffffff" stroke-miterlimit="10"
   stroke-width="2" d="M30 39H2V3h60v36h-8" stroke-linejoin="round" stroke-linecap="round"></path>
@@ -16,6 +16,6 @@ aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
   stroke-width="2" d="M12 21h4m32 0h4M12 3A10 10 0 0 1 2 13m60 0A10 10 0 0 1 52 3M2 29a10 10 0 0 1 10 10"
   stroke-linejoin="round" stroke-linecap="round"></path>
   <path data-name="layer1" d="M30 33v24c0 2.2 5.4 4 12 4s12-1.8 12-4V33"
-  fill="none" stroke="#3DD9AD" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
+  fill="none" stroke="#ff7a20" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
   stroke-linecap="round"></path>
 </svg>
