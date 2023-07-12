@@ -25,7 +25,7 @@ class NotifyFinancesExportedListener
             $filename = $event->filename;
             $userEmail = !empty($event->email) ? $event->email : $user->email;
 
-            if (!str_contains($userEmail, "@nexuspay.com.br")) {
+            if (!str_contains($userEmail, "@azcend.com.br")) {
                 Notification::send($user, new FinancesExportedNotification($user, $filename));
             }
 
@@ -41,8 +41,8 @@ class NotifyFinancesExportedListener
             ];
 
             $sendGridService->sendEmail(
-                "noreply@nexuspay.com.br",
-                "NexusPay",
+                "noreply@azcend.com.br",
+                "Azcend",
                 $userEmail,
                 $userName,
                 "d-b999b01727f14c84adf4fceab77c5d3d", /// done

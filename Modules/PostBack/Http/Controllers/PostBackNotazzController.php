@@ -47,7 +47,7 @@ class PostBackNotazzController extends Controller
                 );
             }
 
-            if (str_contains($requestData["external_id"], "nexuspay")) {
+            if (str_contains($requestData["external_id"], "azcend")) {
                 $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
                 $notazzInvoice = $notazzInvoiceModel->find($externalId);
                 if (empty($notazzInvoice)) {

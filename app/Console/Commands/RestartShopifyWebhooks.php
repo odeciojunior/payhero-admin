@@ -50,23 +50,21 @@ class RestartShopifyWebhooks extends Command
                 $shopifyService->createShopWebhook([
                     "topic" => "products/create",
                     "address" =>
-                        "https://admin.nexuspay.vip/postback/shopify/" .
-                        Hashids::encode($shopifyIntegration->project_id),
+                        "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($shopifyIntegration->project_id),
                     "format" => "json",
                 ]);
 
                 $shopifyService->createShopWebhook([
                     "topic" => "products/update",
                     "address" =>
-                        "https://admin.nexuspay.vip/postback/shopify/" .
-                        Hashids::encode($shopifyIntegration->project_id),
+                        "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($shopifyIntegration->project_id),
                     "format" => "json",
                 ]);
 
                 $shopifyService->createShopWebhook([
                     "topic" => "orders/updated",
                     "address" =>
-                        "https://admin.nexuspay.vip/postback/shopify/" .
+                        "https://admin.azcend.vip/postback/shopify/" .
                         Hashids::encode($shopifyIntegration->project_id) .
                         "/tracking",
                     "format" => "json",

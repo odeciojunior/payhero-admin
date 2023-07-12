@@ -35,7 +35,7 @@ class SalesUnicodropExternalResource extends JsonResource
             ->where("project_id", $this->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "nexuspay.vip";
+        $domainName = $domain->name ?? "azcend.vip";
 
         $boletoLink =
             "https://checkout.{$domainName}/order/" .

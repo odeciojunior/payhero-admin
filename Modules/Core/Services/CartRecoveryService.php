@@ -89,7 +89,7 @@ class CartRecoveryService
                             "name" => $abandonedCart->project_name,
                         ];
 
-                        $domain = $abandonedCart->domain ?? "nexuspay.vip";
+                        $domain = $abandonedCart->domain ?? "azcend.vip";
                         $linkCheckout =
                             "https://checkout." . $domain . "/recovery/" . hashids_encode($abandonedCart->id);
 

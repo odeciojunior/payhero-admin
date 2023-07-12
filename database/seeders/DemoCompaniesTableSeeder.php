@@ -18,7 +18,7 @@ class DemoCompaniesTableSeeder extends Seeder
     {
         Company::create([
             "user_id" => User::DEMO_ID,
-            "fantasy_name" => "NEXUSPAY LTDA",
+            "fantasy_name" => "Azcend LTDA",
             "document" => "05054642000114",
             "zip_code" => "37350-000",
             "country" => "brazil",
@@ -28,7 +28,7 @@ class DemoCompaniesTableSeeder extends Seeder
             "complement" => "ANDAR 8 EDIF JACARANDA TORRE 1",
             "neighborhood" => "TAMBORE",
             "number" => 939,
-            "support_email" => "edwingarcia@nexuspay.com.br",
+            "support_email" => "edwingarcia@azcend.com.br",
             "support_telephone" => "+5566996866082",
             "cielo_balance" => 0,
             "asaas_balance" => 0,

@@ -38,8 +38,8 @@ class NotifyTicketClosedListener implements ShouldQueue
                 ];
 
                 $sendGridService->sendEmail(
-                    "noreply@nexuspay.com.br",
-                    "NexusPay",
+                    "noreply@azcend.com.br",
+                    "Azcend",
                     $ticket->owner_email,
                     $ticket->owner_name,
                     "d-cae8497d2f434f6797f231407f71ebe4", /// done

@@ -248,7 +248,7 @@ class CheckSales extends Command
         dd("Fim");
         $this->warn("Exists sale: " . $aux);
         $this->warn("Not IdTransaction: " . $aux2);
-        $this->warn("Nexuspay: " . count($saleCloudfox));
+        $this->warn("Azcend: " . count($saleCloudfox));
 
         $this->warn("pending_safe_not_exists_cloudfox");
         $total = count($rows);

@@ -252,7 +252,7 @@ class DomainsApiController extends Controller
                             case $cloudFlareService::adminIp:
                             case $cloudFlareService::sacIp:
                             case $cloudFlareService::affiliateIp:
-                                $content = "Servidores Nexuspay";
+                                $content = "Servidores Azcend";
                                 break;
                             default:
                                 $content = $record->content;
@@ -359,7 +359,7 @@ class DomainsApiController extends Controller
                 })
                 ->log("Verificação domínio: " . $domain->name);
 
-            if (!$cloudFlareService->checkHtmlMetadata("https://checkout." . $domain->name, "checkout-nexuspay", "1")) {
+            if (!$cloudFlareService->checkHtmlMetadata("https://checkout." . $domain->name, "checkout-azcend", "1")) {
                 $domain->update(["status" => Domain::STATUS_PENDING]);
 
                 return response()->json(

@@ -52,7 +52,7 @@ class AsaasHelper extends Command
         $this->comment("[2] Company Transfers ");
         $this->comment("[3] Company Transfer");
         $this->comment("[4] Company Balance");
-        $this->comment("[5] Nexus Pay Balance");
+        $this->comment("[5] Azcend Balance");
         $this->comment("[6] Company Anticipation");
         $this->comment("[7] Company Anticipations");
         $this->comment("[8] Company Receivables Reserves");

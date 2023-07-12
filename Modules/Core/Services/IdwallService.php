@@ -15,7 +15,7 @@ class IdwallService
     {
         $url = "https://api-v2.idwall.co/relatorios";
         $data = [
-            "matriz" => "Nexuspay_cnpj",
+            "matriz" => "Azcend_cnpj",
             "parametros" => [
                 "cnpj_numero" => $cnpj,
             ],
@@ -28,7 +28,7 @@ class IdwallService
     {
         $url = "https://api-v2.idwall.co/relatorios";
         $data = [
-            "matriz" => "Nexuspay_gateway_cpf_manual",
+            "matriz" => "Azcend_gateway_cpf_manual",
             "parametros" => [
                 "cpf_numero" => $cpf,
             ],

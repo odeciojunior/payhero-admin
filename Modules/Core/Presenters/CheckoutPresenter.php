@@ -80,7 +80,7 @@ class CheckoutPresenter extends Presenter
         }
 
         if ($companyDefault == Company::DEMO_ID) {
-            return "https://demo.nexuspay.vip" . "/recovery/" . $hashCheckoutId;
+            return "https://demo.azcend.vip" . "/recovery/" . $hashCheckoutId;
         }
 
         $link = "Domínio não configurado";

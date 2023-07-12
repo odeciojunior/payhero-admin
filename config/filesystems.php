@@ -57,7 +57,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "nexuspay-digital-products",
+            "bucket" => "azcend-digital-products",
             "url" => env("AWS_URL"),
         ],
         "s3_documents" => [
@@ -65,7 +65,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "nexuspay-documents",
+            "bucket" => "azcend-documents",
             "url" => env("AWS_URL"),
         ],
         "s3_digital_product" => [
@@ -73,7 +73,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "nexuspay-digital-products",
+            "bucket" => "azcend-digital-products",
             "url" => env("AWS_URL"),
         ],
         "s3_chargeback" => [
@@ -81,7 +81,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "nexuspay-chargeback-contestations",
+            "bucket" => "azcend-chargeback-contestations",
             "url" => env("AWS_URL"),
         ],
         "s3_plans_reviews" => [
@@ -89,7 +89,7 @@ return [
             "key" => env("AWS_ACCESS_KEY_ID"),
             "secret" => env("AWS_SECRET_ACCESS_KEY"),
             "region" => env("AWS_DEFAULT_REGION"),
-            "bucket" => "nexuspay-plans-reviews",
+            "bucket" => "azcend-plans-reviews",
             "url" => env("AWS_URL"),
         ],
         "downloadSpaces" => [

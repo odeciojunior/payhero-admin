@@ -55,8 +55,8 @@ return [
     */
 
     "from" => [
-        "address" => "noreply@nexuspay.com.br",
-        "name" => "NexusPay",
+        "address" => "noreply@azcend.com.br",
+        "name" => "Azcend",
     ],
 
     /*
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    "username" => "noreply@nexuspay.com.br",
+    "username" => "noreply@azcend.com.br",
 
     "password" => "",
 

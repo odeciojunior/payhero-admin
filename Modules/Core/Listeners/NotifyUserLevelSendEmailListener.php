@@ -50,8 +50,8 @@ class NotifyUserLevelSendEmailListener
         }
 
         $sendgrindService->sendEmail(
-            "noreply@nexuspay.com.br",
-            "NexusPay",
+            "noreply@azcend.com.br",
+            "Azcend",
             $event->user->email,
             $event->user->name,
             "not", // done
@@ -63,8 +63,8 @@ class NotifyUserLevelSendEmailListener
                 "nome" => ucfirst(strtolower(current(explode(" ", $event->user->name)))),
             ];
             $sendgrindService->sendEmail(
-                "noreply@nexuspay.com.br",
-                "NexusPay",
+                "noreply@azcend.com.br",
+                "Azcend",
                 $event->user->email,
                 $event->user->name,
                 "not", // done

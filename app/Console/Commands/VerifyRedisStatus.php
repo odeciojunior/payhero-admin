@@ -60,8 +60,8 @@ class VerifyRedisStatus extends Command
             foreach ($emails as $email) {
                 try {
                     $sendgridMail = new \SendGrid\Mail\Mail();
-                    $sendgridMail->setFrom("noreply@nexuspay.com.br", "NexusPay");
-                    $sendgridMail->addTo($email, "nexuspay");
+                    $sendgridMail->setFrom("noreply@azcend.com.br", "Azcend");
+                    $sendgridMail->addTo($email, "azcend");
                     $sendgridMail->addDynamicTemplateDatas([
                         "server" => "ADMIN",
                     ]);

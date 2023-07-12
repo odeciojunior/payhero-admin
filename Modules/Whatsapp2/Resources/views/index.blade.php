@@ -78,7 +78,7 @@
                                 <div class='col-12'>
                                     <label for='email'>Token
                                         <i class="fa-question-circle-o text-info"
-                                           data-content="Copie o token e adicione uma integração com a NexusPay na sua conta do SAK para gerar as urls de pedidos e checkouts. Depois cole as urls abaixo para finalizar sua integração"
+                                           data-content="Copie o token e adicione uma integração com a Azcend na sua conta do SAK para gerar as urls de pedidos e checkouts. Depois cole as urls abaixo para finalizar sua integração"
                                            data-toggle="popover"
                                            data-trigger="click"></i>
                                     </label>

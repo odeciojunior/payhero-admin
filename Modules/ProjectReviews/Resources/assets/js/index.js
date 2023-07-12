@@ -171,7 +171,7 @@ $(document).ready(function () {
                                 <div class="fullInformation-reviwe ellipsis-text" style="height:35px;">
                                     <img src="${
                                         value.photo ||
-                                        "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
+                                        "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
                                     }" class="img-fluid rounded-circle mr-2" width="35" height="35">
                                     ${value.name}
                                 </div>
@@ -468,8 +468,7 @@ $(document).ready(function () {
 
                 $(".review-photo").attr(
                     "src",
-                    review.photo ||
-                        "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
+                    review.photo || "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png"
                 );
                 $(".review-name").html(review.name);
                 $(".review-description").html(review.description);

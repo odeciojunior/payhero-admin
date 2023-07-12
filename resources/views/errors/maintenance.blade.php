@@ -7,7 +7,7 @@
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
-    <title>Manutenção | NexusPay App </title>
+    <title>Manutenção | Azcend App </title>
 
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -22,7 +22,7 @@
 
         <div class="content-error d-flex text-center">
             <img src="{!! mix('build/global/img/manutencao.svg') !!}"
-                 alt="NexusPay">
+                 alt="Azcend">
             <h1 class="big">Voltaremos em breve!</h1>
             <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção
                 no

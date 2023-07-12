@@ -204,25 +204,25 @@ class ShopifyApiController extends Controller
             }
 
             $discountCoupon10 = DiscountCoupon::create([
-                "project_id"            => $projectCreated->id,
-                "name"                  => "Desconto 10%",
-                "type"                  => 0,
-                "value"                 => 10,
-                "code"                  => "NEXX10",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $projectCreated->id,
+                "name" => "Desconto 10%",
+                "type" => 0,
+                "value" => 10,
+                "code" => "NEXX10",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             $discountCoupon20 = DiscountCoupon::create([
-                "project_id"            => $projectCreated->id,
-                "name"                  => "Desconto 20%",
-                "type"                  => 0,
-                "value"                 => 20,
-                "code"                  => "NEXX20",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $projectCreated->id,
+                "name" => "Desconto 20%",
+                "type" => 0,
+                "value" => 20,
+                "code" => "NEXX20",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             if (empty($discountCoupon10) || empty($discountCoupon20)) {
@@ -465,7 +465,7 @@ class ShopifyApiController extends Controller
                     return response()->json(
                         [
                             "message" =>
-                            "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
+                                "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
                         ],
                         Response::HTTP_OK
                     );
@@ -587,7 +587,7 @@ class ShopifyApiController extends Controller
                 ->find($projectId);
 
             /*$domain = new \stdClass();
-             $domain->name = 'nexuspay.vip';*/
+             $domain->name = 'azcend.vip';*/
             if (\foxutils()->isProduction()) {
                 $domain = $project->domains->where("status", $domainModel->present()->getStatus("approved"))->first();
             }

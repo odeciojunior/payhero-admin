@@ -77,14 +77,14 @@
                                      aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item"
-                                       href="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/plugin_cloudfox.zip">Adiciona
+                                       href="https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/plugin_cloudfox.zip">Adiciona
                                         ao carrinho de compras</a>
                                     <a class="dropdown-item"
-                                       href="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/plugin_cloudfox_skip_to_checkout.zip">Envia
+                                       href="https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/plugin_cloudfox_skip_to_checkout.zip">Envia
                                         direto para o checkout</a>
 
                                     <a class="dropdown-item"
-                                       href="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/plugin-cloudfox-geteway.zip">
+                                       href="https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/plugin-cloudfox-geteway.zip">
                                         Checkout API</a>
                                 </div>
                             </div>

@@ -88,7 +88,7 @@ class ManualRefundedSendEmailListener implements ShouldQueue
                 "discount" => $discount,
             ];
 
-            $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.com.br");
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
             $emailService->sendEmail(
                 $fromEmail,
                 $project["name"],

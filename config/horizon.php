@@ -174,7 +174,7 @@ return [
                 "connection" => "redis-horizon",
                 "queue" => "postback-shopify-tracking",
                 "balance" => "false",
-                "processes" => env("APP_NAME") == "Nexuspay-cron" ? 3 : 0,
+                "processes" => env("APP_NAME") == "Azcend-cron" ? 3 : 0,
                 "tries" => 3,
                 "timeout" => 3600,
                 "delay" => 1,

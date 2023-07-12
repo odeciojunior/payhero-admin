@@ -35,7 +35,7 @@ return [
     ],
 
     "zenvia" => [
-        "from" => "Nexuspay",
+        "from" => "Azcend",
         "pretend" => false,
         "conta" => "healthlab.corp",
         "senha" => "hLQNVb7VQk",

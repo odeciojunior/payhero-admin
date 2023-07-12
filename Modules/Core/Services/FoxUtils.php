@@ -278,9 +278,9 @@ class FoxUtils
     public static function urlCheckout()
     {
         if (self::isProduction()) {
-            $url = "https://checkout.nexuspay.vip";
+            $url = "https://checkout.azcend.vip";
         } else {
-            $url = "http://checkout.devnexuspay.vip";
+            $url = "http://checkout.devazcend.vip";
         }
 
         return $url;
@@ -397,8 +397,8 @@ class FoxUtils
         $name = trim($value);
         $last_name =
             strpos($name, " ") === false
-            ? ""
-            : preg_replace('#.*\s([\wáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\'\s]*)$#', '$1', $name);
+                ? ""
+                : preg_replace('#.*\s([\wáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\'\s]*)$#', '$1', $name);
         if ($last_name == $name) {
             return [$name, $name];
         }
@@ -421,7 +421,7 @@ class FoxUtils
     {
         try {
             if (!empty($url)) {
-                $urlKey = str_replace("https://nexuspay-${type}.s3.amazonaws.com/", "", $url);
+                $urlKey = str_replace("https://azcend-${type}.s3.amazonaws.com/", "", $url);
 
                 $client = new S3Client([
                     "credentials" => [
@@ -433,7 +433,7 @@ class FoxUtils
                 ]);
 
                 $command = $client->getCommand("GetObject", [
-                    "Bucket" => "nexuspay-${type}",
+                    "Bucket" => "azcend-${type}",
                     "Key" => $urlKey,
                 ]);
 

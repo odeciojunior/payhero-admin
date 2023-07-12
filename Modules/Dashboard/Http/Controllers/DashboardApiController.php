@@ -692,7 +692,7 @@ class DashboardApiController extends Controller
     {
         try {
             $user = auth()->user();
-            $cloudfox = explode("nexuspay.vip", $user->email);
+            $cloudfox = explode("azcend.vip", $user->email);
             if (count($cloudfox) == 2) {
                 return \response()->json(["message" => false], Response::HTTP_OK);
             }
@@ -728,7 +728,7 @@ class DashboardApiController extends Controller
         try {
             $user = auth()->user();
 
-            $cloudfox = explode("nexuspay.vip", $user->email);
+            $cloudfox = explode("azcend.vip", $user->email);
             if (count($cloudfox) == 2) {
                 return \response()->json(["message" => true], Response::HTTP_OK);
             }

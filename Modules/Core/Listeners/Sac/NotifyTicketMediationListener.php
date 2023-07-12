@@ -47,7 +47,7 @@ class NotifyTicketMediationListener implements ShouldQueue
 
             $sendGridService->sendEmail(
                 "noreply@cloudox.net",
-                "NexusPay",
+                "Azcend",
                 $ticket->owner_email,
                 $ticket->owner_name,
                 "d-42e0d5fc42244ca8a8cdbbd37574549e", /// done

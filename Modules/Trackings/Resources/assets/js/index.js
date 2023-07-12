@@ -73,7 +73,7 @@ $(() => {
     });
 
     $("#tracking-product-image").on("error", function () {
-        $(this).attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg");
+        $(this).attr("src", "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg");
     });
 
     $("#sale").on("change paste keyup select", function () {
@@ -514,12 +514,13 @@ $(() => {
 
                     dados += "<tr>";
 
-                    dados += `${lastSale !== tracking.sale
+                    dados += `${
+                        lastSale !== tracking.sale
                             ? `<td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}" style="padding-right:4px">
                                     #${tracking.sale}
                                 </td>`
                             : `<td></td>`
-                        }`;
+                    }`;
 
                     dados += `<td>
                                     <div class="fullInformation-tracking ellipsis-text" style="max-width: 240px; display:block; margin: 0px 0px 0px 0px;">
@@ -538,14 +539,16 @@ $(() => {
                                 </td>`;
 
                     dados += `<td style="width: 2%;padding: 0px !important;">
-                                    ${systemStatus[tracking.system_status_enum] != undefined
-                            ? systemStatus[tracking.system_status_enum]
-                            : ""
-                        }
-                                    ${tracking.is_chargeback_recovered
-                            ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                            : ``
-                        }
+                                    ${
+                                        systemStatus[tracking.system_status_enum] != undefined
+                                            ? systemStatus[tracking.system_status_enum]
+                                            : ""
+                                    }
+                                    ${
+                                        tracking.is_chargeback_recovered
+                                            ? `<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
+                                            : ``
+                                    }
                                 </td>`;
 
                     let save = `<div class="save-close buttons d-flex px-0" style="max-height: 35px;">
@@ -572,7 +575,8 @@ $(() => {
                     dados += `<td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="row" style="max-height: 35px;">`;
 
-                    dados += `${!tracking.tracking_status_enum
+                    dados += `${
+                        !tracking.tracking_status_enum
                             ? `<div class="col-7">
                             <input maxlength="30" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="border-radius: 8px; max-height:35px; padding: 8px 0 8px 10px !important;">
                             </div>
@@ -580,17 +584,18 @@ $(() => {
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>` + save
                             : ``
-                        }`;
+                    }`;
 
-                    dados += `${tracking.tracking_status_enum
+                    dados += `${
+                        tracking.tracking_status_enum
                             ? `<div class="col-7" >
                             <input maxlength="30" minlength="10" class="mr-10 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">
                             </div>
                         ` +
-                            edit_detail_save_close +
-                            ``
+                              edit_detail_save_close +
+                              ``
                             : ``
-                        }`;
+                    }`;
 
                     dados += `</div>
                         </td>`;
@@ -651,7 +656,7 @@ $(() => {
                 $("#tracking-product-image").attr("src", tracking.product.photo);
                 $("#tracking-product-name").text(
                     tracking.product.name +
-                    (tracking.product.description ? "(" + tracking.product.description + ")" : "")
+                        (tracking.product.description ? "(" + tracking.product.description + ")" : "")
                 );
                 $("#tracking-product-amount").text(tracking.amount + "x");
                 $("#tracking-delivery-address").text(
@@ -676,8 +681,9 @@ $(() => {
                             `<tr>
                               <td>${checkpoint.created_at}</td>
                               <td>
-                                  <span class="text-secondary badge badge-${statusEnum[checkpoint.tracking_status_enum]
-                            }">${checkpoint.tracking_status}</span>
+                                  <span class="text-secondary badge badge-${
+                                      statusEnum[checkpoint.tracking_status_enum]
+                                  }">${checkpoint.tracking_status}</span>
                               </td>
                               <td>${checkpoint.event}</td>
                           </tr>`

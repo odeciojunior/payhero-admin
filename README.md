@@ -1,3 +1,3 @@
 # Admin
 
-Repositório para o sistema administrativo da NexusPay.
+Repositório para o sistema administrativo da Azcend.

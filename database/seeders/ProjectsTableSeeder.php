@@ -30,7 +30,7 @@ class ProjectsTableSeeder extends Seeder
                 "https://cloudfox-digital-products.s3.amazonaws.com/uploads/user/NePyE2ZyMZqRbV4/public/project/jeApQgzQqRGEb76/main/TZbzIATUmMLrYykMSquMYHyWfaRgcnPTXGUBMwa8.png",
             "status" => 1,
             "name" => "Primeira loja",
-            "description" => "https://first-store.nexuspay.com.br",
+            "description" => "https://first-store.azcend.com.br",
             "reviews_config_icon_type" => "star",
             "reviews_config_icon_color" => "#f8ce1c",
             "notazz_configs" => '{"cost_currency_type": 1}',
@@ -53,7 +53,7 @@ class ProjectsTableSeeder extends Seeder
 
         Domain::create([
             "project_id" => $project->id,
-            "name" => "nexuspaystore.com.br",
+            "name" => "azcendstore.com.br",
             "status" => Domain::STATUS_APPROVED,
         ]);
 

@@ -40,8 +40,8 @@ class DomainApprovedEmailNotifyUserListener implements ShouldQueue
             ];
 
             $sendGridService->sendEmail(
-                "noreply@nexuspay.com.br",
-                "NexusPay",
+                "noreply@azcend.com.br",
+                "Azcend",
                 $user->email,
                 $user->name,
                 "d-720ab073ed954115a8662071555fae14", /// done

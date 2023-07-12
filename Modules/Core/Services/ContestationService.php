@@ -299,7 +299,7 @@ class ContestationService
         $trackings = [];
         foreach ($saleTrackings as $saleTracking) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://tracking.nexuspay.vip/api/tracking/detail/" . $saleTracking);
+            curl_setopt($ch, CURLOPT_URL, "https://tracking.azcend.vip/api/tracking/detail/" . $saleTracking);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             $return = json_decode(curl_exec($ch));
             curl_close($ch);

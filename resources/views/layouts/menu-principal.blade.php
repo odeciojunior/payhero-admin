@@ -11,7 +11,7 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- NEXUSPAY LOGO -->
+    <!-- Azcend LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
          data-toggle="gridmenu"
          style="background-color: #ffffff; overflow: hidden; top:0px; box-shadow:none;">
@@ -186,8 +186,8 @@
                                 <img class='img-user-menu-principal'
                                      src="{!! \Auth::user()->photo
                                          ? \Auth::user()->photo
-                                         : 'https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png' !!}"
-                                     onerror="this.onerror=null; this.src='https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png'"
+                                         : 'https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png' !!}"
+                                     onerror="this.onerror=null; this.src='https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/user-default.png'"
                                      alt=""
                                      title="">
                                 <i></i>

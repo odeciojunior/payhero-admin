@@ -69,7 +69,7 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        if (foxutils()->isProduction() && str_contains($request->email, "@nexuspay.com.br")) {
+        if (foxutils()->isProduction() && str_contains($request->email, "@azcend.com.br")) {
             return response()
                 ->redirectTo("/")
                 ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);

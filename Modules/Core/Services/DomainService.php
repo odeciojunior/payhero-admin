@@ -149,7 +149,7 @@ class DomainService
                 if (
                     $this->getCloudFlareService()->checkHtmlMetadata(
                         "https://checkout." . $domain->name,
-                        "checkout-nexuspay",
+                        "checkout-azcend",
                         "1"
                     )
                 ) {

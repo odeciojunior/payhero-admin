@@ -8,7 +8,7 @@
                  alt="Image"
                  border="0"
                  class=""
-                 src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/img-rastreio.png"
+                 src="https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/img-rastreio.png"
                  style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 80px; width: 180px; display: block;"
                  title="Image"
                  width="125" />
