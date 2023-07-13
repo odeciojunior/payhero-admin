@@ -22,8 +22,8 @@ class UsersTableSeeder extends Seeder
         //usuario admin
         $user = User::create([
             "name" => "first admin user",
-            "email" => "acesso@nexuspay.com.br",
-            "password" => bcrypt("nexuspay"),
+            "email" => "acesso@azcend.com.br",
+            "password" => bcrypt("azcend23"),
             "document" => "00000000000",
             "is_cloudfox" => true,
             "cellphone" => "5566999999999",
@@ -46,8 +46,8 @@ class UsersTableSeeder extends Seeder
         //usuario seller
         $userStore = User::create([
             "name" => "Seller Teste",
-            "email" => "seller@nexuspay.com.br",
-            "password" => bcrypt("nexuspay"),
+            "email" => "seller@azcend.com.br",
+            "password" => bcrypt("azcend23"),
             "document" => "00000000000",
             "account_is_approved" => true,
             "cellphone" => "5566999999999",
