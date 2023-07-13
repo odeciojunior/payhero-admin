@@ -36,7 +36,7 @@ class GenericCommand extends Command
                 // $shopifyService->deleteShopWebhook();
                 // $shopifyService->createShopifyIntegrationWebhook(
                 //     $store->id,
-                //     "https:admin.nexuspay.vip/postback/shopify/"
+                //     "https:admin.azcend.vip/postback/shopify/"
                 // );
                 $webhooks = $shopifyService->getShopWebhook();
                 foreach ($webhooks as $webhook) {

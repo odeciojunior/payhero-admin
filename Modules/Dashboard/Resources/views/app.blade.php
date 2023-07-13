@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1"
           name="viewport">
-    <title>Nexuspay - Shopify App</title>
+    <title>Azcend - Shopify App</title>
     <link rel="stylesheet"
           href="{{ mix('build/layouts/dashboard/app.min.css') }}">
 </head>

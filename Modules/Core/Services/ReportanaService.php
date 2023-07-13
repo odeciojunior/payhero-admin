@@ -71,7 +71,7 @@ class ReportanaService
         if (!foxutils()->isProduction()) {
             return [
                 "code" => 403,
-                "result" => "Funcionalidade habilitada somente em ambiente de produção!"
+                "result" => "Funcionalidade habilitada somente em ambiente de produção!",
             ];
         }
 
@@ -90,7 +90,8 @@ class ReportanaService
 
         $headers = [
             "Content-Type: application/json",
-            "Authorization: Basic " . base64_encode(env("REPORTANA_CLIENTE_ID") . ":" . env("REPORTANA_CLIENTE_SECRET"))
+            "Authorization: Basic " .
+            base64_encode(env("REPORTANA_CLIENTE_ID") . ":" . env("REPORTANA_CLIENTE_SECRET")),
         ];
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -102,7 +103,7 @@ class ReportanaService
         if (curl_errno($ch)) {
             return [
                 "code" => $httpCode,
-                "result" => curl_error($ch)
+                "result" => curl_error($ch),
             ];
         }
 
@@ -110,7 +111,7 @@ class ReportanaService
 
         return [
             "code" => $httpCode,
-            "result" => json_decode($result, true)
+            "result" => json_decode($result, true),
         ];
     }
 
@@ -140,7 +141,7 @@ class ReportanaService
                 );
             }
 
-            $domainName = $domain->name ?? "nexuspay.vip";
+            $domainName = $domain->name ?? "azcend.vip";
 
             $checkoutLink = "https://checkout." . $domainName . "/recovery/" . $checkout->id_code . "?recovery=true";
 
@@ -168,7 +169,7 @@ class ReportanaService
                     "country_code" => "BR",
                     "zip" => $log->zipcode ?? "",
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
                 ],
                 "shipping_address" => [
                     "name" => $log->name ?? "",
@@ -185,7 +186,7 @@ class ReportanaService
                     "country_code" => "BR",
                     "zip" => $log->zipcode ?? "",
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
                 ],
                 "line_items" => $dataProducts,
                 "currency" => "BRL",
@@ -193,7 +194,7 @@ class ReportanaService
                 "subtotal_price" => $totalValue,
                 "referring_site" => "https://" . $domainName,
                 "checkout_url" => $checkoutLink,
-                "original_created_at" => $checkout->created_at->format("Y-m-d H:i:s")
+                "original_created_at" => $checkout->created_at->format("Y-m-d H:i:s"),
             ];
 
             $return = $this->sendPostApi($data);
@@ -239,7 +240,10 @@ class ReportanaService
                 $total += $planSale->plan->price * $planSale->amount;
             }
 
-            $trackingCodes = $sale->trackings->pluck("tracking_code")->values()->toArray();
+            $trackingCodes = $sale->trackings
+                ->pluck("tracking_code")
+                ->values()
+                ->toArray();
 
             $status = "";
             $paymentMethod = "CREDIT_CARD";
@@ -291,22 +295,30 @@ class ReportanaService
                     break;
             }
 
-            $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, ".", "");
+            $totalValue = number_format(
+                ($sale->original_total_paid_value - $sale->interest_total_value) / 100,
+                2,
+                ".",
+                ""
+            );
 
             $subtotal = number_format($sale->sub_total, 2, ".", "");
 
-            $domainName = $domain->name ?? "nexuspay.vip";
+            $domainName = $domain->name ?? "azcend.vip";
 
             $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
 
-            $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
+            $boletoLink =
+                "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
             if ($sale->status !== Sale::STATUS_APPROVED) {
                 $boletoLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
             }
 
             $firstName = $sale->customer->name ? explode(" ", $sale->customer->name)[0] : "";
-            $lastName = $sale->customer->name ? explode(" ", $sale->customer->name)[count(explode(" ", $sale->customer->name)) - 1] : "";
+            $lastName = $sale->customer->name
+                ? explode(" ", $sale->customer->name)[count(explode(" ", $sale->customer->name)) - 1]
+                : "";
 
             $data = [
                 "reference_id" => hashids_encode($sale->id, "sale_id"),
@@ -329,12 +341,12 @@ class ReportanaService
                     "country_code" => "BR",
                     "zip" => $sale->delivery->zipcode ?? "",
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
                 ],
                 "shipping_address" => [
                     "name" => $sale->customer->name ?? "",
                     "first_name" => $firstName,
-                    "last_name" =>  $lastName,
+                    "last_name" => $lastName,
                     "company" => null,
                     "phone" => $sale->customer->telephone ?? "",
                     "address1" => $sale->delivery->street ?? "",
@@ -346,7 +358,7 @@ class ReportanaService
                     "country_code" => "BR",
                     "zip" => $sale->delivery->zipcode ?? "",
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
                 ],
                 "line_items" => $dataProducts,
                 "currency" => "BRL",
@@ -360,7 +372,7 @@ class ReportanaService
                 "billet_url" => $boletoLink,
                 "billet_line" => $sale->boleto_digitable_line, // Linha digitável do boleto / Pix Copia e Cola
                 "billet_expired_at" => $sale->boleto_due_date,
-                "original_created_at" => $sale->created_at->format("Y-m-d H:i:s")
+                "original_created_at" => $sale->created_at->format("Y-m-d H:i:s"),
             ];
 
             $return = $this->sendPostApi($data);
@@ -442,10 +454,15 @@ class ReportanaService
                         break;
                 }
 
-                $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, ".", "");
+                $totalValue = number_format(
+                    ($sale->original_total_paid_value - $sale->interest_total_value) / 100,
+                    2,
+                    ".",
+                    ""
+                );
                 $subtotal = number_format($sale->sub_total, 2, ".", "");
 
-                $domainName = $domain->name ?? "nexuspay.vip";
+                $domainName = $domain->name ?? "azcend.vip";
                 $boletoLink =
                     "https://checkout.{$domainName}/order/" .
                     Hashids::connection("sale_id")->encode($sale->id) .
@@ -460,7 +477,7 @@ class ReportanaService
                         "billet_url" => $boletoLink,
                         "gateway" => "cloudfox",
                         "checkout_url" =>
-                        "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
+                            "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
                         "id" => $sale->checkout_id,
                         "status" => $status,
                         "codigo_barras" => $sale->boleto_digitable_line,

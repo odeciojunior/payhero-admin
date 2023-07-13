@@ -46,11 +46,11 @@ class NotifyTrackingsExportedListener implements ShouldQueue
             ];
 
             $sendGridService->sendEmail(
-                "noreply@nexuspay.com.br",
-                "NexusPay",
+                "noreply@azcend.com.br",
+                "Azcend",
                 $userEmail,
                 $userName,
-                "d-367113d653654dfd84abd5134f232d99", // done
+                "d-b999b01727f14c84adf4fceab77c5d3d", /// done
                 $data
             );
         } catch (Exception $e) {

@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="new-register-overlay-subtitle">
-                        Clique nos botões abaixo e siga o passo a passo para começar sua operação na Nexus Pay
+                        Clique nos botões abaixo e siga o passo a passo para começar sua operação na Azcend
                     </div>
                 </div>
             </div>
@@ -308,7 +308,7 @@
                                     </div>
                                 </div>
                                 <span class="font-size-16 font-weight-600 mt-4"
-                                      style="color: #0B1D3D">Como você ficou sabendo da Nexus Pay?</span>
+                                      style="color: #0B1D3D">Como você ficou sabendo da Azcend?</span>
                                 <div class="step-2-checkbox-container">
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
@@ -542,7 +542,7 @@
                                     </span>
                                     <p class="font-size-14 font-weight-400 text-center mb-4"
                                        style="color: #636363">As
-                                        suas respostas ajudam a Nexus Pay a entender melhor o negócio de cada um
+                                        suas respostas ajudam a Azcend a entender melhor o negócio de cada um
                                         de nossos clientes de forma individualizada. Isso nos auxilia a desenvolver
                                         novas funcionalidades focadas no sucesso da sua operação!
                                     </p>

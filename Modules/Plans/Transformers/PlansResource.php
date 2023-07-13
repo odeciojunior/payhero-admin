@@ -31,7 +31,7 @@ class PlansResource extends JsonResource
 
         $user = auth()->user();
         if ($user->company_default == Company::DEMO_ID) {
-            $link = "https://demo.nexuspay.vip/" . $this->code;
+            $link = "https://demo.azcend.vip/" . $this->code;
             if (env("APP_ENV") == "local") {
                 $link = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/" . $this->code;
             }

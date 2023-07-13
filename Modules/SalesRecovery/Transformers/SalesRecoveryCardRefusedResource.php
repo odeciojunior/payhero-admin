@@ -41,7 +41,7 @@ class SalesRecoveryCardRefusedResource extends JsonResource
 
         $user = Auth::user();
         if ($user->company_default == Company::DEMO_ID) {
-            $link = "https://demo.nexuspay.vip";
+            $link = "https://demo.azcend.vip";
         }
 
         if (empty($link)) {

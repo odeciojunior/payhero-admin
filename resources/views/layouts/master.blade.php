@@ -9,7 +9,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
-          content="Nexuspay">
+          content="Azcend">
     <meta name="app-debug"
           content="{{ getenv('APP_DEBUG') }}">
     <meta name="msapplication-TileColor"
@@ -47,17 +47,17 @@
     <meta name="user-id"
           content="{{ hashids_encode($user_id) }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon"
+    {{-- <link rel="apple-touch-icon"
           sizes="180x180"
-          href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
+          href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}"> --}}
     <link rel="icon"
           type="image/png"
           sizes="32x32"
           href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
-    <link rel="icon"
+    {{-- <link rel="icon"
           type="image/png"
           sizes="16x16"
-          href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}">
+          href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}"> --}}
     <link rel="mask-icon"
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
@@ -149,8 +149,9 @@
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
 
-    @if ((!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
-        auth()->user()->is_cloudfox)
+    @if (
+        (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
+            auth()->user()->is_cloudfox)
         @include('utils.documents-pending')
         <script>
             verifyDocumentPending();

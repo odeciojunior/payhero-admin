@@ -46,11 +46,11 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
             $sufixHomolog = "";
         }
 
-        $url = "https://accounts{$sufixHomolog}.nexuspay.vip/personal-info";
+        $url = "https://accounts{$sufixHomolog}.azcend.vip/personal-info";
 
         if (!empty($data["companyId"])) {
             $url =
-                "https://accounts{$sufixHomolog}.nexuspay.vip/companies/company-detail/" .
+                "https://accounts{$sufixHomolog}.azcend.vip/companies/company-detail/" .
                 Hashids::encode($data["companyId"]);
         }
 
@@ -70,11 +70,11 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
 
         try {
             $emailReturn = $this->emailService->sendEmail(
-                "noreply@nexuspay.com.br",
+                "noreply@azcend.com.br",
                 $data["domainName"],
                 $data["clientEmail"],
                 $data["clientName"],
-                "d-15398617c4364a7691829db81c3e5847", // done
+                "d-c8c19c79591448cb9fb755631cab70d0", /// done
                 [
                     "name" => $data["clientName"],
                     "account_url" => $url,

@@ -32,7 +32,7 @@
                cellspacing="0">
             <tr>
                 <td style="padding-top: 20px;text-align:center">
-                    <img src="https://nexuspay-documents.s3.amazonaws.com/nexuspay/defaults/beta-tester.png">
+                    <img src="https://azcend-documents.s3.amazonaws.com/azcend/defaults/beta-tester.png">
                 </td>
             </tr>
             <tr>
@@ -47,7 +47,7 @@
             <tr style='color: #444444;padding-bottom: 40px;margin-bottom: 40px;'>
                 <td>
                     <p style='padding-bottom:20px;'>
-                        Você recebeu um convite para se cadastrar na Nexus Pay e agora chegou a sua hora de fazer parte
+                        Você recebeu um convite para se cadastrar na Azcend e agora chegou a sua hora de fazer parte
                         da
                         <strong> nossa revolução!</strong>
                         <br><br> Nosso trabalho é construir uma plataforma com a sua cara. Venha construir essa história
@@ -76,7 +76,7 @@
                     <p style="color: #757575; font-size: 0.7rem; margin: 0; text-align:center;"
                        class="small">
                         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte, envie
-                        um e-mail para sac@nexuspay.com.br
+                        um e-mail para sac@azcend.com.br
                     </p>
                 </td>
             </tr>

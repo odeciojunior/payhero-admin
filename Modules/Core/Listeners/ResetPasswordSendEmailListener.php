@@ -34,11 +34,11 @@ class ResetPasswordSendEmailListener implements ShouldQueue
             "reset_link" => $resetLink,
         ];
         $sendGridService->sendEmail(
-            "noreply@nexuspay.com.br",
-            "NexusPay",
+            "noreply@azcend.com.br",
+            "Azcend",
             $userEmail,
             $userName,
-            "d-7589cbbe04f643eead0925c47b44c9d1", // done
+            "d-fa32f9dd9cff4c29b27daf22d6aeafc7", /// done
             $data
         );
     }

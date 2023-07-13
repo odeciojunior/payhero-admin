@@ -52,7 +52,7 @@ class SendPendingDocumentEmail extends Command
         $userIds = [];
         foreach ($companies as $company) {
             $data = [
-                "domainName" => "Nexuspay",
+                "domainName" => "Azcend",
                 "clientEmail" => $company->email,
                 "clientName" => explode(" ", $company->name)["0"] ?? " Cliente",
                 "companyId" => $company->id,
@@ -74,7 +74,7 @@ class SendPendingDocumentEmail extends Command
 
         foreach ($users as $user) {
             $data = [
-                "domainName" => "Nexuspay",
+                "domainName" => "Azcend",
                 "clientEmail" => $user->email,
                 "clientName" => explode(" ", $user->name)["0"] ?? " Cliente",
                 "userId" => $user->id,

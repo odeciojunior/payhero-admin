@@ -816,7 +816,7 @@ class NotazzService
                 "date_pending" => Carbon::now(),
             ]);
             $notazzInvoice->update([
-                "external_id" => "nexuspay-" . $notazzInvoice->id,
+                "external_id" => "azcend-" . $notazzInvoice->id,
             ]);
 
             if ($notazzInvoice) {
@@ -1046,8 +1046,8 @@ class NotazzService
             ];
 
             $sendGridService->sendEmail(
-                "noreply@nexuspay.com.br",
-                "Nexus Pay",
+                "noreply@azcend.com.br",
+                "Azcend",
                 $notazzInvoice->sale->user->email,
                 $notazzInvoice->sale->user->name,
                 "not", // done

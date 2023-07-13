@@ -68,7 +68,7 @@ function count_plans_coupons(qtde) {
 
                 var img = response.thumbnails[i].products[0].photo
                     ? response.thumbnails[i].products[0].photo
-                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg";
+                    : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg";
 
                 html_show_plans +=
                     `
@@ -78,7 +78,7 @@ function count_plans_coupons(qtde) {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important;  background-image: url('` +
                     img +
-                    `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');  "></span>
+                    `'), url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg');  "></span>
 
                 `;
             }
@@ -201,7 +201,7 @@ function show_plans() {
             background-repeat: no-repeat; background-position: center center;
             background-size: cover !important; background: url('` +
                 items_selected[i].image +
-                `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
+                `'), url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
         }
 
         $("#show_plans, #c-show_plans").removeClass("mostrar_mais_detalhes");
@@ -240,11 +240,11 @@ function show_plans() {
         show_plans +=
             `<div ${toolTip} class="item_raw" >
 
-            <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
+            <span style="background-image: url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
                 <span style="background-image: url(` +
             (items_selected[i].image
                 ? items_selected[i].image
-                : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
+                : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg") +
             `)" class="image2"></span>
             </span>
 
@@ -504,12 +504,12 @@ function run_search(search, now) {
                         data[plan].description +
                         `" >
 
-                                    <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
+                                    <span style="background-image: url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
 
                                         <span style="background-image: url(` +
                         (data[plan].photo
                             ? data[plan].photo
-                            : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
+                            : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg") +
                         `)" class="image2"></span>
                                     </span>
 
@@ -1390,7 +1390,7 @@ $(function () {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important; background: url('` +
                         response.thumbnails[i].products[0].photo +
-                        `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
+                        `'), url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
                 }
 
                 $(".edit-plans-thumbs").html(html_show_plans);
@@ -1572,7 +1572,7 @@ function count_plans() {
                 background-repeat: no-repeat; background-position: center center;
                 background-size: cover !important; background: url('` +
                     response.thumbnails[i].products[0].photo +
-                    `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
+                    `'), url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg');"></span>`;
             }
 
             $("#show_plans").removeClass("mostrar_mais_detalhes");
@@ -1700,11 +1700,11 @@ function mount_selected_items(search, search2) {
             items_selected[i].description +
             `" >
 
-                        <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
+                        <span style="background-image: url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
                             <span style="background-image: url(` +
             (items_selected[i].image
                 ? items_selected[i].image
-                : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg") +
+                : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg") +
             `)" class="image2"></span>
                         </span>
                         <span class="title text-overflow-title">` +
@@ -2243,9 +2243,9 @@ $(function () {
 
     //                     var item = `<div ${toolTip} class="item" data-id="`+data[plan].id+`" data-image="`+data[plan].photo+`" data-name="`+data[plan].name+`" data-description="`+data[plan].description+`" >
 
-    //                                     <span style="background-image: url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
+    //                                     <span style="background-image: url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg')" class="image">
 
-    //                                         <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg')+`)" class="image2"></span>
+    //                                         <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg')+`)" class="image2"></span>
     //                                     </span>
 
     //                                     <span class="title text-overflow-title">`+data[plan].name+`</span>
@@ -2591,7 +2591,7 @@ $(function () {
                     background-repeat: no-repeat; background-position: center center;
                     background-size: cover !important; background: url('` +
                         response.thumbnails[i].products[0].photo +
-                        `'), url('https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
+                        `'), url('https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg');)"></span>`;
                 }
 
                 $(".edit-plans-thumbs").html(html_show_plans);

@@ -41,8 +41,8 @@ class NotifyUserAchievementSendEmailListener
         $data = $event->achievement->toArray();
 
         $sendgrindService->sendEmail(
-            "noreply@nexuspay.com.br",
-            "NexusPay",
+            "noreply@azcend.com.br",
+            "Azcend",
             $event->user->email,
             $event->user->name,
             "not", // done

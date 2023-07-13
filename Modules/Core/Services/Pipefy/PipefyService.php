@@ -55,15 +55,15 @@ class PipefyService
         "nome" => "name",
         "qual_gateway_voc_utiliza_hoje" => "gateway",
         "qual_o_seu_site_de_vendas" => "website_url",
-        "como_conheceu_a_nexuspay" => "nexuspay_referer",
+        "como_conheceu_a_azcend" => "azcend_referer",
         "qual_seu_nicho_de_atua_o" => "niche",
         "qual_e_commerce_voc_usa_hoje" => "ecommerce",
         "qual_seu_faturamento_m_dio_mensal" => "monthly_income",
         //        "range_de_faturamento" => "" , implemntar uma rotina para preencher esse campo
     ];
 
-    public static $FIELD_MODEL_nexuspay_LABEL_API = [
-        "nexuspay_referer" => [
+    public static $FIELD_MODEL_azcend_LABEL_API = [
+        "azcend_referer" => [
             "ad" => "Anúncios",
             "email" => "Email",
             "other" => "Outros",
@@ -282,7 +282,7 @@ class PipefyService
                     } elseif (
                         !empty($userInformations->$field) &&
                         $api != "qual_e_commerce_voc_usa_hoje" &&
-                        $api != "como_conheceu_a_nexuspay" &&
+                        $api != "como_conheceu_a_azcend" &&
                         $api != "qual_seu_nicho_de_atua_o"
                     ) {
                         $fieldsApi .= '{fieldId: \\"' . $api . '\\", value: \\"' . $userInformations->$field . '\\"} ';
@@ -290,9 +290,9 @@ class PipefyService
                         !empty($userInformations->$field) &&
                         ($api == "qual_e_commerce_voc_usa_hoje" ||
                             $api == "qual_seu_nicho_de_atua_o" ||
-                            $api == "como_conheceu_a_nexuspay")
+                            $api == "como_conheceu_a_azcend")
                     ) {
-                        $options = self::$FIELD_MODEL_nexuspay_LABEL_API[$field];
+                        $options = self::$FIELD_MODEL_azcend_LABEL_API[$field];
                         $values = "[ ";
                         foreach ($options as $modelAtribute => $optionLabel) {
                             $selected = json_decode($userInformations->$field);

@@ -218,11 +218,11 @@
          data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-simple"
              role="document">
-            <div class="modal-content modal-terms-nexuspay">
+            <div class="modal-content modal-terms-azcend">
                 <div class="modal-header p-0 pt-15 pl-15 pb-15">
                     <span class="modal-title p-0"
                           id="exampleModalLabel">
-                        <strong>Termos de uso Nexus Pay atualizados</strong>
+                        <strong>Termos de uso Azcend atualizados</strong>
                     </span>
                 </div>
                 <hr style="margin-top: 0%; color: #F4F6FB; height: 1px">
@@ -230,11 +230,11 @@
 
                     <div class="row form-group col-md-12 pl-15 pr-15 m-0 pb-20 text-modal">
                         Atualizamos recentemente os Termos de Uso da nossa plataforma e produtos. Para continuar
-                        utilizando os serviços Nexus Pay é necessario ler e estar de acordo com o termo.
+                        utilizando os serviços Azcend é necessario ler e estar de acordo com o termo.
                     </div>
 
                     <div class="modal-terms">
-                        <a href="//nexuspay.vip/use-terms-and-privacy-policy.html"
+                        <a href="//azcend.vip/use-terms-and-privacy-policy.html"
                            target="_blank"
                            class="button-modal-term">
                             <span>
@@ -246,7 +246,7 @@
                     </div>
                     <br>
                     <span class="pl-15">
-                        <input id="terms-nexuspay"
+                        <input id="terms-azcend"
                                type="checkbox"><span class="pl-2">Li e estou de acordo.</span>
                     </span>
 

@@ -81,7 +81,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                     ->where("status", $projectNotificationPresenter->getStatus("active"))
                     ->first();
 
-                $linkBase = "https://tracking." . ($domain ? $domain->name : "nexuspay.com.br") . "/";
+                $linkBase = "https://tracking." . ($domain ? $domain->name : "azcend.com.br") . "/";
                 if (!empty($projectNotificationSms)) {
                     $message = $projectNotificationSms->message;
                     $smsMessage = $projectNotificationService->formatNotificationData(
@@ -138,13 +138,13 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         "link" => $linkBase,
                     ];
 
-                    $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.com.br");
+                    $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
                     $sendGridService->sendEmail(
                         $fromEmail,
                         $projectName,
                         $clientEmail,
                         $clientName,
-                        "d-0d371f9388af42f78b664ac9de42e7f7", // done
+                        "d-67d8b7cd971444e0ac412119b331c98c", /// done
                         $data
                     );
                 }

@@ -9,6 +9,6 @@ aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
   stroke-width="2" d="M8 32h6M32 8v5.999M50 32h6M45 20l4-4" stroke-linejoin="round"
   stroke-linecap="round"></path>
   <path data-name="layer1" d="M15.183 16.544A.975.975 0 0 1 15 16a1 1 0 0 1 1.489-.873l18.748 11.821a5.999 5.999 0 1 1-8.153 8.486z"
-  fill="none" stroke="#3DD9AD" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
+  fill="none" stroke="#ff7a20" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
   stroke-linecap="round"></path>
 </svg>

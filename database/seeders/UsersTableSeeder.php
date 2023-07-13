@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
         $user = User::create([
             "name" => "first admin user",
             "email" => "acesso@azcend.com.br",
-            "password" => bcrypt("azcend23"),
+            "password" => bcrypt("azcend"),
             "document" => "00000000000",
             "is_cloudfox" => true,
             "cellphone" => "5566999999999",
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
         $userStore = User::create([
             "name" => "Seller Teste",
             "email" => "seller@azcend.com.br",
-            "password" => bcrypt("azcend23"),
+            "password" => bcrypt("azcend"),
             "document" => "00000000000",
             "account_is_approved" => true,
             "cellphone" => "5566999999999",

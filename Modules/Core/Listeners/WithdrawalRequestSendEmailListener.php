@@ -36,11 +36,11 @@ class WithdrawalRequestSendEmailListener implements ShouldQueue
             "value" => number_format(intval($event->withdrawal->value) / 100, 2, ",", "."),
         ];
         $sendGridService->sendEmail(
-            "noreply@nexuspay.com.br",
-            "NexusPay",
+            "noreply@azcend.com.br",
+            "Azcend",
             $event->withdrawal->company->user->email,
             $userName,
-            "d-2548bf18de634ee1ab6bc23cf4d7ba25", // done
+            "d-7e37fc560fa24a3daed14bcc1781e468", /// done
             $data
         );
     }

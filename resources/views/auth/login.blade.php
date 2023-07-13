@@ -57,7 +57,7 @@
 
         .img-container {
             flex: 1;
-            background: url("https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/book.10242ce7.jpg") center center / cover no-repeat;
+            background: url("https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/book.10242ce7.jpg") center center / cover no-repeat;
         }
 
         .login-container {
@@ -147,7 +147,7 @@
             width: 20px;
             height: 20px;
             background-color: transparent;
-            background-image: url("https://accounts.nexuspay.vip/static/media/eye.62517b9b.svg");
+            background-image: url("https://accounts.azcend.vip/static/media/eye.62517b9b.svg");
             background-size: 20px;
             opacity: 0.5;
             border: none;
@@ -271,7 +271,7 @@
                     <button id="btn-forgot-password"
                             class="btn-link-secondary">Esqueci minha senha</button>
                     <a class="btn-signup"
-                       href="https://accounts.nexuspay.vip/signup">
+                       href="https://accounts.azcend.vip/signup">
                         <p>Não tem conta? CADASTRE-SE</p>
                     </a>
                 </div>
@@ -279,7 +279,7 @@
             <div class="form-container"
                  id="form-forgot">
                 <p class="title">Esqueceu a senha?</p>
-                <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Nexus Pay.</p>
+                <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Azcend.</p>
                 <form method="POST"
                       action="{{ route('password.email') }}">
                     @csrf

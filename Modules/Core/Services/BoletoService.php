@@ -109,7 +109,7 @@ class BoletoService
                                 }
                                 $product->photo = foxutils()->checkFileExistUrl($product->photo)
                                     ? $product->photo
-                                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.png";
+                                    : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.png";
                             }
 
                             $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -151,7 +151,7 @@ class BoletoService
                                 ->where("project_id", $sale->project_id)
                                 ->where("status", 3)
                                 ->first();
-                            $domainName = $domain->name ?? "nexuspay.vip";
+                            $domainName = $domain->name ?? "azcend.vip";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($sale->id, "sale_id") .
@@ -235,7 +235,7 @@ class BoletoService
                                             "projectName" => $projectData->name ?? "",
                                             "clientEmail" => $sale->customer_email,
                                             "clientName" => $customerFirstName ?? "",
-                                            "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                            "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                             "bodyEmail" => $data,
                                             "checkout_id" => $sale->checkout_id,
                                         ];
@@ -322,7 +322,7 @@ class BoletoService
                             ->where("project_id", $project->id)
                             ->where("status", $domainPresent->getStatus("approved"))
                             ->first();
-                        $domainName = $domain->name ?? "nexuspay.vip";
+                        $domainName = $domain->name ?? "azcend.vip";
                         $boletoLink =
                             "https://checkout.{$domainName}/order/" .
                             hashids_encode($boleto->id, "sale_id") .
@@ -425,7 +425,7 @@ class BoletoService
                                         "projectName" => $project["name"] ?? "",
                                         "clientEmail" => $clientEmail,
                                         "clientName" => $clientNameExploded[0] ?? "",
-                                        "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                        "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                         "bodyEmail" => $data,
                                         "checkout_id" => $checkout->id,
                                     ];
@@ -518,7 +518,7 @@ class BoletoService
                                 ->where("project_id", $project->id)
                                 ->where("status", 3)
                                 ->first();
-                            $domainName = $domain->name ?? "nexuspay.vip";
+                            $domainName = $domain->name ?? "azcend.vip";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($boleto->id, "sale_id") .
@@ -594,7 +594,7 @@ class BoletoService
                                                 "projectName" => $project["name"] ?? "",
                                                 "clientEmail" => $clientEmail,
                                                 "clientName" => $clientNameExploded[0] ?? "",
-                                                "templateId" => "d-1da32e1570f743e0b450f5b4de530b1b", // done
+                                                "templateId" => "d-72259c31ebab40d69d903992ac1a963d", /// done
                                                 "bodyEmail" => $data,
                                                 "checkout_id" => $checkout->id,
                                             ];
@@ -687,7 +687,7 @@ class BoletoService
                                 ->where("project_id", $project->id)
                                 ->where("status", $domainPresenter->getStatus("approved"))
                                 ->first();
-                            $domainName = $domain->name ?? "nexuspay.vip";
+                            $domainName = $domain->name ?? "azcend.vip";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($boleto->id, "sale_id") .

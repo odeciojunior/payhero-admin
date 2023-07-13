@@ -222,7 +222,7 @@ $(() => {
 
     // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
     $("img").on("error", function () {
-        $(this).attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg");
+        $(this).attr("src", "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg");
     });
 
     // CARD 4 - TEXTAREA TERMOS DE AFILIACAO

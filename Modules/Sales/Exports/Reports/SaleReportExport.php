@@ -63,7 +63,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
             ->where("project_id", $sale->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "nexuspay.vip";
+        $domainName = $domain->name ?? "azcend.vip";
         $boletoLink =
             "https://checkout.{$domainName}/order/" .
             Hashids::connection("sale_id")->encode($sale->id) .

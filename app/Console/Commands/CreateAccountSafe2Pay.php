@@ -86,9 +86,9 @@ class CreateAccountSafe2Pay extends Command
                 "ResponsibleIdentity" => foxutils()->onlyNumbers($company->user->document),
                 "ResponsiblePhone" => $companyPhoneNumber["dd"] . " " . $companyPhoneNumber["number"],
                 "Email" => $company->user->email,
-                "TechName" => "Nexuspay",
+                "TechName" => "Azcend",
                 "TechIdentity" => "02901053076",
-                "TechEmail" => "julioleichtweis@nexuspay.com.br",
+                "TechEmail" => "julioleichtweis@azcend.com.br",
                 "TechPhone" => "55996931098",
                 "IsPanelRestricted" => true,
                 "Address" => [

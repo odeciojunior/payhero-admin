@@ -142,7 +142,7 @@ class MelhorenvioService
 
     private function setDefaultHeaders(): MelhorenvioService
     {
-        $this->defaultHeaders = ["User-Agent: Nexuspay Admin (noreply@nexuspay.com.br)", "Accept: application/json"];
+        $this->defaultHeaders = ["User-Agent: Azcend Admin (noreply@azcend.com.br)", "Accept: application/json"];
 
         if ($this->getExpiration() > 0 && $this->getExpiration() < time()) {
             $this->refreshToken();

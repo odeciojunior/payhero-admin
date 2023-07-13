@@ -280,7 +280,7 @@
                         qualquer transtorno.</div>
                     <div id="linha4"
                          class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a
-                           href="mailto:noreply@nexuspay.com.br">noreply@nexuspay.com.br</a></div>
+                           href="mailto:noreply@azcend.com.br">noreply@azcend.com.br</a></div>
                 </div>
             </td>
         </tr>

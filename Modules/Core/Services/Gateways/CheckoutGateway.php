@@ -18,7 +18,7 @@ class CheckoutGateway extends GatewayAbstract
 
         $this->baseUrl = getenv("CHECKOUT_URL") . "/api/";
         if (FoxUtils::isProduction()) {
-            $this->baseUrl = "https://checkout.nexuspay.vip/api/";
+            $this->baseUrl = "https://checkout.azcend.vip/api/";
         }
 
         $this->gatewayId = $gatewayId;

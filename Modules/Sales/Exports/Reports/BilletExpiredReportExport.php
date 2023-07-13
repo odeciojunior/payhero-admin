@@ -148,7 +148,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             ->where("project_id", $sale->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "nexuspay.vip";
+        $domainName = $domain->name ?? "azcend.vip";
         $boletoLink =
             "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 
@@ -324,11 +324,11 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ];
 
                 $sendGridService->sendEmail(
-                    "noreply@nexuspay.com.br",
-                    "NexusPay",
+                    "noreply@azcend.com.br",
+                    "Azcend",
                     $userEmail,
                     $userName,
-                    "d-367113d653654dfd84abd5134f232d99", // done
+                    "d-b999b01727f14c84adf4fceab77c5d3d", /// done
                     $data
                 );
             },

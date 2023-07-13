@@ -165,7 +165,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
 
                     $client->getTransactionManager()->create($event->sale->shopify_order, [
                         "kind" => "capture",
-                        "gateway" => "NexusPay",
+                        "gateway" => "Azcend",
                         "authorization" => Hashids::connection("sale_id")->encode($event->sale->id),
                     ]);
                 } catch (Exception $e) {

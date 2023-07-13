@@ -93,7 +93,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 if (!foxutils()->isEmpty($domain)) {
                     $link = "https://checkout." . $domain->name;
                 } else {
-                    $link = "https://checkout.nexuspay.vip";
+                    $link = "https://checkout.azcend.vip";
                 }
             } else {
                 $link = env("APP_URL", "http://dev.checkout.com.br");
@@ -135,13 +135,13 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "discount" => $discount,
             ];
 
-            $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.vip");
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.vip");
             $sendGridService->sendEmail(
                 $fromEmail,
                 $project["name"],
                 $customer["email"],
                 $customer["name"],
-                "d-53b860bd114046128d035b1fbee9050c", // done
+                "d-10dd6854f2734d708cb9e83688ab16ea", /// done
                 $data
             );
         } catch (Exception $e) {

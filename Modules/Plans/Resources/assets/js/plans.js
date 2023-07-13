@@ -228,7 +228,7 @@ $(function () {
                                     .on("error", function () {
                                         $(this).attr(
                                             "src",
-                                            "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                            "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                         );
                                     });
 
@@ -500,7 +500,7 @@ $(function () {
                                         $(this)
                                             .attr(
                                                 "src",
-                                                "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                                "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                             )
                                             .fadeIn(300);
                                     });
@@ -727,7 +727,7 @@ $(function () {
                                                         $(this)
                                                             .attr(
                                                                 "src",
-                                                                "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                                                "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                                             )
                                                             .fadeIn(300);
                                                     });
@@ -1219,7 +1219,7 @@ $(function () {
                                         $(this)
                                             .attr(
                                                 "src",
-                                                "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                                "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                             )
                                             .fadeIn(300);
                                     });
@@ -1461,7 +1461,7 @@ $(function () {
                             .find(".product-photo")
                             .on("error", function () {
                                 $(this)
-                                    .attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg")
+                                    .attr("src", "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg")
                                     .fadeIn(300);
                             });
 
@@ -2790,7 +2790,7 @@ $(function () {
                             .find(".product-photo")
                             .on("error", function () {
                                 $(this)
-                                    .attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg")
+                                    .attr("src", "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg")
                                     .fadeIn(300);
                             });
 
@@ -3385,7 +3385,7 @@ $(function () {
                                         $(this)
                                             .attr(
                                                 "src",
-                                                "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                                "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                             )
                                             .fadeIn(300);
                                     });
@@ -3658,7 +3658,7 @@ $(function () {
                                                         $(this)
                                                             .attr(
                                                                 "src",
-                                                                "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
+                                                                "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
                                                             )
                                                             .fadeIn(300);
                                                     });

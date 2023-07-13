@@ -446,9 +446,9 @@ class SaleService
                 : 0,
             "tax_type" => $userTransaction->tax_type ?? 0,
             "checkout_tax" =>
-            foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
-                ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
-                : null,
+                foxutils()->onlyNumbers($userTransaction->checkout_tax) > 0
+                    ? foxutils()->formatMoney(foxutils()->onlyNumbers($userTransaction->checkout_tax) / 100)
+                    : null,
             "totalTax" => foxutils()->formatMoney($totalTax / 100),
             "total" => foxutils()->formatMoney($total / 100),
             "subTotal" => foxutils()->formatMoney(intval($subTotal) / 100),
@@ -459,9 +459,9 @@ class SaleService
             "taxaDiscount" => foxutils()->formatMoney($totalTaxPercentage / 100),
             "taxaReal" => foxutils()->formatMoney($taxaReal / 100),
             "release_date" =>
-            $userTransaction->release_date != null
-                ? $userTransaction->release_date->format("d/m/Y")
-                : "Processando",
+                $userTransaction->release_date != null
+                    ? $userTransaction->release_date->format("d/m/Y")
+                    : "Processando",
             "has_withdrawal" => $userTransaction->withdrawal_id,
             "affiliate_comission" => $affiliateComission,
             "refund_value" => foxutils()->formatMoney(intval($sale->refund_value) / 100),
@@ -471,7 +471,7 @@ class SaleService
                 ? $sale->saleRefundHistory->first()->refund_observation
                 : null,
             "user_changed_observation" =>
-            $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
+                $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             "company_name" => $companyName,
         ];
     }
@@ -521,7 +521,7 @@ class SaleService
 
                 $product["photo"] = foxutils()->checkFileExistUrl($product["photo"])
                     ? $product["photo"]
-                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.png";
+                    : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.png";
 
                 $productsSale[] = $product;
             }
@@ -587,9 +587,9 @@ class SaleService
         $foxValue = $sale->transactions->whereNull("company_id")->first()->value ?? 0;
         $inviteValue =
             $sale->transactions
-            ->whereNotNull("company_id")
-            ->where("type", 3)
-            ->first()->value ?? 0;
+                ->whereNotNull("company_id")
+                ->where("type", 3)
+                ->first()->value ?? 0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;
 

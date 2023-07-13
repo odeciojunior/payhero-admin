@@ -186,7 +186,7 @@ class ProductService
 
                     $product["photo"] = FoxUtils::checkFileExistUrl($product["photo"])
                         ? $product["photo"]
-                        : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.png";
+                        : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.png";
                     $product["custom_products"] = SaleAdditionalCustomerInformation::select(
                         "id",
                         "type_enum",

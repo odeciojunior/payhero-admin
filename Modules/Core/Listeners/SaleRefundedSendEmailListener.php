@@ -92,13 +92,13 @@ class SaleRefundedSendEmailListener implements ShouldQueue
                 "installments_amount" => $sale->installments_amount,
                 "installments_value" => number_format($sale->installments_value, 2, ",", "."),
             ];
-            $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.com.br");
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
             $emailService->sendEmail(
                 $fromEmail,
                 $project["name"],
                 $customer["email"],
                 $customer["name"],
-                "d-c0f94c743d1f483292df43e9f408e7bd", // done
+                "d-4820590114cf40aa9780a05eaca48404", /// done
                 $data
             );
         } catch (Exception $e) {

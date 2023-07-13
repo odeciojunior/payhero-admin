@@ -241,7 +241,7 @@ class ActiveCampaignService
                         return response()->json(["message" => "Ocorreu algum erro"], 400);
                     }
 
-                    $domainName = !empty($domain->name) ? $domain->name : "nexuspay.com.br";
+                    $domainName = !empty($domain->name) ? $domain->name : "azcend.com.br";
                     $trackingCode = "";
                     $trackingUrl = "";
                     foreach ($trackings as $tracking) {

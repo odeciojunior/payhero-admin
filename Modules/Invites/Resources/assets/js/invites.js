@@ -535,12 +535,12 @@ $(document).ready(function () {
 
                             var linkInvite = "";
                             var companyId = $(".company-navbar").val();
-                            linkInvite = "https://accounts.nexuspay.vip/signup?i=" + companyId;
+                            linkInvite = "https://accounts.azcend.vip/signup?i=" + companyId;
 
                             $("#invite-link").val(linkInvite);
 
                             $("#select-company-list").on("change", function () {
-                                linkInvite = "https://accounts.nexuspay.vip/signup?i=" + $(this).val();
+                                linkInvite = "https://accounts.azcend.vip/signup?i=" + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();
                             });

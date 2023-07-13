@@ -65,7 +65,7 @@
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            background: url(https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/gradient-bg.png) bottom left no-repeat;
+            background: url(https://azcend-digital-products.s3.amazonaws.com/admin/admin-002/gradient-bg.png) bottom left no-repeat;
         }
     </style>
     @yield('content')

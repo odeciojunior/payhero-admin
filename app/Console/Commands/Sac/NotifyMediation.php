@@ -73,17 +73,17 @@ class NotifyMediation extends Command
                         ];
 
                         $sendGridService->sendEmail(
-                            "noreply@nexuspay.com.br",
-                            "NexusPay",
+                            "noreply@azcend.com.br",
+                            "Azcend",
                             $customerEmail,
                             $customerName,
-                            "d-16d46e19ed20447e91876506d22ebe0f", // done
+                            "d-fcf27621590d4c448ed9a2b3666f4de2", /// done
                             $data
                         );
                     } else {
                         $smsService->sendSms(
                             $customer->telephone,
-                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.nexuspay.vip e solicite mediação."
+                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.azcend.vip e solicite mediação."
                         );
                     }
 

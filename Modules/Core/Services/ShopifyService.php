@@ -402,7 +402,7 @@ class ShopifyService
         }
 
         if (FoxUtils::isProduction()) {
-            $this->createShopifyIntegrationWebhook($projectId, "https://admin.nexuspay.vip/postback/shopify/");
+            $this->createShopifyIntegrationWebhook($projectId, "https://admin.azcend.vip/postback/shopify/");
         }
 
         $user = User::find($userId);
@@ -807,7 +807,7 @@ class ShopifyService
             "billing_address" => $billingAddress,
             "shipping_lines" => $shipping,
             "note_attributes" => [
-                "token_nexuspay" => hashids_encode($sale->checkout_id),
+                "token_azcend" => hashids_encode($sale->checkout_id),
             ],
             "total_price" => substr_replace($totalValue, ".", strlen($totalValue) - 2, 0),
         ];
@@ -818,7 +818,7 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
-                        "gateway" => "nexuspay",
+                        "gateway" => "azcend",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "sale",
                         "status" => "success",
@@ -834,7 +834,7 @@ class ShopifyService
                     "financial_status" => $sale->status == 1 ? "paid" : "pending",
                     "transactions" => [
                         [
-                            "gateway" => "nexuspay",
+                            "gateway" => "azcend",
                             "authorization" => hashids_encode($sale->id, "sale_id"),
                             "kind" => "sale",
                             "status" => $sale->status == 1 ? "success" : "pending",
@@ -1015,7 +1015,7 @@ class ShopifyService
                 $orderData["total_price"] = $orderPrice + $totalValue;
                 if ($sale->payment_method == 1) {
                     $orderData["transactions"][] = [
-                        "gateway" => "nexuspay",
+                        "gateway" => "azcend",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "sale",
                         "status" => "success",
@@ -1119,7 +1119,7 @@ class ShopifyService
                     //                    $this->receivedData = $result;
                 } else {
                     $transaction = [
-                        "gateway" => "nexuspay",
+                        "gateway" => "azcend",
                         "authorization" => hashids_encode($sale->id, "sale_id"),
                         "kind" => "refund",
                         "source" => "external",
@@ -1309,10 +1309,10 @@ class ShopifyService
                 "quantity" => 1,
                 "requires_shipping" => true,
                 "sku" => 1234566789,
-                "title" => "Nexus Pay Test",
+                "title" => "Azcend Test",
                 "variant_id" => 20000,
-                "variant_title" => "Nexus Pay Test",
-                "name" => "Nexus Pay Test",
+                "variant_title" => "Azcend Test",
+                "name" => "Azcend Test",
                 "gift_card" => false,
             ];
 
@@ -1327,7 +1327,7 @@ class ShopifyService
                 "phone" => "+5524999999999",
                 "province" => "RS",
                 "zip" => "",
-                "name" => "Nexus Pay",
+                "name" => "Azcend",
                 "country_code" => "BR",
                 "province_code" => "",
             ];
@@ -1335,7 +1335,7 @@ class ShopifyService
             $orderData = [
                 "accepts_marketing" => false,
                 "currency" => "BRL",
-                "email" => "test@nexuspay.com.br",
+                "email" => "test@azcend.com.br",
                 "phone" => "+5524999999999",
                 "first_name" => "Cloud",
                 "last_name" => "Fox",
@@ -1347,7 +1347,7 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
-                        "gateway" => "nexuspay",
+                        "gateway" => "azcend",
                         "authorization" => "PERMISSIONS_TEST",
                         "kind" => "sale",
                         "status" => "success",

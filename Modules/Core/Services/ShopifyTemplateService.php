@@ -274,8 +274,8 @@ class ShopifyTemplateService
 
     public function removeScript(string $html, string $scriptName)
     {
-        $starComment = "<!-- start nexuspay {$scriptName} script -->";
-        $endComment = "<!-- end nexuspay {$scriptName} script -->";
+        $starComment = "<!-- start azcend {$scriptName} script -->";
+        $endComment = "<!-- end azcend {$scriptName} script -->";
 
         $startScriptPos = strpos($html, $starComment);
         $endScriptPos = strpos($html, $endComment);

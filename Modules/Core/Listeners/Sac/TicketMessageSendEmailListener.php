@@ -51,13 +51,13 @@ class TicketMessageSendEmailListener implements ShouldQueue
                     "ticket_code" => Hashids::encode($ticketMessage->ticket->id),
                 ];
 
-                $fromEmail = "noreply@" . ($domain ? $domain->name : "nexuspay.com.br");
+                $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
                 $sendGridService->sendEmail(
                     $fromEmail,
                     $project->name,
                     $customer->email,
                     $customer->name,
-                    "d-ef68300933364220a372e116b63f877e", // done
+                    "d-3b639852468c4e90b56fa953c5ca0303", /// done
                     $data
                 );
             }

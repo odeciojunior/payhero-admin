@@ -20,7 +20,7 @@ class DemoUsersSeeder extends Seeder
         $userStore = User::create([
             "name" => "Lojista Demo",
             "email" => "lojista@demo.com.br",
-            "password" => bcrypt("nexuspay"),
+            "password" => bcrypt("azcend"),
             "document" => "00000000000",
             "account_is_approved" => true,
             "cellphone" => "5511999999999",
