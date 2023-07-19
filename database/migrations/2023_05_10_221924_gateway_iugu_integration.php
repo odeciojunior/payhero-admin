@@ -15,12 +15,12 @@ return new class extends Migration {
     {
         DB::statement("INSERT INTO `gateways`
         (`id`,`gateway_enum`,`name`,`json_config`,`production_flag`,`enabled_flag`,`deleted_at`,`created_at`,`updated_at`)
-        VALUES (7,4,'iugu_production','WwJUT0tFTgIaAhFiEmYWF2VkEGYSEBMTGGETYWFkFGIWFREZYWQWEhQTZGUSF2MXY2NiEhQYZRYQYhRhZhUYE2NhEWMYYxYVEhUCDAJBQ0NPVU5Uf0lEAhoCFRYXERISGWFmFWUYFGQTERkUYWUSExZkGWUZERJlFBYCXQ==',1,1,null,NOW(),NOW());");
+        VALUES (7,4,'iugu_production','WwJUT0tFTgIaAhIYFWZjFhAUFmMQZBgZFWUSFBQSZBZiZmZlFxdlYhcQFGUYFRQUFmYZZWQREhcXEBcSFGFhGBFhGRViYxUWFRECDAJBQ0NPVU5Uf0lEAhoCF2RmFhRiFhEQGBkVFGJkZRkXFhkSYWRjF2USY2VkGRgCXQ==',1,1,null,NOW(),NOW());");
 
         $jsonConfig2 = FoxUtils::xorEncrypt(
             json_encode([
-                "token" => "EAC7F953BF13867FDB4C32FFCC2955A48F1E6507C37F940CA7B561292B42B391",
-                "account_id" => "5671229AF5E84D3194AE236D9E912E46",
+                "token" => "8E66FE55F6D63F4D965BB65B7A4D0B8E0D28DBFBA3AFBE3E511D1ED8F5D4DC1E",
+                "account_id" => "7DF64B6108954BDE97692ADC7E2CED98",
             ])
         );
         DB::statement("INSERT INTO `gateways`
