@@ -31,7 +31,7 @@ jobs:
                   aws ssm send-command \
                   --document-name "AWS-RunShellScript" \
                   --document-version "1" \
-                  --targets Key=tag:Name,Values=app-admin-nxp-prd \
+                  --targets Key=tag:Name,Values=admin-azc-prd \
                   --parameters '
                         {
                             "commands": [
@@ -42,7 +42,7 @@ jobs:
                                 "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard'"'"'",
                                 "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br pull'"'"'",
                                 "rm -rf /var/www/html/admin.azcend.com.br/storage",
-                                "sudo -H -u ubuntu bash -c '"'"'ln -s /var/www/html/efs-admin-nxp-prd/storage /var/www/html/admin.azcend.com.br/storage'"'"'",
+                                "sudo -H -u ubuntu bash -c '"'"'ln -s /var/www/html/efs-admin-azc-prd/storage /var/www/html/admin.azcend.com.br/storage'"'"'",
                                 "chown ubuntu:www-data /var/www/html/admin.azcend.com.br/storage",
                                 "service nginx start",
                                 "echo '"'"'> Resetando o Supervisor'"'"'",
