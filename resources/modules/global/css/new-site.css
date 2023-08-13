@@ -933,7 +933,7 @@ h3 {
 }
 
 .btn-primary:hover {
-    background-color: #ff7a20;
+    background-color: #00b7ff;
 }
 
 .btn-success,
@@ -1006,7 +1006,7 @@ h3 {
 }
 
 .site-menubar {
-    background: #263238;
+    background: #191919;
 }
 
 .site-menu-item.active {

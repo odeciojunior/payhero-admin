@@ -21,7 +21,7 @@ body {
 }
 
 .menu-active > .bg-menu {
-    background: #ff7a20;
+    background: #00b7ff;
     border-radius: 0 44px 44px 0;
     display: inline-block;
 }

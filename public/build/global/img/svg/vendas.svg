@@ -11,8 +11,8 @@ aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
   stroke="#ffffff" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
   stroke-linecap="round"></circle>
   <circle data-name="layer1" cx="46" cy="22" r="16" fill="none"
-  stroke="#ff7a20" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
+  stroke="#00b7ff" stroke-miterlimit="10" stroke-width="2" stroke-linejoin="round"
   stroke-linecap="round"></circle>
-  <path data-name="layer1" fill="none" stroke="#ff7a20" stroke-miterlimit="10"
+  <path data-name="layer1" fill="none" stroke="#00b7ff" stroke-miterlimit="10"
   stroke-width="2" d="M53 18l-8 9-5-5" stroke-linejoin="round" stroke-linecap="round"></path>
 </svg>

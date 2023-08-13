@@ -5109,7 +5109,7 @@ fieldset[disabled] .btn-pure:hover {
 .navbar-brand-logo {
     display: inline-block;
     height: 2.286rem;
-    margin-top: -0.357rem;
+    /* margin-top: -0.357rem; */
 }
 .navbar-brand-text {
     margin-left: 0.429rem;
