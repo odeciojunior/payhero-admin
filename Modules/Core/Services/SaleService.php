@@ -521,7 +521,7 @@ class SaleService
 
                 $product["photo"] = foxutils()->checkFileExistUrl($product["photo"])
                     ? $product["photo"]
-                    : "https://azcend-digital-products.s3.amazonaws.com/admin/produto.png";
+                    : "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.png";
 
                 $productsSale[] = $product;
             }

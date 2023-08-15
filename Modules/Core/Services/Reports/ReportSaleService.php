@@ -602,7 +602,7 @@ class ReportSaleService
                 );
 
                 $result->image = empty($result->image)
-                    ? "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
+                    ? "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
                     : $result->image;
                 $result->percentage = $index == 0 ? "100%" : $percentage . "%";
                 $result->color = $this->getColors($index);

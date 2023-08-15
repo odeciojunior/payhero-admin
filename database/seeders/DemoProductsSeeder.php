@@ -24,7 +24,7 @@ class DemoProductsSeeder extends Seeder
             "project_id" => 1,
             "description" => "Diversas cores ",
             "photo" =>
-                "https://azcend-digital-products.s3.amazonaws.com/admin/yWZ8XSaNH1oZU7P4EtWpgn7kjWoPPwxOGG4NI3Q0.png",
+                "https://nexuspay-digital-products.s3.amazonaws.com/admin/yWZ8XSaNH1oZU7P4EtWpgn7kjWoPPwxOGG4NI3Q0.png",
             "price" => 210,
         ]);
 
@@ -34,7 +34,7 @@ class DemoProductsSeeder extends Seeder
             "project_id" => 1,
             "description" => "Android/IOS",
             "photo" =>
-                "https://azcend-digital-products.s3.amazonaws.com/admin/2rkbIwt9ljoNUqRWH2f1kWjToTRjrJu5vDBQIrVn.png",
+                "https://nexuspay-digital-products.s3.amazonaws.com/admin/2rkbIwt9ljoNUqRWH2f1kWjToTRjrJu5vDBQIrVn.png",
             "price" => 140,
         ]);
 
@@ -44,7 +44,7 @@ class DemoProductsSeeder extends Seeder
             "project_id" => 1,
             "description" => "Diversos tamanhos",
             "photo" =>
-                "https://azcend-digital-products.s3.amazonaws.com/admin/krsodNjYgN7up9LNPlMsV6mSLnTR1hAGwY5s8V5W.png",
+                "https://nexuspay-digital-products.s3.amazonaws.com/admin/krsodNjYgN7up9LNPlMsV6mSLnTR1hAGwY5s8V5W.png",
             "price" => 112,
         ]);
 
@@ -54,7 +54,7 @@ class DemoProductsSeeder extends Seeder
             "project_id" => 1,
             "description" => "USB, Som Surround 7.1, Drivers 50mm",
             "photo" =>
-                "https://azcend-digital-products.s3.amazonaws.com/admin/fhwhvhynQ914DZAtoLtakcaGRYb5tGRPjUU2sOuQ.png",
+                "https://nexuspay-digital-products.s3.amazonaws.com/admin/fhwhvhynQ914DZAtoLtakcaGRYb5tGRPjUU2sOuQ.png",
             "price" => 130,
         ]);
     }

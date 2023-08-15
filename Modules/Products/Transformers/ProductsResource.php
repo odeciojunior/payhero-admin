@@ -44,7 +44,7 @@ class ProductsResource extends JsonResource
             "description" => $this->description,
             "image" =>
                 $this->photo == ""
-                    ? "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg"
+                    ? "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg"
                     : $this->photo,
             "link" => "/api/products/" . $this->id_code . "/edit",
             "created_at" => Carbon::parse($this->created_at)->format("d/m/Y"),

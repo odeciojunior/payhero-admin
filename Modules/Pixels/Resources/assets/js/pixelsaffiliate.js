@@ -4,16 +4,16 @@ const statusPixel = {
 };
 
 const srcPlatforms = {
-    google_analytics: "https://azcend-digital-products.s3.amazonaws.com/admin/old-analytics.png",
-    google_analytics_four: "https://azcend-digital-products.s3.amazonaws.com/admin/analytics.png",
-    google_adwords: "https://azcend-digital-products.s3.amazonaws.com/admin/google-ads.png",
-    facebook: "https://azcend-digital-products.s3.amazonaws.com/admin/facebook.png",
-    outbrain: "https://azcend-digital-products.s3.amazonaws.com/admin/outbrain.png",
-    taboola: "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/taboola.png",
-    pinterest: "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/pinterest",
-    uol_ads: "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/uol-ads.png",
-    tiktok: "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/tiktok",
-    kwai: "https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/kwai",
+    google_analytics: "https://nexuspay-digital-products.s3.amazonaws.com/admin/old-analytics.png",
+    google_analytics_four: "https://nexuspay-digital-products.s3.amazonaws.com/admin/analytics.png",
+    google_adwords: "https://nexuspay-digital-products.s3.amazonaws.com/admin/google-ads.png",
+    facebook: "https://nexuspay-digital-products.s3.amazonaws.com/admin/facebook.png",
+    outbrain: "https://nexuspay-digital-products.s3.amazonaws.com/admin/outbrain.png",
+    taboola: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/taboola.png",
+    pinterest: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/pinterest",
+    uol_ads: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/uol-ads.png",
+    tiktok: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/tiktok",
+    kwai: "https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/kwai",
 };
 
 $(function () {

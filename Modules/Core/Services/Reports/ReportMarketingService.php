@@ -224,7 +224,7 @@ class ReportMarketingService
             }
 
             foreach ($data as &$plan) {
-                $plan->photo = "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg";
+                $plan->photo = "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg";
                 if (!$showFromApi) {
                     $plan->photo = $plan->products()->first()->photo;
                 }

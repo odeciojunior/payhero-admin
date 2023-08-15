@@ -7,7 +7,7 @@
                 <img class="review-photo img-fluid rounded-circle p-0 m-0"
                      width="40"
                      height="40"
-                     src="https://azcend-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png">
+                     src="https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-001/user-default.png">
                 <b class="pl-2 review-name"></b>
             </div>
 

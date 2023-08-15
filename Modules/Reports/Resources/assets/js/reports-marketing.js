@@ -424,7 +424,7 @@ function loadFrequenteSales() {
                                         data-toggle="tooltip"
                                         title="${item.name}"
                                     >
-                                        <img width="37px" height="37px" onerror=this.src='https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg' src="${item.photo}" alt="${item.description}">
+                                        <img width="37px" height="37px" onerror=this.src='https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg' src="${item.photo}" alt="${item.description}">
                                     </div>
                                     <div>
                                         <span class="desc-product">${item.name}</span>
