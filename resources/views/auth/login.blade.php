@@ -11,17 +11,17 @@
     <title>Admin - Login</title>
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon"
+    {{-- <link rel="apple-touch-icon"
           sizes="180x180"
-          href="{{ mix('build/global/img/apple-touch-icon.png') }}">
+          href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}"> --}}
     <link rel="icon"
           type="image/png"
           sizes="32x32"
-          href="{{ mix('build/global/img/favicon-32x32.png') }}">
-    <link rel="icon"
+          href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
+    {{-- <link rel="icon"
           type="image/png"
           sizes="16x16"
-          href="{{ mix('build/global/img/favicon-16x16.png') }}">
+          href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}"> --}}
     <link rel="mask-icon"
           href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
           color="#5bbad5">
@@ -186,7 +186,7 @@
             border: 1px solid #FFFFFF;
             border-radius: 4px;
             text-transform: uppercase;
-            background: #02ce7c;
+            background: #191919;
             color: #FFFFFF;
         }
 
@@ -214,7 +214,7 @@
             display: block;
             margin-top: 18px;
             text-decoration: none;
-            color: #02ce7c;
+            color: #00b7ff;
         }
 
         @media (max-width: 768px) {
