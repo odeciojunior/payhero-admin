@@ -67,23 +67,7 @@
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KDD46QX');
-    </script>
+
     <!-- End Google Tag Manager -->
     <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
     <script>
@@ -92,14 +76,6 @@
 </head>
 
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KDD46QX"
-                height="0"
-                width="0"
-                style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
     @include('layouts.bonus-balance')
 
@@ -160,23 +136,6 @@
 
     @stack('scripts')
     @stack('scriptsModal')
-
-    @if (env('APP_ENV', 'production') == 'production')
-        <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
-        @if (\Auth::user())
-            <script type="text/javascript">
-                window.$crisp = [];
-                window.CRISP_WEBSITE_ID = "906ce701-62be-4b4c-91e1-a8b71a74e82a";
-                (function() {
-                    d = document;
-                    s = d.createElement("script");
-                    s.src = "https://client.crisp.chat/l.js";
-                    s.async = 1;
-                    d.getElementsByTagName("head")[0].appendChild(s);
-                })();
-            </script>
-        @endif
-    @endif
 </body>
 
 </html>
