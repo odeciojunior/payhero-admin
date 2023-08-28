@@ -37,7 +37,14 @@ class DemoCompaniesTableSeeder extends Seeder
             "contract_document_status" => 3,
             "capture_transaction_enabled" => 1,
             "account_type" => 1,
-            "credit_card_release_money_days" => 15,
+            "credit_card_release_money_days" => 30,
+            "bank_slip_release_money_days" => 3,
+            "pix_release_money_days" => 1,
+            "situation" => json_encode([
+                "situation" => "active",
+                "situation_enum" => 1,
+                "date_check_situation" => now(),
+            ]),
         ]);
     }
 }
