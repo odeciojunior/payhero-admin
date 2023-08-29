@@ -38,6 +38,7 @@ class NotifyFinancesExportedListener
                 "name" => $userName,
                 "report_name" => "Relatório de Finanças",
                 "download_link" => $downloadLink,
+                "subject" => "Relatório",
             ];
 
             $sendGridService->sendEmail(

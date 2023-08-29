@@ -36,6 +36,7 @@ class NotifyExtractExportedListener
                 "name" => $userName,
                 "report_name" => "Relatório extrato financeiro",
                 "download_link" => $downloadLink,
+                "subject" => "Relatório",
             ];
 
             $sendGridService->sendEmail(

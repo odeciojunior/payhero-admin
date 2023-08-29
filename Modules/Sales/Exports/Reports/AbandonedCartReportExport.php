@@ -205,6 +205,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     "name" => $userName,
                     "report_name" => "Relatório de Recuperação",
                     "download_link" => $downloadLink,
+                    "subject" => "Relatório",
                 ];
 
                 $sendGridService->sendEmail(

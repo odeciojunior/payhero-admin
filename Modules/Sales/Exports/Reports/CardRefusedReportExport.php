@@ -315,6 +315,7 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
                     "name" => $userName,
                     "report_name" => "Relatório de Recuperação",
                     "download_link" => $downloadLink,
+                    "subject" => "Relatório",
                 ];
 
                 $sendGridService->sendEmail(

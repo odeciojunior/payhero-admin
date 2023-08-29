@@ -34,6 +34,7 @@ class NotifyWithdrawalsExportedListener
                 "name" => $userName,
                 "report_name" => "Relatório de Transferências",
                 "download_link" => $downloadLink,
+                "subject" => "Relatório",
             ];
 
             $sendGridService->sendEmail(

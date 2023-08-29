@@ -35,6 +35,7 @@ class NotifySalesExportedListener
             $data = [
                 "name" => $userName,
                 "report_name" => "Relatório de Vendas",
+                "subject" => "Relatório",
                 "download_link" => $downloadLink,
             ];
 

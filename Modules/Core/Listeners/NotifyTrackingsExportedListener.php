@@ -42,6 +42,7 @@ class NotifyTrackingsExportedListener implements ShouldQueue
             $data = [
                 "name" => $userName,
                 "report_name" => "Relatório de Códigos de Rastreio",
+                "subject" => "Relatório",
                 "download_link" => $downloadLink,
             ];
 
