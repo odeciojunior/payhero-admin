@@ -40,11 +40,11 @@ class DemoCompaniesTableSeeder extends Seeder
             "credit_card_release_money_days" => 30,
             "bank_slip_release_money_days" => 3,
             "pix_release_money_days" => 1,
-            "situation" => json_encode([
+            "situation" => [
                 "situation" => "active",
                 "situation_enum" => 1,
                 "date_check_situation" => now(),
-            ]),
+            ],
         ]);
     }
 }
