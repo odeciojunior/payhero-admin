@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyBalanceService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Mobile\Transformers\SalesResource;
 use Modules\Mobile\Transformers\StatementsResource;
 
@@ -47,9 +48,7 @@ class MobileController extends Controller
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
                 $status = explode(",", $request->status);
-                $status = in_array(7, $status)
-                    ? array_merge($status, [22])
-                    : $status;
+                $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
             }
 
             if (!empty($status)) {
@@ -58,17 +57,15 @@ class MobileController extends Controller
                 });
             }
 
-            if ($request->has("limit")) {
-                $sales->limit($request->limit);
+            if (!empty($request->date_range)) {
+                $dateRange = FoxUtils::validateDateRange($request->date_range);
+                $sales->whereBetween("start_date", [$dateRange[0] . " 00:00:00", $dateRange[1] . " 23:59:59"]);
             }
 
-            return SalesResource::collection($sales->get());
+            return SalesResource::collection($sales->paginate($request->limit ?? 10));
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Erro ao carregar vendas"],
-                Response::HTTP_BAD_REQUEST
-            );
+            return response()->json(["message" => "Erro ao carregar vendas"], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -88,10 +85,7 @@ class MobileController extends Controller
             $company = Company::find($companyId);
 
             if (!$company) {
-                return response()->json(
-                    ["message" => "Empresa não encontrada"],
-                    Response::HTTP_BAD_REQUEST
-                );
+                return response()->json(["message" => "Empresa não encontrada"], Response::HTTP_BAD_REQUEST);
             }
 
             $companyService = new CompanyBalanceService($company);
@@ -100,10 +94,7 @@ class MobileController extends Controller
             return StatementsResource::collection($statementResumes);
         } catch (Exception $e) {
             report($e);
-            return response()->json(
-                ["message" => "Erro ao carregar dados"],
-                Response::HTTP_BAD_REQUEST
-            );
+            return response()->json(["message" => "Erro ao carregar dados"], Response::HTTP_BAD_REQUEST);
         }
     }
 }
