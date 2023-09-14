@@ -172,7 +172,7 @@
 }
 
 .badge.badge-danger {
-    background-color: #E81414;
+    background-color: #e81414;
 }
 
 .btn-sacar {
@@ -236,8 +236,8 @@
 
 .nav-btn.active,
 #pagination-statement .jp-current {
-    background-color: #2E85EC !important;
-    border: 1px solid #2E85EC;
+    background-color: #2e85ec !important;
+    border: 1px solid #2e85ec;
     border-radius: 4px;
     opacity: 1 !important;
     color: white !important;
@@ -518,7 +518,8 @@ select,
     color: #70707e;
 }
 #bt-withdrawal {
-    background-color: #1be4a8;
+    background: rgb(25, 25, 25);
+    background: linear-gradient(90deg, rgba(25, 25, 25, 1) 0%, rgba(2, 114, 158, 1) 100%, rgba(0, 0, 0, 1) 100%);
     border-radius: 8px;
 }
 

@@ -2166,10 +2166,10 @@
                         <div class="save-changes-button-group">
                             <button id="cancel_button"
                                     type="button"
-                                    class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
+                                    class="font-size-16 btn btn-light border border-white mr-10 px-15 px-sm-40">Cancelar</button>
                             <button type="submit"
                                     form="checkout_editor"
-                                    class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar
+                                    class="font-size-16 btn btn-primary-save mr-40 mr-sm-0 px-15 px-sm-40">Salvar
                                 alterações</button>
                         </div>
                     </div>

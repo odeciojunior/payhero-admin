@@ -665,31 +665,38 @@ a.label {
 .nephritis.s-border-left,
 .nephritis.s-border-top,
 .nephritis.s-border-bottom {
-    background: #97e7ff !important;
+    background: #1b1b1b !important;
 }
 
 .emerland.s-border-right,
 .emerland.s-border-left,
 .emerland.s-border-top,
 .emerland.s-border-bottom {
-    background: #76f9ff !important;
+    background: #ffaa02 !important;
 }
 
 .green.s-border-right,
 .green.s-border-left,
 .green.s-border-top,
 .green.s-border-bottom {
-    background: #000096 !important;
+    background: #38be00 !important;
 }
 
 .turquoise.s-border-right,
 .turquoise.s-border-left,
 .turquoise.s-border-top,
 .turquoise.s-border-bottom {
-    background: #00b7ff !important;
+    background: #000083 !important;
 }
 
-.s-btn {
+.dark-gray.s-border-right,
+.dark-gray.s-border-left,
+.dark-gray.s-border-top,
+.dark-gray.s-border-bottom {
+    background: #191919 !important;
+}
+
+#2e85ec .s-btn {
     background-color: #ffffff;
     border: 2px solid #2626264d;
     font: normal normal bold 24px/30px "Inter";
@@ -2515,7 +2522,8 @@ tbody td {
 }
 
 .alert-demo-account .row {
-    background-color: #2e85ec;
+    background: rgb(25, 25, 25);
+    background: linear-gradient(97deg, rgba(25, 25, 25, 1) 0%, rgba(0, 183, 255, 1) 78%, rgba(151, 231, 255, 1) 100%);
     color: white;
     border-radius: 0;
     text-align: center;
@@ -3344,7 +3352,7 @@ tbody td {
     padding-right: 50px;
     padding-top: 12px !important;
     background-color: #f4f4f4;
-    color: #15034c;
+    color: #404040;
     font-weight: 600;
     font-size: 16px;
 }

@@ -224,17 +224,17 @@
                                         </div>
 
                                         <!-- <div
-                                                 class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
-                                                <label class="switch mr-2">
-                                                    <input type="checkbox"
-                                                           id='cashback'
-                                                           name="cashback"
-                                                           class='check shopify_error'
-                                                           value='0'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                                <span class="switch-text"> Cashback </span>
-                                            </div> -->
+                                                                 class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                                                <label class="switch mr-2">
+                                                                    <input type="checkbox"
+                                                                           id='cashback'
+                                                                           name="cashback"
+                                                                           class='check shopify_error'
+                                                                           value='0'>
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                                <span class="switch-text"> Cashback </span>
+                                                            </div> -->
                                     </div>
                                 </div>
 
@@ -313,7 +313,7 @@
                                     <h4 id="commission"
                                         class="number"></h4>
                                 </div>
-                                <div class="s-border-right green"></div>
+                                <div class="s-border-right dark-gray"></div>
                             </div>
                         </div>
 
@@ -325,7 +325,7 @@
                                     <h4 id="total"
                                         class="number"></h4>
                                 </div>
-                                <div class="s-border-right green"></div>
+                                <div class="s-border-right dark-gray"></div>
                             </div>
                         </div>
 

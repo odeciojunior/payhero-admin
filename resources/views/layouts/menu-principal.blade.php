@@ -1,7 +1,7 @@
 <!-- BARRA SUPERIOR DE NAVEGACAO -->
 <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega"
      role="navigation"
-     style="background-color: white">
+     style="background-color: #f4f4f4">
 
     <!-- BOTAO DE HAMBURGUER NO MOBILE-->
     <button type="button"
@@ -14,7 +14,7 @@
     <!-- Azcend LOGO -->
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
          data-toggle="gridmenu"
-         style="background-color: #ffffff; overflow: hidden; top:0px; box-shadow:none;">
+         style="background-color: #191919; overflow: hidden; top:0px; box-shadow:none;">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
              src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}"

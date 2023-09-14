@@ -4,7 +4,7 @@
     justify-content: space-between;
 }
 
-.color-options>div {
+.color-options > div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,12 +16,12 @@
     border-radius: 5px;
 }
 
-.color-options>div>i {
+.color-options > div > i {
     display: none;
     font-size: 20px;
 }
 
-.color-options>div.active>i {
+.color-options > div.active > i {
     display: inline;
 }
 
@@ -98,8 +98,8 @@
     border-bottom: 3px solid #2e85ec;
 }
 
-#tab_configuration:hover>img,
-.nav-tabs .nav-link.active>img {
+#tab_configuration:hover > img,
+.nav-tabs .nav-link.active > img {
     filter: invert(54%) sepia(87%) saturate(1211%) hue-rotate(188deg) brightness(98%) contrast(93%);
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -122,7 +122,7 @@
     border-width: 1px !important;
 }
 
-.rounded-info>span {
+.rounded-info > span {
     -webkit-text-stroke: 1px;
 }
 
@@ -250,11 +250,11 @@
     margin: 3px 5px -1px !important;
 }
 
-.nav-tabs-horizontal li:first-child>a {
+.nav-tabs-horizontal li:first-child > a {
     margin-left: 0 !important;
 }
 
-.nav-tabs-horizontal li:last-child>a {
+.nav-tabs-horizontal li:last-child > a {
     margin-right: 0 !important;
 }
 
@@ -368,12 +368,12 @@
     border-radius: 60px;
 }
 
-#first-click[type="radio"]:checked+label {
+#first-click[type="radio"]:checked + label {
     background-color: #2e85ec !important;
     color: #fff;
 }
 
-#last-click[type="radio"]:checked+label {
+#last-click[type="radio"]:checked + label {
     background-color: #2e85ec !important;
     color: #fff;
 }
@@ -465,7 +465,7 @@
 
 .loader {
     display: none;
-    border: 5px solid #2e85ec;
+    border: 5px solid #00b7ff;
     animation: spin 2s linear infinite;
     border-top: 5px solid #eee;
     border-right: 5px solid #eee;
@@ -502,31 +502,32 @@
 /* /////////////////////////// END FOOTER CARD */
 
 /* Page titles */
-.page-title>a,
-.page-title>a>span {
+.page-title > a,
+.page-title > a > span {
     color: #707070;
 }
 
-.table tbody>tr>td {
-    font-family: 'Inter';
+.table tbody > tr > td {
+    font-family: "Inter";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
 }
 
-.table thead>tr>td, .table thead>tr>th {
-    font-family: 'Inter';
+.table thead > tr > td,
+.table thead > tr > th {
+    font-family: "Inter";
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
-    color: #15034C !important;
+    color: #15034c !important;
 }
 
-.page-project .table thead>tr>td {
-    background-color: #FBFBFB !important;
+.page-project .table thead > tr > td {
+    background-color: #fbfbfb !important;
 }
 
-.table thead>tr>td:first-child {
+.table thead > tr > td:first-child {
     padding: 16px 16px 16px 32px;
 }
 
@@ -536,16 +537,16 @@
 }
 
 .badge-danger {
-    background-color: #E81414;
+    background-color: #e81414;
 }
 
 .badge-disable {
-    background-color: #EBEBEB;
+    background-color: #ebebeb;
     color: #999999;
 }
 
-#divCustomDomain>table thead>tr>td,
-#divCustomDomain thead>tr>th {
+#divCustomDomain > table thead > tr > td,
+#divCustomDomain thead > tr > th {
     border-top: none !important;
     padding: 25px 16px;
 }

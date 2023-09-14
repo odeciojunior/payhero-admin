@@ -199,7 +199,7 @@ li.select2-selection__choice {
 }
 
 .quick-list > li a:hover {
-    color: #2e85ec;
+    color: #00b7ff;
 
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -254,7 +254,9 @@ li.select2-selection__choice {
 }
 
 .btn-primary-1 {
-    background-color: #263238;
+    /* background-color: #191919; */
+    background: rgb(25, 25, 25);
+    background: linear-gradient(90deg, rgba(25, 25, 25, 1) 0%, rgba(2, 114, 158, 1) 100%, rgba(0, 0, 0, 1) 100%);
     color: #fff;
 }
 

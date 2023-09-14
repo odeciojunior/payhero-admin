@@ -236,7 +236,9 @@ body {
     background-color: rgba(255, 255, 255, 0.02);
 }
 .site-menu-item.active {
-    background: #242f35;
+    /* background: #242f35; */
+    background: rgb(25, 25, 25);
+    background: linear-gradient(90deg, rgba(25, 25, 25, 1) 0%, rgba(2, 114, 158, 1) 100%, rgba(0, 0, 0, 1) 100%);
 }
 .site-menu-item.active > a {
     color: #fff;

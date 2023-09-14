@@ -358,9 +358,14 @@ input[type="number"] {
     padding: 16px 24px;
     bottom: 0;
     border-radius: 10px 10px 0 0;
-    background-color: #2e85ec;
+    background-color: #191919;
     color: #fff;
     position: absolute;
+}
+
+.btn-primary-save {
+    background: rgb(25, 25, 25);
+    background: linear-gradient(90deg, rgba(25, 25, 25, 1) 0%, rgba(2, 114, 158, 1) 100%, rgba(0, 0, 0, 1) 100%);
 }
 
 .save-changes p {

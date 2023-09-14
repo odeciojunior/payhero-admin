@@ -20,7 +20,7 @@
                role="tab"
                aria-controls="nav-profile"
                aria-selected="true">
-                Agenda Financeira
+                Extrato
             </a>
         </div>
     </div>
