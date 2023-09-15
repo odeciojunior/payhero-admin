@@ -1,7 +1,6 @@
 <!-- BARRA SUPERIOR DE NAVEGACAO -->
 <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega"
-     role="navigation"
-     style="background-color: #f4f4f4">
+     role="navigation">
 
     <!-- BOTAO DE HAMBURGUER NO MOBILE-->
     <button type="button"

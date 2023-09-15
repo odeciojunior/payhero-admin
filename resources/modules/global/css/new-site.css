@@ -802,6 +802,18 @@ h3 {
     .table {
         margin-bottom: 0px;
     }
+
+    .hamburger-bar {
+        background-color: white !important;
+    }
+
+    .hamburger::before {
+        background-color: white !important;
+    }
+
+    .hamburger::after {
+        background-color: white !important;
+    }
 }
 
 .table td,

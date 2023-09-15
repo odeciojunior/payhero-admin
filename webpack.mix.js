@@ -35,11 +35,9 @@ mix.babel(["Modules/Affiliates/Resources/assets/js/index.js"], "public/build/lay
  * Modules/Affiliates/Resources/views/projectaffiliates.blade.php
  */
 mix.styles(
-    [
-        "resources/modules/global/css/table.css",
-        "Modules/Affiliates/Resources/assets/css/index.css",
-    ],
-    "public/build/layouts/affiliates/projectaffiliates.min.css");
+    ["resources/modules/global/css/table.css", "Modules/Affiliates/Resources/assets/css/index.css"],
+    "public/build/layouts/affiliates/projectaffiliates.min.css"
+);
 mix.babel(
     ["Modules/Affiliates/Resources/assets/js/projectaffiliates.js"],
     "public/build/layouts/affiliates/projectaffiliates.min.js"
@@ -52,7 +50,7 @@ mix.styles(
     [
         "resources/modules/global/adminremark/global/css/bootstrap.min.css",
         "resources/modules/global/adminremark/global/css/bootstrap-extend.min.css",
-        "resources/modules/global/adminremark/assets/css/site.min.css",
+        "resources/modules/global/adminremark/assets/css/site.css",
         "resources/modules/global/css/loading.css",
         "resources/modules/global/css/checkAnimation.css",
         "resources/modules/global/css/ribbon.css",
@@ -1120,7 +1118,7 @@ mix.styles(
         "resources/modules/global/css/normalize.css",
         "resources/modules/global/adminremark/global/css/bootstrap.min.css",
         "resources/modules/global/adminremark/global/css/bootstrap-extend.min.css",
-        "resources/modules/global/adminremark/assets/css/site.min.css",
+        "resources/modules/global/adminremark/assets/css/site.css",
         "resources/modules/global/css/loading.css",
         "resources/modules/global/css/checkAnimation.css",
         "resources/modules/global/css/ribbon.css",
