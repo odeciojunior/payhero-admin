@@ -136,6 +136,14 @@
 
     @stack('scripts')
     @stack('scriptsModal')
+
+    @if (env('APP_ENV', 'production') == 'production')
+        <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
+        @if (\Auth::user())
+            <script type="application/javascript" src="https://kong.tallos.com.br:18000/megasac-api/widget/64f5cdbb6dc37ffb2e11ab8c-64f5cdbcf3bf29fc2e628eb1-1.min.js"></script>
+        @endif
+    @endif
+
 </body>
 
 </html>
