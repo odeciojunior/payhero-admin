@@ -119,9 +119,9 @@ class WithdrawalsApiController
                 return response()->json(["message" => "Valor informado inválido"], 400);
             }
 
-            if (!$gatewayService->existsBankAccountApproved()) {
-                return response()->json(["message" => "Cadastre um meio de recebimento para solicitar saques"], 400);
-            }
+            // if (!$gatewayService->existsBankAccountApproved()) {
+            //     return response()->json(["message" => "Cadastre um meio de recebimento para solicitar saques"], 400);
+            // }
 
             $responseCreateWithdrawal = $gatewayService->createWithdrawal($withdrawalValue);
 
@@ -163,7 +163,11 @@ class WithdrawalsApiController
     public function checkAllowed(): JsonResponse
     {
         try {
-            $user = User::find(auth()->user()->getAccountOwnerId());
+            $user = User::find(
+                auth()
+                    ->user()
+                    ->getAccountOwnerId()
+            );
             return response()->json([
                 "allowed" => $user->status != (new User())->present()->getStatus("withdrawal blocked"),
             ]);
