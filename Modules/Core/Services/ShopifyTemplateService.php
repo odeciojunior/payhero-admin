@@ -2,21 +2,7 @@
 
 namespace Modules\Core\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Response;
 use Modules\Core\Entities\ShopifyIntegration;
-use PHPHtmlParser\Dom;
-use PHPHtmlParser\Dom\HtmlNode;
-use PHPHtmlParser\Dom\TextNode;
-use PHPHtmlParser\Exceptions\ChildNotFoundException;
-use PHPHtmlParser\Exceptions\CircularException;
-use PHPHtmlParser\Exceptions\CurlException;
-use PHPHtmlParser\Exceptions\LogicalException;
-use PHPHtmlParser\Exceptions\NotLoadedException;
-use PHPHtmlParser\Exceptions\StrictException;
-use PHPHtmlParser\Exceptions\UnknownChildTypeException;
-use PHPHtmlParser\Selector\Parser;
-use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\Client;
 use Slince\Shopify\Manager\Asset\Asset;
 use Slince\Shopify\Manager\Theme\Theme;
@@ -26,17 +12,7 @@ class ShopifyTemplateService
 {
     public const LAYOUT_THEME_LIQUID = "layout/theme.liquid";
 
-    public const SECTION_UTM = "utm";
-
-    public const SECTION_CART = "cart";
-
-    public const SECTION_SKIP_TO_CART = "skip to cart";
-
-    public const STUBS_TEMPLATE_UTM = "NexuspayUtmScriptSnnipet.liquid";
-
-    public const STUBS_TEMPLATE_CART = "NexuspayCartScriptSnippet.liquid";
-
-    public const STUBS_TEMPLATE_SKIP_TO_CART = "NexuspaySkipToCartScriptSnippet.liquid";
+    public const STUBS_TEMPLATE = "AzcendSnippet.liquid";
 
     private $stubsTemplateFolder = __DIR__ . "./../../Shopify/Stubs/";
 
@@ -190,46 +166,109 @@ class ShopifyTemplateService
     public function setSkipToCart(bool $skipToCart): void
     {
         $this->skipToCart = $skipToCart;
+
+        $this->setThemeByRole("main");
+
+        $themeId = $this->theme->getId();
+        $resource = "themes/{$themeId}/assets";
+
+        $snippetName = self::STUBS_TEMPLATE;
+        $key = "snippets/{$snippetName}";
+
+        $result = $this->client->get($resource, [
+            "asset" => [
+                "key" => $key,
+            ]
+        ]);
+
+        $content = !empty($result['asset']) && !empty($result['asset']['value']) ? $result['asset']['value'] : false;
+
+        if ($content) {
+            $value  =  $skipToCart ? "true" : "false";
+            $newContent = preg_replace('/var skipToCart = .+;/', "var skipToCart = {$value};", $content);
+
+            $this->client->put($resource, [
+                "asset" => [
+                    "key" => $key,
+                    "value" => $newContent
+                ]
+            ]);
+        }
+    }
+
+    public function createSnippet($snippetName, $skipToCart, $domain)
+    {
+        if (!empty($this->theme)) {
+            $themeId = $this->theme->getId();
+            $snippetContent = file_get_contents("{$this->stubsTemplateFolder}{$snippetName}");
+
+            $snippetContent = str_replace("<DOMAIN>", $domain, $snippetContent);
+            $snippetContent = str_replace("'<SKIP_TO_CART>'", $skipToCart ? 'true' : 'false', $snippetContent);
+
+            $resource = "themes/{$themeId}/assets";
+            $this->client->put($resource, [
+                "asset" => [
+                    "key" => "snippets/{$snippetName}",
+                    "value" => $snippetContent
+                ]
+            ]);
+        }
+    }
+
+    public function removeSnippet($snippetName)
+    {
+        if (!empty($this->theme)) {
+            $themeId = $this->theme->getId();
+            $resource = "themes/{$themeId}/assets";
+            $this->client->delete($resource, [
+                "asset" => [
+                    "key" => "snippets/{$snippetName}"
+                ]
+            ]);
+        }
     }
 
     public function makeTemplateIntegration(ShopifyIntegration $shopifyIntegration, $domain, $theme)
     {
-        $this->removeIntegrationInAllThemes();
-
         $this->setThemeByRole("main");
 
+        // insert snippet files
+        $this->removeSnippet(self::STUBS_TEMPLATE);
+        $this->createSnippet(self::STUBS_TEMPLATE, boolval($shopifyIntegration->skip_to_cart), $domain->name);
+
+        // include snippets into main theme file
         $htmlBody = $this->getTemplateHtml();
 
         if (empty($htmlBody)) {
             return [
                 "failed" => true,
-                "message" => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado',
+                "message" => "Problema ao refazer integração, template \"theme.liquid\" não encontrado",
             ];
         }
 
-        $shopifyIntegration->update([
-            "theme_type" => $theme,
-            "theme_name" => $this->getThemeName(),
-            "theme_file" => $this::LAYOUT_THEME_LIQUID,
-            "theme_html" => $htmlBody,
-        ]);
+        $htmlBody = $this->removeScript($htmlBody);
 
-        $shopifyIntegration->update([
-            "layout_theme_html" => $htmlBody,
-        ]);
-
-        $newHtmlBody = $this->insertScript($htmlBody, self::SECTION_UTM, $domain->name, self::STUBS_TEMPLATE_UTM);
-        $newHtmlBody = $this->insertScript($newHtmlBody, self::SECTION_CART, $domain->name, self::STUBS_TEMPLATE_CART);
-
-        if ($shopifyIntegration->skip_to_cart) {
-            $newHtmlBody = $this->insertScript(
-                $newHtmlBody,
-                self::SECTION_SKIP_TO_CART,
-                $domain->name,
-                self::STUBS_TEMPLATE_SKIP_TO_CART
-            );
+        $htmlToPersistence = $htmlBody;
+        if (strlen($htmlToPersistence) > 65535) {
+            $htmlToPersistence = trim($htmlBody);
+        }
+        if (strlen($htmlToPersistence) <= 65535) {
+            $shopifyIntegration->update([
+                "theme_type" => $theme,
+                "theme_name" => $this->getThemeName(),
+                "theme_file" => $this::LAYOUT_THEME_LIQUID,
+                "theme_html" => $htmlToPersistence,
+                "layout_theme_html" => $htmlToPersistence,
+            ]);
+        } else {
+            $shopifyIntegration->update([
+                "theme_type" => $theme,
+                "theme_name" => $this->getThemeName(),
+                "theme_file" => $this::LAYOUT_THEME_LIQUID,
+            ]);
         }
 
+        $newHtmlBody = $this->insertScript($htmlBody);
         $this->updateTemplateLiquid($newHtmlBody);
 
         $shopifyIntegration->update([
@@ -238,7 +277,7 @@ class ShopifyTemplateService
 
         return [
             "failed" => false,
-            "message" => 'Problema ao refazer integração, template \'theme.liquid\' não encontrado',
+            "message" => "Problema ao refazer integração, template \"theme.liquid\" não encontrado",
         ];
     }
 
@@ -258,24 +297,29 @@ class ShopifyTemplateService
         return false; //throwl
     }
 
-    public function insertScript(string $oldHtml, string $scriptName, string $domain, string $stubLiquidSnippet)
+    public function insertScript(string $oldHtml)
     {
-        $html = $this->removeScript($oldHtml, $scriptName);
-
+        $html = $this->removeScript($oldHtml);
         $strPos = strpos($html, "</body>");
 
-        $scriptFox = file_get_contents("{$this->stubsTemplateFolder}{$stubLiquidSnippet}");
-        $scriptFox = $this->changeDomainSnippets($scriptFox, $domain);
+        $script = "\n\n  <!-- Não remova. Checkout Azcend. -->";
+        $script .= "\n  {% capture azcend_snippet_content %}";
+        $script .= "\n    {% include 'AzcendSnippet' %}";
+        $script .= "\n  {% endcapture %}";
+        $script .= "\n  {% unless azcend_snippet_content contains 'Liquid error' %}";
+        $script .= "\n    {% include 'AzcendSnippet' %}";
+        $script .= "\n  {% endunless %}";
+        $script .= "\n  <!-- Não remova. Checkout Azcend. -->\n\n";
 
-        $newHtml = substr_replace($html, $scriptFox, $strPos, 0);
+        $newHtml = substr_replace($html, $script, $strPos, 0);
 
         return $newHtml;
     }
 
-    public function removeScript(string $html, string $scriptName)
+    public function removeScript(string $html)
     {
-        $starComment = "<!-- start azcend {$scriptName} script -->";
-        $endComment = "<!-- end azcend {$scriptName} script -->";
+        $starComment = "\n\n  <!-- Não remova. Checkout Azcend. -->";
+        $endComment = "\n  <!-- Não remova. Checkout Azcend. -->\n\n";
 
         $startScriptPos = strpos($html, $starComment);
         $endScriptPos = strpos($html, $endComment);
@@ -326,9 +370,9 @@ class ShopifyTemplateService
 
     public function removeIntegrationInAllThemes(): void
     {
-        /*if(!foxutils()->isProduction()){
+        if (!foxutils()->isProduction()) {
             return;
-        }*/
+        }
 
         $themes = $this->getAllThemes();
 
@@ -337,16 +381,9 @@ class ShopifyTemplateService
             $this->setThemeById($theme->getId());
 
             $htmlBody = $this->getTemplateHtml();
-            $htmlBody = $this->removeScript($htmlBody, self::SECTION_UTM);
-            $htmlBody = $this->removeScript($htmlBody, self::SECTION_CART);
-            $htmlBody = $this->removeScript($htmlBody, self::SECTION_SKIP_TO_CART);
+            $htmlBody = $this->removeScript($htmlBody);
 
             $this->updateTemplateLiquid($htmlBody);
         }
-    }
-
-    private function changeDomainSnippets($text, $domain, $oldDomain = "localhost:8081")
-    {
-        return str_replace($oldDomain, $domain, $text);
     }
 }
