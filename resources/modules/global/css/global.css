@@ -3373,7 +3373,7 @@ tbody td {
 
 .cloudfox-logo-mobile {
     display: none;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 
 .new-register-navbar-open-modal-container {
