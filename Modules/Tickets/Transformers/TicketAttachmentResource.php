@@ -13,7 +13,7 @@ class TicketAttachmentResource extends JsonResource
     {
         $filename = pathinfo($this->file, PATHINFO_BASENAME);
         $expiration = now()->addMinutes(config("session.lifetime"));
-        $url = Storage::disk("s3_documents")->temporaryUrl(
+        $url = Storage::disk("s3_digital_product")->temporaryUrl(
             "uploads/private/tickets/attachments/" . $filename,
             $expiration
         );
