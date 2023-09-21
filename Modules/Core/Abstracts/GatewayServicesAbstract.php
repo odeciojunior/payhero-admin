@@ -194,7 +194,7 @@ abstract class GatewayServicesAbstract
                     "gateway_id" => $this->getGatewayId(),
                 ];
 
-                $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                // $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
 
                 $withdrawal = Withdrawal::create($data);
             } else {
@@ -203,9 +203,9 @@ abstract class GatewayServicesAbstract
                     "value" => $withdrawalValueSum,
                 ];
 
-                if ($withdrawal->transfer_type != $this->companyBankAccount->transfer_type) {
-                    $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
-                }
+                // if ($withdrawal->transfer_type != $this->companyBankAccount->transfer_type) {
+                //     $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                // }
 
                 $withdrawal->update($data);
             }
