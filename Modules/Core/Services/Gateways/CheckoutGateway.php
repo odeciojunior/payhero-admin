@@ -175,6 +175,15 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function processPostbackPaylab($postbackId)
+    {
+        $options = new GatewayCurlOptions([
+            "endpoint" => "processPostbackPaylab",
+            "data" => ["postback_id" => $postbackId],
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl)
     {
         $this->baseUrl = $newUrl;
@@ -246,6 +255,10 @@ class CheckoutGateway extends GatewayAbstract
             ],
             "processPostbackEthoca" => [
                 "route" => "postback/process/ethoca",
+                "method" => "POST",
+            ],
+            "processPostbackPaylab" => [
+                "route" => "postback/process/paylab",
                 "method" => "POST",
             ],
         ];

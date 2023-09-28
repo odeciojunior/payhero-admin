@@ -54,7 +54,7 @@ class ProcessPostbackPaylab extends Command
                 $checkout = new CheckoutGateway(Gateway::IUGU_PRODUCTION_ID);
                 foreach ($rows as $row) {
                     $this->line($row->id);
-                    $response = $checkout->processPostbackEthoca(Hashids::encode($row->id));
+                    $response = $checkout->processPostbackPaylab(Hashids::encode($row->id));
                     $this->line(json_encode($response));
                 }
             }
