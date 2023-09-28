@@ -40,10 +40,10 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes()
             ->onOneServer();
 
-        $schedule
-            ->command("paylab:proccess-postback")
-            ->everyTenMinutes()
-            ->onOneServer();
+        // $schedule
+        //     ->command("paylab:proccess-postback")
+        //     ->everyTenMinutes()
+        //     ->onOneServer();
 
         $schedule
             ->command("demo:create-fake-checkout")
