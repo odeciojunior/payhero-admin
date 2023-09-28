@@ -49,7 +49,7 @@ class ProcessPostbackPaylab extends Command
                 ->orderBy("id", "ASC")
                 ->limit(10)
                 ->get();
-
+            $this->line(count($rows) . " para processar");
             if (count($rows) > 0) {
                 $checkout = new CheckoutGateway(Gateway::IUGU_PRODUCTION_ID);
                 foreach ($rows as $row) {
