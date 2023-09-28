@@ -70,6 +70,7 @@
 
     <!-- End Google Tag Manager -->
     <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
+    <script src="https://sdkweb-lib.idwall.co/index.js"></script>
     <script>
         Breakpoints();
     </script>
@@ -118,6 +119,8 @@
         </div>
     </div>
 
+    <div data-idw-sdk-web></div>
+
     @yield('content')
 
     @include('utils.alert-demo-account')
@@ -125,9 +128,8 @@
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
 
-    @if (
-        (!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
-            auth()->user()->is_cloudfox)
+    @if ((!auth()->user()->account_is_approved && auth()->user()->id == auth()->user()->account_owner_id) ||
+        auth()->user()->is_cloudfox)
         @include('utils.documents-pending')
         <script>
             verifyDocumentPending();
@@ -143,6 +145,23 @@
             <script type="application/javascript" src="https://kong.tallos.com.br:18000/megasac-api/widget/64f5cdbb6dc37ffb2e11ab8c-64f5cdbcf3bf29fc2e628eb1-1.min.js"></script>
         @endif
     @endif
+
+    <script>
+        idwSDKWeb({
+            token: 'U2FsdGVkX19q4ivHZJe2oIXSOmu4Q9fRYwUk5O0ZphLI7Qye+w==',
+            onRender: () => {
+                console.log('it renders!');
+            },
+            onComplete: ({
+                token
+            }) => {
+                console.log('SDK Token', token);
+            },
+            onError: (error) => {
+                alert(error);
+            }
+        });
+    </script>
 
 </body>
 
