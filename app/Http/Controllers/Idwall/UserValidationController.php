@@ -38,7 +38,7 @@ class UserValidationController extends Controller
 
             $response = Http::withHeaders([
                 "Authorization" => env("IDWALL_TOKEN"),
-            ])->post("https://api-v3.idwall.co/maestro/profile/sdk", $idWallData);
+            ])->post("https://api-v3.idwall.co/maestro/profile/sdk?runOCR=true", $idWallData);
 
             UserBiometryResult::create([
                 "user_id" => $user->id,
