@@ -57,6 +57,9 @@ class Gateway extends Model
     public const SUITPAY_PRODUCTION_ID = 9;
     public const SUITPAY_SANDBOX_ID = 10;
 
+    public const ABMEX_PRODUCTION_ID = 11;
+    public const ABMEX_SANDBOX_ID = 12;
+
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;

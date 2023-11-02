@@ -28,7 +28,8 @@ class UpdateAvailableBalance extends Command
 
     private $defaultGateways = [
         IuguService::class,
-        Safe2PayService::class,
+        AbmexService::class,
+        //Safe2PayService::class,
         // AsaasService::class,
         // GerencianetService::class,
         // GetnetService::class,
