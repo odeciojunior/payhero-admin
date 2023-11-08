@@ -9,6 +9,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\GatewayPresenter;
 use Spatie\Activitylog\Traits\LogsActivity;
 use LogicException;
+use Modules\Core\Services\Gateways\AbmexService;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
@@ -115,6 +116,10 @@ class Gateway extends Model
             case self::IUGU_PRODUCTION_ID:
             case self::IUGU_SANDBOX_ID:
                 return new IuguService();
+
+            case self::ABMEX_PRODUCTION_ID:
+            case self::ABMEX_SANDBOX_ID:
+                return new AbmexService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:
