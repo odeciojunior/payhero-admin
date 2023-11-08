@@ -23,8 +23,6 @@ return new class extends Migration {
             ["gateway_id" => 11, "slug" => "amex", "name" => "AMEX", "card_flag_enum" => 5],
             ["gateway_id" => 11, "slug" => "discover", "name" => "Discover", "card_flag_enum" => 22],
             ["gateway_id" => 11, "slug" => "hipercard", "name" => "Hipercard", "card_flag_enum" => 12],
-            ["gateway_id" => 11, "slug" => "boleto", "name" => "Boleto", "card_flag_enum" => 50],
-            ["gateway_id" => 11, "slug" => "pix", "name" => "Pix", "card_flag_enum" => 51],
 
             ["gateway_id" => 12, "slug" => "visa", "name" => "Visa", "card_flag_enum" => 2],
             ["gateway_id" => 12, "slug" => "mastercard", "name" => "Master Card", "card_flag_enum" => 3],
@@ -32,8 +30,6 @@ return new class extends Migration {
             ["gateway_id" => 12, "slug" => "amex", "name" => "AMEX", "card_flag_enum" => 5],
             ["gateway_id" => 12, "slug" => "discover", "name" => "Discover", "card_flag_enum" => 22],
             ["gateway_id" => 12, "slug" => "hipercard", "name" => "Hipercard", "card_flag_enum" => 12],
-            ["gateway_id" => 12, "slug" => "boleto", "name" => "Boleto", "card_flag_enum" => 50],
-            ["gateway_id" => 12, "slug" => "pix", "name" => "Pix", "card_flag_enum" => 51],
         ];
 
         $installmentsTax = [
@@ -60,34 +56,15 @@ return new class extends Migration {
         foreach ($flags as $flag) {
             $gatewayFlag = GatewayFlag::create($flag);
 
-            switch ($flag["slug"]) {
-                case "boleto":
-                    GatewayFlagTax::create([
-                        "gateway_flag_id" => $gatewayFlag->id,
-                        "installments" => 0,
-                        "type_enum" => 2,
-                        "percent" => 2.49,
-                    ]);
-                    break;
-                case "pix":
-                    GatewayFlagTax::create([
-                        "gateway_flag_id" => $gatewayFlag->id,
-                        "installments" => 0,
-                        "type_enum" => 3,
-                        "percent" => 1.0,
-                    ]);
-                    break;
-                default:
-                    for ($i = 1; $i <= 12; $i++) {
-                        GatewayFlagTax::create([
-                            "gateway_flag_id" => $gatewayFlag->id,
-                            "installments" => $i,
-                            "type_enum" => 1,
-                            "percent" => $installmentsTax[$i],
-                        ]);
-                    }
-                    break;
+            for ($i = 1; $i <= 12; $i++) {
+                GatewayFlagTax::create([
+                    "gateway_flag_id" => $gatewayFlag->id,
+                    "installments" => $i,
+                    "type_enum" => 1,
+                    "percent" => $installmentsTax[$i],
+                ]);
             }
+            break;
 
             $progress->advance();
         }
