@@ -4,11 +4,8 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Services\Gateways\AsaasService;
-use Modules\Core\Services\Gateways\GerencianetService;
-use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\AbmexService;
 use Modules\Core\Services\Gateways\IuguService;
-use Modules\Core\Services\Gateways\Safe2PayService;
 
 class UpdateAvailableBalance extends Command
 {
