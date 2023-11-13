@@ -139,7 +139,53 @@
     @if (env('APP_ENV', 'production') == 'production')
         <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
         @if (\Auth::user())
-            <script type="application/javascript" src="https://kong.tallos.com.br:18000/megasac-api/widget/64f5cdbb6dc37ffb2e11ab8c-64f5cdbcf3bf29fc2e628eb1-1.min.js"></script>
+            {!! <script type="application/javascript" src="https://kong.tallos.com.br:18000/megasac-api/widget/64f5cdbb6dc37ffb2e11ab8c-64f5cdbcf3bf29fc2e628eb1-1.min.js"></script> !!}
+            <script>
+                window.intercomSettings = {
+                    api_base: "https://api-iam.intercom.io",
+                    app_id: "zs3bxybw",
+                    name: "<%= current_user.name %>", // Nome completo
+                    email: "<%= current_user.email %>", // Endereço de e-mail
+                    created_at: "<%= current_user.created_at.to_i %>" // Data de assinatura como registro de data e hora do Unix
+                };
+            </script>
+
+            <script>
+                // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/zs3bxybw'
+                (function() {
+                    var w = window;
+                    var ic = w.Intercom;
+                    if (typeof ic === "function") {
+                        ic('reattach_activator');
+                        ic('update', w.intercomSettings);
+                    } else {
+                        var d = document;
+                        var i = function() {
+                            i.c(arguments);
+                        };
+                        i.q = [];
+                        i.c = function(args) {
+                            i.q.push(args);
+                        };
+                        w.Intercom = i;
+                        var l = function() {
+                            var s = d.createElement('script');
+                            s.type = 'text/javascript';
+                            s.async = true;
+                            s.src = 'https://widget.intercom.io/widget/zs3bxybw';
+                            var x = d.getElementsByTagName('script')[0];
+                            x.parentNode.insertBefore(s, x);
+                        };
+                        if (document.readyState === 'complete') {
+                            l();
+                        } else if (w.attachEvent) {
+                            w.attachEvent('onload', l);
+                        } else {
+                            w.addEventListener('load', l, false);
+                        }
+                    }
+                })();
+            </script>
         @endif
     @endif
 
