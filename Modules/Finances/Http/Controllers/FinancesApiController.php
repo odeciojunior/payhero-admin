@@ -27,7 +27,7 @@ class FinancesApiController extends Controller
 
         try {
             $company = Company::find(hashids_decode($request->input("company")));
-            $gatewayId = hashids_decode($request->input("gateway_id"));
+            $gatewayId = foxutils()->isProduction() ? Gateway::ABMEX_PRODUCTION_ID : Gateway::ABMEX_SANDBOX_ID; //hashids_decode($request->input("gateway_id"));
 
             if (empty($company) || empty($gatewayId)) {
                 return response()->json(["message" => "Ocorreu algum erro, tente novamente!"], 400);
