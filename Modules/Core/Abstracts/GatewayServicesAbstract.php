@@ -320,39 +320,36 @@ abstract class GatewayServicesAbstract
 
     public function getResume()
     {
-        $cacheName = "resume-{$this->gatewayName}-{$this->company->id}";
-        return cache()->remember($cacheName, 120, function () {
-            $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
-                ->where("company_id", $this->company->id)
-                ->orderBy("id", "desc")
-                ->first();
-            $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
+        $lastTransaction = Transaction::whereIn("gateway_id", $this->gatewayIds)
+            ->where("company_id", $this->company->id)
+            ->orderBy("id", "desc")
+            ->first();
+        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format("d/m/Y") : "";
 
-            $blockedBalance = $this->getBlockedBalance();
-            $blockedBalanceCount = $this->getBlockedBalanceCount();
-            $pendingBalance = $this->getPendingBalance();
-            $securityReserveBalance = $this->getSecurityReserveBalance();
-            $pendingBalanceCount = $this->getPendingBalanceCount();
-            $availableBalance = $this->getAvailableBalance();
-            $totalBalance = $availableBalance + $pendingBalance + $securityReserveBalance;
+        $blockedBalance = $this->getBlockedBalance();
+        $blockedBalanceCount = $this->getBlockedBalanceCount();
+        $pendingBalance = $this->getPendingBalance();
+        $securityReserveBalance = $this->getSecurityReserveBalance();
+        $pendingBalanceCount = $this->getPendingBalanceCount();
+        $availableBalance = $this->getAvailableBalance();
+        $totalBalance = $availableBalance + $pendingBalance + $securityReserveBalance;
 
-            (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
-            return [
-                "name" => $this->gatewayName,
-                "available_balance" => $availableBalance,
-                "pending_balance" => $pendingBalance,
-                "security_reserve_balance" => $securityReserveBalance,
-                "pending_balance_count" => $pendingBalanceCount,
-                "blocked_balance" => $blockedBalance,
-                "blocked_balance_count" => $blockedBalanceCount,
-                "total_balance" => $totalBalance,
-                "total_available" => $availableBalance,
-                "last_transaction" => $lastTransactionDate,
-                "pending_debt_balance" => 0,
-                "id" => $this->gatewayHashId,
-            ];
-        });
+        return [
+            "name" => $this->gatewayName,
+            "available_balance" => $availableBalance,
+            "pending_balance" => $pendingBalance,
+            "security_reserve_balance" => $securityReserveBalance,
+            "pending_balance_count" => $pendingBalanceCount,
+            "blocked_balance" => $blockedBalance,
+            "blocked_balance_count" => $blockedBalanceCount,
+            "total_balance" => $totalBalance,
+            "total_available" => $availableBalance,
+            "last_transaction" => $lastTransactionDate,
+            "pending_debt_balance" => 0,
+            "id" => $this->gatewayHashId,
+        ];
     }
 
     public function getGatewayAvailable()
