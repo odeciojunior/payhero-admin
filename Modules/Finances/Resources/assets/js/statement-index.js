@@ -100,7 +100,7 @@ $(window).on("load", function () {
                 if (!isEmpty(data2.company_default)) {
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
-                    window.gatewayCode = "RX6YQPgjlZpxze7"; //window.location.href.split("/")[4];
+                    window.gatewayCode = "v2RmA83EbZPVpYB"; //window.location.href.split("/")[4];
                     //getGateway(window.gatewayCode);
                     checkBlockedWithdrawal();
                     updateBalances();
@@ -115,7 +115,7 @@ $(window).on("load", function () {
         });
     });
 
-    window.gatewayCode = "RX6YQPgjlZpxze7"; //window.location.href.split("/")[4];
+    window.gatewayCode = "v2RmA83EbZPVpYB"; //window.location.href.split("/")[4];
     //getGateway(window.gatewayCode);
     console.log(window.gatewayCode);
     function getGateway(nome) {
@@ -150,7 +150,7 @@ $(window).on("load", function () {
                                                 ${gatewayLogos.cielo}
                                             </a>`);
                 break;
-            case "RX6YQPgjlZpxze7":
+            case "v2RmA83EbZPVpYB":
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.vega}
