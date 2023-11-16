@@ -143,9 +143,9 @@
                 window.intercomSettings = {
                     api_base: "https://api-iam.intercom.io",
                     app_id: "zs3bxybw",
-                    name: "<%= current_user.name %>", // Nome completo
-                    email: "<%= current_user.email %>", // Endereço de e-mail
-                    created_at: "<%= current_user.created_at.to_i %>" // Data de assinatura como registro de data e hora do Unix
+                    name: <?php echo json_encode($current_user->name); ?>, // Nome completo
+                    email: <?php echo json_encode($current_user->email); ?>, // Endereço de e-mail
+                    created_at: "<?php echo strtotime($current_user->created_at); ?>" // Data de assinatura como registro de data e hora do Unix
                 };
             </script>
 
