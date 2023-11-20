@@ -15,7 +15,7 @@ class LinkShortenerService
         }
 
         $data = [
-            "domain" => "nxpy.me",
+            "domain" => "azcend.online",
             "originalURL" => $url,
             "allowDuplicates" => false,
         ];
