@@ -145,7 +145,7 @@
             <script>
                 window.intercomSettings = {
                     api_base: "https://api-iam.intercom.io",
-                    app_id: "zs3bxybw",
+                    app_id: "zuy8geqt",
                     name: "{{ $user->name }}", // Nome completo
                     email: "{{ $user->email }}", // Endereço de e-mail
                     created_at: "{{ $user->created_at }}" // Data de assinatura como registro de data e hora do Unix
@@ -174,7 +174,7 @@
                             var s = d.createElement('script');
                             s.type = 'text/javascript';
                             s.async = true;
-                            s.src = 'https://widget.intercom.io/widget/zs3bxybw';
+                            s.src = 'https://widget.intercom.io/widget/zuy8geqt';
                             var x = d.getElementsByTagName('script')[0];
                             x.parentNode.insertBefore(s, x);
                         };
