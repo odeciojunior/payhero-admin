@@ -47,8 +47,8 @@ class SalesController extends Controller
         try {
             $id = current(Hashids::connection("sale_id")->decode($hashid));
             $arrDatewaysIds = foxutils()->isProduction()
-                ? [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::IUGU_PRODUCTION_ID]
-                : [Gateway::SAFE2PAY_SANDBOX_ID, Gateway::IUGU_SANDBOX_ID];
+                ? [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::IUGU_PRODUCTION_ID, Gateway::ABMEX_PRODUCTION_ID]
+                : [Gateway::SAFE2PAY_SANDBOX_ID, Gateway::IUGU_SANDBOX_ID, Gateway::ABMEX_SANDBOX_ID];
 
             $transaction = Transaction::with(["sale", "company"])
                 ->where("sale_id", $id)
