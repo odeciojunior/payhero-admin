@@ -98,10 +98,10 @@ class SalesRecoveryService
                 // })
                 // ->where('checkout_config.company_id', $company_id)
             })
-            ->leftJoin("transactions as transaction", function ($join) {
-                $join->on("sales.id", "=", "transaction.sale_id");
+            ->leftJoin("transactions as transaction", function ($join) use ($company_id) {
+                $join->on("sales.id", "=", "transaction.sale_id")->where("transaction.company_id", $company_id);
             })
-            ->where("transaction.company_id", $company_id)
+
             ->whereIn("sales.status", $status)
             ->where("sales.payment_method", $paymentMethod)
             ->with([
