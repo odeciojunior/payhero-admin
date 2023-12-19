@@ -31,7 +31,7 @@ class PixService
                         "created_at",
                         "<=",
                         Carbon::now()
-                            ->subHour()
+                            ->subHours(24)
                             ->toDateTimeString()
                     );
                 });
