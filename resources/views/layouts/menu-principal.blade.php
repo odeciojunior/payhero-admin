@@ -452,12 +452,12 @@
                         <span class="site-menu-arrow"></span>
                     </a>
                     <ul class="site-menu-sub">
-                        {{-- <li class="site-menu-item">
+                        <li class="site-menu-item">
                             <a href="{!! route('integrations.index') !!}">
                                 <span class="bg-menu"></span>
                                 <span class="site-menu-title">API</span>
                             </a>
-                        </li> --}}
+                        </li>
                         <li class="site-menu-item">
                             <a href="{{ route('webhooks.index') }}">
                                 <span class="bg-menu"></span>
