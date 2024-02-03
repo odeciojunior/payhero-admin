@@ -14,9 +14,9 @@ class CheckoutConfigResource extends JsonResource
         /**
          *  nova regra de negocio: bank_document_status, não é mais necessario estar aprovado para vender
          */
-        $user = User::select('id','account_is_approved')
-        ->where('id',auth()->user()->getAccountOwnerId())
-        ->first();
+        $user = User::select('id', 'account_is_approved')
+            ->where('id', auth()->user()->getAccountOwnerId())
+            ->first();
 
         $companies = Company::select([
             'id',
@@ -30,7 +30,7 @@ class CheckoutConfigResource extends JsonResource
         ])->where('user_id', $user->id)
             ->where('active_flag', true)
             ->get()
-            ->map(function ($company) use($user){
+            ->map(function ($company) use ($user) {
                 if ($company->type === Company::PHYSICAL_PERSON) {
                     $status = "approved";
                     $status = "approved";
@@ -38,8 +38,8 @@ class CheckoutConfigResource extends JsonResource
                     $status =
                         $company->address_document_status === 3 && $company->contract_document_status === 3
                         && $user->account_is_approved
-                            ? "approved"
-                            : "pending";
+                        ? "approved"
+                        : "pending";
                 }
 
                 return (object) [
@@ -111,6 +111,12 @@ class CheckoutConfigResource extends JsonResource
             "color_secondary" => $this->color_secondary,
             "color_buy_button" => $this->color_buy_button,
             "theme_enum" => $this->theme_enum,
+            "checkout_step_type" => $this->checkout_step_type,
+            "checkout_expanded_resume" => $this->checkout_expanded_resume,
+            "checkout_custom_border_radius" => $this->checkout_custom_border_radius,
+            "checkout_custom_footer_enabled" => $this->checkout_custom_footer_enabled,
+            "checkout_custom_footer_message" => $this->checkout_custom_footer_message,
+            "delivery_time_shipping_enabled" => $this->delivery_time_shipping_enabled,
             "created_at" => Carbon::parse($this->created_at)->toDateTimeString(),
             "updated_at" => Carbon::parse($this->updated_at)->toDateTimeString(),
             "deleted_at" => Carbon::parse($this->deleted_at)->toDateTimeString(),
