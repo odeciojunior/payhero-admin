@@ -25,26 +25,27 @@
 
     <form id="checkout_editor">
         @method('PUT')
-        <input type="hidden"
-               id="checkout_editor_id">
+        <input type="hidden" id="checkout_editor_id">
         <div style="display: flex; flex-direction: column; width: 100%">
             <div class="grid-checkout-editor">
 
                 <div id="checkout_type"
                      class="checkout-content select-type">
-                    <h1 class="checkout-title">
+                    <h2 class="checkout-title">
                         Selecione um tipo
-                    </h1>
+                    </h2>
 
                     <div id="checkout_type"
-                         class="radio-group">
+                         class="radio-group"
+                         style="flex-direction: column; justify-content: inherit;"
+                    >
                         <input class="custom-radio"
                                id="checkout_type_steps"
                                type="radio"
                                name="checkout_type_enum"
                                value="1"
                                style="width: 150px" />
-                        <label for="checkout_type_steps">Checkout de 3 passos</label>
+                        <label for="checkout_type_steps" style="margin-bottom: 5px !important; width: 165px;">Checkout de 3 passos</label>
 
                         <input class="custom-radio"
                                id="checkout_type_unique"
@@ -52,7 +53,30 @@
                                name="checkout_type_enum"
                                value="2"
                                style="width: 150px" />
-                        <label for="checkout_type_unique">Checkout de 1 passo</label>
+                        <label for="checkout_type_unique" style="width: 165px;">Checkout de 1 passo</label>
+                    </div>
+
+                    <div class="row-flex type_steps" style="flex-direction: column;">
+                        <div class="radio-row">
+                            <input type="radio"
+                                   id="number_steps"
+                                   class="bigger-radio"
+                                   name="type_steps"
+                                   value="1"
+                                   checked
+                                   style="outline: none">
+                            <label for="number_steps">3 passos com numeros</label><br>
+                        </div>
+
+                        <div class="radio-row">
+                            <input type="radio"
+                                   id="icon_steps"
+                                   class="bigger-radio"
+                                   name="type_steps"
+                                   value="2"
+                                   style="outline: none">
+                            <label for="icon_steps">3 passos com icones</label><br>
+                        </div>
                     </div>
                 </div>
 
@@ -97,8 +121,8 @@
                                            id="checkout_logo"
                                            name="checkout_logo"
                                            data-max-file-size="10M"
-                                           data-min-height="63"
-                                           data-min-width="63"
+                                           data-max-height="300"
+                                           data-max-width="300"
                                            data-allowed-file-extensions="jpg jpeg png">
                                     <input type="hidden"
                                            id="has_checkout_logo"
@@ -107,7 +131,7 @@
 
                                 <div class="instrunctios">
                                     <p><b>Recomendações:</b> Imagem de
-                                        300x300px, <b>.jpeg</b> ou <b>.png</b></p>
+                                        280x280px, <b>.jpeg</b> ou <b>.png</b></p>
                                 </div>
 
                                 <div id="checkout_logo_error"
@@ -492,12 +516,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="checkbox-container">
+                        {{-- <div class="checkbox-container">
                             <input class="checkbox"
                                    id="default_finish_color"
                                    type="checkbox" />
                             <label for="default_finish_color">Manter “Finalizar compra” verde</label>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <hr>
@@ -508,12 +532,9 @@
                                 Banner no topo
                             </h1>
 
-                            <div
-                                 style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
+                            <div style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <div id="banner_type"
-                                         class="radio-group"
-                                         style="justify-self: end; display: none;">
+                                    <div id="banner_type" class="radio-group" style="justify-self: end; display: none;">
                                         <input class="custom-icon-radio"
                                                id="banner_type_square"
                                                type="radio"
@@ -1003,6 +1024,114 @@
 
                         </div>
 
+                        <hr>
+
+                        <div class="custom-footer-container">
+                            <div class="title-buttons-group">
+                                <div>
+                                    <h1 class="checkout-title">
+                                        Rodapé Customizado
+                                    </h1>
+                                </div>
+
+                                <div class="switch-holder mb-3">
+                                    <label class="switch"
+                                           style='top:3px'>
+                                        <input type="checkbox"
+                                               id="custom_footer_enabled"
+                                               name="custom_footer_enabled"
+                                               data-target="custom_footer_content"
+                                               class='check switch-checkout'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="custom_footer_content"
+                                 style="display: none">
+                                <div class="input-container">
+                                    <label for="custom_footer_message"
+                                           class="checkout-label">Mensagem</label>
+                                    <textarea class="checkout-textarea"
+                                              id="custom_footer_message"
+                                              name="custom_footer_message"
+                                              rows="1">
+
+                                    </textarea>
+                                    <div id="custom_footer_error"
+                                         class="checkout-error"
+                                         style="display: none;">
+                                        <p>Preencha o campo de mensagem.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="countdown-container">
+                            <div class="title-buttons-group">
+                                <div>
+                                    <h1 class="checkout-title">
+                                        Adicionar bordas arredondadas para botões e campos de formulário
+                                    </h1>
+                                </div>
+
+                                <div class="switch-holder mb-3">
+                                    <label class="switch"
+                                           style='top:3px'>
+                                        <input type="checkbox"
+                                               id="custom_border_radius"
+                                               name="custom_border_radius"
+                                               class='check'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="countdown-container">
+                            <div class="title-buttons-group">
+                                <div>
+                                    <h1 class="checkout-title">
+                                        Mostrar tempo de entrega do frete
+                                    </h1>
+                                </div>
+
+                                <div class="switch-holder mb-3">
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="delivery_time_shipping_enabled" name="delivery_time_shipping_enabled" class="check" value="1">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- <hr>
+
+                        <div class="countdown-container">
+                            <div class="title-buttons-group">
+                                <div>
+                                    <h1 class="checkout-title">
+                                        Resumo do pedido expandido em mobile
+                                    </h1>
+                                </div>
+
+                                <div class="switch-holder mb-3">
+                                    <label class="switch"
+                                           style='top:3px'>
+                                        <input type="checkbox"
+                                               id="expanded_resume"
+                                               name="expanded_resume"
+                                               class='check switch-checkout'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -1619,11 +1748,9 @@
                                     <div class="header-colorbar desktop primary-color  countdown-preview"></div>
                                     <div class="header-colorbar desktop secondary-color textbar-preview"> </div>
 
-                                    <div class="preview-banner wide-banner desktop"
-                                         style="display: none">
-                                        <img id="preview_banner_img_desktop"
-                                             class="preview-banner-img" />
-                                    </div>
+                                    {{-- <div class="preview-banner wide-banner desktop" style="display: none">
+                                        <img id="preview_banner_img_desktop" class="preview-banner-img" />
+                                    </div> --}}
                                 </div>
 
                                 <div id="logo_preview_desktop_div"
@@ -1702,11 +1829,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="preview-banner wide-banner mobile"
-                                             style="display: none">
-                                            <img id="preview_banner_img_mobile"
-                                                 class="preview-banner-img" />
-                                        </div>
+                                        {{-- <div class="preview-banner wide-banner mobile" style="display: none">
+                                            <img id="preview_banner_img_mobile" class="preview-banner-img" />
+                                        </div> --}}
                                     </div>
 
                                     <div class="logo-div logo-menu-bar has-banner"
@@ -2166,10 +2291,11 @@
                         <div class="save-changes-button-group">
                             <button id="cancel_button"
                                     type="button"
-                                    class="font-size-16 btn btn-light border border-white mr-10 px-15 px-sm-40">Cancelar</button>
-                            <button type="submit"
+                                    class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
+                            <button id="update_checkout_editor"
+                                    type="button"
                                     form="checkout_editor"
-                                    class="font-size-16 btn btn-primary-save mr-40 mr-sm-0 px-15 px-sm-40">Salvar
+                                    class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar
                                 alterações</button>
                         </div>
                     </div>

@@ -62,6 +62,11 @@ class UpdateCheckoutConfigRequest extends FormRequest
             "color_primary" => "required|string",
             "color_secondary" => "required|string",
             "color_buy_button" => "required|string",
+            "checkout_step_type" => "nullable|integer",
+            "checkout_expanded_resume" => "nullable|integer",
+            "checkout_custom_border_radius" => "nullable|integer",
+            "checkout_custom_footer_enabled" => "nullable|integer",
+            "checkout_custom_footer_message" => "nullable|string",
         ];
     }
 
