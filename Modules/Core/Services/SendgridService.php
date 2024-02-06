@@ -130,9 +130,11 @@ class SendgridService
             ->get(null, $queryParameters);
 
         $sendgridDomains = json_decode($response->body());
-        foreach ($sendgridDomains as $sendgridDomain) {
-            if (!empty($sendgridDomain->domain) && $sendgridDomain->domain == $domain) {
-                return $sendgridDomain;
+        if (is_array($sendgridDomains) || is_object($sendgridDomains)) {
+            foreach ($sendgridDomains as $sendgridDomain) {
+                if (!empty($sendgridDomain->domain) && $sendgridDomain->domain == $domain) {
+                    return $sendgridDomain;
+                }
             }
         }
 
