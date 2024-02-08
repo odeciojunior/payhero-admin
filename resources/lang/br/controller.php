@@ -6,7 +6,7 @@ return [
         "create" => "Ocorreu um erro ao tentar cadastrar",
     ],
     "success" => [
-        "create" => "Atualizado com sucesso",
+        "create" => "Criado com sucesso",
     ],
     "pixel" => [
         "permission" => [

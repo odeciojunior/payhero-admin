@@ -6,6 +6,6 @@ return [
         "generic" => "Ocorreu um erro, tente novamente mais tarde",
     ],
     "success" => [
-        "create" => "Atualizado com sucesso",
+        "create" => "Criado com sucesso",
     ],
 ];
