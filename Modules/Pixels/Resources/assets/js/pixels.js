@@ -170,7 +170,7 @@ $(function () {
 
                                         </a>
 
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' \\pixel='${
                                             value.id
                                         }' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
                                             <span class=''>
@@ -308,8 +308,31 @@ $(function () {
             conversionalEditInput.val("");
         }
 
-        $(".percentage-boleto-value-edit").val(pixel.value_percentage_purchase_boleto);
-        $(".percentage-pix-value-edit").val(pixel.value_percentage_purchase_pix);
+        const percentagePurchaseBoletoEnabled = $("#modal-edit-pixel .percentage-purchase-boleto-enabled");
+        percentagePurchaseBoletoEnabled.val(pixel.percentage_purchase_boleto_enabled);
+        if(pixel.percentage_purchase_boleto_enabled) {
+            percentagePurchaseBoletoEnabled.prop('checked', true);
+            percentagePurchaseBoletoEnabled.closest('.swicth-show-input').find('.form-group').show()
+            $(".percentage-boleto-value").val(pixel.value_percentage_purchase_boleto);
+        } else {
+            percentagePurchaseBoletoEnabled.prop('checked', false);
+            percentagePurchaseBoletoEnabled.closest('.swicth-show-input').find('.form-group').hide()
+            $(".percentage-boleto-value").val('');
+        }
+
+        const percentagePurchasePixEnabled = $("#modal-edit-pixel .percentage-purchase-pix-enabled");
+        percentagePurchasePixEnabled.val(pixel.percentage_purchase_pix_enabled);
+        if(pixel.percentage_purchase_pix_enabled) {
+            percentagePurchasePixEnabled.prop('checked', true);
+            percentagePurchasePixEnabled.closest('.swicth-show-input').find('.form-group').show()
+            $(".percentage-pix-value").val(pixel.value_percentage_purchase_pix);
+        } else {
+            percentagePurchasePixEnabled.prop('checked', false);
+            percentagePurchasePixEnabled.closest('.swicth-show-input').find('.form-group').hide()
+            $(".percentage-pix-value").val('');
+        }
+
+
 
         // plans
         const plansInput = $(".apply_plans");
@@ -433,8 +456,10 @@ $(function () {
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
         const inputConversionalEdit = $("#modal-edit-pixel .conversional-edit").val();
-        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
-        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value-edit").val();
+        const percentagePurchaseBoletoEnabled = $("#modal-edit-pixel .percentage-purchase-boleto-enabled").is(":checked");
+        const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value").val();
+        const percentagePurchasePixEnabled = $("#modal-edit-pixel .percentage-purchase-pix-enabled").is(":checked");
+        const valuePercentagePurchasePix = $("#modal-edit-pixel .percentage-pix-value").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
         const plansApply = $("#modal-edit-pixel .apply_plans").val();
@@ -446,7 +471,9 @@ $(function () {
                 is_api: isApi,
                 code: inputCodeEdit,
                 conversional: inputConversionalEdit,
+                percentage_purchase_boleto_enabled: percentagePurchaseBoletoEnabled,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                percentage_purchase_pix_enabled: percentagePurchasePixEnabled,
                 value_percentage_purchase_pix: valuePercentagePurchasePix,
                 facebook_token_api: facebookTokenApi,
                 purchase_event_name: inputPurchaseEventName,
@@ -488,7 +515,9 @@ $(function () {
                 purchase_event_name: inputPurchaseEventName,
                 is_api: isApi,
                 facebook_token_api: facebookTokenApi,
+                percentage_purchase_boleto_enabled: percentagePurchaseBoletoEnabled,
                 value_percentage_purchase_boleto: valuePercentagePurchaseBoleto,
+                percentage_purchase_pix_enabled: percentagePurchasePixEnabled,
                 value_percentage_purchase_pix: valuePercentagePurchasePix,
                 url_facebook_domain_edit: $("#modal-edit-pixel .url_facebook_domain_edit").val(),
             },
@@ -715,29 +744,13 @@ $(function () {
             }
         }
 
-        if (formData.value_percentage_purchase_boleto.length > 3) {
-            alertCustom("error", "O valore do campo % Valor Boleto está incorreto!");
+        if (formData.percentage_purchase_boleto_enabled && formData.value_percentage_purchase_boleto.length > 3) {
+            alertCustom("error", "O valor do campo % Valor Boleto está incorreto!");
             return false;
         }
 
-        if (formData.value_percentage_purchase_pix.length > 3) {
-            alertCustom("error", "O valore do campo % Valor PIX está incorreto!");
-            return false;
-        }
-
-        if (
-            formData.value_percentage_purchase_boleto.length > 0 &&
-            (formData.value_percentage_purchase_boleto > 100 || formData.value_percentage_purchase_boleto < 10)
-        ) {
-            alertCustom("error", "O valores permitidos para o campo % Valor Boleto deve ser entre 10 e 100");
-            return false;
-        }
-
-        if (
-            formData.value_percentage_purchase_pix.length > 0 &&
-            (formData.value_percentage_purchase_pix > 100 || formData.value_percentage_purchase_pix < 10)
-        ) {
-            alertCustom("error", "O valores permitidos para o campo % Valor PIX deve ser entre 10 e 100");
+        if (formData.percentage_purchase_pix_enabled && formData.value_percentage_purchase_pix.length > 3) {
+            alertCustom("error", "O valor do campo % Valor PIX está incorreto!");
             return false;
         }
 
@@ -758,6 +771,28 @@ $(function () {
 
         return true;
     }
+
+    $(document).on("change", ".percentage-purchase-boleto-enabled", function () {
+        const input = $(this).closest('.swicth-show-input').find('.percentage-boleto-value')
+        if($(this).is(':checked')) {
+            input.closest('.form-group').show();
+            input.focus();
+        } else {
+            input.closest('.form-group').hide();
+            input.val('');
+        }
+    });
+
+    $(document).on("change", ".percentage-purchase-pix-enabled", function () {
+        const input = $(this).closest('.swicth-show-input').find('.percentage-pix-value')
+        if($(this).is(':checked')) {
+            input.closest('.form-group').show();
+            input.focus();
+        } else {
+            input.closest('.form-group').hide();
+            input.val('');
+        }
+    });
 
     // Create
     $("#modal-create-pixel #single-event").on("change", function () {

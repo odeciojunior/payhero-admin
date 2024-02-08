@@ -22,7 +22,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $name
  * @property string $code
  * @property string $platform
- * @property bool $status
+ * @property boolean $status
  * @property string $checkout
  * @property string $send_value_checkout
  * @property string $purchase_all
@@ -35,50 +35,21 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $purchase_pix
  * @property string $upsell
  * @property string $purchase_upsell
- * @property int $affiliate_id
- * @property Project $project
- * @property int|null $campaign_id
+ * @property integer $affiliate_id
+ * @property integer|null $campaign_id
  * @property mixed|null $apply_on_plans
  * @property string|null $purchase_event_name
- * @property int $is_api
+ * @property boolean $is_api
  * @property string|null $facebook_token
+ * @property boolean $percentage_purchase_boleto_enabled
  * @property int $value_percentage_purchase_boleto
+ * @property boolean $percentage_purchase_pix_enabled
  * @property int $value_percentage_purchase_pix
- * @property-read Collection|Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read Affiliate|null $affiliate
- * @property-read string $id_code
+ * @property integer|null $activities_count
+ * @property string $id_code
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @method static Builder|Pixel newModelQuery()
- * @method static Builder|Pixel newQuery()
- * @method static \Illuminate\Database\Query\Builder|Pixel onlyTrashed()
- * @method static Builder|Pixel query()
- * @method static Builder|Pixel whereAffiliateId($value)
- * @method static Builder|Pixel whereApplyOnPlans($value)
- * @method static Builder|Pixel whereCampaignId($value)
- * @method static Builder|Pixel whereCheckout($value)
- * @method static Builder|Pixel whereCode($value)
- * @method static Builder|Pixel whereCodeMetaTagFacebook($value)
- * @method static Builder|Pixel whereCreatedAt($value)
- * @method static Builder|Pixel whereDeletedAt($value)
- * @method static Builder|Pixel whereFacebookToken($value)
- * @method static Builder|Pixel whereId($value)
- * @method static Builder|Pixel whereIsApi($value)
- * @method static Builder|Pixel whereName($value)
- * @method static Builder|Pixel wherePlatform($value)
- * @method static Builder|Pixel whereProjectId($value)
- * @method static Builder|Pixel wherePurchaseBoleto($value)
- * @method static Builder|Pixel wherePurchaseCard($value)
- * @method static Builder|Pixel wherePurchaseEventName($value)
- * @method static Builder|Pixel wherePurchasePix($value)
- * @method static Builder|Pixel whereStatus($value)
- * @method static Builder|Pixel whereUpdatedAt($value)
- * @method static Builder|Pixel whereValuePercentagePurchaseBoleto($value)
- * @method static \Illuminate\Database\Query\Builder|Pixel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Pixel withoutTrashed()
- * @mixin Eloquent
  */
 class Pixel extends Model
 {
@@ -131,7 +102,9 @@ class Pixel extends Model
         "is_api",
         "facebook_token",
         "url_facebook_domain",
+        "percentage_purchase_boleto_enabled",
         "value_percentage_purchase_boleto",
+        "percentage_purchase_pix_enabled",
         "value_percentage_purchase_pix",
         "created_at",
         "updated_at",

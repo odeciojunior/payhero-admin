@@ -187,6 +187,10 @@ class PixelService
             $this->dataGoogleAds($dataValidated);
         }
 
+        if(empty($dataValidated["url_facebook_domain_edit"])){
+            $dataValidated["url_facebook_domain_edit"] = null;
+        }
+
         $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated["edit_pixel_plans"]));
 
         $pixel->update([
@@ -210,7 +214,9 @@ class PixelService
             "purchase_event_name" => $dataValidated["purchase_event_name"] ?? null,
             "facebook_token" => $dataValidated["facebook_token_api"],
             "is_api" => $dataValidated["is_api"],
+            "percentage_purchase_boleto_enabled" => $dataValidated["percentage_purchase_boleto_enabled"] == "true",
             "value_percentage_purchase_boleto" => $dataValidated["value_percentage_purchase_boleto"],
+            "percentage_purchase_pix_enabled" => $dataValidated["percentage_purchase_pix_enabled"] == "true",
             "value_percentage_purchase_pix" => $dataValidated["value_percentage_purchase_pix"],
             "url_facebook_domain" => $dataValidated["url_facebook_domain_edit"],
         ]);
