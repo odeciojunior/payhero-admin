@@ -79,7 +79,7 @@ class PixelsApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => 'Erro ao tentar criar pixel',
+                    "message" => __("controller.error.generic"),
                 ],
                 400
             );

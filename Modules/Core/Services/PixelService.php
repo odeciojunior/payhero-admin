@@ -66,8 +66,8 @@ class PixelService
             $dataValidated["purchase-event-name"] = null;
         }
 
-        if(empty($dataValidated["url_facebook_domain_edit"])){
-            $dataValidated["url_facebook_domain_edit"] = null;
+        if(empty($dataValidated["url_facebook_domain"])){
+            $dataValidated["url_facebook_domain"] = null;
         }
 
         $facebookToken = null;
