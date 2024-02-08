@@ -66,6 +66,10 @@ class PixelService
             $dataValidated["purchase-event-name"] = null;
         }
 
+        if(empty($dataValidated["url_facebook_domain_edit"])){
+            $dataValidated["url_facebook_domain_edit"] = null;
+        }
+
         $facebookToken = null;
         $isApi = false;
         $facebookDomainUrl = null;
@@ -87,9 +91,7 @@ class PixelService
             $dataValidated["value_percentage_purchase_pix"] = 100;
         }
 
-        if(empty($dataValidated["url_facebook_domain_edit"])){
-            $dataValidated["url_facebook_domain_edit"] = null;
-        }
+
 
         Pixel::create([
             "project_id" => $project->id,
@@ -169,6 +171,10 @@ class PixelService
             }
         }
 
+        if(empty($dataValidated["url_facebook_domain_edit"])){
+            $dataValidated["url_facebook_domain_edit"] = null;
+        }
+
         if ($dataValidated["platform"] == "facebook") {
             $dataValidated["purchase_event_name"] = "";
             if ($dataValidated["is_api"] == "api") {
@@ -191,10 +197,6 @@ class PixelService
 
         if ($dataValidated["platform"] == "google_adwords") {
             $this->dataGoogleAds($dataValidated);
-        }
-
-        if(empty($dataValidated["url_facebook_domain_edit"])){
-            $dataValidated["url_facebook_domain_edit"] = null;
         }
 
         $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated["edit_pixel_plans"]));
