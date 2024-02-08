@@ -170,9 +170,7 @@ $(function () {
 
                                         </a>
 
-                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' \\pixel='${
-                                            value.id
-                                        }' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'>
                                             <span class=''>
                                                 <img src='/build/global/img/icon-trash-tale.svg'/>
                                             </span>
