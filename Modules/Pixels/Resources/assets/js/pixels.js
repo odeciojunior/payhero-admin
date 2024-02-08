@@ -828,6 +828,8 @@ $(function () {
         formData.append("delivery", true); // $("#modal-create-pixel .delivery").is(':checked'));
         formData.append("coupon", true); // $("#modal-create-pixel .coupon").is(':checked'));
         formData.append("payment_info", true); // $("#modal-create-pixel .payment-info").is(':checked'));
+        formData.append("percentage_purchase_boleto_enabled", $("#modal-create-pixel .percentage-purchase-boleto-enabled").is(":checked"));
+        formData.append("percentage_purchase_pix_enabled", $("#modal-create-pixel .percentage-purchase-pix-enabled").is(":checked"));
         formData.append("purchase_card", $("#modal-create-pixel .purchase-card").is(":checked"));
         formData.append("purchase_boleto", $("#modal-create-pixel .purchase-boleto").is(":checked"));
         formData.append("purchase_pix", $("#modal-create-pixel .purchase-pix").is(":checked"));
@@ -844,7 +846,9 @@ $(function () {
                 is_api: formData.get("api-facebook"),
                 code: formData.get("code"),
                 conversional: formData.get("conversional"),
+                percentage_purchase_boleto_enabled: formData.get("percentage_purchase_boleto_enabled"),
                 value_percentage_purchase_boleto: formData.get("value_percentage_purchase_boleto"),
+                percentage_purchase_pix_enabled: formData.get("percentage_purchase_pix_enabled"),
                 value_percentage_purchase_pix: formData.get("value_percentage_purchase_pix"),
                 facebook_token_api: formData.get("facebook-token-api"),
                 purchase_event_name: formData.get("purchase-event-name"),

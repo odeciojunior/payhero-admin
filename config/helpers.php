@@ -74,7 +74,7 @@ if (!function_exists('getRegionByIp')) {
 if (!function_exists('versionsFile')) {
     function versionsFile()
     {
-        return md5(413);
+        return md5(414);
     }
 }
 
