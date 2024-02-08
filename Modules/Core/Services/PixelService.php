@@ -87,6 +87,10 @@ class PixelService
             $dataValidated["value_percentage_purchase_pix"] = 100;
         }
 
+        if(empty($dataValidated["url_facebook_domain_edit"])){
+            $dataValidated["url_facebook_domain_edit"] = null;
+        }
+
         Pixel::create([
             "project_id" => $project->id,
             "name" => $dataValidated["name"],
@@ -111,7 +115,9 @@ class PixelService
             "purchase_event_name" => $dataValidated["purchase-event-name"],
             "facebook_token" => $facebookToken,
             "is_api" => $isApi,
+            "percentage_purchase_boleto_enabled" => $dataValidated["percentage_purchase_boleto_enabled"] == "true",
             "value_percentage_purchase_boleto" => $dataValidated["value_percentage_purchase_boleto"],
+            "percentage_purchase_pix_enabled" => $dataValidated["percentage_purchase_pix_enabled"] == "true",
             "value_percentage_purchase_pix" => $dataValidated["value_percentage_purchase_pix"],
             "url_facebook_domain" => $facebookDomainUrl,
         ]);
