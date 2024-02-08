@@ -25,7 +25,8 @@
 
     <form id="checkout_editor">
         @method('PUT')
-        <input type="hidden" id="checkout_editor_id">
+        <input type="hidden"
+               id="checkout_editor_id">
         <div style="display: flex; flex-direction: column; width: 100%">
             <div class="grid-checkout-editor">
 
@@ -37,15 +38,15 @@
 
                     <div id="checkout_type"
                          class="radio-group"
-                         style="flex-direction: column; justify-content: inherit;"
-                    >
+                         style="flex-direction: column; justify-content: inherit;">
                         <input class="custom-radio"
                                id="checkout_type_steps"
                                type="radio"
                                name="checkout_type_enum"
                                value="1"
                                style="width: 150px" />
-                        <label for="checkout_type_steps" style="margin-bottom: 5px !important; width: 165px;">Checkout de 3 passos</label>
+                        <label for="checkout_type_steps"
+                               style="margin-bottom: 5px !important; width: 165px;">Checkout de 3 passos</label>
 
                         <input class="custom-radio"
                                id="checkout_type_unique"
@@ -53,10 +54,12 @@
                                name="checkout_type_enum"
                                value="2"
                                style="width: 150px" />
-                        <label for="checkout_type_unique" style="width: 165px;">Checkout de 1 passo</label>
+                        <label for="checkout_type_unique"
+                               style="width: 165px;">Checkout de 1 passo</label>
                     </div>
 
-                    <div class="row-flex type_steps" style="flex-direction: column;">
+                    <div class="row-flex type_steps"
+                         style="flex-direction: column;">
                         <div class="radio-row">
                             <input type="radio"
                                    id="number_steps"
@@ -137,7 +140,8 @@
                                 <div id="checkout_logo_error"
                                      class="checkout-error"
                                      style="display: none">
-                                    <p>Por favor,carregue uma imagem de formato válido (jpg, jpeg ou png).</p>
+                                    <p>Por favor,carregue uma imagem de formato válido (jpg, jpeg ou png) e no máximo
+                                        300x300px.</p>
                                 </div>
                             </div>
                         </div>
@@ -532,9 +536,12 @@
                                 Banner no topo
                             </h1>
 
-                            <div style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
+                            <div
+                                 style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <div id="banner_type" class="radio-group" style="justify-self: end; display: none;">
+                                    <div id="banner_type"
+                                         class="radio-group"
+                                         style="justify-self: end; display: none;">
                                         <input class="custom-icon-radio"
                                                id="banner_type_square"
                                                type="radio"
@@ -1102,8 +1109,13 @@
                                 </div>
 
                                 <div class="switch-holder mb-3">
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="delivery_time_shipping_enabled" name="delivery_time_shipping_enabled" class="check" value="1">
+                                    <label class="switch"
+                                           style='top:3px'>
+                                        <input type="checkbox"
+                                               id="delivery_time_shipping_enabled"
+                                               name="delivery_time_shipping_enabled"
+                                               class="check"
+                                               value="1">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -1662,7 +1674,8 @@
                             <div class="textarea-observation">
                                 <img class="dot"
                                      src="{{ mix('build/layouts/checkouteditor/img/svg/info-icon.svg') }}"></span><span
-                                      class="observation-span">Caso preenchido, esse número apareçerá para o cliente no
+                                      class="observation-span">Caso preenchido, esse número apareçerá para o cliente
+                                    no
                                     envio da mensagem de WhatsApp.</span>
                             </div>
                         </div>
