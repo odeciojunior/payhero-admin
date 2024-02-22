@@ -93,7 +93,8 @@ $(document).ready(function () {
 
     //reset the intergation modal
     function clearForm() {
-        $("#url_api").val("");
+        $("#client_id").val("");
+        $("#client_secret").val("");
         $(":checkbox").prop("checked", true).val(1);
         $("#project_id, #select_projects_edit")
             .prop("selectedIndex", 0)
@@ -181,7 +182,8 @@ $(document).ready(function () {
 
                 $("#select_projects_edit").val(integration.project_id);
                 $("#integration_id").val(integration.id);
-                $("#url_api_edit").val(integration.url_api);
+                $("#client_id_edit").val(integration.client_id);
+                $("#client_secret_edit").val(integration.client_secret);
 
                 $("#boleto_generated_edit")
                     .val(integration.boleto_generated)
@@ -224,8 +226,12 @@ $(document).ready(function () {
 
     //store
     $(document).on("click", ".btn-save", function () {
-        if ($("#url_api").val() == "") {
-            alertCustom("error", "Dados informados inválidos");
+        if ($("#client_id").val() == "") {
+            alertCustom("error", "Dados informados inválidos 1");
+            return false;
+        }
+        if ($("#client_secret").val() == "") {
+            alertCustom("error", "Dados informados inválidos 2");
             return false;
         }
         var form_data = new FormData(
@@ -256,8 +262,12 @@ $(document).ready(function () {
 
     //update
     $(document).on("click", ".btn-update", function () {
-        if ($("#url_api_edit").val() == "") {
-            alertCustom("error", "Dados informados inválidos");
+        if ($("#client_id_edit").val() == "") {
+            alertCustom("error", "Dados informados inválidos 3");
+            return false;
+        }
+        if ($("#client_secret_edit").val() == "") {
+            alertCustom("error", "Dados informados inválidos 4");
             return false;
         }
         var integrationId = $("#integration_id").val();

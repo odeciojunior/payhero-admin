@@ -26,7 +26,9 @@ class ReportanaIntegrationFactory extends Factory
         return [
             "project_id" => Project::DEMO_ID,
             "user_id" => User::DEMO_ID,
-            "url_api" => $this->faker->url(),
+            // "url_api" => $this->faker->url(),
+            "client_id" => rand(0, 1),
+            "client_secret" => rand(0, 1),
             "billet_generated" => rand(0, 1),
             "billet_paid" => rand(0, 1),
             "credit_card_refused" => rand(0, 1),

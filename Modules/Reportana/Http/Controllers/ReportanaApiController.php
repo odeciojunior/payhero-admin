@@ -110,11 +110,11 @@ class ReportanaApiController extends Controller
 
             $projectId = current(Hashids::decode($data["project_id"]));
             if (!empty($projectId)) {
-                if (empty($data["url_api"])) {
-                    return response()->json(["message" => "URl API é obrigatório!"], 400);
+                if (empty($data["client_id"])) {
+                    return response()->json(["message" => "CLIENT ID é obrigatório!"], 400);
                 }
-                if (!filter_var($data["url_api"], FILTER_VALIDATE_URL)) {
-                    return response()->json(["message" => "URL API inválido!"], 400);
+                if (empty($data["client_secret"])) {
+                    return response()->json(["message" => "CLIENT SECRET é obrigatório!"], 400);
                 }
                 if (empty($data["boleto_generated"])) {
                     $data["boleto_generated"] = 0;
@@ -145,7 +145,8 @@ class ReportanaApiController extends Controller
                 }
 
                 $integrationCreated = $reportanaIntegrationModel->firstOrCreate([
-                    "url_api" => $data["url_api"],
+                    "client_id" => $data["client_id"],
+                    "client_secret" => $data["client_secret"],
                     "billet_generated" => $data["boleto_generated"],
                     "billet_paid" => $data["boleto_paid"],
                     "billet_expired" => $data["boleto_expired"],
@@ -263,11 +264,11 @@ class ReportanaApiController extends Controller
             $integrationId = current(Hashids::decode($id));
             $reportanaIntegration = $reportanaIntegrationModel->find($integrationId);
             $messageError = "";
-            if (empty($data["url_api"])) {
-                return response()->json(["message" => "URl API é obrigatório!"], 400);
+            if (empty($data["client_id"])) {
+                return response()->json(["message" => "CLIENT ID é obrigatório!"], 400);
             }
-            if (!filter_var($data["url_api"], FILTER_VALIDATE_URL)) {
-                return response()->json(["message" => "URL API inválido!"], 400);
+            if (empty($data["client_secret"])) {
+                return response()->json(["message" => "CLIENT SECRET é obrigatório!"], 400);
             }
             if (empty($data["boleto_generated"])) {
                 $data["boleto_generated"] = 0;
@@ -298,7 +299,8 @@ class ReportanaApiController extends Controller
             }
 
             $integrationUpdated = $reportanaIntegration->update([
-                "url_api" => $data["url_api"],
+                "client_id" => $data["client_id"],
+                "client_secret" => $data["client_secret"],
                 "billet_generated" => $data["boleto_generated"],
                 "billet_paid" => $data["boleto_paid"],
                 "billet_expired" => $data["boleto_expired"],
