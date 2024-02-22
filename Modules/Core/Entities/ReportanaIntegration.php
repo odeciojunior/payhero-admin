@@ -16,7 +16,8 @@ use Spatie\Activitylog\LogOptions;
  * @property integer $id
  * @property int $user_id
  * @property int $project_id
- * @property string $url_api
+ * @property string $client_id
+ * @property string $client_secret
  * @property boolean $billet_generated
  * @property boolean $billet_paid
  * @property boolean $billet_expired
@@ -50,7 +51,8 @@ class ReportanaIntegration extends Model
     protected $fillable = [
         "user_id",
         "project_id",
-        "url_api",
+        "client_id",
+        "client_secret",
         "billet_generated",
         "billet_paid",
         "credit_card_refused",

@@ -15,13 +15,25 @@
         </div>
         <div class="row">
             <div class='form-group col-12'>
-                <label for="url_api">URL API</label>
+                <label for="client_id">CLIENTE ID</label>
                 <div class="d-flex input-group">
-                    <input type="url"
+                    <input type="text"
                            class="input-pad addon"
-                           name="url_api"
-                           id="url_api"
-                           placeholder="Digite a URL de integração">
+                           name="client_id"
+                           id="client_id"
+                           placeholder="Digite o client id">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class='form-group col-12'>
+                <label for="client_secret">CLIENT SECRET</label>
+                <div class="d-flex input-group">
+                    <input type="password"
+                           class="input-pad addon"
+                           name="client_secret"
+                           id="client_secret"
+                           placeholder="Digite o client secret">
                 </div>
             </div>
         </div>
