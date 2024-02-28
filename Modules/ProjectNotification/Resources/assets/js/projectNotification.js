@@ -76,7 +76,7 @@ $(function () {
                     $("#modal-edit-project-notification .project-notification-field-email").show();
                     $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 10000);
                 } else {
-                    $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 160);
+                    $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 190);
                     $("#modal-edit-project-notification .project-notification-field-email").hide();
                 }
 

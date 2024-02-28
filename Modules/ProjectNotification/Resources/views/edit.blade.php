@@ -89,6 +89,7 @@
                       type="text"
                       class="form-control project-notification-message project-notification-field"
                       rows="8"></textarea>
+                <label>Limite 190 caraceteres.</label><br>
             <div id="customs"
                  class="">
                 <label for="name">Parâmetros</label><br>
