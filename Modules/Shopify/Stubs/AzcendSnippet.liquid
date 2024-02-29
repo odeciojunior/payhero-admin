@@ -80,7 +80,7 @@
     }
 
     if (urlParams) {
-        setCookie(cookieName, urlParams, 7, checkoutDomain, true);
+        setCookie(cookieName, urlParams, 7, cookieDomain, true);
     } else {
         var savedParams = getCookie(cookieName);
         if (savedParams) window.location.search = savedParams;
