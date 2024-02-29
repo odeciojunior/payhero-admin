@@ -24,7 +24,7 @@
                     disabled>
                 <option value="1">Boleto gerado</option>
                 <option value="2">Boleto compensado</option>
-                <option value="3">Compra no cartão</option>
+                <option value="3">Compra Aprovada</option>
                 <option value="4">Carrinho abandonado</option>
                 <option value="5">Boleto vencendo</option>
                 <option value="6">Código de Rastreio</option>
@@ -89,6 +89,7 @@
                       type="text"
                       class="form-control project-notification-message project-notification-field"
                       rows="8"></textarea>
+                <label>Limite 190 caraceteres.</label><br>
             <div id="customs"
                  class="">
                 <label for="name">Parâmetros</label><br>

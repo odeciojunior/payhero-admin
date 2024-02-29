@@ -22,7 +22,7 @@ class ProjectNotificationResource extends JsonResource
         $arrayEvent = [
             1 => "Boleto gerado",
             2 => "Boleto compensado",
-            3 => "Compra no cartão",
+            3 => "Compra Aprovada",
             4 => "Carrinho abandonado",
             5 => "Boleto vencendo",
             6 => "Código de Rastreio",

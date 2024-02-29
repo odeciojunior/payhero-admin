@@ -76,7 +76,7 @@ $(function () {
                     $("#modal-edit-project-notification .project-notification-field-email").show();
                     $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 10000);
                 } else {
-                    $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 160);
+                    $("#modal-edit-project-notification .project-notification-message").attr("maxlength", 190);
                     $("#modal-edit-project-notification .project-notification-field-email").hide();
                 }
 
@@ -350,7 +350,7 @@ $(function () {
                                             </span>
                                         </a>
 
-                                        ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? `
+                                        ${value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? `
                                             <button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
                                                 <span class="">
                                                     <img src="/build/global/img/pencil-icon.svg">
