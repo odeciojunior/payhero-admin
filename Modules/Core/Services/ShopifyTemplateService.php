@@ -203,7 +203,7 @@ class ShopifyTemplateService
             $snippetContent = file_get_contents("{$this->stubsTemplateFolder}{$snippetName}");
 
             $snippetContent = str_replace("<DOMAIN>", $domain, $snippetContent);
-            $snippetContent = str_replace("'<SKIP_TO_CART>'", $skipToCart ? 'true' : 'false', $snippetContent);
+            $snippetContent = str_replace('"<SKIP_TO_CART>"', $skipToCart ? 'true' : 'false', $snippetContent);
 
             $resource = "themes/{$themeId}/assets";
             $this->client->put($resource, [
