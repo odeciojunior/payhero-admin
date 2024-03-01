@@ -1,14 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewayFlag;
 use Modules\Core\Entities\GatewayFlagTax;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
 return new class extends Migration {
     /**
@@ -45,6 +41,8 @@ return new class extends Migration {
                 ]);
             }
         }
+
+        
     }
 
     /**
