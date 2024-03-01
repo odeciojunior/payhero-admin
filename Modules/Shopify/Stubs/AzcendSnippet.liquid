@@ -40,13 +40,24 @@
 
 <script>
 
+    // Config
+    var checkoutDomain = "<DOMAIN>";
+    var cookieDomain = "<DOMAIN>";
+    var skipToCart = "<SKIP_TO_CART>";
+    var cookieName = "_azcend_track";
+
     // UTM params
 
-    var setCookie = function(name, value, days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + date.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";domain=" + checkoutDomain + ";path=/";
+    var setCookie = function(name, value, days, domain, secure) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        var domainString = domain ? "; domain=" + domain : "";
+        var secureFlag = secure ? "; Secure" : "";
+        document.cookie = name + "=" + (value || "") + expires + domainString + secureFlag + "; path=/";
     };
 
     var getCookie = function(name) {
@@ -68,19 +79,14 @@
         params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
     }
 
-    var cookieName = "_azcend_track";
-
     if (urlParams) {
-        setCookie(cookieName, urlParams, 7);
+        setCookie(cookieName, urlParams, 7, cookieDomain, true);
     } else {
         var savedParams = getCookie(cookieName);
         if (savedParams) window.location.search = savedParams;
     }
 
     // Redirect to checkout
-
-    var checkoutDomain = "<DOMAIN>";
-    var skipToCart = "<SKIP_TO_CART>";
 
     function ajaxRequest(method, url, data, callback) {
         const xhr = new XMLHttpRequest();
