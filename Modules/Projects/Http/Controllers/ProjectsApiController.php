@@ -3,6 +3,7 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -14,6 +15,7 @@ use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Project;
@@ -167,6 +169,17 @@ class ProjectsApiController extends Controller
             if (empty($project)) {
                 return response()->json(["message" => "Erro ao tentar salvar projeto"], 400);
             }
+
+            Domain::create([
+                "project_id"            => $project->id,
+                "cloudflare_domain_id"  => null,
+                "name"                  => "azcend.com.br",
+                "status"                => 3,
+                "sendgrid_id"           => null,
+                "created_at"            => now(),
+                "updated_at"            => now(),
+                "deleted_at"            => null,
+            ]);
 
             DiscountCoupon::create([
                 "project_id"            => $project->id,
