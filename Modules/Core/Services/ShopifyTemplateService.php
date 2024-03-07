@@ -381,9 +381,10 @@ class ShopifyTemplateService
             $this->setThemeById($theme->getId());
 
             $htmlBody = $this->getTemplateHtml();
-            $htmlBody = $this->removeScript($htmlBody);
-
-            $this->updateTemplateLiquid($htmlBody);
+            if ($htmlBody!==null) {
+                $htmlBody = $this->removeScript($htmlBody ?? "");
+                $this->updateTemplateLiquid($htmlBody);
+            }
         }
     }
 }
