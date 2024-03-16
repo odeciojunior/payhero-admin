@@ -278,6 +278,8 @@ class LoginController extends Controller
                 return response()->redirectTo("/{$redirect}");
             }
         } catch (Exception $e) {
+            report($e);
+
             return response()->json([
                 "message" => "Não foi possivel autenticar o usuário.",
                 "error" => $e->getMessage(),
