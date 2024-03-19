@@ -16,6 +16,7 @@ use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\VegaService;
 use Spatie\Activitylog\LogOptions;
 
@@ -60,6 +61,9 @@ class Gateway extends Model
 
     public const ABMEX_PRODUCTION_ID = 11;
     public const ABMEX_SANDBOX_ID = 12;
+
+    public const SIMPAY_PRODUCTION_ID = 13;
+    public const SIMPAY_SANDBOX_ID = 14;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -120,6 +124,10 @@ class Gateway extends Model
             case self::ABMEX_PRODUCTION_ID:
             case self::ABMEX_SANDBOX_ID:
                 return new AbmexService();
+
+            case self::SIMPAY_PRODUCTION_ID:
+            case self::SIMPAY_SANDBOX_ID:
+                return new SimPayService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:
