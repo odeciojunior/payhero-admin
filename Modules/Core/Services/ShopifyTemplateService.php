@@ -3,10 +3,9 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\ShopifyIntegration;
-use Slince\Shopify\Client;
-use Slince\Shopify\Manager\Asset\Asset;
-use Slince\Shopify\Manager\Theme\Theme;
-use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Services\Shopify\AssetService;
+use Modules\Core\Services\Shopify\Client;
+use Modules\Core\Services\Shopify\ThemeService;
 
 class ShopifyTemplateService
 {
@@ -16,29 +15,20 @@ class ShopifyTemplateService
 
     private $stubsTemplateFolder = __DIR__ . "./../../Shopify/Stubs/";
 
-    private $cacheDir;
-
     private $credential;
-
-    private $client;
 
     private $theme;
 
     private $skipToCart = false;
 
+    private ThemeService $themeService;
+    private AssetService $assetService;
+
     public function __construct(string $urlStore, string $token, $getThemes = true)
     {
-        if (!$this->cacheDir) {
-            $cache = "/var/tmp";
-            //$cache = storage_path();
-        } else {
-            $cache = $this->cacheDir;
-        }
-
-        $this->credential = new PublicAppCredential($token);
-        $this->client = new Client($urlStore, $this->credential, [
-            "meta_cache_dir" => $cache, // Metadata cache dir, required
-        ]);
+        $client = new Client($urlStore, $token);
+        $this->themeService = new ThemeService($client);
+        $this->assetService = new AssetService($client);
 
         if ($getThemes) {
             sleep(1);
@@ -46,29 +36,6 @@ class ShopifyTemplateService
         }
     }
 
-    /**
-     * @param string $cacheDir
-     * @return $this
-     */
-    public function cacheDir(string $cacheDir)
-    {
-        $this->cacheDir = $cacheDir;
-
-        return $this;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * @param $themeId
-     * @return $this
-     */
     public function setThemeById($themeId)
     {
         $this->theme = $this->getThemeById($themeId);
@@ -76,10 +43,6 @@ class ShopifyTemplateService
         return $this;
     }
 
-    /**
-     * @param $role
-     * @return bool
-     */
     public function setThemeByRole($role)
     {
         $this->theme = $this->getThemeByRole($role);
@@ -91,46 +54,25 @@ class ShopifyTemplateService
         return false;
     }
 
-    /**
-     * @return \Slince\Shopify\Theme\Theme[]
-     */
     public function getAllThemes()
     {
-        return $this->client->getThemeManager()->findAll([]);
+        return $this->themeService->findAll();
     }
 
-    /**
-     * @param string $role
-     * @return mixed
-     */
-    public function getThemeIdByRole(string $role)
-    {
-        $theme = $this->getThemeByRole($role);
-
-        return $theme->id;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getThemeName()
     {
         if ($this->theme) {
-            return $this->theme->getName();
+            return $this->theme->name;
         }
-        return ""; //throwl
+        return "";
     }
 
-    /**
-     * @param string $role
-     * @return \Slince\Shopify\Theme\Theme
-     */
     public function getThemeByRole(string $role)
     {
         $themes = $this->getAllThemes();
 
         foreach ($themes as $theme) {
-            if ($theme->getRole() == $role) {
+            if ($theme->role == $role) {
                 return $theme;
             }
         }
@@ -138,21 +80,17 @@ class ShopifyTemplateService
         return null;
     }
 
-    /**
-     * @param string $themeId
-     * @return Theme|null
-     */
     public function getThemeById(string $themeId)
     {
         $themes = $this->getAllThemes();
 
         foreach ($themes as $theme) {
-            if ($theme->getId() == $themeId) {
+            if ($theme->id == $themeId) {
                 return $theme;
             }
         }
 
-        return null; //throwl
+        return null;
     }
 
     public function getTheme()
@@ -160,39 +98,26 @@ class ShopifyTemplateService
         return $this->theme;
     }
 
-    /**
-     * @param bool $skipToCart
-     */
     public function setSkipToCart(bool $skipToCart): void
     {
         $this->skipToCart = $skipToCart;
 
         $this->setThemeByRole("main");
 
-        $themeId = $this->theme->getId();
-        $resource = "themes/{$themeId}/assets";
+        $themeId = $this->theme->id;
 
         $snippetName = self::STUBS_TEMPLATE;
         $key = "snippets/{$snippetName}";
 
-        $result = $this->client->get($resource, [
-            "asset" => [
-                "key" => $key,
-            ]
-        ]);
+        $result = $this->assetService->find($themeId, $key);
 
-        $content = !empty($result['asset']) && !empty($result['asset']['value']) ? $result['asset']['value'] : false;
+        $content = !empty($result["asset"]) && !empty($result["asset"]["value"]) ? $result["asset"]["value"] : false;
 
         if ($content) {
-            $value  =  $skipToCart ? "true" : "false";
-            $newContent = preg_replace('/var skipToCart = .+;/', "var skipToCart = {$value};", $content);
+            $value = $skipToCart ? "true" : "false";
+            $newContent = preg_replace("/var skipToCart = .+;/", "var skipToCart = {$value};", $content);
 
-            $this->client->put($resource, [
-                "asset" => [
-                    "key" => $key,
-                    "value" => $newContent
-                ]
-            ]);
+            $this->assetService->createOrUpdateAsset($themeId, $key, $newContent);
         }
     }
 
@@ -203,15 +128,9 @@ class ShopifyTemplateService
             $snippetContent = file_get_contents("{$this->stubsTemplateFolder}{$snippetName}");
 
             $snippetContent = str_replace("<DOMAIN>", $domain, $snippetContent);
-            $snippetContent = str_replace('"<SKIP_TO_CART>"', $skipToCart ? 'true' : 'false', $snippetContent);
+            $snippetContent = str_replace('"<SKIP_TO_CART>"', $skipToCart ? "true" : "false", $snippetContent);
 
-            $resource = "themes/{$themeId}/assets";
-            $this->client->put($resource, [
-                "asset" => [
-                    "key" => "snippets/{$snippetName}",
-                    "value" => $snippetContent
-                ]
-            ]);
+            $this->assetService->createOrUpdateAsset($themeId, "snippets/{$snippetName}", $snippetContent);
         }
     }
 
@@ -219,12 +138,7 @@ class ShopifyTemplateService
     {
         if (!empty($this->theme)) {
             $themeId = $this->theme->getId();
-            $resource = "themes/{$themeId}/assets";
-            $this->client->delete($resource, [
-                "asset" => [
-                    "key" => "snippets/{$snippetName}"
-                ]
-            ]);
+            $this->assetService->delete($themeId, "snippets/{$snippetName}");
         }
     }
 
@@ -284,17 +198,14 @@ class ShopifyTemplateService
     public function updateTemplateLiquid(string $newHtml, string $templateKeyName = self::LAYOUT_THEME_LIQUID)
     {
         if (!empty($this->theme)) {
-            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
-                "key" => $templateKeyName,
-                "value" => $newHtml,
-            ]);
+            $asset = $this->assetService->createOrUpdateAsset($this->theme->id, $templateKeyName, $newHtml);
 
             if ($asset) {
                 return true;
             }
         }
 
-        return false; //throwl
+        return false;
     }
 
     public function insertScript(string $oldHtml)
@@ -336,36 +247,20 @@ class ShopifyTemplateService
         return $html;
     }
 
-    /**
-     * @return Asset[]|null
-     */
-    public function getAllTemplates()
-    {
-        if (!empty($this->theme->id)) {
-            return $this->client->getAssetManager()->findAll($this->theme);
-        }
-
-        return null; //throwl
-    }
-
-    /**
-     * @param string $templateKeyName
-     * @return string|null
-     */
     public function getTemplateHtml(string $templateKeyName = self::LAYOUT_THEME_LIQUID): ?string
     {
         if (!empty($this->theme)) {
-            $templateFiles = $this->client->getAssetManager()->findAll($this->theme->getId());
+            $templateFiles = $this->assetService->findAll($this->theme->id);
             foreach ($templateFiles as $file) {
-                if ($file->getKey() == $templateKeyName) {
-                    $htmlCart = $this->client->getAssetManager()->find($this->theme->getId(), $templateKeyName);
+                if ($file->key == $templateKeyName) {
+                    $htmlCart = $this->assetService->find($this->theme->id, $templateKeyName);
 
-                    return $htmlCart->getValue();
+                    return $htmlCart->value;
                 }
             }
         }
 
-        return null; //throwl
+        return null;
     }
 
     public function removeIntegrationInAllThemes(): void
@@ -376,12 +271,11 @@ class ShopifyTemplateService
 
         $themes = $this->getAllThemes();
 
-        /** @var Theme $theme */
         foreach ($themes as $theme) {
-            $this->setThemeById($theme->getId());
+            $this->setThemeById($theme->id);
 
             $htmlBody = $this->getTemplateHtml();
-            if ($htmlBody!==null) {
+            if ($htmlBody !== null) {
                 $htmlBody = $this->removeScript($htmlBody ?? "");
                 $this->updateTemplateLiquid($htmlBody);
             }
