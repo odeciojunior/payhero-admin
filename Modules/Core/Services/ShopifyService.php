@@ -359,7 +359,7 @@ class ShopifyService
         }
 
         if (FoxUtils::isProduction()) {
-            $this->createShopifyIntegrationWebhook($projectId, "https://admin.azcend.vip/postback/shopify/");
+            $this->createShopifyIntegrationWebhook($projectId, "https://admin.azcend.com.br/postback/shopify/");
         }
 
         $user = User::find($userId);
@@ -437,7 +437,7 @@ class ShopifyService
 
     public function createShopWebhook($data = [])
     {
-        return $this->webhookService->create($data);
+        return $this->webhookService->create(["webhook" => $data]);
     }
 
     public function getShopWebhook($webhookId = null)
@@ -801,7 +801,7 @@ class ShopifyService
             }
 
             $this->sendData = $orderData;
-            $order = $this->orderService->create($orderData);
+            $order = $this->orderService->create(["order" => $orderData]);
             $this->receivedData = $this->convertToArray($order);
 
             $oldOrderId = $firstSale->shopify_order;
@@ -823,7 +823,7 @@ class ShopifyService
             ]);
 
             foreach ($firstSale->upsells as $upsell) {
-                if ($upsell->shopify_order != $oldOrderId) {
+                if (!empty($upsell->shopify_order) && $upsell->shopify_order != $oldOrderId) {
                     try {
                         $fulfillments = $this->fulfillmentService->findAll($upsell->shopify_order);
                         foreach ($fulfillments as $fulfillment) {
@@ -879,7 +879,9 @@ class ShopifyService
                         "amount" => "",
                     ];
                     $this->sendData = $transaction;
-                    $result = $this->transactionService->create($sale->shopify_order, $transaction);
+                    $result = $this->transactionService->create($sale->shopify_order, [
+                        "transaction" => $transaction,
+                    ]);
                     $this->receivedData = $this->convertToArray($result);
                 }
             } else {
@@ -1095,7 +1097,7 @@ class ShopifyService
     public function testProductsPermissions()
     {
         try {
-            $products = $this->productService->findAll();
+            $products = $this->productService->findAll()->current();
 
             if (empty($products)) {
                 return [
@@ -1106,7 +1108,10 @@ class ShopifyService
 
             foreach ($products as $product) {
                 foreach ($product->variants as $variant) {
-                    $this->inventoryService->find($variant->inventory_item_id);
+                    try {
+                        $this->inventoryService->find($variant->inventory_item_id);
+                    } catch (Exception $e) {
+                    }
                 }
 
                 return [

@@ -11,7 +11,7 @@ class Client
     public function __construct(string $shop, string $accessToken)
     {
         $this->client = new GuzzleClient([
-            "base_uri" => "https://$shop.myshopify.com/admin/api/2024-01/",
+            "base_uri" => "https://$shop/admin/api/2024-01/",
             "headers" => [
                 "Content-Type" => "application/json",
                 "X-Shopify-Access-Token" => $accessToken,

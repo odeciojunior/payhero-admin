@@ -140,7 +140,9 @@ class PostBackEbanxController extends Controller
                             "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                         ];
 
-                        $transactionService->create($sale->shopify_order, $transactionUpdate);
+                        $transactionService->create($sale->shopify_order, [
+                            "transaction" => $transactionUpdate,
+                        ]);
                     } catch (\Exception $e) {
                         Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $sale["id"]);
                         report($e);

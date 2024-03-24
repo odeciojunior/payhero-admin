@@ -138,14 +138,16 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
                 ];
 
                 $order = $shopifyOrderService->create([
-                    "accepts_marketing" => false,
-                    "currency" => "BRL",
-                    "email" => $event->client->email,
-                    "first_name" => $names[0],
-                    "last_name" => $names[count($names) - 1],
-                    "buyer_accepts_marketing" => false,
-                    "line_items" => $items,
-                    "shipping_address" => $shippingAddress,
+                    "order" => [
+                        "accepts_marketing" => false,
+                        "currency" => "BRL",
+                        "email" => $event->client->email,
+                        "first_name" => $names[0],
+                        "last_name" => $names[count($names) - 1],
+                        "buyer_accepts_marketing" => false,
+                        "line_items" => $items,
+                        "shipping_address" => $shippingAddress,
+                    ],
                 ]);
 
                 $event->sale->update([
@@ -161,9 +163,11 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
                     $shopifyTransactionrService = new TransactionService($shopifyClient);
 
                     $shopifyTransactionrService->create($event->sale->shopify_order, [
-                        "kind" => "capture",
-                        "gateway" => "Azcend",
-                        "authorization" => Hashids::connection("sale_id")->encode($event->sale->id),
+                        "transaction" => [
+                            "kind" => "capture",
+                            "gateway" => "Azcend",
+                            "authorization" => Hashids::connection("sale_id")->encode($event->sale->id),
+                        ],
                     ]);
                 } catch (Exception $e) {
                     Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $event->sale->id);

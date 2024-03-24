@@ -22,7 +22,8 @@ class ShopService
     {
         try {
             $response = $this->client->getClient()->get("shop.json");
-            return json_decode($response->getBody()->getContents());
+            $content = json_decode($response->getBody()->getContents());
+            return $content->shop;
         } catch (GuzzleException $e) {
             throw new Exception("Error retrieving shop properties: " . $e->getMessage());
         }

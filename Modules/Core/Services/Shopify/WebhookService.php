@@ -34,7 +34,7 @@ class WebhookService
     /**
      * @throws Exception
      */
-    public function findAll(): stdClass
+    public function findAll(): array
     {
         try {
             $response = $this->client->getClient()->get("webhooks.json");

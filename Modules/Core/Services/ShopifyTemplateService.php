@@ -124,7 +124,7 @@ class ShopifyTemplateService
     public function createSnippet($snippetName, $skipToCart, $domain)
     {
         if (!empty($this->theme)) {
-            $themeId = $this->theme->getId();
+            $themeId = $this->theme->id;
             $snippetContent = file_get_contents("{$this->stubsTemplateFolder}{$snippetName}");
 
             $snippetContent = str_replace("<DOMAIN>", $domain, $snippetContent);
@@ -137,7 +137,7 @@ class ShopifyTemplateService
     public function removeSnippet($snippetName)
     {
         if (!empty($this->theme)) {
-            $themeId = $this->theme->getId();
+            $themeId = $this->theme->id;
             $this->assetService->delete($themeId, "snippets/{$snippetName}");
         }
     }

@@ -18,7 +18,7 @@ class FulfillmentService
     /**
      * @throws Exception
      */
-    public function findAll(int $orderId): stdClass
+    public function findAll(int $orderId): array
     {
         try {
             $response = $this->client->getClient()->get("orders/$orderId/fulfillments.json");
