@@ -2,6 +2,8 @@
     "tabWidth": 4,
     "printWidth": 120,
     "bracketSameLine": true,
+    "singleQuote": false,
+    "plugins": ["@prettier/plugin-php", "@shufo/prettier-plugin-blade"],
     "overrides": [
         {
             "files": ["*.blade.php"],

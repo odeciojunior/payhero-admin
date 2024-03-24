@@ -5,16 +5,17 @@ namespace Modules\Core\Listeners;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\SaleService;
-use Slince\Shopify\Client;
-use Modules\Core\Entities\Plan;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
-use Slince\Shopify\PublicAppCredential;
-use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Events\SaleApprovedEvent;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
+use Modules\Core\Services\Shopify\Client;
+use Modules\Core\Services\Shopify\OrderService;
+use Modules\Core\Services\Shopify\TransactionService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -40,10 +41,8 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
             $shopifyIntegration = $shopifyIntegrationModel->where("project", $event->project->id)->first();
 
             if (!empty($shopifyIntegration)) {
-                $credential = new PublicAppCredential($shopifyIntegration->token);
-                $shopifyClient = new Client($shopifyIntegration->url_store, $this->credential, [
-                    "meta_cache_dir" => "/var/tmp",
-                ]);
+                $shopifyClient = new Client($shopifyIntegration->url_store, $shopifyIntegration->token);
+                $shopifyOrderService = new OrderService($shopifyClient);
 
                 $names = explode(" ", $event->delivery->receiver_name);
                 $telephone = str_replace("+", "", $event->client->telephone);
@@ -138,19 +137,21 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
                     "province_code" => $event->delivery->state,
                 ];
 
-                $order = $shopifyClient->getOrderManager()->create([
-                    "accepts_marketing" => false,
-                    "currency" => "BRL",
-                    "email" => $event->client->email,
-                    "first_name" => $names[0],
-                    "last_name" => $names[count($names) - 1],
-                    "buyer_accepts_marketing" => false,
-                    "line_items" => $items,
-                    "shipping_address" => $shippingAddress,
+                $order = $shopifyOrderService->create([
+                    "order" => [
+                        "accepts_marketing" => false,
+                        "currency" => "BRL",
+                        "email" => $event->client->email,
+                        "first_name" => $names[0],
+                        "last_name" => $names[count($names) - 1],
+                        "buyer_accepts_marketing" => false,
+                        "line_items" => $items,
+                        "shipping_address" => $shippingAddress,
+                    ],
                 ]);
 
                 $event->sale->update([
-                    "shopify_order" => $order->getId(),
+                    "shopify_order" => $order->id,
                 ]);
             }
         } else {
@@ -158,15 +159,15 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
 
             if (!empty($shopifyIntegration)) {
                 try {
-                    $credential = new PublicAppCredential($shopifyIntegration["token"]);
-                    $client = new Client($shopifyIntegration["url_store"], $credential, [
-                        "meta_cache_dir" => "./tmp",
-                    ]);
+                    $shopifyClient = new Client($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopifyTransactionrService = new TransactionService($shopifyClient);
 
-                    $client->getTransactionManager()->create($event->sale->shopify_order, [
-                        "kind" => "capture",
-                        "gateway" => "Azcend",
-                        "authorization" => Hashids::connection("sale_id")->encode($event->sale->id),
+                    $shopifyTransactionrService->create($event->sale->shopify_order, [
+                        "transaction" => [
+                            "kind" => "capture",
+                            "gateway" => "Azcend",
+                            "authorization" => Hashids::connection("sale_id")->encode($event->sale->id),
+                        ],
                     ]);
                 } catch (Exception $e) {
                     Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $event->sale->id);

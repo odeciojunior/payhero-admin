@@ -3,23 +3,19 @@
 namespace Modules\PostBack\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
-use Slince\Shopify\Client;
-use Illuminate\Http\Request;
 use Modules\Core\Entities\Transaction;
-use Illuminate\Http\Response;
 use Modules\Core\Entities\User;
-use Modules\Core\HotZapp\HotZapp;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Slince\Shopify\PublicAppCredential;
-use Modules\Core\Transportadoras\Kapsula;
-use Modules\Core\Transportadoras\LiftGold;
+use Modules\Core\Services\Shopify\Client;
+use Modules\Core\Services\Shopify\TransactionService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class PostBackEbanxController extends Controller
@@ -134,21 +130,19 @@ class PostBackEbanxController extends Controller
                     $shopifyIntegration = $shopifyIntegrationModel->where("project_id", $plan["project_id"])->first();
 
                     try {
-                        $credential = new PublicAppCredential($shopifyIntegration["token"]);
+                        $client = new Client($shopifyIntegration["url_store"], $shopifyIntegration["token"]);
+                        $transactionService = new TransactionService($client);
 
-                        $client = new Client($credential, $shopifyIntegration["url_store"], [
-                            "metaCacheDir" => "./tmp",
-                        ]);
                         $transactionUpdate = [
                             "kind" => "sale",
                             "source" => "external",
                             "gateway" => "Azcend",
                             "authorization" => Hashids::connection("sale_id")->encode($sale->id),
                         ];
-                        //                        if ($sale['payment_method'] == 2) {
-                        //                            $transactionUpdate['gateway'] = 'Boleto';
-                        //                        }
-                        $client->getTransactionManager()->create($sale->shopify_order, $transactionUpdate);
+
+                        $transactionService->create($sale->shopify_order, [
+                            "transaction" => $transactionUpdate,
+                        ]);
                     } catch (\Exception $e) {
                         Log::warning("erro ao alterar estado do pedido no shopify com a venda " . $sale["id"]);
                         report($e);

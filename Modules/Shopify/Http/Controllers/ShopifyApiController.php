@@ -11,9 +11,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\ShopifyTemplateService;
-use Modules\Core\Transformers\CompaniesSelectResource;
-use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DiscountCoupon;
@@ -23,14 +20,13 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
-use Modules\Core\Services\UserService;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -89,7 +85,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "A empresa precisa estar aprovada transacionar para realizar a integração!",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -119,22 +115,13 @@ class ShopifyApiController extends Controller
                 $urlStore = str_replace(".myshopify.com", "", $dataRequest["url_store"]);
 
                 $shopifyService = new ShopifyService($urlStore . ".myshopify.com", $dataRequest["token"]);
-
-                if (empty($shopifyService->getClient())) {
-                    return response()->json(
-                        [
-                            "message" => "Dados do shopify inválidos, revise os dados informados",
-                        ],
-                        400
-                    );
-                }
             } catch (Exception $e) {
                 report($e);
                 return response()->json(
                     [
                         "message" => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e),
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -199,30 +186,30 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Problema ao criar integração, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
             $discountCoupon10 = DiscountCoupon::create([
-                "project_id"            => $projectCreated->id,
-                "name"                  => "Desconto 10%",
-                "type"                  => 0,
-                "value"                 => 10,
-                "code"                  => "NEXX10",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $projectCreated->id,
+                "name" => "Desconto 10%",
+                "type" => 0,
+                "value" => 10,
+                "code" => "NEXX10",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             $discountCoupon20 = DiscountCoupon::create([
-                "project_id"            => $projectCreated->id,
-                "name"                  => "Desconto 20%",
-                "type"                  => 0,
-                "value"                 => 20,
-                "code"                  => "NEXX20",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $projectCreated->id,
+                "name" => "Desconto 20%",
+                "type" => 0,
+                "value" => 20,
+                "code" => "NEXX20",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             if (empty($discountCoupon10) || empty($discountCoupon20)) {
@@ -233,7 +220,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Problema ao criar integração, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -256,7 +243,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Problema ao criar integração, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -284,7 +271,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Problema ao criar integração, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -299,7 +286,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!",
                 ],
-                200
+                200,
             );
         } catch (Exception $e) {
             report($e);
@@ -328,7 +315,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Este projeto não tem integração com o shopify",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -360,7 +347,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Problema ao desfazer integração, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
         } catch (Exception $e) {
@@ -370,7 +357,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Problema ao desfazer integração, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
     }
@@ -412,7 +399,7 @@ class ShopifyApiController extends Controller
                     if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
                         return response()->json(
                             ["message" => "O token deve ter entre 10 e 100 letras e números!"],
-                            400
+                            400,
                         );
                     }
 
@@ -431,7 +418,7 @@ class ShopifyApiController extends Controller
                             foreach ($project->shopifyIntegrations as $shopifyIntegration) {
                                 $shopify = new ShopifyService(
                                     $shopifyIntegration->url_store,
-                                    $shopifyIntegration->token
+                                    $shopifyIntegration->token,
                                 );
 
                                 $basicTheme = $shopifyIntegrationModel->present()->getThemeType("basic_theme");
@@ -439,25 +426,25 @@ class ShopifyApiController extends Controller
                                 $shopify->templateService->makeTemplateIntegration(
                                     $shopifyIntegration,
                                     $domain,
-                                    $basicTheme
+                                    $basicTheme,
                                 );
                             }
 
                             return response()->json(
                                 ["message" => "Integração com o shopify refeita"],
-                                Response::HTTP_OK
+                                Response::HTTP_OK,
                             );
                         } catch (Exception $e) {
                             //throwl
                             return response()->json(
                                 ["message" => "Problema ao refazer integração, tente novamente mais tarde"],
-                                Response::HTTP_BAD_REQUEST
+                                Response::HTTP_BAD_REQUEST,
                             );
                         }
                     } else {
                         return response()->json(
                             ["message" => "Este projeto não tem integração com o shopify"],
-                            Response::HTTP_BAD_REQUEST
+                            Response::HTTP_BAD_REQUEST,
                         );
                     }
                 } else {
@@ -465,9 +452,9 @@ class ShopifyApiController extends Controller
                     return response()->json(
                         [
                             "message" =>
-                            "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
+                                "Produtos do shopify importados, adicione um domínio para finalizar a sua integração",
                         ],
-                        Response::HTTP_OK
+                        Response::HTTP_OK,
                     );
                 }
             } else {
@@ -479,7 +466,7 @@ class ShopifyApiController extends Controller
 
             return response()->json(
                 ["message" => "Problema ao refazer integração, tente novamente mais tarde"],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_BAD_REQUEST,
             );
         }
     }
@@ -503,7 +490,7 @@ class ShopifyApiController extends Controller
             if (empty($shopifyIntegration)) {
                 return response()->json(
                     ["message" => "Problema ao sincronizar produtos, tente novamente mais tarde"],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
             if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
@@ -514,14 +501,14 @@ class ShopifyApiController extends Controller
 
             return response()->json(
                 ["message" => "Os Produtos do shopify estão sendo sincronizados."],
-                Response::HTTP_OK
+                Response::HTTP_OK,
             );
         } catch (Exception $e) {
             report($e);
 
             return response()->json(
                 ["message" => "Problema ao sincronizar produtos do shopify, tente novamente mais tarde"],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_BAD_REQUEST,
             );
         }
     }
@@ -540,20 +527,20 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Os códigos de rastreio estão sendo importados...",
                 ],
-                Response::HTTP_OK
+                Response::HTTP_OK,
             );
         } catch (Exception $e) {
             if (method_exists($e, "getCode") && in_array($e->getCode(), [401, 402, 403, 404, 406, 422, 423, 429])) {
                 return response()->json(
                     ["message" => "Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde"],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
             report($e);
 
             return response()->json(
                 ["message" => "Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde"],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_BAD_REQUEST,
             );
         }
     }
@@ -590,8 +577,8 @@ class ShopifyApiController extends Controller
                 ])
                 ->find($projectId);
 
-            /*$domain = new \stdClass();
-             $domain->name = 'azcend.vip';*/
+            //            $domain = new \stdClass();
+            //            $domain->name = "azcend.vip";
             if (\foxutils()->isProduction()) {
                 $domain = $project->domains->where("status", $domainModel->present()->getStatus("approved"))->first();
             }
@@ -599,14 +586,14 @@ class ShopifyApiController extends Controller
             if (empty($domain)) {
                 return response()->json(
                     ["message" => "Você não tem nenhum domínio configurado"],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
 
             if (empty($project->shopify_id)) {
                 return response()->json(
                     ["message" => "Este projeto não tem integração com o shopify"],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
 
@@ -622,7 +609,7 @@ class ShopifyApiController extends Controller
                     if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
                         return response()->json(
                             ["message" => "O token deve ter entre 10 e 100 letras e números!"],
-                            400
+                            400,
                         );
                     }
                     $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
@@ -636,7 +623,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Sincronização do template com o shopify concluida com sucesso!",
                     ],
-                    Response::HTTP_OK
+                    Response::HTTP_OK,
                 );
             } catch (Exception $e) {
                 $message = ShopifyErrors::FormatErrors($e->getMessage());
@@ -653,7 +640,7 @@ class ShopifyApiController extends Controller
 
             return response()->json(
                 ["message" => "Problema ao sincronizar template do shopify, tente novamente mais tarde"],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_BAD_REQUEST,
             );
         }
     }
@@ -673,7 +660,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Ocorreu um erro, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
     }
@@ -686,7 +673,7 @@ class ShopifyApiController extends Controller
             if (empty($data["token"]) || 0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $data["token"])) {
                 return response()->json(
                     ["message" => "Token inválido, o token de acesso deve ter entre 10 e 100 letras e números"],
-                    400
+                    400,
                 );
             }
 
@@ -697,7 +684,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => "Ocorreu um erro ao atualizar token, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -719,7 +706,7 @@ class ShopifyApiController extends Controller
                     [
                         "message" => $permissions["message"],
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -733,7 +720,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Ocorreu um erro ao atualizar token, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         } catch (Exception $e) {
             $message = ShopifyErrors::FormatErrors($e->getMessage());
@@ -747,7 +734,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => $message,
                 ],
-                400
+                400,
             );
         }
     }
@@ -761,7 +748,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Ocorreu um erro ao verificar permissões, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
 
@@ -772,7 +759,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => "Ocorreu um erro ao verificar permissões, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
 
@@ -800,7 +787,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e),
                 ],
-                400
+                400,
             );
         }
 
@@ -811,7 +798,7 @@ class ShopifyApiController extends Controller
                 [
                     "message" => $permissions["message"],
                 ],
-                400
+                400,
             );
         }
 
@@ -819,7 +806,7 @@ class ShopifyApiController extends Controller
             [
                 "message" => "Todas as permissões estão funcionando corretamente",
             ],
-            200
+            200,
         );
     }
 
