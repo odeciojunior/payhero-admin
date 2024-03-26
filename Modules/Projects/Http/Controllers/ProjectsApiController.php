@@ -173,7 +173,7 @@ class ProjectsApiController extends Controller
             Domain::create([
                 "project_id"            => $project->id,
                 "cloudflare_domain_id"  => null,
-                "name"                  => "azcend.com.br",
+                "name"                  => "pag.net.br",
                 "status"                => 3,
                 "sendgrid_id"           => null,
                 "created_at"            => now(),
