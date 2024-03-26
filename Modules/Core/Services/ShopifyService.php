@@ -262,7 +262,7 @@ class ShopifyService
                     }
                 }
                 if (empty($photo)) {
-                    $image = $this->productImageService->find($storeProduct->id);
+                    $image = $storeProduct->image;
                     if (!empty($image)) {
                         try {
                             $photo = $image->src;
