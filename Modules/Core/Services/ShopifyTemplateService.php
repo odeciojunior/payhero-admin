@@ -24,16 +24,11 @@ class ShopifyTemplateService
     private ThemeService $themeService;
     private AssetService $assetService;
 
-    public function __construct(string $urlStore, string $token, $getThemes = true)
+    public function __construct(string $urlStore, string $token)
     {
         $client = new Client($urlStore, $token);
         $this->themeService = new ThemeService($client);
         $this->assetService = new AssetService($client);
-
-        if ($getThemes) {
-            sleep(1);
-            $this->getAllThemes();
-        }
     }
 
     public function setThemeById($themeId)

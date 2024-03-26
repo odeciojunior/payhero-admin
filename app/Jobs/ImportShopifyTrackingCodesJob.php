@@ -33,7 +33,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
     public function handle()
     {
         $integration = $this->project->shopifyIntegrations->first();
-        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token);
 
         $this->restartWebhooks();
 

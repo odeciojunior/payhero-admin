@@ -58,9 +58,9 @@ class ShopifyService
 
     private $project = "admin";
 
-    public function __construct(string $urlStore, string $token, $getThemes = true)
+    public function __construct(string $urlStore, string $token)
     {
-        $this->templateService = new ShopifyTemplateService($urlStore, $token, $getThemes);
+        $this->templateService = new ShopifyTemplateService($urlStore, $token);
 
         $client = new Client($urlStore, $token);
         $this->orderService = new OrderService($client);
