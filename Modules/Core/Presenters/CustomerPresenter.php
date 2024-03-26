@@ -34,18 +34,25 @@ class CustomerPresenter extends Presenter
     {
         $telephone = preg_replace("/[^0-9]/", "", $this->telephone);
         $length = strlen($telephone);
+
         if ($length == 11) {
             return "+55" . $telephone;
-        } elseif ($length == 12) {
+        }
+
+        if ($length == 12) {
             return "+" .
                 substr($telephone, 0, $length - 10) .
                 substr($telephone, $length - 10, 2) .
                 "9" .
                 substr($telephone, $length - 8, 4) .
                 substr($telephone, -4);
-        } else {
-            return null;
         }
+
+        if ($length == 13) {
+            return "+" . $telephone;
+        }
+
+        return null;
     }
 
     /**
