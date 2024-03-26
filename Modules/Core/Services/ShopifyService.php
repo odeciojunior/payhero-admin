@@ -77,7 +77,7 @@ class ShopifyService
     public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
         $storeProduct = $this->getShopProduct($shopifyProductId);
-        sleep(1);
+        sleep(5);
 
         if (empty($storeProduct)) {
             return false;
