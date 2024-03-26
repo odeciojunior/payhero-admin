@@ -27,8 +27,8 @@ class CustomerPresenter extends Presenter
     }
 
     /**
-     * @param $number
-     * @return string
+     * @return string|null
+     * The Shopify API does not accept phone numbers that do not start with 9.
      */
     public function getTelephoneShopify()
     {
@@ -44,7 +44,7 @@ class CustomerPresenter extends Presenter
                 substr($telephone, $length - 8, 4) .
                 substr($telephone, -4);
         } else {
-            return "+" . $telephone;
+            return null;
         }
     }
 
