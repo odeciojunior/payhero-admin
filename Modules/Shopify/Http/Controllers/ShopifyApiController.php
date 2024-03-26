@@ -776,21 +776,7 @@ class ShopifyApiController extends Controller
             return response()->json(["message" => "O token deve ter entre 10 e 100 letras e números!"], 400);
         }
 
-        try {
-            $shopify = new ShopifyService($integration->url_store, $integration->token);
-            if (empty($shopify->getClient())) {
-                return response()->json(["message" => "Token inválido, revise o dado informado"], 400);
-            }
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(
-                [
-                    "message" => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e),
-                ],
-                400,
-            );
-        }
-
+        $shopify = new ShopifyService($integration->url_store, $integration->token);
         $permissions = $shopify->verifyPermissions();
 
         if ($permissions["status"] == "error") {
