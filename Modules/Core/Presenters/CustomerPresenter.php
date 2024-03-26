@@ -33,23 +33,11 @@ class CustomerPresenter extends Presenter
     public function getTelephoneShopify()
     {
         $telephone = preg_replace("/[^0-9]/", "", $this->telephone);
-        $length = strlen($telephone);
 
-        if ($length == 11) {
-            return "+55" . $telephone;
-        }
-
-        if ($length == 12) {
-            return "+" .
-                substr($telephone, 0, $length - 10) .
-                substr($telephone, $length - 10, 2) .
-                "9" .
-                substr($telephone, $length - 8, 4) .
-                substr($telephone, -4);
-        }
-
-        if ($length == 13) {
-            return "+" . $telephone;
+        if (strlen($telephone) == 13) {
+            if ($telephone[4] == "9") {
+                return "+" . $telephone;
+            }
         }
 
         return null;
