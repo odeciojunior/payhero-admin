@@ -2,20 +2,17 @@
 
 namespace App\Jobs;
 
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Tracking;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TrackingService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ImportShopifyTrackingCodesJob implements ShouldQueue
 {
@@ -36,7 +33,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
     public function handle()
     {
         $integration = $this->project->shopifyIntegrations->first();
-        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token);
 
         $this->restartWebhooks();
 
@@ -71,22 +68,30 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             $this->shopifyService->deleteShopWebhook();
 
             $this->shopifyService->createShopWebhook([
-                "topic" => "products/create",
-                "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
-                "format" => "json",
+                "webhook" => [
+                    "topic" => "products/create",
+                    "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
+                    "format" => "json",
+                ],
             ]);
 
             $this->shopifyService->createShopWebhook([
-                "topic" => "products/update",
-                "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
-                "format" => "json",
+                "webhook" => [
+                    "topic" => "products/update",
+                    "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
+                    "format" => "json",
+                ],
             ]);
 
             $this->shopifyService->createShopWebhook([
-                "topic" => "orders/updated",
-                "address" =>
-                    "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id) . "/tracking",
-                "format" => "json",
+                "webhook" => [
+                    "topic" => "orders/updated",
+                    "address" =>
+                        "https://admin.azcend.vip/postback/shopify/" .
+                        Hashids::encode($this->project->id) .
+                        "/tracking",
+                    "format" => "json",
+                ],
             ]);
         }
     }
@@ -99,21 +104,21 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $saleProducts = $productService->getProductsBySale($sale);
 
         foreach ($fulfillments as $fulfillment) {
-            $trackingCodes = $fulfillment->getTrackingNumbers();
+            $trackingCodes = $fulfillment->tracking_numbers;
             if (!empty($trackingCodes)) {
-                $lineItems = $fulfillment->getLineItems();
+                $lineItems = $fulfillment->line_items;
                 $fulfillmentWithMultipleTracking = count($trackingCodes) === count($lineItems);
                 foreach ($lineItems as $key => $lineItem) {
                     $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] : $trackingCodes[0];
 
                     $products = $saleProducts
-                        ->where("shopify_variant_id", $lineItem->getVariantId())
-                        ->where("amount", $lineItem->getQuantity());
+                        ->where("shopify_variant_id", $lineItem->variant_id)
+                        ->where("amount", $lineItem->quantity);
                     if (!$products->count()) {
                         $products = $saleProducts
-                            ->where("name", $lineItem->getTitle())
-                            ->where("description", $lineItem->getVariantTitle())
-                            ->where("amount", $lineItem->getQuantity());
+                            ->where("name", $lineItem->title)
+                            ->where("description", $lineItem->variant_title)
+                            ->where("amount", $lineItem->quantity);
                     }
 
                     // Camila Monteiro

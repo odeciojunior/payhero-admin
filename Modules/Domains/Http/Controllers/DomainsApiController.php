@@ -11,14 +11,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\CloudflareErrorsService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DomainService;
-use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
@@ -64,7 +61,7 @@ class DomainsApiController extends Controller
                 [
                     "message" => "Erro ao listar dados de domínios",
                 ],
-                400
+                400,
             );
         }
     }
@@ -144,7 +141,7 @@ class DomainsApiController extends Controller
                 $newDomain = $cloudFlareService->integrationWebsite(
                     $domainCreated->id,
                     $requestData["name"],
-                    $domainIp
+                    $domainIp,
                 );
             } else {
                 $newDomain = $cloudFlareService->integrationShopify($domainCreated->id, $requestData["name"]);
@@ -190,7 +187,7 @@ class DomainsApiController extends Controller
                         "zones" => $newNameServers,
                     ],
                 ],
-                200
+                200,
             );
         } catch (Exception $e) {
             if (!empty($domainCreated)) {
@@ -293,7 +290,7 @@ class DomainsApiController extends Controller
                 [
                     "message" => $message,
                 ],
-                400
+                400,
             );
         }
     }
@@ -304,7 +301,7 @@ class DomainsApiController extends Controller
             $requestData = $request->validated();
 
             $domain = Domain::with("domainsRecords", "project", "project.shopifyIntegrations")->find(
-                hashids_decode($requestData["domain"])
+                hashids_decode($requestData["domain"]),
             );
 
             if (empty($domain)) {
@@ -335,7 +332,7 @@ class DomainsApiController extends Controller
             $cloudFlareService = new CloudFlareService();
 
             $domain = Domain::with(["domainsRecords", "project", "project.shopifyIntegrations"])->find(
-                hashids_decode($domain)
+                hashids_decode($domain),
             );
 
             if (empty($domain)) {
@@ -347,7 +344,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "Sem permissão para validar domínio",
                     ],
-                    403
+                    403,
                 );
             }
 
@@ -366,7 +363,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "A verificação falhou, atualização de nameservers pendentes",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -384,7 +381,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "Não foi possivel revalidar o domínio, integração do shopify não encontrada",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -394,14 +391,14 @@ class DomainsApiController extends Controller
             $shopifyIntegration = $domain->project->shopifyIntegrations->first();
 
             try {
-                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
+                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                 $basicTheme = $shopifyIntegration->present()->getThemeType("basic_theme");
 
                 $integrationTemplate = $shopify->templateService->makeTemplateIntegration(
                     $shopifyIntegration,
                     $domain,
-                    $basicTheme
+                    $basicTheme,
                 );
 
                 if ($integrationTemplate["failed"]) {
@@ -416,7 +413,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "Ocorreu um erro, irregularidade na loja shopify",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -425,7 +422,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "Ocorreu um problema ao revalidar o domínio",
                     ],
-                    400
+                    400,
                 );
             }
         } catch (Exception $e) {
@@ -480,7 +477,7 @@ class DomainsApiController extends Controller
                                 "status" => $domain->status,
                             ],
                         ],
-                        200
+                        200,
                     );
                 } else {
                     return response()->json(["message" => "Sem permissão para visualizar o domínio"], 400);
@@ -490,7 +487,7 @@ class DomainsApiController extends Controller
                     [
                         "message" => "Ocorreu um erro, dominio nao encontrado",
                     ],
-                    400
+                    400,
                 );
             }
         } catch (Exception $e) {
@@ -500,7 +497,7 @@ class DomainsApiController extends Controller
                 [
                     "message" => $message,
                 ],
-                400
+                400,
             );
         }
     }

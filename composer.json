@@ -46,7 +46,6 @@
         "qcod/laravel-settings": "1.*",
         "sendgrid/sendgrid": "~7",
         "sentry/sentry-laravel": "2.13.0",
-        "slince/shopify-api-php": "3.1.0",
         "spatie/laravel-activitylog": "4.5.3",
         "spatie/laravel-health": "^1.14",
         "spatie/laravel-permission": "5.5.5",

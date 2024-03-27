@@ -36,13 +36,13 @@ return new class extends Migration {
         foreach ($flags as $flag) {
             $installments = GatewayFlagTax::where("gateway_flag_id", $flag->id)->get();
             foreach ($installments as $item) {
-                $item->update([
-                    "percent" => $taxes[$item->installments],
-                ]);
+                if (!empty($taxes[$item->installments])) {
+                    $item->update([
+                        "percent" => $taxes[$item->installments],
+                    ]);
+                }
             }
         }
-
-        
     }
 
     /**

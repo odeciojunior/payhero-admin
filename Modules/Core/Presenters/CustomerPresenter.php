@@ -27,25 +27,20 @@ class CustomerPresenter extends Presenter
     }
 
     /**
-     * @param $number
-     * @return string
+     * @return string|null
+     * The Shopify API does not accept phone numbers that do not start with 9.
      */
     public function getTelephoneShopify()
     {
         $telephone = preg_replace("/[^0-9]/", "", $this->telephone);
-        $length = strlen($telephone);
-        if ($length == 11) {
-            return "+55" . $telephone;
-        } elseif ($length == 12) {
-            return "+" .
-                substr($telephone, 0, $length - 10) .
-                substr($telephone, $length - 10, 2) .
-                "9" .
-                substr($telephone, $length - 8, 4) .
-                substr($telephone, -4);
-        } else {
-            return "+" . $telephone;
+
+        if (strlen($telephone) == 13) {
+            if ($telephone[4] == "9") {
+                return "+" . $telephone;
+            }
         }
+
+        return null;
     }
 
     /**
