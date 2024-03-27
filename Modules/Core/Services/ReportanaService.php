@@ -621,7 +621,7 @@ class ReportanaService
                 "instance_id" => $checkout->id,
                 "instance" => "checkout",
                 "event_sale" => (new ReportanaIntegration())->present()->getEvent("abandoned_cart"),
-                "reportana_integration_id" => $this->integrationId,
+                "reportana_integration_id" => $this->integrationId, "reportana_integration_id",
             ]);
 
             return $return;
