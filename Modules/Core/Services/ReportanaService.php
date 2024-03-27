@@ -3,26 +3,38 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Modules\Core\Entities\Sale;
-use Vinkla\Hashids\Facades\Hashids;
+
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ReportanaSent;
 use Modules\Core\Entities\ReportanaIntegration;
+use Modules\Core\Entities\PixCharge;
+
+use App\Services\Core\FoxUtils;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ReportanaService
 {
     public $urlApi;
 
+    public $client_id;
+    
+    public $client_secret;
+
     private $integrationId;
 
-    function __construct($urlApi, $integrationId)
+    function __construct($client_id, $client_secret, $integrationId)
     {
-        $this->urlApi = $urlApi;
+        $this->urlApi = env("REPORTANA_URL_API");
+        $this->client_id = $client_id;
+        $this->client_secret = $client_secret;
         $this->integrationId = $integrationId;
+        
     }
 
-    private function sendPost($data, $recovery)
+    private function sendPost($url, $data)
     {
         if (!foxutils()->isProduction()) {
             return [
@@ -35,7 +47,7 @@ class ReportanaService
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->urlApi);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 
@@ -43,12 +55,9 @@ class ReportanaService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
 
-        $headers = ["Content-Type: application/json", "Content-Length: " . strlen($data)];
-
-        if ($recovery) {
-            $headers["Authorization"] =
-                "Basic " . base64_encode(env("REPORTANA_CLIENTE_ID") . ":" . env("REPORTANA_CLIENTE_SECRET"));
-        }
+        $headers = ["Content-Type:application/json", 
+                    "Content-Length:" . strlen($data), 
+                    "Authorization:Basic " . base64_encode($this->client_id . ":" . $this->client_secret)];
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -93,11 +102,9 @@ class ReportanaService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
 
-        $headers = [
-            "Content-Type: application/json",
-            "Authorization: Basic " .
-            base64_encode(env("REPORTANA_CLIENTE_ID") . ":" . env("REPORTANA_CLIENTE_SECRET")),
-        ];
+        $headers = ["Content-Type:application/json", 
+                    "Content-Length:" . strlen($data), 
+                    "Authorization:Basic " . base64_encode($this->client_id . ":" . $this->client_secret)];
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -125,16 +132,20 @@ class ReportanaService
         try {
             if (!empty($domain)) {
                 $checkout = $sale->checkout;
+                $pix = PixCharge::where("sale_id", $sale->id)->first();
 
                 $dataProducts = [];
+                $total = 0;
                 foreach ($planSales as $planSale) {
                     $dataProducts[] = [
-                        "id" => $planSale->plan_id,
-                        "name" => $planSale->plan->name,
+                        "title" => $planSale->plan->name,
                         "price" => $planSale->plan->price,
-                        "qty" => $planSale->amount,
-                        "image" => $planSale->plan->products->first()->photo ?? "",
+                        "quantity" => $planSale->amount,
+                        "image_url" => $planSale->plan->products->first()->photo ?? "",
+                        "path" => null,
+                        "tracking_number" => null
                     ];
+                    $total += $planSale->plan->price * $planSale->amount;
                 }
 
                 $trackingCodes = $sale->trackings
@@ -143,89 +154,141 @@ class ReportanaService
                     ->toArray();
 
                 $status = "";
+                $paymentMethod = "OTHER";
+                $domainName = $domain->name ?? "azcend.com.br";
+                $boletoLink = null;
+                $checkoutLink = null;
+
                 switch ($eventSale) {
-                    case "billet_pending":
-                    case "pix_pending":
-                        $status = "pending";
-                        break;
-                    case "credit_card_paid":
-                    case "billet_paid":
-                    case "pix_paid":
-                        $status = "paid";
-                        break;
                     case "credit_card_refused":
-                        $status = "refused";
+                        $status = "NOT_PAID";
+                        $paymentMethod = "CREDIT_CARD";
+                    
                         break;
+
+                    case "credit_card_paid":
+                        $status = "PAID";
+                        $paymentMethod = "CREDIT_CARD";
+                    
+                        break;
+
                     case "abandoned_cart":
-                        $status = "abandoned_cart";
+                        $status = "NOT_PAID";
+                        $paymentMethod = "OTHER";
+                    
                         break;
+
+                    case "billet_paid":
+                        $status = "PAID";
+                        $paymentMethod = "BOLETO";
+                        $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
+                        break;
+
+                    case "billet_pending":
+                        $status = "PENDING";
+                        $paymentMethod = "BOLETO";
+                        $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
+                        break;
+
                     case "billet_expired":
+                        $status = "NOT_PAID";
+                        $paymentMethod = "BOLETO";
+                        $boletoLink = "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
+                        break;
+
+                    case "pix_paid":
+                        $status = "PAID";
+                        $paymentMethod = "PIX";
+                        $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
+
+                        break;
+
+                    case "pix_pending":
+                        $status = "PENDING";
+                        $paymentMethod = "PIX";
+                        $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
+
+                        break;
+
                     case "pix_expired":
-                        $status = "expired";
+                        $status = "NOT_PAID";
+                        $paymentMethod = "PIX";
+                        $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
+
                         break;
                 }
 
-                $totalValue = FoxUtils::moneyFormat(
-                    ($sale->original_total_paid_value - $sale->interest_total_value) / 100
+                $totalValue = number_format(
+                    ($sale->original_total_paid_value - $sale->interest_total_value) / 100,
+                    2,
+                    ".",
+                    ""
                 );
 
-                $subtotal = FoxUtils::moneyFormat($sale->sub_total);
-
-                $domainName = $domain->name ?? "azcend.com.br";
-                $boletoLink =
-                    "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
+                $subtotal = number_format($sale->sub_total, 2, ".", "");
+                                
+                $firstName = $sale->customer->name ? explode(" ", $sale->customer->name)[0] : "";
+                $lastName = $sale->customer->name
+                ? explode(" ", $sale->customer->name)[count(explode(" ", $sale->customer->name)) - 1]
+                : "";
 
                 $data = [
-                    "type" => "order",
-                    "event_type" => $trackingCreatedEvent ? "tracking_created" : $eventSale,
-                    "payment_type" => (new Sale())->present()->getPaymentType($sale->payment_method),
-                    "order" => [
-                        "financial_status" => $status,
-                        "billet_url" => $boletoLink,
-                        "pix_code" =>
-                            $sale->payment_method == Sale::PIX_PAYMENT ? $sale->gateway_billet_identificator : null,
-                        "gateway" => "azcend",
-                        "checkout_url" =>
-                            "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
-                        "id" => $sale->checkout_id,
-                        "status" => $status,
-                        "codigo_barras" => $sale->boleto_digitable_line,
-                        "boleto_due_date" => $sale->boleto_due_date,
-                        "shopify_reference" => $sale->shopify_order,
-                        "src" => $checkout->src,
-                        "utm_source" => $checkout->utm_source,
-                        "utm_medium" => $checkout->utm_medium,
-                        "utm_campaign" => $checkout->utm_campaign,
-                        "utm_term" => $checkout->utm_term,
-                        "utm_content" => $checkout->utm_content,
-                        "values" => [
-                            "subtotal" => $subtotal,
-                            "total" => $totalValue,
-                        ],
-                        "costumer" => [
-                            "name" => $sale->customer->name,
-                            "email" => $sale->customer->email,
-                            "doc" => $sale->customer->document,
-                            "phone_number" => foxutils()->onlyNumbers($sale->customer->telephone),
-                            "address" => $sale->delivery->street ?? "",
-                            "address_number" => $sale->delivery->number ?? "",
-                            "address_comp" => $sale->delivery->complement ?? "",
-                            "address_district" => $sale->delivery->neighborhood ?? "",
-                            "address_city" => $sale->delivery->city ?? "",
-                            "address_state" => $sale->delivery->state ?? "",
-                            "address_country" => $sale->delivery->country ?? "",
-                            "address_zip_code" => !empty($sale->delivery)
-                                ? foxutils()->onlyNumbers($sale->delivery->zip_code)
-                                : "",
-                        ],
-                        "products" => $dataProducts,
-                        "tracking_codes" => $trackingCodes,
+                    "reference_id" => hashids_encode($sale->id, "sale_id"),
+                    "number" => strval($sale->id),
+                    "admin_url"=> "https://azcend.com.br/recovery",
+                    "customer_name" => $sale->customer->name ?? "",
+                    "customer_email" => $sale->customer->email ?? "",
+                    "customer_phone" => $sale->customer->telephone ?? "",
+                    "billing_address" => [
+                        "name" => $sale->customer->name ?? "",
+                        "first_name" => $firstName,
+                        "last_name" => $lastName,
+                        "company" => null,
+                        "phone" => $sale->customer->telephone ?? "",
+                        "address1" => $sale->delivery->street ?? "",
+                        "address2" => null,
+                        "city" => $sale->delivery->city ?? "",
+                        "province" => $sale->delivery->neighborhood ?? "",
+                        "province_code" => $sale->delivery->state ?? "",
+                        "country" => "Brazil",
+                        "country_code" => "BR",
+                        "zip" => $sale->delivery->zipcode ?? "",
+                        "latitude" => null,
+                        "longitude" => null,
                     ],
-                    "created_at" => $sale->start_date,
-                    "updated_at" => Carbon::createFromFormat("Y-m-d H:i:s", $sale->updated_at)->toDateTimeString(),
+                    "shipping_address" => [
+                        "name" => $sale->customer->name ?? "",
+                        "first_name" => $firstName,
+                        "last_name" => $lastName,
+                        "company" => null,
+                        "phone" => $sale->customer->telephone ?? "",
+                        "address1" => $sale->delivery->street ?? "",
+                        "address2" => null,
+                        "city" => $sale->delivery->city ?? "",
+                        "province" => $sale->delivery->neighborhood ?? "",
+                        "province_code" => $sale->delivery->state ?? "",
+                        "country" => "Brazil",
+                        "country_code" => "BR",
+                        "zip" => $sale->delivery->zipcode ?? "",
+                        "latitude" => null,
+                        "longitude" => null,
+                    ],
+                    "line_items" => $dataProducts,
+                    "currency" => "BRL",
+                    "total_price" => $totalValue,
+                    "subtotal_price" => $subtotal,
+                    "payment_status" => $status, // PAID, PENDING, NOT_PAID
+                    "payment_method" => $paymentMethod, // BOLETO, CREDIT_CARD, DEPOSIT, PIX, OTHER
+                    "tracking_numbers" => !empty($trackingCodes) ? implode(",", $trackingCodes) : null,
+                    "referring_site" => "https://" . $domainName,
+                    "status_url" => $checkoutLink,
+                    "billet_url" => $boletoLink,
+                    "billet_line" => $sale->boleto_digitable_line ?? $pix->qrcode ?? "", // Linha digitável do boleto / Pix Copia e Cola
+                    "billet_expired_at" => $sale->boleto_due_date,
+                    "original_created_at" => $sale->created_at->format("Y-m-d H:i:s"),
                 ];
-
-                $return = $this->sendPost($data, $recovery);
+                
+                $return = $this->sendPost(env("REPORTANA_URL_API") . '/2022-05/orders', $data, $recovery);
 
                 if (isset($return["code"]) && $return["code"] > 199 && $return["code"] < 300) {
                     $sentStatus = 2;
@@ -257,11 +320,12 @@ class ReportanaService
             $total = 0;
             foreach ($planCheckouts as $planCheckout) {
                 $dataProducts[] = [
-                    "id" => $planCheckout->plan_id,
-                    "name" => $planCheckout->plan->name,
+                    "title" => $planCheckout->plan->name,
                     "price" => $planCheckout->plan->price,
-                    "qty" => $planCheckout->amount,
-                    "image" => $planCheckout->plan->products->first()->photo ?? "",
+                    "quantity" => $planCheckout->amount,
+                    "image_url" => $planCheckout->plan->products->first()->photo ?? "",
+                    "path" => null,
+                    "tracking_number" => null
                 ];
 
                 $total += $planCheckout->plan->price * $planCheckout->amount;
@@ -281,46 +345,65 @@ class ReportanaService
                     2
                 );
             }
+            
+            $checkoutLink = "https://checkout." . $domainName . "/recovery/" . $checkout->id_code . "?recovery=true";
+            
+            $firstName = $log->name ? explode(" ", $log->name)[0] : "";
+            $lastName = $log->name ? explode(" ", $log->name)[count(explode(" ", $log->name)) - 1] : "";
 
-            $data = [
-                "type" => "checkout",
-                "event_type" => "abandoned_cart",
-                "order" => [
-                    "checkout_url" => "https://checkout." . $domainName . "/recovery/" . $checkout->id_code,
-                    "id" => $checkout->id,
-                    "status" => "abandoned_cart",
-                    "financial_status" => "abandoned_cart",
-                    "src" => $checkout->src,
-                    "utm_source" => $checkout->utm_source,
-                    "utm_medium" => $checkout->utm_medium,
-                    "utm_campaign" => $checkout->utm_campaign,
-                    "utm_term" => $checkout->utm_term,
-                    "utm_content" => $checkout->utm_content,
-                    "values" => [
-                        "subtotal" => $totalValue,
-                        "total" => $totalValue,
-                    ],
-                    "costumer" => [
-                        "name" => $log->name,
-                        "email" => $log->email,
-                        "doc" => $log->document,
-                        "phone_number" => preg_replace("/[^0-9]/", "", str_replace("+55", "", $log->telephone)),
-                        "address" => $log->street,
-                        "address_number" => $log->number,
-                        "address_comp" => "",
-                        "address_district" => $log->neighborhood,
-                        "address_city" => $log->city,
-                        "address_state" => $log->state,
-                        "address_country" => $checkout->country,
-                        "address_zip_code" => preg_replace("/[^0-9]/", "", $log->zip_code),
-                    ],
-                    "products" => $dataProducts,
+            $data=[
+                "reference_id"=> strval($checkout->id_code),
+                "number"=> strval($checkout->id),
+                "reason_type" => null,
+                "admin_url"=> "https://azcend.com.br/recovery",
+                "customer_name"=> $log->name ?? "",
+                "customer_email"=> $log->email ?? "",
+                "customer_phone"=> preg_replace("/[^0-9]/", "", str_replace("+55", "", $log->telephone)) ?? "",
+                "billing_address"=> [
+                    "name"=> $log->name ?? "",
+                    "first_name"=> $firstName,
+                    "last_name"> $lastName,
+                    "company"=> null,
+                    "phone"=> preg_replace("/[^0-9]/", "", str_replace("+55", "", $log->telephone)) ?? "",
+                    "address1"=> $log->street ?? "",
+                    "address2"=> null,
+                    "city"=> $log->city ?? "",
+                    "province"=> $log->neighborhood ?? "",
+                    "province_code"=> $log->state ?? "",
+                    "country"=> $checkout->country,
+                    "country_code"=> "BR",
+                    "zip"=> preg_replace("/[^0-9]/", "", $log->zip_code) ?? "",
+                    "latitude"=> null,
+                    "longitude"=> null
                 ],
-                "created_at" => Carbon::createFromFormat("Y-m-d H:i:s", $checkout->created_at)->toDateTimeString(),
-                "updated_at" => Carbon::createFromFormat("Y-m-d H:i:s", $checkout->updated_at)->toDateTimeString(),
+                "shipping_address"=> [
+                    "name"=> $log->name ?? "",
+                    "first_name"=> $firstName,
+                    "last_name"> $lastName,
+                    "company"=> null,
+                    "phone"=> preg_replace("/[^0-9]/", "", str_replace("+55", "", $log->telephone)) ?? "",
+                    "address1"=> $log->street ?? "",
+                    "address2"=> null,
+                    "city"=> $log->city ?? "",
+                    "province"=> $log->neighborhood ?? "",
+                    "province_code"=> $log->state ?? "",
+                    "country"=> $checkout->country,
+                    "country_code"=> "BR",
+                    "zip"=> preg_replace("/[^0-9]/", "", $log->zip_code) ?? "",
+                    "latitude"=> null,
+                    "longitude"=> null
+                ],
+                "line_items" => $dataProducts,
+                "currency"=> "BRL",
+                "total_price"=> $totalValue,
+                "subtotal_price"=> $totalValue,
+                "referring_site"=> "https://" . $domainName,                
+                "checkout_url"=> $checkoutLink,
+                "completed_at" => null,
+                "original_created_at" => $checkout->created_at->format("Y-m-d H:i:s")
             ];
 
-            $return = $this->sendPost($data, $recovery);
+            $return = $this->sendPost($this->urlApi . '/2022-05/abandoned-checkouts', $data);
 
             if (isset($return["code"]) && $return["code"] > 199 && $return["code"] < 300) {
                 $sentStatus = 2;
@@ -340,294 +423,6 @@ class ReportanaService
 
             return $return;
         } catch (Exception $e) {
-            report($e);
-        }
-    }
-
-    public function sendSaleApi($sale, $planSales, $domain, $eventSale, $trackingCreatedEvent = false)
-    {
-        return null;
-        try {
-            $dataProducts = [];
-            $total = 0;
-            foreach ($planSales as $planSale) {
-                $dataProducts[] = [
-                    "id" => $planSale->plan_id,
-                    "title" => $planSale->plan->name,
-                    "quantity" => $planSale->amount,
-                    "price" => $planSale->plan->price,
-                    "image_url" => $planSale->plan->products->first()->photo ?? "",
-                ];
-
-                $total += $planSale->plan->price * $planSale->amount;
-            }
-
-            $trackingCodes = $sale->trackings
-                ->pluck("tracking_code")
-                ->values()
-                ->toArray();
-
-            $status = "";
-            $paymentMethod = "CREDIT_CARD";
-            switch ($eventSale) {
-                case "credit_card_refused":
-                    $status = "NOT_PAID";
-                    $paymentMethod = "CREDIT_CARD";
-
-                    break;
-                case "credit_card_paid":
-                    $status = "PAID";
-                    $paymentMethod = "CREDIT_CARD";
-
-                    break;
-                case "abandoned_cart":
-                    $status = "NOT_PAID";
-                    $paymentMethod = "OTHER";
-
-                    break;
-                case "billet_paid":
-                    $status = "PAID";
-                    $paymentMethod = "BOLETO";
-
-                    break;
-                case "billet_pending":
-                    $status = "PENDING";
-                    $paymentMethod = "BOLETO";
-
-                    break;
-                case "billet_expired":
-                    $status = "NOT_PAID";
-                    $paymentMethod = "BOLETO";
-
-                    break;
-                case "pix_paid":
-                    $status = "PAID";
-                    $paymentMethod = "PIX";
-
-                    break;
-                case "pix_pending":
-                    $status = "PENDING";
-                    $paymentMethod = "PIX";
-
-                    break;
-                case "pix_expired":
-                    $status = "NOT_PAID";
-                    $paymentMethod = "PIX";
-
-                    break;
-            }
-
-            $totalValue = number_format(
-                ($sale->original_total_paid_value - $sale->interest_total_value) / 100,
-                2,
-                ".",
-                ""
-            );
-
-            $subtotal = number_format($sale->sub_total, 2, ".", "");
-
-            $domainName = $domain->name ?? "azcend.com.br";
-
-            $checkoutLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
-
-            $boletoLink =
-                "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
-
-            if ($sale->status !== Sale::STATUS_APPROVED) {
-                $boletoLink = "https://checkout.{$domainName}/recovery/" . $sale->checkout->id_code . "?recovery=true";
-            }
-
-            $firstName = $sale->customer->name ? explode(" ", $sale->customer->name)[0] : "";
-            $lastName = $sale->customer->name
-                ? explode(" ", $sale->customer->name)[count(explode(" ", $sale->customer->name)) - 1]
-                : "";
-
-            $data = [
-                "reference_id" => hashids_encode($sale->id, "sale_id"),
-                "number" => strval($sale->id),
-                "customer_name" => $sale->customer->name ?? "",
-                "customer_email" => $sale->customer->email ?? "",
-                "customer_phone" => $sale->customer->telephone ?? "",
-                "billing_address" => [
-                    "name" => $sale->customer->name ?? "",
-                    "first_name" => $firstName,
-                    "last_name" => $lastName,
-                    "company" => null,
-                    "phone" => $sale->customer->telephone ?? "",
-                    "address1" => $sale->delivery->street ?? "",
-                    "address2" => null,
-                    "city" => $sale->delivery->city ?? "",
-                    "province" => $sale->delivery->neighborhood ?? "",
-                    "province_code" => $sale->delivery->state ?? "",
-                    "country" => "Brazil",
-                    "country_code" => "BR",
-                    "zip" => $sale->delivery->zipcode ?? "",
-                    "latitude" => null,
-                    "longitude" => null,
-                ],
-                "shipping_address" => [
-                    "name" => $sale->customer->name ?? "",
-                    "first_name" => $firstName,
-                    "last_name" => $lastName,
-                    "company" => null,
-                    "phone" => $sale->customer->telephone ?? "",
-                    "address1" => $sale->delivery->street ?? "",
-                    "address2" => null,
-                    "city" => $sale->delivery->city ?? "",
-                    "province" => $sale->delivery->neighborhood ?? "",
-                    "province_code" => $sale->delivery->state ?? "",
-                    "country" => "Brazil",
-                    "country_code" => "BR",
-                    "zip" => $sale->delivery->zipcode ?? "",
-                    "latitude" => null,
-                    "longitude" => null,
-                ],
-                "line_items" => $dataProducts,
-                "currency" => "BRL",
-                "total_price" => $totalValue,
-                "subtotal_price" => $subtotal,
-                "payment_status" => $status, // PAID, PENDING, NOT_PAID
-                "payment_method" => $paymentMethod, // BOLETO, CREDIT_CARD, DEPOSIT, PIX, OTHER
-                "tracking_numbers" => !empty($trackingCodes) ? implode(",", $trackingCodes) : null,
-                "referring_site" => "https://" . $domainName,
-                "status_url" => $checkoutLink,
-                "billet_url" => $boletoLink,
-                "billet_line" => $sale->boleto_digitable_line, // Linha digitável do boleto / Pix Copia e Cola
-                "billet_expired_at" => $sale->boleto_due_date,
-                "original_created_at" => $sale->created_at->format("Y-m-d H:i:s"),
-            ];
-
-            $return = $this->sendPostApi($data);
-
-            if (isset($return["result"]["success"]) && $return["result"]["success"] == true) {
-                $sentStatus = 2;
-            } else {
-                $sentStatus = 1;
-            }
-
-            ReportanaSent::create([
-                "data" => json_encode($data),
-                "response" => json_encode($return),
-                "sent_status" => $sentStatus,
-                "instance_id" => $sale->id,
-                "instance" => "sale",
-                "event_sale" => (new ReportanaIntegration())->present()->getEvent($eventSale),
-                "reportana_integration_id" => $this->integrationId,
-            ]);
-
-            return $return;
-        } catch (Exception $e) {
-            Log::warning("Erro ao enviar notificação para Reportana na venda de recuperação " . $sale->id);
-
-            report($e);
-        }
-    }
-
-    public function sendAbandonedCartApi($checkout, $plansCheckout, $domain, $log, $trackingCreatedEvent = false)
-    {
-        return null;
-        try {
-            $dataProducts = [];
-            $total = 0;
-            foreach ($plansCheckout as $planCheckout) {
-                $dataProducts[] = [
-                    "id" => $planCheckout->plan_id,
-                    "title" => $planCheckout->plan->name,
-                    "quantity" => $planCheckout->amount,
-                    "price" => $planCheckout->plan->price,
-                    "image_url" => $planCheckout->plan->products->first()->photo ?? "",
-                ];
-
-                $total += $planCheckout->plan->price * $planCheckout->amount;
-            }
-
-            if (empty(preg_replace("/[^0-9]/", "", $log->total_value))) {
-                $totalValue = $total;
-            } else {
-                $totalValue = number_format(
-                    preg_replace("/[,]/", ".", preg_replace("/[^0-9,]/", "", $log->total_value)),
-                    2
-                );
-            }
-
-            $domainName = $domain->name ?? "azcend.com.br";
-
-            $checkoutLink = "https://checkout." . $domainName . "/recovery/" . $checkout->id_code . "?recovery=true";
-
-            $firstName = $log->name ? explode(" ", $log->name)[0] : "";
-            $lastName = $log->name ? explode(" ", $log->name)[count(explode(" ", $log->name)) - 1] : "";
-
-            $data = [
-                "reference_id" => $checkout->id_code,
-                "number" => strval($checkout->id),
-                "customer_name" => $log->name ?? "",
-                "customer_email" => $log->email ?? "",
-                "customer_phone" => $log->telephone ?? "",
-                "billing_address" => [
-                    "name" => $log->name ?? "",
-                    "first_name" => $firstName,
-                    "last_name" => $lastName,
-                    "company" => null,
-                    "phone" => $log->telephone ?? "",
-                    "address1" => $log->street ?? "",
-                    "address2" => null,
-                    "city" => $log->city ?? "",
-                    "province" => $log->neighborhood ?? "",
-                    "province_code" => $log->state ?? "",
-                    "country" => "Brazil",
-                    "country_code" => "BR",
-                    "zip" => $log->zipcode ?? "",
-                    "latitude" => null,
-                    "longitude" => null,
-                ],
-                "shipping_address" => [
-                    "name" => $log->name ?? "",
-                    "first_name" => $firstName,
-                    "last_name" => $lastName,
-                    "company" => null,
-                    "phone" => $log->telephone ?? "",
-                    "address1" => $log->street ?? "",
-                    "address2" => null,
-                    "city" => $log->city ?? "",
-                    "province" => $log->neighborhood ?? "",
-                    "province_code" => $log->state ?? "",
-                    "country" => "Brazil",
-                    "country_code" => "BR",
-                    "zip" => $log->zipcode ?? "",
-                    "latitude" => null,
-                    "longitude" => null,
-                ],
-                "line_items" => $dataProducts,
-                "currency" => "BRL",
-                "total_price" => $totalValue,
-                "subtotal_price" => $totalValue,
-                "referring_site" => "https://" . $domainName,
-                "checkout_url" => $checkoutLink,
-                "original_created_at" => $checkout->created_at->format("Y-m-d H:i:s"),
-            ];
-
-            $return = $this->sendPostApi($data);
-
-            if (isset($return["result"]["success"]) && $return["result"]["success"] == true) {
-                $sentStatus = 2;
-            } else {
-                $sentStatus = 1;
-            }
-
-            ReportanaSent::create([
-                "data" => json_encode($data),
-                "response" => json_encode($return),
-                "sent_status" => $sentStatus,
-                "instance_id" => $checkout->id,
-                "instance" => "checkout",
-                "event_sale" => (new ReportanaIntegration())->present()->getEvent("abandoned_cart"),
-                "reportana_integration_id" => $this->integrationId, "reportana_integration_id",
-            ]);
-
-            return $return;
-        } catch (Exception $e) {
-            Log::warning("Erro ao enviar notificação para Reportana no carrinho abandonado " . $checkout->id);
-
             report($e);
         }
     }

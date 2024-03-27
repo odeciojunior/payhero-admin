@@ -71,7 +71,7 @@ class ReportanaSaleListener implements ShouldQueue
                         ->get();
 
                     foreach ($integrations as $integration) {
-                        $reportanaService = new ReportanaService($integration->client_id,$integration->client_secret, hashids_decode($integration->id));
+                        $reportanaService = new ReportanaService($integration->client_id,$integration->client_secret, $integration->id);
 
                         $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
                         $domain = Domain::where("status", 3)
