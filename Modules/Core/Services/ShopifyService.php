@@ -77,7 +77,7 @@ class ShopifyService
     public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
         $storeProduct = $this->getShopProduct($shopifyProductId);
-        sleep(5);
+        sleep(1);
 
         if (empty($storeProduct)) {
             return false;
@@ -336,7 +336,7 @@ class ShopifyService
         $project = Project::find($projectId);
 
         $pagination = $this->getShopProducts();
-        sleep(2);
+        
         $storeProducts = $pagination->current();
 
         $nextPagination = true;
