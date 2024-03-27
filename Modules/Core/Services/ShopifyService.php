@@ -77,7 +77,7 @@ class ShopifyService
     public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
         $storeProduct = $this->getShopProduct($shopifyProductId);
-        sleep(1);
+        //sleep(1);
 
         if (empty($storeProduct)) {
             return false;
@@ -352,6 +352,7 @@ class ShopifyService
 
             if ($pagination->hasNext()) {
                 $nextPageInfo = $pagination->getNextPageInfo();
+                sleep(1);
                 $storeProducts = $this->getShopProducts($nextPageInfo);
             } else {
                 $nextPagination = false;
