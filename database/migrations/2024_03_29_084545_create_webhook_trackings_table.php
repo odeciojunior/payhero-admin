@@ -13,7 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('webhooks_tracking', function (Blueprint $table) {
+        Schema::dropIfExists('webhooks_tracking');
+        Schema::create('webhook_trackings', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger("user_id")->index();
             $table->unsignedInteger("project_id")->index();
@@ -53,6 +54,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('webhooks_tracking');
+        Schema::dropIfExists('webhook_trackings');
     }
 };

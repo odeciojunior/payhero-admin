@@ -13,23 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('webhooks_tracking_logs', function (Blueprint $table) {
+        Schema::create('webhook_tracking_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("webhook_tracking_id")->index();
             $table->unsignedInteger("user_id")->index();
             $table->unsignedInteger("project_id")->index();
             $table->unsignedInteger("sale_id")->index();
             $table->string("url");
-            $table->string("sent_data");
-            $table->string("response")->nullable();
-            $table->string("response_status")->nullable();
+            $table->json("sent_data");
+            $table->json("response")->nullable();
+            $table->integer("response_status")->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table
                 ->foreign(["webhook_tracking_id"])
                 ->references(["id"])
-                ->on("webhooks_tracking")
+                ->on("webhook_trackings")
                 ->onUpdate("NO ACTION")
                 ->onDelete("NO ACTION");
             
@@ -56,6 +56,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('webhooks_tracking_logs');
+        Schema::dropIfExists('webhook_tracking_logs');
     }
 };
