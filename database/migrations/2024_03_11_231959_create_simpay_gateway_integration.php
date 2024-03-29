@@ -16,6 +16,7 @@ return new class extends Migration {
      */
     public function up()
     {
+      
         DB::statement("INSERT INTO `gateways`
         (`id`,`gateway_enum`,`name`,`json_config`,`production_flag`,`enabled_flag`,`deleted_at`,`created_at`,`updated_at`)
         VALUES (13,7,'simpay_production','WwJBUEl/VE9LRU4CGgJWU1RHTE8YR0ZDRBNEFRFDGEMUQhYYRBkVRRcUERETRkYURkRFFRUTGBVEFBdBFRIQREVDFxMTExdDQ0YXEhIUREYQFxMQQxUCXQ==',1,1,null,NOW(),NOW());");
@@ -96,6 +97,10 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists("simpay_gateway_integration");
+        DB::statement("DELETE FROM `gateway_flag_taxes` WHERE gateway_flag_id in (SELECT id FROM gateway_flags WHERE gateway_id in (13, 14));");
+
+        DB::statement("DELETE FROM `gateway_flags` WHERE gateway_id in (13, 14);");
+
+        DB::statement("DELETE FROM `gateways` WHERE id in (13, 14);");
     }
 };
