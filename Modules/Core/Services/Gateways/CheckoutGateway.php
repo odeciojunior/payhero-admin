@@ -206,7 +206,7 @@ class CheckoutGateway extends GatewayAbstract
                 "method" => "POST",
             ],
             "createAccount" => [
-                "route" => "withdrawal/create-account/:gatewayId",
+                "route" => "marketplace/create-account/:gatewayId",
                 "method" => "POST",
             ],
             "getCurrentBalance" => [
