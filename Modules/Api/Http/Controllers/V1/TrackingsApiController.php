@@ -9,12 +9,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\Api\Http\Requests\V1\TrackingsApiRequest;
 use Modules\Api\Transformers\V1\TrackingsApiResource;
-use Modules\Core\Entities\Company;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\Api\V1\TrackingsApiService;
 use Modules\Core\Services\TrackingService;
-use Modules\Trackings\Transformers\TrackingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -35,35 +34,69 @@ class TrackingsApiController extends Controller
                 return response()->json($validator->errors()->toArray());
             }
 
-            $saleId = current(Hashids::connection("sale_id")->decode($requestData['sale_id']));
-            $productId = current(Hashids::decode($requestData['product_id']));
-            $tracking = $requestData['tracking_code'];
+            if (!empty($requestData["tracking_code"]) && !empty($requestData["sale_id"]) && empty($requestData["product_id"])) {
+                $saleId = current(Hashids::connection("sale_id")->decode($requestData['sale_id']));
 
-            $productPlanSale = ProductPlanSale::select("id")
-                    ->where("sale_id", $saleId)
-                    ->where(function ($query) use ($productId) {
-                        $query->where("product_id", $productId)->orWhere("products_sales_api_id", $productId);
-                    })
-                    ->first();
+                $tracking = $requestData['tracking_code'];
 
-            if (empty($productPlanSale)) {
-                return response()->json([
-                    'message' => 'Erro ao salvar código de rastreio.'
-                ], 400);
+                $productPlanSales = ProductPlanSale::select("id")->where("sale_id", $saleId)->get();
+                $notify = false;
+
+                $trackingService = new TrackingService();
+
+                foreach ($productPlanSales as $productPlanSale)
+                {
+                    $trackingCreate = $trackingService->createOrUpdateTracking($tracking, $productPlanSale->id, $saleId, true, false);
+                    if ($trackingCreate) {
+                        $notify = true;
+                    }
+                }
+                
+                if ($notify) {
+                    event(new TrackingCodeUpdatedEvent($trackingCreate->id));
+                    
+                    return response()->json([
+                        'message' => 'Código de rastreio salvo com sucesso.',
+                        'data' => new TrackingsApiResource($trackingCreate)
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Erro ao salvar código de rastreio.'
+                    ], 400);
+                }
             }
 
-            $trackingService = new TrackingService();
-            $trackingCreate = $trackingService
-                    ->createOrUpdateTracking(
-                        $tracking,
-                        $productPlanSale->id,
-                        true
-                    );
+            if (!empty($requestData["tracking_code"]) && !empty($requestData["sale_id"]) && !empty($requestData["product_id"])) {
+                $saleId = current(Hashids::connection("sale_id")->decode($requestData['sale_id']));
+                $productId = current(Hashids::decode($requestData['product_id']));
+                $tracking = $requestData['tracking_code'];
 
-            return response()->json([
-                'message' => 'Código de rastreio salvo com sucesso.',
-                'data' => new TrackingsApiResource($trackingCreate)
-            ], 200);
+                $productPlanSale = ProductPlanSale::select("id")
+                        ->where("sale_id", $saleId)
+                        ->where(function ($query) use ($productId) {
+                            $query->where("product_id", $productId)->orWhere("products_sales_api_id", $productId);
+                        })
+                        ->first();
+
+                if (empty($productPlanSale)) {
+                    return response()->json([
+                        'message' => 'Erro ao salvar código de rastreio.'
+                    ], 400);
+                }
+
+                $trackingService = new TrackingService();
+                $trackingCreate = $trackingService
+                        ->createOrUpdateTracking(
+                            $tracking,
+                            $productPlanSale->id,
+                            true
+                        );
+
+                return response()->json([
+                    'message' => 'Código de rastreio salvo com sucesso.',
+                    'data' => new TrackingsApiResource($trackingCreate)
+                ], 200);
+            }
         } catch (Exception $e) {
             report($e);
 

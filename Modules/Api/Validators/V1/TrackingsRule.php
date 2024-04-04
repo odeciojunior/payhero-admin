@@ -8,7 +8,6 @@ class TrackingsRule
 {
     protected static $rules = [
         'sale_id' => 'required',
-        'product_id' => 'required',
         'tracking_code' => 'required|min:9|max:30'
     ];
 
@@ -16,7 +15,6 @@ class TrackingsRule
     {
         return [
             'sale_id' => self::$rules['sale_id'],
-            'product_id' => self::$rules['product_id'],
             'tracking_code' => self::$rules['tracking_code']
         ];
     }
