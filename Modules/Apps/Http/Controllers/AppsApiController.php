@@ -20,6 +20,7 @@ use Modules\Core\Entities\HotbilletIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\NotificacoesInteligentesIntegration;
+use Modules\Core\Entities\WebhookTracking;
 
 class AppsApiController extends Controller
 {
@@ -75,6 +76,10 @@ class AppsApiController extends Controller
 
             'astronmembersIntegrations' => AstronMembersIntegration::
                 join('checkout_configs as cc', 'cc.project_id', '=', 'astron_members_integrations.project_id')
+                ->where([['user_id', $accountOwnerId],['cc.company_id', $company_default]])->count(),
+
+            'geradorrastreioIntegrations' => WebhookTracking::
+                join('checkout_configs as cc', 'cc.project_id', '=', 'webhook_trackings.project_id')
                 ->where([['user_id', $accountOwnerId],['cc.company_id', $company_default]])->count(),
 
             'notificacoesinteligentesIntegrations' => NotificacoesInteligentesIntegration::

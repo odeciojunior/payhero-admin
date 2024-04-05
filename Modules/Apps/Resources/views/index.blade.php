@@ -293,6 +293,28 @@
                         </div>
                     </div>
 
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration"
+                             data-url="/apps/grsolucoes"
+                             style='width: 270px;'>
+                            <a id="geradorrastreio-bt"
+                               href="/apps/grsolucoes"
+                               class="add-btn">
+                                <i id="geradorrastreio-icon"
+                                   class="o-add-1"
+                                   aria-hidden="true"></i></a>
+                            <div style="height: 250px; line-height:250px">
+                                <img class="card-img-top card-img-controll   "
+                                     src="{!! asset('build/global/img/geradorrastreio.png') !!}"
+                                     alt="">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">GR Soluções</h5>
+                                <p class="card-text sm">Gerador de Ratreio aumenta a sua conversão!</p>
+                            </div>
+                        </div>
+                    </div>
+
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
