@@ -2,27 +2,27 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 
-class IuguCreateSellerAccount extends Command
+class IuguVerificationAccount extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = "iugu:create-seller-account";
+    protected $signature = "iugu:verification-account";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Create seller account";
+    protected $description = "Command description";
 
     /**
      * Execute the console command.
@@ -32,19 +32,24 @@ class IuguCreateSellerAccount extends Command
     public function handle()
     {
         $gatewayId = foxutils()->isProduction() ? Gateway::IUGU_PRODUCTION_ID : Gateway::IUGU_SANDBOX_ID;
-        $bankAccounts = DB::table("company_bank_accounts as cba")
-            ->select("cba.company_id")
-            ->leftJoin("gateways_companies_credentials as gcc", function (JoinClause $join) use ($gatewayId) {
-                $join->on("cba.company_id", "=", "gcc.company_id")->where("gcc.gateway_id", $gatewayId);
-            })
-            ->whereNull("gcc.company_id")
+        $companiesCredentials = DB::table("gateways_companies_credentials as gcc")
+            ->select("gcc.company_id")
+            ->join("company_bank_accounts as cba", "gcc.company_id", "=", "cba.company_id")
+            ->where("gcc.gateway_id", $gatewayId)
+            ->whereNotNull("gcc.gateway_subseller_id")
+            ->where("gcc.has_charges_webhook", false)
             ->where("cba.transfer_type", "TED")
             ->where("cba.status", "VERIFIED")
             ->get();
 
         $checkoutGateway = new CheckoutGateway($gatewayId);
-        foreach ($bankAccounts as $bankAccount) {
-            $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
+
+        foreach ($companiesCredentials as $row) {
+            try {
+                $checkoutGateway->createAccount(["companyId" => $row->company_id]);
+            } catch (Exception $e) {
+                report($e);
+            }
         }
     }
 }

@@ -44,6 +44,16 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function verificationAccount($data)
+    {
+        $options = new GatewayCurlOptions([
+            "endpoint" => "verificationAccount",
+            "variables" => [$this->gatewayId],
+            "data" => $data,
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function registerTransfersWebhookAsaas($companyId)
     {
         $options = new GatewayCurlOptions([
@@ -207,6 +217,10 @@ class CheckoutGateway extends GatewayAbstract
             ],
             "createAccount" => [
                 "route" => "marketplace/create-account/:gatewayId",
+                "method" => "POST",
+            ],
+            "verificationAccount" => [
+                "route" => "marketplace/verification-account/:gatewayId",
                 "method" => "POST",
             ],
             "getCurrentBalance" => [
