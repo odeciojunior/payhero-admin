@@ -99,7 +99,7 @@ class SalesApiController extends Controller
             $filename = "sales_report_" . hashids_encode($user->id) . ".csv"; //. $dataRequest['format'];
             
             $saleService = new SaleService();
-            $dataJson = $saleService->getSalesQueryBuilder($dataRequest, true, $user)->get();
+            $dataJson = $saleService->getSalesQueryBuilder($dataRequest, true, $user);
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue("high");
             return response()->json($dataJson);
         } catch (Exception $e) {
