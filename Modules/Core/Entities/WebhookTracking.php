@@ -40,6 +40,7 @@ class WebhookTracking extends Model
         "user_id",
         "project_id",
         "token_id",
+        "clientid",
         "webhook_url",
         "created_at",
         "updated_at",

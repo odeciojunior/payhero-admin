@@ -295,7 +295,7 @@
 
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
-                             data-url="/apps/grsolucoes"
+                             data-url="/apps/geradorrastreio"
                              style='width: 270px;'>
                             <a id="geradorrastreio-bt"
                                href="/apps/grsolucoes"
@@ -310,7 +310,7 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">GR Soluções</h5>
-                                <p class="card-text sm">Gerador de Ratreio aumenta a sua conversão!</p>
+                                <p class="card-text sm">Aumente sua conversão!</p>
                             </div>
                         </div>
                     </div>

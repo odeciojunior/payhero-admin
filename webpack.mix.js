@@ -740,6 +740,16 @@ mix.styles(
 mix.babel(["Modules/Reportana/Resources/assets/js/index.js"], "public/build/layouts/reportana/index.min.js");
 
 /**
+ * Modules/GeradorRastreio/Resources/views/index.blade.php
+ */
+mix.styles(
+    ["resources/modules/digitalmanager/css/index.css", "resources/modules/global/css/empty.css"],
+    "public/build/layouts/geradorrastreio/index.min.css"
+);
+mix.babel(["Modules/GeradorRastreio/Resources/assets/js/index.js"], "public/build/layouts/geradorrastreio/index.min.js");
+
+
+/**
  * Modules/Reports/Resources/views/layouts/details.blade.php
  */
 mix.styles(["Modules/Sales/Resources/assets/css/index.css"], "public/build/layouts/reports/details.min.css");

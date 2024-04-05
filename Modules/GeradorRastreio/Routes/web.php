@@ -11,6 +11,12 @@
 |
 */
 
-Route::prefix('geradorrastreio')->group(function() {
-    Route::get('/', 'GeradorRastreioController@index');
+Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
+    Route::get("apps/geradorrastreio", "GeradorRastreioController@index");
+    Route::get("apps/geradorrastreio/{id}", "GeradorRastreioController@show");
+    Route::get("apps/geradorrastreio/{id}/edit", "GeradorRastreioController@edit");
+
+    Route::Resource("apps/geradorrastreio", "GeradorRastreioController")
+        ->only("create", "store", "update", "destroy")
+        ->middleware("permission:apps_manage");
 });

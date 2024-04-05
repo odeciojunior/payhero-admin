@@ -61,6 +61,18 @@ class IntegrationsApiController extends Controller
                 );
             }
 
+            $apiTokenModel = new ApiToken();
+            $hasToken = $apiTokenModel->newQuery()
+                ->where('user_id', auth()->user()->getAccountOwnerId())
+                ->where('description', $description)
+                ->exists();
+            if ($hasToken) {
+                return response()->json(
+                    ["message" => "Já existe um token com a descrição informada!"],
+                    Response::HTTP_OK
+                );
+            }
+
             $tokenTypeEnum = ApiToken::INTEGRATION_TYPE_SPLIT_API;
             if (empty($tokenTypeEnum)) {
                 return response()->json(
@@ -89,7 +101,7 @@ class IntegrationsApiController extends Controller
             }
 
             /** @var User $user */
-            $apiTokenModel = new ApiToken();
+            
             $apiTokenPresenter = $apiTokenModel->present();
 
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
