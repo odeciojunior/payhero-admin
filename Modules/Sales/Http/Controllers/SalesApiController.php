@@ -97,11 +97,8 @@ class SalesApiController extends Controller
                 ->log("Exportou tabela " . $dataRequest["format"] . " de vendas");
             $user = auth()->user();
             $filename = "sales_report_" . hashids_encode($user->id) . ".csv"; //. $dataRequest['format'];
-            
-            $saleService = new SaleService();
-            $dataJson = $saleService->getSalesQueryBuilder($dataRequest, true, $user);
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue("high");
-            return response()->json($dataJson);
+            return response()->json(["message" => "A exportação começou", "email" => $dataRequest["email"]]);
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Erro ao tentar gerar o arquivo Excel."], 200);
