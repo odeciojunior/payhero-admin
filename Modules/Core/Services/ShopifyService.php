@@ -77,7 +77,6 @@ class ShopifyService
     public function importShopifyProduct($projectId, $userId, $shopifyProductId): bool
     {
         $storeProduct = $this->getShopProduct($shopifyProductId);
-        sleep(5);
 
         if (empty($storeProduct)) {
             return false;
@@ -336,7 +335,6 @@ class ShopifyService
         $project = Project::find($projectId);
 
         $pagination = $this->getShopProducts();
-        sleep(2);
         $storeProducts = $pagination->current();
 
         $nextPagination = true;
@@ -352,7 +350,8 @@ class ShopifyService
 
             if ($pagination->hasNext()) {
                 $nextPageInfo = $pagination->getNextPageInfo();
-                $storeProducts = $this->getShopProducts($nextPageInfo);
+                $pagination = $this->getShopProducts($nextPageInfo);
+                $storeProducts = $pagination->current();
             } else {
                 $nextPagination = false;
             }
@@ -389,7 +388,6 @@ class ShopifyService
             "format" => "json",
         ]);
 
-        sleep(1);
         $this->createShopWebhook([
             "topic" => "products/update",
             "address" => $postbackUrl . hashids_encode($projectId),
@@ -464,7 +462,6 @@ class ShopifyService
             $webhooks = $this->getShopWebhook();
             foreach ($webhooks as $webhook) {
                 $this->webhookService->delete($webhook->id);
-                sleep(1);
             }
 
             return [];

@@ -1,0 +1,13 @@
+{
+    "name": "GeradorRastreio",
+    "alias": "geradorrastreio",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GeradorRastreio\\Providers\\GeradorRastreioServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

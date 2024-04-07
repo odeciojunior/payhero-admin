@@ -162,6 +162,14 @@ $(document).ready(function () {
                     $("#astronmembers-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
 
+                if (response.geradorrastreioIntegrations > 0) {
+                    $("#geradorrastreio-bt").addClass("added");
+                    $("#geradorrastreio-icon").removeClass("o-add-1").addClass("o-checkmark-1");
+                } else {
+                    $("#geradorrastreio-bt").removeClass("added");
+                    $("#geradorrastreio-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+                }
+
                 if (response.notificacoesinteligentesIntegrations > 0) {
                     $("#notificacoesinteligentes-bt").addClass("added");
                     $("#notificacoesinteligentes-icon").removeClass("o-add-1").addClass("o-checkmark-1");
@@ -232,6 +240,9 @@ $(document).ready(function () {
 
         $("#astronmembers-bt").removeClass("added");
         $("#astronmembers-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#geradorrastreio-bt").removeClass("added");
+        $("#geradorrastreio-icon").removeClass("o-checkmark-1").addClass("o-add-1");
 
         $("#notificacoesinteligentes-bt").removeClass("added");
         $("#notificacoesinteligentes-icon").removeClass("o-checkmark-1").addClass("o-add-1");
