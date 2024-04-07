@@ -35,18 +35,21 @@ class IuguVerificationAccount extends Command
         $companiesCredentials = DB::table("gateways_companies_credentials as gcc")
             ->select("gcc.company_id")
             ->join("company_bank_accounts as cba", "gcc.company_id", "=", "cba.company_id")
+            ->join("companies as c", "gcc.company_id", "=", "c.id")
             ->where("gcc.gateway_id", $gatewayId)
             ->whereNotNull("gcc.gateway_subseller_id")
             ->where("gcc.has_charges_webhook", false)
             ->where("cba.transfer_type", "TED")
             ->where("cba.status", "VERIFIED")
+            ->whereNotNull("c.zip_code")
+            ->whereNotNull("c.street")
             ->get();
 
         $checkoutGateway = new CheckoutGateway($gatewayId);
 
         foreach ($companiesCredentials as $row) {
             try {
-                $checkoutGateway->createAccount(["companyId" => $row->company_id]);
+                $checkoutGateway->verificationAccount(["companyId" => $row->company_id]);
             } catch (Exception $e) {
                 report($e);
             }
