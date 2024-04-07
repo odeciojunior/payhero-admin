@@ -42,8 +42,11 @@ class IuguCreateSellerAccount extends Command
             ->where("cba.status", "VERIFIED")
             ->get();
 
+        $this->line(count($bankAccounts) . " registros");
+
         $checkoutGateway = new CheckoutGateway($gatewayId);
         foreach ($bankAccounts as $bankAccount) {
+            $this->line("Company " . $bankAccount->company_id);
             $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
         }
     }

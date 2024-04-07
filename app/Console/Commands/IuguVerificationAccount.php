@@ -45,9 +45,12 @@ class IuguVerificationAccount extends Command
             ->whereNotNull("c.street")
             ->get();
 
+        $this->line(count($companiesCredentials) . " registros");
+
         $checkoutGateway = new CheckoutGateway($gatewayId);
 
         foreach ($companiesCredentials as $row) {
+            $this->line("Company " . $row->company_id);
             try {
                 $checkoutGateway->verificationAccount(["companyId" => $row->company_id]);
             } catch (Exception $e) {
