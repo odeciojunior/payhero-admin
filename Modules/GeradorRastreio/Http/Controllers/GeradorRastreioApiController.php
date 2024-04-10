@@ -127,7 +127,7 @@ class GeradorRastreioApiController extends Controller
                     "project_id" => $projectId,
                     "token_id" => $tokenid->id,
                     "clientid" => $data["clientid"],
-                    "webhook_url" => 'https://api.geradorrastreio.com.br/webhook/track',
+                    "webhook_url" => 'https://geradorderastreio.com/webhook/azcend',
                     
                 ]);
 
