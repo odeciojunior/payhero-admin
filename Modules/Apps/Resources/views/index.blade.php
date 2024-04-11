@@ -298,7 +298,7 @@
                              data-url="/apps/geradorrastreio"
                              style='width: 270px;'>
                             <a id="geradorrastreio-bt"
-                               href="/apps/grsolucoes"
+                               href="/apps/geradorrastreio"
                                class="add-btn">
                                 <i id="geradorrastreio-icon"
                                    class="o-add-1"
