@@ -110,7 +110,7 @@ class AsaasTransfersSurplusBalance extends Command
                 if ($asaasBalance > 0 && $asaasBalance > $companyBalance) {
                     $amountTransfer = intval($companyBalance > 0 ? $asaasBalance - $companyBalance : $asaasBalance);
 
-                    $response = $checkoutGateway->transferSubSellerToSeller($company->id, $amountTransfer);
+                    $response = $checkoutGateway->transferAccountToMainAccount($company->id, $amountTransfer);
 
                     //$status = 'Done';
                     //if(empty($response) || empty($response->status) || $response->status=='error'){

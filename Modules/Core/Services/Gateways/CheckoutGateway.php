@@ -139,12 +139,12 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
-    public function transferSubSellerToSeller($companyId, int $amount, $transferId = null)
+    public function transferAccountToMainAccount($companyId, $amount = null)
     {
         $options = new GatewayCurlOptions([
-            "endpoint" => "transferSubSellerToSeller",
-            "variables" => [$companyId],
-            "data" => ["amount" => $amount, "transfer_id" => $transferId],
+            "endpoint" => "transferAccountToMainAccount",
+            "variables" => [$this->gatewayId],
+            "data" => ["companyId" => $companyId],
         ]);
         return json_decode($this->requestHttp($options));
     }
@@ -223,6 +223,10 @@ class CheckoutGateway extends GatewayAbstract
                 "route" => "marketplace/verification-account/:gatewayId",
                 "method" => "POST",
             ],
+            "transferAccountToMainAccount" => [
+                "route" => "marketplace/transfer-account-to-main-account/:gatewayId",
+                "method" => "POST",
+            ],
             "getCurrentBalance" => [
                 "route" => "withdrawal/current-balance/:gatewayId/:companyId",
                 "method" => "GET",
@@ -251,10 +255,7 @@ class CheckoutGateway extends GatewayAbstract
                 "route" => "withdrawal/asaas/transfer-seller-to-subseller/:companyId",
                 "method" => "POST",
             ],
-            "transferSubSellerToSeller" => [
-                "route" => "withdrawal/asaas/transfer-subseller-to-seller/:companyId",
-                "method" => "POST",
-            ],
+
             "getPaymentInfo" => [
                 "route" => "payment/info/:saleId",
                 "method" => "GET",
