@@ -607,7 +607,47 @@ $(document).ready(function () {
         $("#cardWelcome").slideUp("600");
     });
 
+
+    function verifyBankAndAddress() {
+        loadOnAny(".page-content");
+        $.ajax({
+            method: "GET",
+            url: "/api/core/verifybankandaddress",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                loadOnAny(".page-content", true);
+                errorAjaxResponse(response);
+            },
+            success: (response) => {                
+                loadOnAny(".page-content", true);
+                if (response.refused) {
+                    //window.location.replace(response.link);
+                    swal({
+                        title: "Verificar dados da empresa",
+                        html: "É necessária atualização do endereço e conta bancária associada ao CNPJ da sua empresa.<br>Por favor, atualize seus dados para continuar utilizando o sistema.<br>Clique em OK para ser redirecionado para a página de atualização.",
+                        type: "warning",
+                        confirmButtonText: "OK",
+                        showCancelButton: true,
+                        cancelButtonText: "Cancelar",
+                    }).then((result) => {
+                        if (result.dismiss === swal.DismissReason.cancel) {
+                            loadOnAny(".page-content", true);
+                        } else {
+                            window.location.replace(response.link);
+                        }
+                    });
+                }
+            },
+        });
+    }
+
+
     getCompaniesAndProjects().done(function (data) {
+        verifyBankAndAddress();
         getProjects();
     });
 

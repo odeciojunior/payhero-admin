@@ -200,6 +200,42 @@ class CoreApiController extends Controller
         }
     }
 
+    public function verifyBankAndAddress()
+    {
+        try {
+            $companyService = new CompanyService();
+
+            $link = null;
+            $refused = false;
+            
+            $companyAddressPending = $companyService->companyAddressPending();
+                
+            if (!empty($companyAddressPending)) {
+                $refused = true;
+                $companyCode = hashids_encode($companyAddressPending->id);
+                $link = env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . $companyCode;
+            } else {
+                $companyBankAccountPending = $companyService->companyBankAccountPending();
+                
+                if (!empty($companyBankAccountPending)) {
+                    $refused = true;
+                    $companyCode = hashids_encode($companyBankAccountPending->id);
+                    $link = env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . $companyCode;
+                }
+            }
+            
+            return response()->json([
+                "message" => "Verificar dados bancários e endereço!",
+                "refused" => $refused,
+                "link" => $link,
+            ]);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(["error" => "Erro ao verificar documentos"], 400);
+        }
+    }
+
     public function companies(Request $request)
     {
         try {

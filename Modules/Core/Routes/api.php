@@ -13,6 +13,8 @@ Route::group(
 
         Route::get("/core/verifydocuments", "CoreApiController@verifyDocuments");
 
+        Route::get("/core/verifybankandaddress", "CoreApiController@verifyBankAndAddress");
+
         Route::get("/core/usercompanies", "CoreApiController@getCompanies")
             //->name('api.companies.getcompanies')
             ->middleware("role:account_owner|attendance|finantial|custom|admin");
