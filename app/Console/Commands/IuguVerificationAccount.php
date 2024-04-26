@@ -38,7 +38,7 @@ class IuguVerificationAccount extends Command
             ->join("companies as c", "gcc.company_id", "=", "c.id")
             ->where("gcc.gateway_id", $gatewayId)
             ->whereNotNull("gcc.gateway_subseller_id")
-            ->where("gcc.has_charges_webhook", false)
+            ->whereNull("gcc.gateway_contact_id")
             ->where("cba.transfer_type", "TED")
             ->where("cba.status", "VERIFIED")
             ->whereNotNull("c.zip_code")
