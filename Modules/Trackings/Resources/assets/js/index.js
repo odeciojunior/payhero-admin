@@ -73,7 +73,7 @@ $(() => {
     });
 
     $("#tracking-product-image").on("error", function () {
-        $(this).attr("src", "https://nexuspay-digital-products.s3.amazonaws.com/admin/produto.svg");
+        $(this).attr("src", "https://azcend-digital-products.s3.amazonaws.com/admin/produto.svg");
     });
 
     $("#sale").on("change paste keyup select", function () {
