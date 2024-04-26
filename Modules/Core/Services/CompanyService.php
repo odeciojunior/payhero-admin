@@ -8,6 +8,7 @@ use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
@@ -384,6 +385,47 @@ class CompanyService
                     return $company;
                 }
             } else {
+                return $company;
+            }
+        }
+
+        return null;
+    }
+
+    public function companyAddressPending()
+    {
+        $companies = Company::where("user_id", auth()->user()->account_owner_id)
+            ->where("active_flag", true)
+            ->get();
+
+        foreach ($companies as $company) {
+            if (empty($company->zip_code))
+                return $company;
+            if (empty($company->street))
+                return $company;
+            if (empty($company->neighborhood))
+                return $company;
+            if (empty($company->city))
+                return $company;
+            if (empty($company->state))
+                return $company;
+        }
+
+        return null;
+    }
+
+    public function companyBankAccountPending()
+    {
+        $companies = Company::where("user_id", auth()->user()->account_owner_id)
+            ->where("active_flag", true)
+            ->get();
+
+        foreach ($companies as $company) {
+            $exists = CompanyBankAccount::where("company_id", $company->id)
+                ->where("transfer_type", "TED")
+                ->whereIn("status", ["VERIFIED", "VALIDATING"])
+                ->exists();
+            if (empty($exists)) {
                 return $company;
             }
         }

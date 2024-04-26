@@ -57,7 +57,7 @@
                        aria-hidden="true"></i>
                 </button>
             @else
-                <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.azcend.vip/') }}/personal-info"
+                <a href="{{ env('ACCOUNT_FRONT_URL', 'https://accounts.azcend.com.br/') }}/personal-info"
                    class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white"
                    style="position: relative;">
                     <i class="o-add-1"
