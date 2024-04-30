@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 
 class IuguVerificationAccount extends Command
@@ -37,10 +38,9 @@ class IuguVerificationAccount extends Command
             ->join("company_bank_accounts as cba", "gcc.company_id", "=", "cba.company_id")
             ->join("companies as c", "gcc.company_id", "=", "c.id")
             ->where("gcc.gateway_id", $gatewayId)
+            ->where("gcc.gateway_status", GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING)
             ->whereNotNull("gcc.gateway_subseller_id")
             ->whereNull("gcc.gateway_contact_id")
-            ->where("cba.transfer_type", "TED")
-            ->where("cba.status", "VERIFIED")
             ->whereNotNull("c.zip_code")
             ->whereNotNull("c.street")
             ->get();
