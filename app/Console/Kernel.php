@@ -84,6 +84,18 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->hourly()
             ->onOneServer();
+
+        $schedule
+            ->command("iugu:create-seller-account")
+            ->twiceDaily(1, 13)
+            ->withoutOverlapping()
+            ->onOneServer();
+
+        $schedule
+            ->command("iugu:verification-account")
+            ->dailyAt("15:00")
+            ->withoutOverlapping()
+            ->onOneServer();
         $schedule
             ->command("demo:create-fake-withdrawal")
             ->days([Schedule::MONDAY, Schedule::WEDNESDAY, Schedule::FRIDAY])
