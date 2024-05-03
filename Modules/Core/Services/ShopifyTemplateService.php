@@ -106,7 +106,7 @@ class ShopifyTemplateService
 
         $result = $this->assetService->find($themeId, $key);
 
-        $content = !empty($result["asset"]) && !empty($result["asset"]["value"]) ? $result["asset"]["value"] : false;
+        $content = !empty($result->value) ? $result->value : false;
 
         if ($content) {
             $value = $skipToCart ? "true" : "false";

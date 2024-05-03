@@ -1094,7 +1094,7 @@ class ShopifyService
     public function testProductsPermissions()
     {
         try {
-            $products = $this->productService->findAll()->current();
+            $products = $this->productService->findAll(["limit" => 1])->current();
 
             if (empty($products)) {
                 return [
@@ -1104,10 +1104,15 @@ class ShopifyService
             }
 
             foreach ($products as $product) {
-                foreach ($product->variants as $variant) {
+                if (!empty($product->variants)) {
+                    $variant = $product->variants[0];
                     try {
                         $this->inventoryService->find($variant->inventory_item_id);
                     } catch (Exception $e) {
+                        return [
+                            "status" => "error",
+                            "message" => "Erro na permissão de produtos",
+                        ];
                     }
                 }
 

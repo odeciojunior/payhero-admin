@@ -10,7 +10,7 @@ function delayMiddleware(): callable
 {
     return function (callable $handler) {
         return function (RequestInterface $request, array $options) use ($handler) {
-            sleep(1);
+            usleep(500);
             return $handler($request, $options);
         };
     };
