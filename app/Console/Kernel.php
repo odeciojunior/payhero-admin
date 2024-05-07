@@ -87,13 +87,13 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command("iugu:create-seller-account")
-            ->twiceDaily(1, 13)
+            ->everyTenMinutes()
             ->withoutOverlapping()
             ->onOneServer();
 
         $schedule
             ->command("iugu:verification-account")
-            ->dailyAt("15:00")
+            ->everyThirtyMinutes()
             ->withoutOverlapping()
             ->onOneServer();
         $schedule
