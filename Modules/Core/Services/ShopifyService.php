@@ -394,6 +394,12 @@ class ShopifyService
             "format" => "json",
         ]);
 
+        $this->createShopWebhook([
+            "topic" => "orders/updated",
+            "address" => "https://admin.azcend.vip/postback/shopify/" . hashids_encode($projectId) . "/tracking",
+            "format" => "json",
+        ]);
+
         return true;
     }
 

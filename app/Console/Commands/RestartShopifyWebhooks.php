@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use Exception;
-use Hashids\Hashids;
 use Illuminate\Console\Command;
-use Modules\Core\Services\ShopifyService;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Services\ShopifyService;
 
 class RestartShopifyWebhooks extends Command
 {
@@ -41,36 +41,24 @@ class RestartShopifyWebhooks extends Command
      */
     public function handle()
     {
-        foreach (ShopifyIntegration::all() as $shopifyIntegration) {
+        $shopifyIntegrations = ShopifyIntegration::where("status", ShopifyIntegration::STATUS_APPROVED)
+            ->whereHas("project", function ($query) {
+                $query->where("status", Project::STATUS_ACTIVE);
+            })
+            ->get();
+
+        foreach ($shopifyIntegrations as $shopifyIntegration) {
             try {
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                $shopifyService->deleteShopWebhook();
+                $shopifyService->createShopifyIntegrationWebhook(
+                    $shopifyIntegration->project_id,
+                    "https://admin.azcend.com.br/postback/shopify/",
+                );
 
-                $shopifyService->createShopWebhook([
-                    "topic" => "products/create",
-                    "address" =>
-                        "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($shopifyIntegration->project_id),
-                    "format" => "json",
-                ]);
-
-                $shopifyService->createShopWebhook([
-                    "topic" => "products/update",
-                    "address" =>
-                        "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($shopifyIntegration->project_id),
-                    "format" => "json",
-                ]);
-
-                $shopifyService->createShopWebhook([
-                    "topic" => "orders/updated",
-                    "address" =>
-                        "https://admin.azcend.vip/postback/shopify/" .
-                        Hashids::encode($shopifyIntegration->project_id) .
-                        "/tracking",
-                    "format" => "json",
-                ]);
+                $this->info("Webhook created for project {$shopifyIntegration->project_id}");
             } catch (Exception $e) {
-                //
+                $this->error($e->getMessage());
             }
         }
     }

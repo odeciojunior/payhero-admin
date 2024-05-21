@@ -5,10 +5,8 @@ namespace Modules\Core\Services;
 use Aws\S3\S3Client;
 use Carbon\Carbon;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Affiliate;
@@ -220,7 +218,7 @@ class FoxUtils
                 "/(ç)/",
             ],
             explode(" ", "a A e E i I o O u U n N C c"),
-            $string
+            $string,
         );
     }
 
@@ -421,7 +419,7 @@ class FoxUtils
     {
         try {
             if (!empty($url)) {
-                $urlKey = str_replace("https://azcend-${type}.s3.amazonaws.com/", "", $url);
+                $urlKey = str_replace("https://azcend-{$type}.s3.amazonaws.com/", "", $url);
 
                 $client = new S3Client([
                     "credentials" => [
@@ -433,7 +431,7 @@ class FoxUtils
                 ]);
 
                 $command = $client->getCommand("GetObject", [
-                    "Bucket" => "azcend-${type}",
+                    "Bucket" => "azcend-{$type}",
                     "Key" => $urlKey,
                 ]);
 
