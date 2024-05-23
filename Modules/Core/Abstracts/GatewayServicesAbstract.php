@@ -273,12 +273,15 @@ abstract class GatewayServicesAbstract
                 if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax;
                 } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_pix);
                     $reserveDays = $user->security_reserve_days_pix;
+                    $security_reserve_tax = $user->security_reserve_tax_pix;
                 } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_billet);
                     $reserveDays = $user->security_reserve_days_billet;
+                    $security_reserve_tax = $user->security_reserve_tax_billet;
                 } else {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
@@ -306,7 +309,7 @@ abstract class GatewayServicesAbstract
                     "transaction_id" => $transaction->id,
                     "transfer_id" => $transfer->id,
                     "user_id" => $transaction->user_id,
-                    "tax" => $user->security_reserve_tax,
+                    "tax" => $security_reserve_tax,
                     "value" => $reserveValue,
                     "release_date" => Carbon::now()
                         ->addDays($reserveDays)
