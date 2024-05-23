@@ -275,16 +275,17 @@ abstract class GatewayServicesAbstract
                     $reserveDays = $user->security_reserve_days;
                     $security_reserve_tax = $user->security_reserve_tax;
                 } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_pix);
-                    $reserveDays = $user->security_reserve_days_pix;
-                    $security_reserve_tax = $user->security_reserve_tax_pix;
+                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax));
+                    $reserveDays = ($user->security_reserve_days_pix ? $user->security_reserve_days_pix : $user->security_reserve_days);
+                    $security_reserve_tax = ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax);
                 } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_billet);
-                    $reserveDays = $user->security_reserve_days_billet;
-                    $security_reserve_tax = $user->security_reserve_tax_billet;
+                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax));
+                    $reserveDays = ($user->security_reserve_days_billet ? $user->security_reserve_days_billet : $user->security_reserve_days);
+                    $security_reserve_tax = ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax);
                 } else {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax;
                 }
                 
                 $transferValue = $transaction->value - $reserveValue;
