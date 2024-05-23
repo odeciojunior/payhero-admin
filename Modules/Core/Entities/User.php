@@ -76,6 +76,10 @@ use Illuminate\Support\Collection as SupportCollection;
  * @property int $release_count
  * @property int $security_reserve_tax
  * @property int $security_reserve_days
+ * @property int $security_reserve_tax_pix
+ * @property int $security_reserve_days_pix
+ * @property int $security_reserve_tax_billet
+ * @property int $security_reserve_days_billet
  * @property int $level
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
@@ -205,6 +209,10 @@ class User extends Authenticable
         "release_count",
         "security_reserve_tax",
         "security_reserve_days",
+        "security_reserve_tax_pix",
+        "security_reserve_days_pix",
+        "security_reserve_tax_billet",
+        "security_reserve_days_billet",
         "contestation_penalty",
         "contestation_penalty_tax",
         "invite_comission",

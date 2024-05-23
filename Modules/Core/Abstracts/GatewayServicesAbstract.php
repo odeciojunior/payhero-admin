@@ -248,7 +248,7 @@ abstract class GatewayServicesAbstract
         try {
             DB::beginTransaction();
 
-            $transactions = Transaction::with(["company", "user"])
+            $transactions = Transaction::with(["company", "user" , "sales"])
                 ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
@@ -268,8 +268,22 @@ abstract class GatewayServicesAbstract
 
                 $company = $transaction->company;
                 $user = $transaction->user;
+                $sale = $transaction->sale;
 
-                $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveDays = $user->security_reserve_days;
+                } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_pix);
+                    $reserveDays = $user->security_reserve_days_pix;
+                } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_billet);
+                    $reserveDays = $user->security_reserve_days_billet;
+                } else {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveDays = $user->security_reserve_days;
+                }
+                
                 $transferValue = $transaction->value - $reserveValue;
 
                 $company->update([
@@ -295,7 +309,7 @@ abstract class GatewayServicesAbstract
                     "tax" => $user->security_reserve_tax,
                     "value" => $reserveValue,
                     "release_date" => Carbon::now()
-                        ->addDays($user->security_reserve_days)
+                        ->addDays($reserveDays)
                         ->format("Y-m-d"),
                     "status" => SecurityReserve::STATUS_PENDING,
                 ]);
