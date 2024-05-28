@@ -248,7 +248,7 @@ abstract class GatewayServicesAbstract
         try {
             DB::beginTransaction();
 
-            $transactions = Transaction::with(["company", "user"])
+            $transactions = Transaction::with(["company", "user" , "sales"])
                 ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
@@ -268,8 +268,26 @@ abstract class GatewayServicesAbstract
 
                 $company = $transaction->company;
                 $user = $transaction->user;
+                $sale = $transaction->sale;
 
-                $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveDays = $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax;
+                } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax));
+                    $reserveDays = ($user->security_reserve_days_pix ? $user->security_reserve_days_pix : $user->security_reserve_days);
+                    $security_reserve_tax = ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax);
+                } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
+                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax));
+                    $reserveDays = ($user->security_reserve_days_billet ? $user->security_reserve_days_billet : $user->security_reserve_days);
+                    $security_reserve_tax = ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax);
+                } else {
+                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveDays = $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax;
+                }
+                
                 $transferValue = $transaction->value - $reserveValue;
 
                 $company->update([
@@ -292,10 +310,10 @@ abstract class GatewayServicesAbstract
                     "transaction_id" => $transaction->id,
                     "transfer_id" => $transfer->id,
                     "user_id" => $transaction->user_id,
-                    "tax" => $user->security_reserve_tax,
+                    "tax" => $security_reserve_tax,
                     "value" => $reserveValue,
                     "release_date" => Carbon::now()
-                        ->addDays($user->security_reserve_days)
+                        ->addDays($reserveDays)
                         ->format("Y-m-d"),
                     "status" => SecurityReserve::STATUS_PENDING,
                 ]);
