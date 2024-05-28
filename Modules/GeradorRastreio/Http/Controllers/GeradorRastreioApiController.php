@@ -119,6 +119,7 @@ class GeradorRastreioApiController extends Controller
                 $token = new ApiToken();
                 $tokenid = $token->newQuery()
                     ->where('description', 'GR_Solucoes_Token')
+                    ->where('user_id', auth()->user()->account_owner_id)
                     ->where('deleted_at', null)
                     ->first();
                 
