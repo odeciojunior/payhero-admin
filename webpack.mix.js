@@ -746,8 +746,16 @@ mix.styles(
     ["resources/modules/digitalmanager/css/index.css", "resources/modules/global/css/empty.css"],
     "public/build/layouts/geradorrastreio/index.min.css"
 );
-mix.babel(["Modules/GeradorRastreio/Resources/assets/js/index.js"], "public/build/layouts/geradorrastreio/index.min.js");
+mix.babel(
+    ["Modules/GeradorRastreio/Resources/assets/js/index.js"],
+    "public/build/layouts/geradorrastreio/index.min.js"
+);
 
+/**
+ * Modules/Utmify/Resources/views/index.blade.php
+ */
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/utmify/index.min.css");
+mix.babel(["Modules/Utmify/Resources/assets/js/index.js"], "public/build/layouts/utmify/index.min.js");
 
 /**
  * Modules/Reports/Resources/views/layouts/details.blade.php

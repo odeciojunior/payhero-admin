@@ -1,0 +1,13 @@
+{
+    "name": "Utmify",
+    "alias": "utmify",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Utmify\\Providers\\UtmifyServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

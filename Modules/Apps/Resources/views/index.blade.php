@@ -315,6 +315,28 @@
                         </div>
                     </div>
 
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration"
+                             data-url="/apps/utmify"
+                             style='width: 270px;'>
+                            <a id="utmify-bt"
+                               href="/apps/utmify"
+                               class="add-btn">
+                                <i id="utmify-icon"
+                                   class="o-add-1"
+                                   aria-hidden="true"></i></a>
+                            <div style="height: 250px; line-height:250px">
+                                <img class="card-img-top card-img-controll px-4"
+                                     src="{!! asset('build/global/img/utmify.png') !!}"
+                                     alt="">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text sm">Integre suas lojas com Utmify</p>
+                            </div>
+                        </div>
+                    </div>
+
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration"
