@@ -194,6 +194,14 @@ $(document).ready(function () {
                     $("#menv-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
 
+                if (response.utmifyIntegrations > 0) {
+                    $("#utmify-bt").addClass("added");
+                    $("#utmify-icon").removeClass("o-add-1").addClass("o-checkmark-1");
+                } else {
+                    $("#utmify-bt").removeClass("added");
+                    $("#utmify-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+                }
+
                 // removeLoadingSkeletonCards();
 
                 // $("#project-not-empty").show();
