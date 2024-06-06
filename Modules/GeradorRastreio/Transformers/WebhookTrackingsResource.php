@@ -25,6 +25,9 @@ class WebhookTrackingsResource extends JsonResource
             "token" => $this->token->access_token ?? null,
             "clientid" => $this->clientid,
             "webhook_url" => $this->webhook_url,
+            "credit_flag" => $this->credit_flag,
+            "pix_flag" => $this->pix_flag,
+            "billet_flag" => $this->billet_flag,
             "created_at" => $this->created_at->format("d/m/Y"),
             "updated_at" => $this->created_at->format("d/m/Y"),
         ];

@@ -82,9 +82,24 @@ $(document).ready(function () {
         index();
     });
 
+    //checkbox
+    $(".check").on("click", function () {
+        if ($(this).is(":checked")) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+    
     //reset the intergation modal
     function clearForm() {
         $("#clientid").val("");
+        $("#credit_flag").prop("checked", true).val(1);
+        $("#credit_flag_edit").prop("checked", true).val(1);
+        $("#pix_flag").prop("checked", false).val(0);
+        $("#pix_flag_edit").prop("checked", false).val(0);
+        $("#billet_flag_edit").prop("checked", false).val(0);
+        $("#billet_flag_edit").prop("checked", false).val(0);
         $("#project_id, #select_projects_edit")
             .prop("selectedIndex", 0)
             .change();
@@ -174,6 +189,18 @@ $(document).ready(function () {
                 $("#clientid_edit").val(integration.clientid);
                 $("#token_edit").val(integration.token);
                 $("#webhook_url_edit").val(integration.webhook_url);
+
+                $("#credit_flag_edit")
+                    .val(integration.credit_flag)
+                    .prop("checked", integration.credit_flag === 1);
+                
+                $("#pix_flag_edit")
+                    .val(integration.pix_flag)
+                    .prop("checked", integration.pix_flag === 1);
+                
+                $("#billet_flag_edit")
+                    .val(integration.billet_flag)
+                    .prop("checked", integration.billet_flag === 1);
             },
         });
     });

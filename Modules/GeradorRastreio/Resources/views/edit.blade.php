@@ -61,5 +61,53 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="credit_flag_edit"
+                           class='mb-10'>Cartão:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='1'
+                               name="credit_flag_edit"
+                               id="credit_flag_edit"
+                               class='check'
+                               checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="pix_flag_edit"
+                           class='mb-10'>Pix:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='0'
+                               name="pix_flag_edit"
+                               id="pix_flag_edit"
+                               class='check'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="billet_flag_edit"
+                           class='mb-10'>Boleto:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='1'
+                               name="billet_flag_edit"
+                               id="billet_flag_edit"
+                               class='check'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
