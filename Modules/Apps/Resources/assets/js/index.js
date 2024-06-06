@@ -202,6 +202,14 @@ $(document).ready(function () {
                     $("#utmify-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
 
+                if (response.vegacheckoutIntegrations > 0) {
+                    $("#vegacheckout-bt").addClass("added");
+                    $("#vegacheckout-icon").removeClass("o-add-1").addClass("o-checkmark-1");
+                } else {
+                    $("#vegacheckout-bt").removeClass("added");
+                    $("#vegacheckout-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+                }
+
                 // removeLoadingSkeletonCards();
 
                 // $("#project-not-empty").show();
@@ -260,6 +268,9 @@ $(document).ready(function () {
 
         $("#menv-bt").removeClass("added");
         $("#menv-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+
+        $("#vegacheckout-bt").removeClass("added");
+        $("#vegacheckout-icon").removeClass("o-checkmark-1").addClass("o-add-1");
     }
 
     $(".app-integration").on("click", function () {

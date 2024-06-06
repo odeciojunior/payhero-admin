@@ -65,5 +65,6 @@
     "Api": true,
     "Webhooks": true,
     "GeradorRastreio": true,
-    "Utmify": true
+    "Utmify": true,
+    "VegaCheckout": true
 }

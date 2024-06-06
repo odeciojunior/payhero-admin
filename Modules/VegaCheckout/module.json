@@ -1,0 +1,13 @@
+{
+    "name": "VegaCheckout",
+    "alias": "vegacheckout",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\VegaCheckout\\Providers\\VegaCheckoutServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -758,6 +758,13 @@ mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/utm
 mix.babel(["Modules/Utmify/Resources/assets/js/index.js"], "public/build/layouts/utmify/index.min.js");
 
 /**
+ * Modules/VegaCheckout/Resources/views/index.blade.php
+ */
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/vegacheckout/index.min.css");
+mix.babel(["Modules/VegaCheckout/Resources/assets/js/index.js"], "public/build/layouts/vegacheckout/index.min.js");
+
+
+/**
  * Modules/Reports/Resources/views/layouts/details.blade.php
  */
 mix.styles(["Modules/Sales/Resources/assets/css/index.css"], "public/build/layouts/reports/details.min.css");

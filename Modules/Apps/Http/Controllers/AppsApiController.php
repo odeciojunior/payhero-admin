@@ -22,6 +22,7 @@ use Modules\Core\Entities\UtmifyIntegration;
 use Modules\Core\Entities\WebhookTracking;
 use Modules\Core\Entities\Whatsapp2Integration;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Entities\ApiToken;
 
 class AppsApiController extends Controller
 {
@@ -170,6 +171,8 @@ class AppsApiController extends Controller
             "melhorenvioIntegrations" => MelhorenvioIntegration::where("user_id", $accountOwnerId)->count(),
 
             "utmifyIntegrations" => UtmifyIntegration::where("user_id", $accountOwnerId)->count(),
+            
+            "vegacheckoutIntegrations" => ApiToken::where([["description", "Vega_Checkout"], ["company_id", $company_default]])->count(),
         ]);
     }
 }
