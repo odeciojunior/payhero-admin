@@ -117,20 +117,20 @@
         <div id="no-integration-found"
              class='justify-content-center'
              style="display:none !important;
-                                                                        height: 100%;
-                                                                        width: 100%;
-                                                                        position: absolute;
-                                                                        display: -webkit-flex;
-                                                                        display: flex;
-                                                                        -webkit-align-items: center;
-                                                                        align-items: center;
-                                                                        -webkit-justify-content: center;
-                                                                        justify-content: center;">
+                    height: 100%;
+                    width: 100%;
+                    position: absolute;
+                    display: -webkit-flex;
+                    display: flex;
+                    -webkit-align-items: center;
+                    align-items: center;
+                    -webkit-justify-content: center;
+                    justify-content: center;">
             <div class="content-error text-center">
                 <img src="{!! mix('build/global/img/aplicativos.svg') !!}"
                      width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Converta mais com um gerador de rastreio!</p>
+                <p class="desc gray">Converta mais com a GR Soluções!</p>
             </div>
         </div>
     </div>

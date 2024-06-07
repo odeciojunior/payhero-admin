@@ -30,13 +30,13 @@
         </div>
         <div class="row">
             <div class='form-group col-12'>
-                <label for="webhook_url_edit">WEBHOOK URL</label>
+                {{--<label for="webhook_url_edit">WEBHOOK URL</label>--}}
                 <div class="d-flex input-group">
-                    <input type="text"
+                    <input type="hidden"
                            class="input-pad addon"
                            name="webhook_url"
                            id="webhook_url_edit"
-                           placeholder="" readonly>
+                           placeholder="" readonly hidden>
                 </div>
             </div>
         </div>
@@ -72,8 +72,7 @@
                                value='1'
                                name="credit_flag_edit"
                                id="credit_flag_edit"
-                               class='check'
-                               checked>
+                               class='check'>
                         <span class="slider round"></span>
                     </label>
                 </div>
