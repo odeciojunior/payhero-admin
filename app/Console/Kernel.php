@@ -58,6 +58,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("available-balance:update")
             ->everyThirtyMinutes()
+            ->withoutOverlapping()
             ->onOneServer();
         $schedule
             ->command("verify:abandonedcarts")
