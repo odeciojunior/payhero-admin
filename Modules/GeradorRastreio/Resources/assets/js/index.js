@@ -82,9 +82,24 @@ $(document).ready(function () {
         index();
     });
 
+    //checkbox
+    $(".check").on("click", function () {
+        if ($(this).is(":checked")) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+    
     //reset the intergation modal
     function clearForm() {
         $("#clientid").val("");
+        $("#credit_flag").prop("checked", true).val(1);
+        $("#credit_flag_edit").prop("checked", true).val(1);
+        $("#pix_flag").prop("checked", false).val(0);
+        $("#pix_flag_edit").prop("checked", false).val(0);
+        $("#billet_flag_edit").prop("checked", false).val(0);
+        $("#billet_flag_edit").prop("checked", false).val(0);
         $("#project_id, #select_projects_edit")
             .prop("selectedIndex", 0)
             .change();
@@ -92,12 +107,10 @@ $(document).ready(function () {
 
     //draw the integration cards
     function renderIntegration(data) {
-        $("#content").append(
-            `
-                            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                <div class="card shadow card-edit" project=` +
-                data.id +
-                ` style='cursor:pointer;'>
+        $("#content").append(`
+        
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 integration-card" project="${data.id}">
+            <div class="card shadow card-edit" style='cursor:pointer;'>
 
                 <div class="d-flex align-items-center justify-content-center"   >
                 <img class="card-img-top img-fluid w-full" src=` +
@@ -135,7 +148,7 @@ $(document).ready(function () {
 
     //create
     $("#btn-add-integration").on("click", function () {
-        $(".modal-title").html("Adicionar nova Integração com Gerador de Rastreio");
+        $(".modal-title").html("Adicionar nova Integração com GR Soluções");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").removeClass("btn-update");
         $("#bt_integration").text("Adicionar integração");
@@ -147,7 +160,7 @@ $(document).ready(function () {
 
     //edit
     $(document).on("click", ".card-edit", function () {
-        $(".modal-title").html("Editar Integração com Gerador de Rastreio");
+        $(".modal-title").html("Editar Integração com GR Soluções");
         $("#bt_integration").addClass("btn-update");
         $("#bt_integration").removeClass("btn-save");
         $("#bt_integration").text("Atualizar");
@@ -155,9 +168,11 @@ $(document).ready(function () {
         $("#form_add_integration").hide();
         $("#modal_add_integracao").modal("show");
 
+        const projectId = $(this).closest(".integration-card").attr("project");
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/geradorrastreio/" + $(this).attr("project"),
+            url: "/api/apps/geradorrastreio/" + projectId,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -174,6 +189,18 @@ $(document).ready(function () {
                 $("#clientid_edit").val(integration.clientid);
                 $("#token_edit").val(integration.token);
                 $("#webhook_url_edit").val(integration.webhook_url);
+
+                $("#credit_flag_edit")
+                    .val(integration.credit_flag)
+                    .prop("checked", integration.credit_flag == 1);
+                
+                $("#pix_flag_edit")
+                    .val(integration.pix_flag)
+                    .prop("checked", integration.pix_flag == 1);
+                
+                $("#billet_flag_edit")
+                    .val(integration.billet_flag)
+                    .prop("checked", integration.billet_flag == 1);
             },
         });
     });
@@ -295,7 +322,7 @@ $(document).ready(function () {
     // load delete modal
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
-        var project = $(this).attr("project");
+        var project = $(this).closest(".integration-card").attr("project");
         $("#modal-delete-integration .btn-delete").attr("project", project);
         $("#modal-delete-integration").modal("show");
     });
@@ -320,7 +347,8 @@ $(document).ready(function () {
                 error: (response) => {
                     errorAjaxResponse(response);
                 },
-                success: function success(response) {
+                success: (response) => {
+                    $(`.integration-card[project="${project}"]`).remove();
                     index();
                     alertCustom("success", response.message);
                 },

@@ -119,6 +119,7 @@ class GeradorRastreioApiController extends Controller
                 $token = new ApiToken();
                 $tokenid = $token->newQuery()
                     ->where('description', 'GR_Solucoes_Token')
+                    ->where('user_id', auth()->user()->account_owner_id)
                     ->where('deleted_at', null)
                     ->first();
                 
@@ -128,7 +129,9 @@ class GeradorRastreioApiController extends Controller
                     "token_id" => $tokenid->id,
                     "clientid" => $data["clientid"],
                     "webhook_url" => 'https://geradorderastreio.com/webhook/azcend',
-                    
+                    "credit_flag" => $data["credit_flag"] ?? 0,
+                    "pix_flag" => $data["pix_flag"] ?? 0,
+                    "billet_flag" => $data["billet_flag"] ?? 0,
                 ]);
 
                 if ($integrationCreated) {
@@ -240,8 +243,12 @@ class GeradorRastreioApiController extends Controller
             }
 
             $integrationUpdated = $WebhookTracking->update([
-                "clientid" => $data["clientid"],                
+                "clientid" => $data["clientid"],
+                "credit_flag" => $data["credit_flag_edit"] ?? 0,
+                "pix_flag" => $data["pix_flag_edit"] ?? 0,
+                "billet_flag" => $data["billet_flag_edit"] ?? 0,                
             ]);
+
             if ($integrationUpdated) {
                 return response()->json(
                     [
@@ -262,7 +269,7 @@ class GeradorRastreioApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro ao atualizar a integração",
+                    "message" => "Ocorreu um erro ao tentar atualizar a integração", $e
                 ],
                 400
             );

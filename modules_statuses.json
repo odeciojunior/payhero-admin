@@ -64,5 +64,7 @@
     "NotificacoesInteligentes": true,
     "Api": true,
     "Webhooks": true,
-    "GeradorRastreio": true
+    "GeradorRastreio": true,
+    "Utmify": true,
+    "VegaCheckout": true
 }

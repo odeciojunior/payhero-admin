@@ -30,13 +30,13 @@
         </div>
         <div class="row">
             <div class='form-group col-12'>
-                <label for="webhook_url_edit">WEBHOOK URL</label>
+                {{--<label for="webhook_url_edit">WEBHOOK URL</label>--}}
                 <div class="d-flex input-group">
-                    <input type="text"
+                    <input type="hidden"
                            class="input-pad addon"
                            name="webhook_url"
                            id="webhook_url_edit"
-                           placeholder="" readonly>
+                           placeholder="" readonly hidden>
                 </div>
             </div>
         </div>
@@ -58,6 +58,53 @@
                             <img src="/build/global/img/icon-copy-b.svg">
                         </button>
                     </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="credit_flag_edit"
+                           class='mb-10'>Cartão:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='1'
+                               name="credit_flag_edit"
+                               id="credit_flag_edit"
+                               class='check'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="pix_flag_edit"
+                           class='mb-10'>Pix:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='0'
+                               name="pix_flag_edit"
+                               id="pix_flag_edit"
+                               class='check'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="switch-holder">
+                    <label for="billet_flag_edit"
+                           class='mb-10'>Boleto:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox"
+                               value='1'
+                               name="billet_flag_edit"
+                               id="billet_flag_edit"
+                               class='check'>
+                        <span class="slider round"></span>
+                    </label>
                 </div>
             </div>
         </div>

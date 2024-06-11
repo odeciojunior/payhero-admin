@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $token_id
  * @property string $clientid
  * @property string $webhook_url
+ * @property integer $credit_flag
+ * @property integer $pix_flag
+ * @property integer $billet_flag
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -42,6 +45,9 @@ class WebhookTracking extends Model
         "token_id",
         "clientid",
         "webhook_url",
+        "credit_flag",
+        "pix_flag",
+        "billet_flag",
         "created_at",
         "updated_at",
         "deleted_at",
