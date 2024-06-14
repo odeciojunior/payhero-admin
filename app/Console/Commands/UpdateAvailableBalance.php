@@ -53,6 +53,7 @@ class UpdateAvailableBalance extends Command
     public function handle()
     {
         try {
+            report("Updating available balance starts: " . time());
             settings()
                 ->group("withdrawal_request")
                 ->set("withdrawal_request", false);
@@ -65,6 +66,7 @@ class UpdateAvailableBalance extends Command
             settings()
                 ->group("withdrawal_request")
                 ->set("withdrawal_request", true);
+            report("Updating available balance ends: " . time());
         } catch (Exception $e) {
             report($e);
         }
