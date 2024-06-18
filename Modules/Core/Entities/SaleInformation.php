@@ -20,6 +20,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $browser_token Token do browser (salvo no cookie) utilizado na compra
  * @property string|null $browser_token_post
  * @property string|null $ip Ip com comprador
+ * @property string|null $url Url de origem da compra
+ * @property string|null $referer Referer de origem da compra
  * @property string|null $customer_name Nome do comprador
  * @property string|null $customer_email Email do comprador
  * @property string|null $customer_phone Telefone do comprador
@@ -89,6 +91,8 @@ class SaleInformation extends Model
         "browser_fingerprint",
         "browser_token",
         "ip",
+        "url",
+        "referer",
         "customer_name",
         "customer_email",
         "customer_phone",
@@ -107,8 +111,8 @@ class SaleInformation extends Model
         "installments",
         "first_six_digits",
         "last_four_digits",
-        'created_at',
-        'updated_at'
+        "created_at",
+        "updated_at",
     ];
 
     public function sale(): BelongsTo

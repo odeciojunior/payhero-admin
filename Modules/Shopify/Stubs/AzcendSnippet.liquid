@@ -163,6 +163,8 @@
             checkoutForm.appendChild(createInput("product_amount_" + i, item.quantity));
         }
 
+        checkoutForm.appendChild(createInput("referer", window.location.href));
+
         document.body.appendChild(checkoutForm);
 
         checkoutForm.submit();
