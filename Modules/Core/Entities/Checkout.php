@@ -3,15 +3,15 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CheckoutPresenter;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -37,6 +37,7 @@ use Spatie\Activitylog\LogOptions;
  * @property string $lon
  * @property string $src
  * @property boolean $is_mobile
+ * @property string $referer
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $utm_source
@@ -116,6 +117,7 @@ class Checkout extends Model
         "email_sent_amount",
         "sms_sent_amount",
         "client_name",
+        "referer",
         "client_telephone",
         "template_type",
         "created_at",
