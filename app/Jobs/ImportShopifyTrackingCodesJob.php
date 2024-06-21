@@ -70,7 +70,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             $this->shopifyService->createShopWebhook([
                 "webhook" => [
                     "topic" => "products/create",
-                    "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
+                    "address" => "https://admin.azcend.com.br/postback/shopify/" . Hashids::encode($this->project->id),
                     "format" => "json",
                 ],
             ]);
@@ -78,7 +78,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             $this->shopifyService->createShopWebhook([
                 "webhook" => [
                     "topic" => "products/update",
-                    "address" => "https://admin.azcend.vip/postback/shopify/" . Hashids::encode($this->project->id),
+                    "address" => "https://admin.azcend.com.br/postback/shopify/" . Hashids::encode($this->project->id),
                     "format" => "json",
                 ],
             ]);
@@ -87,7 +87,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 "webhook" => [
                     "topic" => "orders/updated",
                     "address" =>
-                        "https://admin.azcend.vip/postback/shopify/" .
+                        "https://admin.azcend.com.br/postback/shopify/" .
                         Hashids::encode($this->project->id) .
                         "/tracking",
                     "format" => "json",

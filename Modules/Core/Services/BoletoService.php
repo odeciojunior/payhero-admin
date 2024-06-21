@@ -151,7 +151,7 @@ class BoletoService
                                 ->where("project_id", $sale->project_id)
                                 ->where("status", 3)
                                 ->first();
-                            $domainName = $domain->name ?? "azcend.vip";
+                            $domainName = $domain->name ?? "azcend.com.br";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($sale->id, "sale_id") .
@@ -322,7 +322,7 @@ class BoletoService
                             ->where("project_id", $project->id)
                             ->where("status", $domainPresent->getStatus("approved"))
                             ->first();
-                        $domainName = $domain->name ?? "azcend.vip";
+                        $domainName = $domain->name ?? "azcend.com.br";
                         $boletoLink =
                             "https://checkout.{$domainName}/order/" .
                             hashids_encode($boleto->id, "sale_id") .
@@ -518,7 +518,7 @@ class BoletoService
                                 ->where("project_id", $project->id)
                                 ->where("status", 3)
                                 ->first();
-                            $domainName = $domain->name ?? "azcend.vip";
+                            $domainName = $domain->name ?? "azcend.com.br";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($boleto->id, "sale_id") .
@@ -687,7 +687,7 @@ class BoletoService
                                 ->where("project_id", $project->id)
                                 ->where("status", $domainPresenter->getStatus("approved"))
                                 ->first();
-                            $domainName = $domain->name ?? "azcend.vip";
+                            $domainName = $domain->name ?? "azcend.com.br";
                             $boletoLink =
                                 "https://checkout.{$domainName}/order/" .
                                 hashids_encode($boleto->id, "sale_id") .

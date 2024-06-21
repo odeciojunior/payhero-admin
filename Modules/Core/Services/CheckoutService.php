@@ -215,7 +215,7 @@ class CheckoutService
 
             $domain = $sale->project->domains->where("status", 3)->first();
             if (foxutils()->isProduction()) {
-                $regenerateBilletUrl = "https://checkout.azcend.vip/api/payment/regeneratebillet";
+                $regenerateBilletUrl = "https://checkout.azcend.com.br/api/payment/regeneratebillet";
             } else {
                 $regenerateBilletUrl =
                     env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/regeneratebillet";
@@ -314,7 +314,7 @@ class CheckoutService
     {
         $cloudFlareService = new CloudFlareService();
 
-        if (!$cloudFlareService->checkHtmlMetadata("https://checkout.azcend.vip/", "checkout-cloudfox", "1")) {
+        if (!$cloudFlareService->checkHtmlMetadata("https://checkout.azcend.com.br/", "checkout-cloudfox", "1")) {
             // checkout OFF
 
             // email addresses for notify
@@ -357,7 +357,7 @@ class CheckoutService
     public function releasePaymentGetnet($transactionId)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.azcend.vip/api/payment/releasepaymentgetnet";
+            $url = "https://checkout.azcend.com.br/api/payment/releasepaymentgetnet";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasepaymentgetnet";
         }
@@ -375,7 +375,7 @@ class CheckoutService
     public function releaseCloudfoxPaymentGetnet($data)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.azcend.vip/api/payment/releasecloudfoxpaymentgetnet";
+            $url = "https://checkout.azcend.com.br/api/payment/releasecloudfoxpaymentgetnet";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/releasecloudfoxpaymentgetnet";
         }
@@ -389,7 +389,7 @@ class CheckoutService
     public function checkPaymentPix($data)
     {
         if (foxutils()->isProduction()) {
-            $url = "https://checkout.azcend.vip/api/payment/check-payment-pix";
+            $url = "https://checkout.azcend.com.br/api/payment/check-payment-pix";
         } else {
             $url = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/api/payment/check-payment-pix";
         }

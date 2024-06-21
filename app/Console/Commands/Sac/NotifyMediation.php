@@ -83,7 +83,7 @@ class NotifyMediation extends Command
                     } else {
                         $smsService->sendSms(
                             $customer->telephone,
-                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.azcend.vip e solicite mediação."
+                            "Olá {$customerName}, podemos ajudar a solucionar a sua reclamação. Acesse https://sac.azcend.com.br e solicite mediação."
                         );
                     }
 

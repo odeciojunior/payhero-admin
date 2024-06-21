@@ -36,7 +36,7 @@ class UpdateCompanyGetnetSendEmailListener implements ShouldQueue
             $data = [
                 "first_name" => explode(" ", $user->name)[0],
                 "company_name" => $company->fantasy_name,
-                "companies_url" => "https://admin.azcend.vip/companies",
+                "companies_url" => "https://admin.azcend.com.br/companies",
             ];
 
             $emailService->sendEmail(

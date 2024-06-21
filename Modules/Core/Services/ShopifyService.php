@@ -396,7 +396,7 @@ class ShopifyService
 
         $this->createShopWebhook([
             "topic" => "orders/updated",
-            "address" => "https://admin.azcend.vip/postback/shopify/" . hashids_encode($projectId) . "/tracking",
+            "address" => "https://admin.azcend.com.br/postback/shopify/" . hashids_encode($projectId) . "/tracking",
             "format" => "json",
         ]);
 

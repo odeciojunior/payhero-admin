@@ -15,7 +15,7 @@ class TrackingShowResource extends JsonResource
         if (!empty($this->product)) {
             $product = $this->product;
             $domain = $this->productPlanSale->plan->project->domains->first();
-            $linkBase = $domain ? $domain->name : "azcend.vip";
+            $linkBase = $domain ? $domain->name : "azcend.com.br";
         } else {
             $productSaleApi = $this->productPlanSale->productSaleApi;
             $product = (object) [
@@ -23,7 +23,7 @@ class TrackingShowResource extends JsonResource
                 "description" => "",
                 "photo" => mix("build/global/img/produto.svg"),
             ];
-            $linkBase = "azcend.vip";
+            $linkBase = "azcend.com.br";
         }
 
         return [

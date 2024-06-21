@@ -147,7 +147,7 @@
             width: 20px;
             height: 20px;
             background-color: transparent;
-            background-image: url("https://accounts.azcend.vip/static/media/eye.62517b9b.svg");
+            background-image: url("https://accounts.azcend.com.br/static/media/eye.62517b9b.svg");
             background-size: 20px;
             opacity: 0.5;
             border: none;
@@ -271,7 +271,7 @@
                     <button id="btn-forgot-password"
                             class="btn-link-secondary">Esqueci minha senha</button>
                     <a class="btn-signup"
-                       href="https://accounts.azcend.vip/signup">
+                       href="https://accounts.azcend.com.br/signup">
                         <p>Não tem conta? CADASTRE-SE</p>
                     </a>
                 </div>

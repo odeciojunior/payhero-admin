@@ -578,7 +578,7 @@ class ShopifyApiController extends Controller
                 ->find($projectId);
 
             //            $domain = new \stdClass();
-            //            $domain->name = "azcend.vip";
+            //            $domain->name = "azcend.com.br";
             if (\foxutils()->isProduction()) {
                 $domain = $project->domains->where("status", $domainModel->present()->getStatus("approved"))->first();
             }

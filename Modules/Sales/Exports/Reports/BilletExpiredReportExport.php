@@ -148,7 +148,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             ->where("project_id", $sale->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "azcend.vip";
+        $domainName = $domain->name ?? "azcend.com.br";
         $boletoLink =
             "https://checkout.{$domainName}/order/" . hashids_encode($sale->id, "sale_id") . "/download-boleto";
 

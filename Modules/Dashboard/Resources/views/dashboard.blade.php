@@ -234,7 +234,7 @@
                     </div>
 
                     <div class="modal-terms">
-                        <a href="//azcend.vip/use-terms-and-privacy-policy.html"
+                        <a href="//azcend.com.br/use-terms-and-privacy-policy.html"
                            target="_blank"
                            class="button-modal-term">
                             <span>

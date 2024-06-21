@@ -124,7 +124,7 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <a class="linkfooter"
                        target="_blank"
-                       href="https://azcend.vip/terms"
+                       href="https://azcend.com.br/index.php/politica-de-privacidade"
                        style="font-size: 11px">
                         Terms & Conditions</a>
                     <div class="oval"></div>

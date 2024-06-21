@@ -276,9 +276,9 @@ class FoxUtils
     public static function urlCheckout()
     {
         if (self::isProduction()) {
-            $url = "https://checkout.azcend.vip";
+            $url = "https://checkout.azcend.com.br";
         } else {
-            $url = "http://checkout.devazcend.vip";
+            $url = "http://checkout.devazcend.com.br";
         }
 
         return $url;

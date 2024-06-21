@@ -9,7 +9,7 @@ use Modules\Core\Services\FoxUtils;
 
 trait GetnetPrepareCompanyData
 {
-    private string $urlCallback = "https://admin.azcend.vip/postback/getnet";
+    private string $urlCallback = "https://admin.azcend.com.br/postback/getnet";
 
     public function getPrepareDataCreatePfCompany(Company $company)
     {

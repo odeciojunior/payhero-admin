@@ -46,7 +46,7 @@ class SalesResource extends JsonResource
             ->where("project_id", $this->project_id)
             ->where("status", 3)
             ->first();
-        $domainName = $domain->name ?? "azcend.vip";
+        $domainName = $domain->name ?? "azcend.com.br";
 
         $urlCheckout = "https://checkout.{$domainName}/order/";
         if (!empty($domain->name)) {
@@ -58,7 +58,7 @@ class SalesResource extends JsonResource
         }
 
         if ($user->company_default == Company::DEMO_ID) {
-            $urlCheckout = "https://demo.azcend.vip/order/";
+            $urlCheckout = "https://demo.azcend.com.br/order/";
             if (env("APP_ENV") == "local") {
                 $urlCheckout = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/order/";
             }

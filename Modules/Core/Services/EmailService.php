@@ -40,7 +40,7 @@ class EmailService
         try {
             $emailLayout = view("invites::email.invite", [
                 "logo" =>
-                    (env("APP_ENV") != "production" ? env("APP_URL") : "https://admin.azcend.vip") .
+                    (env("APP_ENV") != "production" ? env("APP_URL") : "https://admin.azcend.com.br") .
                     "/build/global/img/logos/2021/logo-primary.png",
                 "link" => env("ACCOUNT_FRONT_URL") . "/signup?i=" . $parameter,
             ]);

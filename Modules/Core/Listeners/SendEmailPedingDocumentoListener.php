@@ -46,11 +46,11 @@ class SendEmailPedingDocumentoListener implements ShouldQueue
             $sufixHomolog = "";
         }
 
-        $url = "https://accounts{$sufixHomolog}.azcend.vip/personal-info";
+        $url = "https://accounts{$sufixHomolog}.azcend.com.br/personal-info";
 
         if (!empty($data["companyId"])) {
             $url =
-                "https://accounts{$sufixHomolog}.azcend.vip/companies/company-detail/" .
+                "https://accounts{$sufixHomolog}.azcend.com.br/companies/company-detail/" .
                 Hashids::encode($data["companyId"]);
         }
 

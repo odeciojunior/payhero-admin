@@ -291,7 +291,7 @@ class ProjectNotificationService
                         ->where("project_id", $sale->project_id)
                         ->where("status", 3)
                         ->first();
-                    $domainName = $domain->name ?? "azcend.vip";
+                    $domainName = $domain->name ?? "azcend.com.br";
                 }
 
                 if (strpos($message, "{url_boleto}") !== false && !empty($sale)) {

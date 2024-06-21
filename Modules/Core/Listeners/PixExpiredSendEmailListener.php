@@ -93,7 +93,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 if (!foxutils()->isEmpty($domain)) {
                     $link = "https://checkout." . $domain->name;
                 } else {
-                    $link = "https://checkout.azcend.vip";
+                    $link = "https://checkout.azcend.com.br";
                 }
             } else {
                 $link = env("APP_URL", "http://dev.checkout.com.br");
@@ -135,7 +135,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 "discount" => $discount,
             ];
 
-            $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.vip");
+            $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
             $sendGridService->sendEmail(
                 $fromEmail,
                 $project["name"],

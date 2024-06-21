@@ -39,7 +39,7 @@ class ProjectUpsellConfigApiController extends Controller
                         ->first();
 
                     $upsellConfig->checkoutUrl =
-                        "https://checkout." . (isset($domain->name) ? $domain->name : "azcend.vip");
+                        "https://checkout." . (isset($domain->name) ? $domain->name : "azcend.com.br");
                 } else {
                     $upsellConfig->checkoutUrl = env("CHECKOUT_URL", "http://dev.checkout.net");
                 }

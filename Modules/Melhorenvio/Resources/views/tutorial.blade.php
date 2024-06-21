@@ -18,7 +18,7 @@
     <main>
         <div class="sidebar">
             <img class="logo"
-                 src="https://azcend.vip/sirius/assets/img/logos/sirius-powered-cloudfox.svg"
+                 src="https://azcend.com.br/sirius/assets/img/logos/sirius-powered-cloudfox.svg"
                  alt="Admin Logo">
             <ol>
                 <li>
