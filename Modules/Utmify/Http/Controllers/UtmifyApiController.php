@@ -5,6 +5,7 @@ namespace Modules\Utmify\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
