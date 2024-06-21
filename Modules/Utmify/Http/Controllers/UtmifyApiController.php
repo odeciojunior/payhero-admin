@@ -27,12 +27,6 @@ class UtmifyApiController extends Controller
                 ->user()
                 ->getAccountOwnerId();
 
-            $utmifyIntegrations = UtmifyIntegration::with(["project", "project.usersProjects"])
-                ->whereHas("project.usersProjects", function ($query) use ($companyId, $ownerId) {
-                    $query->where("company_id", $companyId)->where("user_id", $ownerId);
-                })
-                ->get();
-
             $userProjects = UserProject::with([
                 "project" => function ($query) {
                     $query
@@ -50,6 +44,12 @@ class UtmifyApiController extends Controller
                 ->get();
 
             $projects = $userProjects->pluck("project")->filter();
+
+            $projectIds = $projects->pluck("id");
+
+            $utmifyIntegrations = UtmifyIntegration::with(["project"])
+                ->whereIn("project_id", $projectIds)
+                ->get();
 
             return response()->json([
                 "integrations" => UtmifyIntegrationResource::collection($utmifyIntegrations),
