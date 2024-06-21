@@ -6,8 +6,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\UtmifyIntegration;
 use Modules\Core\Services\ProjectService;
 use Modules\Projects\Transformers\ProjectsSelectResource;
@@ -23,33 +23,25 @@ class UtmifyApiController extends Controller
             $this->logActivity("visualization", "Visualizou tela todos as integrações Utmify");
 
             $companyId = hashids_decode($request->company);
-            $ownerId = auth()
+            $userId = auth()
                 ->user()
                 ->getAccountOwnerId();
 
-            $userProjects = UserProject::with([
-                "project" => function ($query) {
-                    $query
-                        ->leftJoin("domains", function ($join) {
-                            $join
-                                ->on("domains.project_id", "=", "projects.id")
-                                ->where("domains.status", 3)
-                                ->whereNull("domains.deleted_at");
-                        })
-                        ->where("projects.status", Project::STATUS_ACTIVE);
-                },
-            ])
-                ->where([["user_id", $ownerId], ["company_id", $companyId]])
-                ->orderBy("id", "desc")
-                ->get();
-
-            $projects = $userProjects->pluck("project")->filter();
-
-            $projectIds = $projects->pluck("id");
+            $projectIds = DB::table("users_projects as up")
+                ->join("projects as p", "p.id", "=", "up.project_id")
+                ->leftJoin("domains as d", "d.project_id", "=", "p.id")
+                ->where("up.user_id", $userId)
+                ->where("up.company_id", $companyId)
+                ->where("d.status", Domain::STATUS_APPROVED)
+                ->where("p.status", Project::STATUS_ACTIVE)
+                ->whereNull("d.deleted_at")
+                ->pluck("p.id");
 
             $utmifyIntegrations = UtmifyIntegration::with(["project"])
                 ->whereIn("project_id", $projectIds)
                 ->get();
+
+            $projects = Project::whereIn("id", $projectIds)->get();
 
             return response()->json([
                 "integrations" => UtmifyIntegrationResource::collection($utmifyIntegrations),
