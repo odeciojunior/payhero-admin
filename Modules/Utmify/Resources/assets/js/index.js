@@ -5,15 +5,7 @@ $(document).ready(function () {
         $("#no-integration-found").hide();
         $("#project-empty").hide();
         loadOnAny("#content");
-        updateCompanyDefault().done(function (data1) {
-            getCompaniesAndProjects().done(function (data2) {
-                companiesAndProjects = data2;
-                index(false);
-            });
-        });
     });
-
-    var companiesAndProjects = "";
 
     function index(loading = true) {
         if (loading) {
@@ -22,59 +14,47 @@ $(document).ready(function () {
             loadOnAny("#content");
         }
 
-        let hasProjects = false;
-        if (companiesAndProjects.company_default_projects) {
-            $.each(companiesAndProjects.company_default_projects, function (i, project) {
-                if (project.status == 1) hasProjects = true;
-            });
-        }
+        $.ajax({
+            method: "GET",
+            url: "/api/apps/utmify?company=" + $(".company-navbar").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                loadOnAny("#content", true);
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#project_id, #select_projects_edit").html("");
 
-        if (!hasProjects) {
-            $("#integration-actions").hide();
-            $("#no-integration-found").hide();
-            $("#project-empty").show();
-            loadingOnScreenRemove();
-            loadOnAny("#content", true);
-        } else {
-            $.ajax({
-                method: "GET",
-                url: "/api/apps/utmify?company=" + $(".company-navbar").val(),
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    loadOnAny("#content", true);
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    $("#project_id, #select_projects_edit").html("");
-                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
-                    if (isEmpty(response.integrations)) {
-                        $("#no-integration-found").show();
-                    } else {
-                        $("#content").html("");
-                        let integrations = response.integrations;
-                        for (let i = 0; i < integrations.length; i++) {
-                            renderIntegration(integrations[i]);
-                        }
-                        $("#no-integration-found").hide();
+                $.each(response.projects, function (i, project) {
+                    $("#project_id, #select_projects_edit").append(
+                        $("<option>", { value: project.id, text: project.name })
+                    );
+                });
+
+                if (isEmpty(response.integrations)) {
+                    $("#no-integration-found").show();
+                } else {
+                    $("#content").html("");
+                    let integrations = response.integrations;
+                    for (let i = 0; i < integrations.length; i++) {
+                        renderIntegration(integrations[i]);
                     }
-                    $("#project-empty").hide();
-                    $("#integration-actions").show();
-                    if (loading) loadOnAny("#content", true);
-                    loadingOnScreenRemove();
-                },
-            });
-        }
+                    $("#no-integration-found").hide();
+                }
+                $("#project-empty").hide();
+                $("#integration-actions").show();
+                if (loading) loadOnAny("#content", true);
+                loadingOnScreenRemove();
+            },
+        });
     }
 
-    getCompaniesAndProjects().done(function (data) {
-        companiesAndProjects = data;
-        index();
-    });
+    index();
 
     // Reset the integration modal
     function clearForm() {

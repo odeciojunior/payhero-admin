@@ -23,7 +23,6 @@ class UtmifyApiController extends Controller
         try {
             $this->logActivity("visualization", "Visualizou tela todos as integrações Utmify");
 
-            $companyId = hashids_decode($request->company);
             $userId = auth()
                 ->user()
                 ->getAccountOwnerId();
@@ -32,7 +31,6 @@ class UtmifyApiController extends Controller
                 ->join("projects as p", "p.id", "=", "up.project_id")
                 ->leftJoin("domains as d", "d.project_id", "=", "p.id")
                 ->where("up.user_id", $userId)
-                ->where("up.company_id", $companyId)
                 ->where("d.status", Domain::STATUS_APPROVED)
                 ->where("p.status", Project::STATUS_ACTIVE)
                 ->whereNull("d.deleted_at")
