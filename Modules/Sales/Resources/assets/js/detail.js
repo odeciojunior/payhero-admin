@@ -803,6 +803,11 @@ $(() => {
             $("#thank-page-url").hide();
             $(".btn-copy-thank-page-url").hide();
         }
+        if (sale.referer != "") {
+            $("#referer-urll").text(sale.referer).show();
+        } else {
+            $("#referer-url").text("").hide();
+        }
         if (sale.delivery_id != "") {
             $("#div_delivery").css("display", "block");
         } else {

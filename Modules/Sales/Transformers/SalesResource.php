@@ -28,7 +28,7 @@ class SalesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $sale = Sale::with("apiToken")->find($this->id);
+        $sale = Sale::find($this->id);
 
         $user = auth()->user();
         $userPermissionRefunded = false;

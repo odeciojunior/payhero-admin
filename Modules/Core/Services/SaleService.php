@@ -16,6 +16,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\SaleWhiteBlackListResult;
@@ -300,7 +301,7 @@ class SaleService
 
         //get sale
         $sale = $saleModel
-            ->with(["transactions", "notazzInvoices", "affiliate", "saleRefundHistory"])
+            ->with(["transactions", "notazzInvoices", "affiliate", "saleRefundHistory", "apiToken"])
             ->find(hashids_decode($saleId, "sale_id"));
 
         //add details to sale
@@ -437,6 +438,13 @@ class SaleService
         }
         $companyName = $userTransaction->company->fantasy_name;
 
+        $saleInfo = SaleInformation::select("referer")
+            ->where("sale_id", "=", $sale->id)
+            ->orderByDesc("id")
+            ->first();
+
+        $referer = $saleInfo->referer ?? null;
+
         //add details to sale
         $sale->details = (object) [
             "transaction_tax" => foxutils()->formatMoney($transactionTax / 100),
@@ -474,6 +482,7 @@ class SaleService
             "user_changed_observation" =>
                 $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             "company_name" => $companyName,
+            "referer" => $referer,
         ];
     }
 

@@ -677,6 +677,11 @@
                                 <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
                             <br>
+                            <span id="referer-url"
+                                  class="table-title gray"
+                                  style="display:none"></span>
+                            <br>
+
                         </div>
 
                         <div class="dados-checkout">
