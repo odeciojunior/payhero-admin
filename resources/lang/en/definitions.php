@@ -105,7 +105,7 @@ return [
                 "in_review" => "Em Revisão",
                 "processing" => "Processando",
                 "returned" => "Retornado",
-                "liquidating" => "Liquidando",
+                "liquidating" => "Depósito agendado",
                 "partially_liquidated" => "Parcialmente Liquidado",
             ],
         ],
@@ -229,7 +229,7 @@ return [
             "suspended" => "Suspenso",
             "unfit" => "Inapto",
             "downloaded" => "Baixado",
-            "invalid" => "Invalido"
+            "invalid" => "Invalido",
         ],
     ],
 ];
