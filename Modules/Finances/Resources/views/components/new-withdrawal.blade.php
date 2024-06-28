@@ -49,9 +49,16 @@
                 </div>
             </div>
             <div class="col-sm-3 pt-1">
-                <button id="bt-withdrawal" style="margin-top: 21px; height: 48px;" class="btn btn-success disabled btn-sacar" data-toggle="modal" disabled>
-                    Realizar saque
-                </button>
+                <div class="d-flex align-items-center" style="margin-top: 21px;">
+                    <button id="bt-withdrawal" style="height: 48px;" class="btn btn-success mt-0 disabled btn-sacar" data-toggle="modal" disabled>
+                        Realizar saque
+                    </button>
+                    <i class="o-info-help-1 ml-2"
+                       id="info-total-balance"
+                       data-toggle="tooltip"
+                       title="Taxa de R$ 3,90 por saque."
+                    ></i>
+                </div>
             </div>
         </div>
         <div class='py-20 d-md-none' style="position: relative;">
