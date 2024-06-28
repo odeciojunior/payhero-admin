@@ -2,7 +2,6 @@
 
 namespace Modules\Sales\Transformers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -29,7 +28,7 @@ class SalesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $sale = Sale::find($this->id);
+        $sale = Sale::with("apiToken")->find($this->id);
 
         $user = auth()->user();
         $userPermissionRefunded = false;
@@ -79,6 +78,8 @@ class SalesResource extends JsonResource
                 hashids_encode($this->id, "sale_id") .
                 "/download-boleto";
         }
+
+        $apiPlatform = $this->apiToken ? $this->apiToken->platform_enum : null;
 
         $data = [
             "id" => hashids_encode($this->id, "sale_id"),
@@ -145,6 +146,7 @@ class SalesResource extends JsonResource
                     : 0,
             "has_cashback" => $this->cashback->value ?? false,
             "api_flag" => $this->api_flag,
+            "api_platform" => $apiPlatform,
             "refund_enabled" =>
                 $this->status == Sale::STATUS_APPROVED and
                 Gateway::getServiceById($this->gateway_id)->refundEnabled() and
@@ -180,7 +182,7 @@ class SalesResource extends JsonResource
                     $service = new WooCommerceService(
                         $integration->url_store,
                         $integration->token_user,
-                        $integration->token_pass
+                        $integration->token_pass,
                     );
                     $order = $service->woocommerce->get("orders/" . $this->woocommerce_order);
                     $data["woocommerce_order"] = $order;

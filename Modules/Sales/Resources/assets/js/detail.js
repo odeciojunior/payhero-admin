@@ -774,9 +774,14 @@ $(() => {
         }
 
         if (!sale.api_flag) {
-            $("#details-api").hide();
+            $("#details-api").text("").hide();
         } else {
-            $("#details-api").show();
+            const content =
+                sale.api_platform === "VEGA_CHECKOUT"
+                    ? "Venda realizada por Vega Checkout"
+                    : "Venda realizada por integração API Admin";
+
+            $("#details-api").text(content).show();
         }
 
         if (sale.refund_observation != null) {

@@ -1,13 +1,13 @@
 <?php
 
-if (!function_exists('hashids')) {
+if (!function_exists("hashids")) {
     function hashids()
     {
         return \Vinkla\Hashids\Facades\Hashids::getFacadeRoot();
     }
 }
 
-if (!function_exists('hashids_decode')) {
+if (!function_exists("hashids_decode")) {
     function hashids_decode(string $hash, $connection = null)
     {
         if ($connection) {
@@ -17,7 +17,7 @@ if (!function_exists('hashids_decode')) {
     }
 }
 
-if (!function_exists('hashids_encode')) {
+if (!function_exists("hashids_encode")) {
     function hashids_encode($numbers, $connection = null)
     {
         if ($connection) {
@@ -27,58 +27,58 @@ if (!function_exists('hashids_encode')) {
     }
 }
 
-if (!function_exists('foxutils')) {
+if (!function_exists("foxutils")) {
     function foxutils(): \Modules\Core\Services\FoxUtils
     {
         return new \Modules\Core\Services\FoxUtils();
     }
 }
 
-if (!function_exists('builder2sql')) {
+if (!function_exists("builder2sql")) {
     function builder2sql($query)
     {
         $bindings = array_map(function ($binding) {
             return is_numeric($binding) ? $binding : "'" . $binding . "'";
         }, $query->getBindings());
-        return str_replace_array('?', $bindings, $query->toSql());
+        return str_replace_array("?", $bindings, $query->toSql());
     }
 }
 
-if (!function_exists('getRegionByIp')) {
+if (!function_exists("getRegionByIp")) {
     function getRegionByIp($ip)
     {
         $regionJson = [];
 
-        $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
-        if ($query && $query['status'] == 'success') {
-            $regionJson['status'] = $query['status'];
-            $regionJson['country'] = $query['country'];
-            $regionJson['countryCode'] = $query['countryCode'];
-            $regionJson['region'] = $query['region'];
-            $regionJson['regionName'] = $query['regionName'];
-            $regionJson['city'] = $query['city'];
-            $regionJson['zip'] = $query['zip'];
-            $regionJson['lat'] = $query['lat'];
-            $regionJson['lon'] = $query['lon'];
-            $regionJson['timezone'] = $query['timezone'];
-            $regionJson['isp'] = $query['isp'];
-            $regionJson['org'] = $query['org'];
-            $regionJson['as'] = $query['as'];
-            $regionJson['query'] = $query['query'];
+        $query = @unserialize(file_get_contents("http://ip-api.com/php/" . $ip));
+        if ($query && $query["status"] == "success") {
+            $regionJson["status"] = $query["status"];
+            $regionJson["country"] = $query["country"];
+            $regionJson["countryCode"] = $query["countryCode"];
+            $regionJson["region"] = $query["region"];
+            $regionJson["regionName"] = $query["regionName"];
+            $regionJson["city"] = $query["city"];
+            $regionJson["zip"] = $query["zip"];
+            $regionJson["lat"] = $query["lat"];
+            $regionJson["lon"] = $query["lon"];
+            $regionJson["timezone"] = $query["timezone"];
+            $regionJson["isp"] = $query["isp"];
+            $regionJson["org"] = $query["org"];
+            $regionJson["as"] = $query["as"];
+            $regionJson["query"] = $query["query"];
         }
 
         return $regionJson;
     }
 }
 
-if (!function_exists('versionsFile')) {
+if (!function_exists("versionsFile")) {
     function versionsFile()
     {
-        return md5(414);
+        return md5(415);
     }
 }
 
-if (!function_exists('getRegionByIp')) {
+if (!function_exists("getRegionByIp")) {
     function getRegionByIp($ip)
     {
         $curl = curl_init();

@@ -614,7 +614,6 @@
                         <h4> Dados Gerais </h4>
                         <div id="details-api"
                              style="display: none; margin-bottom: 11px;">
-                            Venda realizada por integração API Admin
                         </div>
                         <div id="details-card"
                              style="display:none">
