@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleWoocommerceRequests;
-use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TransactionResource extends JsonResource
@@ -19,17 +17,40 @@ class TransactionResource extends JsonResource
     {
         $sale = $this->sale;
 
+        //        $planSales = $this->getRelation("plansSales");
+        //        $plansSale = $planSales->first();
+        //        $plan = $plansSale ? $plansSale->getRelation("plan") : null;
+        //
+        //        $productsSalesApi = $this->productsSaleApi;
+        //        $productSaleApi = $productsSalesApi->first();
+        //
+        //        $productName = Str::limit($this->api_flag ? $productSaleApi->name : $plan->name ?? "", 25);
+        //        $hasMultipleProducts = $this->api_flag ? count($productsSalesApi) > 1 : count($planSales) > 1;
+        //
+        //        $product = $hasMultipleProducts ?  $productName . " e mais " . (count($productsSalesApi) - 1) . " produtos" : $productName;
+
         if (!$sale->api_flag) {
             $project = !empty($sale->project) ? $sale->project->name : "";
-            $product =
-                count($sale->getRelation("plansSales")) > 1
-                    ? "Carrinho"
-                    : (!empty($sale->plansSales->first()->plan->name)
-                        ? $sale->plansSales->first()->plan->name
-                        : "");
+
+            $planSales = $sale->plansSales;
+            $productName = $planSales->first()->plan->name;
+
+            $hasMultipleProducts = count($planSales) > 1;
+            $extraProducts = $hasMultipleProducts ? count($planSales) - 1 : 0;
+
+            $product = $hasMultipleProducts
+                ? $productName . " e mais " . $extraProducts . " produto" . ($extraProducts > 1 ? "s" : "")
+                : $productName;
         } else {
-            $project = "Integração";
-            $product = "Checkout api";
+            $project = $sale->apiToken->platform_enum === "VEGA_CHECKOUT" ? "Vega Checkout" : "Integração";
+
+            $product = $sale->productsSaleApi->first()->name;
+            $hasMultipleProducts = count($sale->productsSaleApi) > 1;
+            $extraProducts = $hasMultipleProducts ? count($sale->productsSaleApi) - 1 : 0;
+
+            $product = $hasMultipleProducts
+                ? $product . " e mais " . $extraProducts . " produto" . ($extraProducts > 1 ? "s" : "")
+                : $product;
         }
 
         $customerName = $sale->customer->name;
@@ -51,7 +72,7 @@ class TransactionResource extends JsonResource
             "method" => $sale->payment_method,
             "status" => $sale->status,
             "status_translate" => Lang::get(
-                "definitions.enum.sale.status." . $sale->present()->getStatus($sale->status)
+                "definitions.enum.sale.status." . $sale->present()->getStatus($sale->status),
             ),
             "start_date" => $sale->start_date ? Carbon::parse($sale->start_date)->format("d/m/Y H:i:s") : "",
             "end_date" => $sale->end_date ? Carbon::parse($sale->end_date)->format("d/m/Y H:i:s") : "",
@@ -111,10 +132,15 @@ class TransactionResource extends JsonResource
             }
         }
 
-        $data['cashback_value'] = '0.00';
+        $data["cashback_value"] = "0.00";
 
-        if ($sale->owner_id == auth()->user()->getAccountOwnerId()) {
-            $data['user_sale_type'] = 'producer';
+        if (
+            $sale->owner_id ==
+            auth()
+                ->user()
+                ->getAccountOwnerId()
+        ) {
+            $data["user_sale_type"] = "producer";
             if (!empty($sale->cashback->value)) {
                 if ($sale->payment_method != 4) {
                     $data["cashback_value"] = FoxUtils::formatMoney($sale->cashback->value / 100);

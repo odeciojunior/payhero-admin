@@ -12,7 +12,6 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Product;
@@ -78,11 +77,13 @@ class SaleService
                 "sale.affiliate.user",
                 "sale.saleRefundHistory",
                 "sale.cashback",
+                "sale.apiToken",
             ];
 
             if ($withProducts) {
                 $relationsArray[] = "sale.productsPlansSale.plan";
                 $relationsArray[] = "sale.productsPlansSale.product";
+                $relationsArray[] = "sale.productsSaleApi";
             }
 
             $transactions = $transactionModel
@@ -189,7 +190,7 @@ class SaleService
                         "<=",
                         Carbon::now()
                             ->subMinutes(5)
-                            ->toDateTimeString()
+                            ->toDateTimeString(),
                     );
                 });
             }
@@ -280,8 +281,8 @@ class SaleService
                 DB::raw(
                     "count(sales.id) as total_sales,
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"
-                )
+                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total",
+                ),
             )
             ->first()
             ->toArray();
@@ -510,7 +511,7 @@ class SaleService
                 ) {
                     $product["digital_product_url"] = foxutils()->getAwsSignedUrl(
                         $product["digital_product_url"],
-                        $product["url_expiration_time"]
+                        $product["url_expiration_time"],
                     );
                     $pps->update([
                         "temporary_url" => $product["digital_product_url"],
@@ -766,15 +767,15 @@ class SaleService
                         ) / 100 as commission,
                         sum(CASE WHEN transactions.invitation_id IS NOT NULL THEN
                             if(transactions.status_enum in ({$transactionModel->present()->getStatusEnum(
-                            "transfered"
+                            "transfered",
                         )}), transactions.value, 0) ELSE 0 END
                         ) / 100 as commission_invite,
                         sum(CASE WHEN transactions.invitation_id IS NULL THEN
                                 (sales.sub_total + sales.shipment_value) -
                                 (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100
                                 ELSE 0 END
-                            ) as total"
-                    )
+                            ) as total",
+                    ),
                 )
                 ->first()
                 ->toArray();
@@ -817,7 +818,7 @@ class SaleService
                     "user_id",
                     auth()
                         ->user()
-                        ->getAccountOwnerId()
+                        ->getAccountOwnerId(),
                 )
                 ->join("sales", "sales.id", "transactions.sale_id")
                 ->whereHas("blockReasonSale", $blockReasonQuery);
@@ -915,8 +916,8 @@ class SaleService
                 ->without(["sale"])
                 ->select(
                     DB::raw(
-                        "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission"
-                    )
+                        "count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission",
+                    ),
                 )
                 ->first()
                 ->toArray();
@@ -937,7 +938,7 @@ class SaleService
                     "user_id",
                     auth()
                         ->user()
-                        ->getAccountOwnerId()
+                        ->getAccountOwnerId(),
                 )
                 ->where("company_id", auth()->user()->company_default)
                 ->join("sales", "sales.id", "transactions.sale_id")
@@ -984,7 +985,7 @@ class SaleService
                         $qr2->whereIn("transactions.gateway_id", $this->getGatewayIdsByFilter("Asaas"))->where(
                             "transactions.created_at",
                             ">",
-                            "2021-09-20"
+                            "2021-09-20",
                         );
                     })
                         ->orWhere(function ($qr2) {
@@ -993,13 +994,13 @@ class SaleService
                         ->orWhere(function ($qr2) {
                             $qr2->whereIn(
                                 "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Gerencianet")
+                                $this->getGatewayIdsByFilter("Gerencianet"),
                             )->where("is_waiting_withdrawal", 0);
                         })
                         ->orWhere(function ($qr3) {
                             $qr3->where("is_waiting_withdrawal", 0)->whereIn(
                                 "transactions.gateway_id",
-                                $this->getGatewayIdsByFilter("Getnet")
+                                $this->getGatewayIdsByFilter("Getnet"),
                             );
                         })
                         ->orWhere(function ($qr2) {
@@ -1065,7 +1066,7 @@ class SaleService
             // CPF do Usuário
             if (!empty($filters["customer_document"])) {
                 $customers = Customer::where("document", foxutils()->onlyNumbers($filters["customer_document"]))->pluck(
-                    "id"
+                    "id",
                 );
 
                 if (count($customers) < 1) {
@@ -1253,7 +1254,7 @@ class SaleService
 
         return PDF::loadView(
             "sales::refund_receipt",
-            compact("company", "transaction", "saleInfo", "checkoutConfigs", "productsPlansSales", "refundDate")
+            compact("company", "transaction", "saleInfo", "checkoutConfigs", "productsPlansSales", "refundDate"),
         );
     }
 
