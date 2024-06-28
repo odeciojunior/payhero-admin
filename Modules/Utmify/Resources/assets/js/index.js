@@ -146,7 +146,7 @@ $(document).ready(function () {
         var form_data = new FormData(document.getElementById("form_add_integration"));
 
         loadingOnScreen();
-        let description = "GR_Solucoes_Token";
+        let description = "UTMIFY";
         let companyHash = $(".company-navbar").val();
 
         storeIntegration(description, companyHash)

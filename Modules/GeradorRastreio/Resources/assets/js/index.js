@@ -216,7 +216,7 @@ $(document).ready(function () {
         );
         
         loadingOnScreen();
-        let description = "GR_Solucoes_Token"
+        let description = "GR_Solucoes"
         let companyHash = $('.company-navbar').val();
 
         storeIntegration(description, companyHash)
