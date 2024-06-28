@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\FoxUtils;
 use Modules\Integrations\Transformers\ApiTokenCollection;
 use Modules\Integrations\Transformers\ApiTokenResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,9 +29,15 @@ class IntegrationsApiController extends Controller
     {
         try {
             $apiTokenModel = new ApiToken();
-            $tokens        = $apiTokenModel->newQuery()
-                ->where('user_id', auth()->user()->getAccountOwnerId())
-                ->where('company_id', auth()->user()->company_default)
+            $tokens = $apiTokenModel
+                ->newQuery()
+                ->where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId(),
+                )
+                ->where("company_id", auth()->user()->company_default)
                 ->latest()
                 ->paginate(10);
             return new ApiTokenCollection($tokens);
@@ -55,21 +60,24 @@ class IntegrationsApiController extends Controller
         try {
             $description = $request->get("description");
             if (empty($description)) {
-                return response()->json(
-                    ["message" => "O campo Descrição é obrigatório!"],
-                    Response::HTTP_BAD_REQUEST
-                );
+                return response()->json(["message" => "O campo Descrição é obrigatório!"], Response::HTTP_BAD_REQUEST);
             }
 
             $apiTokenModel = new ApiToken();
-            $hasToken = $apiTokenModel->newQuery()
-                ->where('user_id', auth()->user()->getAccountOwnerId())
-                ->where('description', $description)
+            $hasToken = $apiTokenModel
+                ->newQuery()
+                ->where(
+                    "user_id",
+                    auth()
+                        ->user()
+                        ->getAccountOwnerId(),
+                )
+                ->where("description", $description)
                 ->exists();
             if ($hasToken) {
                 return response()->json(
                     ["message" => "Já existe um token com a descrição informada!"],
-                    Response::HTTP_OK
+                    Response::HTTP_OK,
                 );
             }
 
@@ -77,7 +85,7 @@ class IntegrationsApiController extends Controller
             if (empty($tokenTypeEnum)) {
                 return response()->json(
                     ["message" => "O Tipo de Integração é obrigatório!"],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
 
@@ -87,27 +95,29 @@ class IntegrationsApiController extends Controller
                 if (!$company) {
                     return response()->json(
                         ["message" => "O campo Empresa é obrigatório para a integração Checkout API"],
-                        Response::HTTP_BAD_REQUEST
+                        Response::HTTP_BAD_REQUEST,
                     );
                 }
 
-                $postback = $request->get('postback');
+                $postback = $request->get("postback");
                 if (empty($postback)) {
                     return response()->json(
                         ["message" => "O campo Postback é obrigatório!"],
-                        Response::HTTP_BAD_REQUEST
+                        Response::HTTP_BAD_REQUEST,
                     );
                 }
             }
 
             /** @var User $user */
-            
+
             $apiTokenPresenter = $apiTokenModel->present();
 
             $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
             if (empty($scopes)) {
                 return response()->json(["message" => "Tipo do token inválido!"], Response::HTTP_BAD_REQUEST);
             }
+
+            $platform_enum = $request->get("description") ?? null;
 
             $tokenIntegration = ApiToken::generateTokenIntegration($description, $scopes);
             /** @var ApiToken $token */
@@ -120,6 +130,7 @@ class IntegrationsApiController extends Controller
                 "integration_type_enum" => $tokenTypeEnum,
                 "description" => $description,
                 "postback" => $postback ?? null,
+                "platform_enum" => $platform_enum,
             ]);
 
             return new ApiTokenResource($token);
@@ -147,7 +158,7 @@ class IntegrationsApiController extends Controller
                     "token_type_enum" => $apiToken->integration_type_enum,
                     "postback" => $apiToken->postback,
                 ],
-                200
+                200,
             );
         } catch (Exception $ex) {
             Log::debug($ex);
@@ -178,13 +189,13 @@ class IntegrationsApiController extends Controller
                 return response()->json(["message" => "O campo Descrição é obrigatório!"], Response::HTTP_BAD_REQUEST);
             }
 
-            $tokenTypeEnum = $request->get('token_type_enum');
+            $tokenTypeEnum = $request->get("token_type_enum");
             if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
-                $postback = $request->get('postback');
+                $postback = $request->get("postback");
                 if (empty($postback)) {
                     return response()->json(
                         ["message" => "O campo Postback é obrigatório!"],
-                        Response::HTTP_BAD_REQUEST
+                        Response::HTTP_BAD_REQUEST,
                     );
                 }
             }
@@ -253,7 +264,7 @@ class IntegrationsApiController extends Controller
             if (!$result) {
                 return response()->json(
                     ["message" => "Ocorreu um erro ao atualizar registro."],
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_BAD_REQUEST,
                 );
             }
 

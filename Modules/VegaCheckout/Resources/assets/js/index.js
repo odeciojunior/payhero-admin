@@ -95,9 +95,7 @@ $(document).ready(function () {
                                 <p class="card-text sm">Criado em ${data.register_date}</p>
                             </div>
                             <div class='col-md-2'>
-                                <a role='button' title='Excluir' class='delete-integration float-right mt-35' id_code="${
-                                    data.id_code
-                                }">
+                                <a role='button' title='Excluir' class='delete-integration float-right mt-35' id_code="${data.id_code}">
                                     <img src="/build/global/img/icon-trash-new.svg" />
                                 </a>
                             </div>
@@ -164,8 +162,9 @@ $(document).ready(function () {
         loadingOnScreen();
         let description = "Vega_Checkout";
         let companyHash = $(".company-navbar").val();
+        let platformEnum = "VEGA_CHECKOUT";
 
-        storeIntegration(description, companyHash)
+        storeIntegration(description, companyHash, platformEnum)
             .then(function (response) {
                 $.ajax({
                     method: "POST",
@@ -206,7 +205,7 @@ $(document).ready(function () {
         alertCustom("success", "Token copiado!");
     });
 
-    function storeIntegration(description, companyHash) {
+    function storeIntegration(description, companyHash, platformEnum = null) {
         return new Promise(function (resolve, reject) {
             $.ajax({
                 method: "POST",
@@ -214,6 +213,7 @@ $(document).ready(function () {
                 data: {
                     description: description,
                     company_id: companyHash,
+                    platform_enum: platformEnum,
                 },
                 dataType: "json",
                 headers: {
