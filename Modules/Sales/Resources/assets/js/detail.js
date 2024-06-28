@@ -804,7 +804,9 @@ $(() => {
             $(".btn-copy-thank-page-url").hide();
         }
         if (sale.referer != "") {
-            $("#referer-urll").text(sale.referer).show();
+            $("#referer-url")
+                .text("URL original:" + sale.referer)
+                .show();
         } else {
             $("#referer-url").text("").hide();
         }
