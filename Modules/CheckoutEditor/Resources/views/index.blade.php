@@ -1037,7 +1037,7 @@
                             <div class="title-buttons-group">
                                 <div>
                                     <h1 class="checkout-title">
-                                        Rodapé Customizado
+                                        Remover/editar informações do rodapé
                                     </h1>
                                 </div>
 
