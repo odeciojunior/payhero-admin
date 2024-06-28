@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +16,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -233,7 +233,7 @@ class Sale extends Model
         "original_total_paid_value",
         "antifraud_warning_level",
         "antifraud_observation",
-        "reportana_recovery_flag"
+        "reportana_recovery_flag",
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -403,6 +403,11 @@ class Sale extends Model
     public function products(): HasManyThrough
     {
         return $this->hasManyThrough(Product::class, ProductPlanSale::class, "sale_id", "id", "id", "product_id");
+    }
+
+    public function apiToken(): BelongsTo
+    {
+        return $this->belongsTo(ApiToken::class);
     }
 
     public function getHashIdAttribute()
