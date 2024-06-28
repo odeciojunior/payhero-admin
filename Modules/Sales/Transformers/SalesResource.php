@@ -154,6 +154,7 @@ class SalesResource extends JsonResource
             "refund_url" =>
                 env("APP_URL", "http://dev.checkout.com") . "/api/sales/refund/" . hashids_encode($this->id, "sale_id"),
             "already_refunded" => (new SaleService())->alreadyRefunded($sale),
+            "referer" => $this->details->referer,
         ];
 
         $shopifyIntegrations = [];
