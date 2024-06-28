@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -19,6 +18,7 @@ use Laravel\Passport\PersonalAccessTokenResult;
 use Laravel\Passport\Token;
 use Modules\Core\Presenters\ApiTokenPresenter;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class ApiToken
@@ -84,6 +84,7 @@ class ApiToken extends Model
         "integration_type_enum",
         "description",
         "postback",
+        "platform_enum",
         "created_at",
         "updated_at",
         "deleted_at",
