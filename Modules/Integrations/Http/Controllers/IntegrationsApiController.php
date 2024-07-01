@@ -117,7 +117,13 @@ class IntegrationsApiController extends Controller
                 return response()->json(["message" => "Tipo do token inválido!"], Response::HTTP_BAD_REQUEST);
             }
 
-            $platform_enum = $request->get("description") ?? null;
+            if ($request->get("description") == "UTMIFY" 
+                || $request->get("description") == "GR_SOLUCOES" 
+                || $request->get("description") == "VEGA_CHECKOUT") {
+                $platform_enum = $request->get("description");
+            } else {
+                $platform_enum = "WEBAPI";
+            }
 
             $tokenIntegration = ApiToken::generateTokenIntegration($description, $scopes);
             /** @var ApiToken $token */
