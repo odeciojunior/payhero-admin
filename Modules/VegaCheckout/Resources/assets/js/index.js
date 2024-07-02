@@ -23,11 +23,11 @@ $(document).ready(function () {
         }
 
         let hasProjects = true;
-        // if (companiesAndProjects.company_default_projects) {
-        //     $.each(companiesAndProjects.company_default_projects, function (i, project) {
-        //         if (project.status == 1) hasProjects = true;
-        //     });
-        // }
+        if (companiesAndProjects.company_default_projects) {
+            $.each(companiesAndProjects.company_default_projects, function (i, project) {
+                if (project.status == 1) hasProjects = true;
+            });
+        }
 
         if (!hasProjects) {
             $("#integration-actions").hide();
