@@ -1,12 +1,4 @@
 $(document).ready(function () {
-    $(".company-navbar").change(function () {
-        if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#integration-actions").hide();
-        $("#no-integration-found").hide();
-        $("#project-empty").hide();
-        loadOnAny("#content");
-    });
-
     function index(loading = true) {
         if (loading) {
             loadingOnScreen();
@@ -16,7 +8,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/apps/utmify?company=" + $(".company-navbar").val(),
+            url: "/api/apps/utmify",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -146,38 +138,29 @@ $(document).ready(function () {
         var form_data = new FormData(document.getElementById("form_add_integration"));
 
         loadingOnScreen();
-        let description = "UTMIFY";
-        let companyHash = $(".company-navbar").val();
 
-        storeIntegration(description, companyHash)
-            .then(function (response) {
-                $.ajax({
-                    method: "POST",
-                    url: "/api/apps/utmify",
-                    dataType: "json",
-                    headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
-                        Accept: "application/json",
-                    },
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    data: form_data,
-                    error: (response) => {
-                        errorAjaxResponse(response);
-                        loadingOnScreenRemove();
-                    },
-                    success: (response) => {
-                        index();
-                        loadingOnScreenRemove();
-                        alertCustom("success", response.message);
-                    },
-                });
-            })
-            .catch(function (error) {
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/utmify",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: (response) => {
+                errorAjaxResponse(response);
                 loadingOnScreenRemove();
-                console.error("Erro ao executar storeIntegration:", error);
-            });
+            },
+            success: (response) => {
+                index();
+                loadingOnScreenRemove();
+                alertCustom("success", response.message);
+            },
+        });
     });
 
     $(document).on("click", ".btnCopiarLinkToken", function () {
@@ -189,31 +172,6 @@ $(document).ready(function () {
         tmpInput.remove();
         alertCustom("success", "Token copiado!");
     });
-
-    function storeIntegration(description, companyHash) {
-        return new Promise(function (resolve, reject) {
-            $.ajax({
-                method: "POST",
-                url: "/api/integrations",
-                data: {
-                    description: description,
-                    company_id: companyHash,
-                },
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
-                },
-                error: (response) => {
-                    errorAjaxResponse(response);
-                    reject(response);
-                },
-                success: (response) => {
-                    resolve(response);
-                },
-            });
-        });
-    }
 
     // Update
     $(document).on("click", ".btn-update", function () {
