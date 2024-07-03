@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\VegaCheckout\Database\Seeders;
+namespace Modules\AdooreiCheckout\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class VegaCheckoutDatabaseSeeder extends Seeder
+class AdooreiCheckoutDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

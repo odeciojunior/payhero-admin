@@ -218,8 +218,9 @@ $(document).ready(function () {
         loadingOnScreen();
         let description = "GR_Solucoes"
         let companyHash = $('.company-navbar').val();
+        let platform_enum = "GR_SOLUCOES"
 
-        storeIntegration(description, companyHash)
+        storeIntegration(description, companyHash, platform_enum)
         .then(function(response) {
             $.ajax({
                 method: "POST",

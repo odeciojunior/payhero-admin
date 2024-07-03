@@ -66,5 +66,6 @@
     "Webhooks": true,
     "GeradorRastreio": true,
     "Utmify": true,
-    "VegaCheckout": true
+    "VegaCheckout": true,
+    "AdooreiCheckout": true
 }
