@@ -173,6 +173,8 @@ class AppsApiController extends Controller
             "utmifyIntegrations" => UtmifyIntegration::where("user_id", $accountOwnerId)->count(),
             
             "vegacheckoutIntegrations" => ApiToken::where([["description", "Vega_Checkout"], ["company_id", $company_default]])->count(),
+
+            "adooreicheckoutIntegrations" => ApiToken::where([["description", "Vega_Checkout"], ["company_id", $company_default]])->count(),
         ]);
     }
 }

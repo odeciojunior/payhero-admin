@@ -1,0 +1,13 @@
+{
+    "name": "AdooreiCheckout",
+    "alias": "adooreicheckout",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AdooreiCheckout\\Providers\\AdooreiCheckoutServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

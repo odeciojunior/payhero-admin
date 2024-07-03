@@ -125,6 +125,12 @@ mix.copy(
 );
 
 /**
+ * Modules/AdooreiCheckout/Resources/views/index.blade.php
+ */
+mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/adooreicheckout/index.min.css");
+mix.babel(["Modules/AdooreiCheckout/Resources/assets/js/index.js"], "public/build/layouts/adooreicheckout/index.min.js");
+
+/**
  * Modules/Apps/Resources/views/index.blade.php
  */
 mix.styles(["Modules/Apps/Resources/assets/css/index.css"], "public/build/layouts/apps/index.min.css");
