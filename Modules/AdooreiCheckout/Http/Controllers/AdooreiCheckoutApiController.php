@@ -77,6 +77,10 @@ class AdooreiCheckoutApiController extends Controller
         try {
             $ApiTokenModel = new ApiToken();
             $WebhooksModel = new Webhook();
+            
+            $data = $request->all();
+
+            $url = isset($data['webhook']) ? $data['webhook'] : '';
 
             $ApiToken = $ApiTokenModel
                     ->where("description", 'Adoorei_Checkout')
@@ -89,8 +93,8 @@ class AdooreiCheckoutApiController extends Controller
                 $integrationCreated = $WebhooksModel->firstOrCreate([
                     "user_id" => auth()->user()->account_owner_id,
                     "company_id" => auth()->user()->company_default,
-                    "description" => 'Vega_Checkout',
-                    "url" => ($request, 'url'),                   
+                    "description" => 'Adoorei_Checkout',
+                    "url" => $url,
                 ]);
 
                 if ($integrationCreated) {
@@ -117,7 +121,7 @@ class AdooreiCheckoutApiController extends Controller
                 );
             }
         } catch (Exception $e) {
-            Log::warning("Erro ao realizar integração Vega Checkout - store");
+            Log::warning("Erro ao realizar integração Adoorei Checkout - store");
             report($e);
 
             return response()->json(
@@ -148,7 +152,8 @@ class AdooreiCheckoutApiController extends Controller
                     })
                     ->log("Visualizou tela editar configurações da integração Adoorei Checkout");
 
-                $Webhook = $WebhookModel->where("description", 'Adoorei_Checkout')->first();
+                $Webhook = $WebhookModel->where("description", 'Adoorei_Checkout')
+                                        ->where("deleted_at", null)->first();
               
                 $integration = $ApiTokenModel->where("id", $id)->first();
 
@@ -177,6 +182,57 @@ class AdooreiCheckoutApiController extends Controller
             return response()->json(
                 [
                     "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                ],
+                400
+            );
+        }
+    }
+
+        /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $WebhookModel = new Webhook();
+            $data = $request->all();
+            $Webhook = $WebhookModel->where("description", 'Adoorei_Checkout')
+                                        ->where("deleted_at", null)->first();
+            $messageError = "";
+            if (empty($data["webhook"])) {
+                return response()->json(["message" => "Webhook é obrigatório!"], 400);
+            }
+
+            if (empty($Webhook)) {
+                return response()->json(["message" => "Cadastre um webhook com descrição \"Adoorei_Checkout\""], 400);
+            }
+            
+            $integrationUpdated = $Webhook->update([
+                "url" => $data["webhook"],                
+            ]);
+            if ($integrationUpdated) {
+                return response()->json(
+                    [
+                        "message" => "Integração atualizada com sucesso!",
+                    ],
+                    200
+                );
+            }
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao atualizar a integração",
+                ],
+                400
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    "message" => "Ocorreu um erro ao atualizar a integração",
                 ],
                 400
             );

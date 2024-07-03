@@ -148,7 +148,8 @@ class VegaCheckoutApiController extends Controller
                     })
                     ->log("Visualizou tela editar configurações da integração Vega Checkout");
 
-                $Webhook = $WebhookModel->where("description", 'Vega_Checkout')->first();
+                $Webhook = $WebhookModel->where("description", 'Vega_Checkout')
+                                        ->where("deleted_at", null)->first();
               
                 $integration = $ApiTokenModel->where("id", $id)->first();
 

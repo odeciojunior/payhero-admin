@@ -174,7 +174,7 @@ class AppsApiController extends Controller
             
             "vegacheckoutIntegrations" => ApiToken::where([["description", "Vega_Checkout"], ["company_id", $company_default]])->count(),
 
-            "adooreicheckoutIntegrations" => ApiToken::where([["description", "Vega_Checkout"], ["company_id", $company_default]])->count(),
+            "adooreicheckoutIntegrations" => ApiToken::where([["description", "Adoorei_Checkout"], ["company_id", $company_default]])->count(),
         ]);
     }
 }

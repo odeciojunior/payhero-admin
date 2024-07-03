@@ -121,8 +121,6 @@ $(document).ready(function () {
 
     // Edit
     $(document).on("click", ".card-edit", function () {
-        const projectId = $(this).closest(".integration-card").attr("project");
-
         $.ajax({
             method: "GET",
             url: "/api/apps/adooreicheckout/",
@@ -143,7 +141,9 @@ $(document).ready(function () {
                 $("#webhook_edit").val(webhook.url ?? null);
 
                 $(".modal-title").html("Integração com Adoorei Checkout");
-                $("#bt_integration").hide();
+                $("#bt_integration").addClass("btn-update");
+                $("#bt_integration").removeClass("btn-save");
+                $("#bt_integration").text("Atualizar");
                 $("#form_update_integration").show();
                 $("#form_add_integration").hide();
                 $("#modal_add_integracao").modal("show");
@@ -231,9 +231,37 @@ $(document).ready(function () {
         });
     }
 
-    // Update
-    $(document).on("click", ".btn-update", function () {
-        return;
+     //update
+     $(document).on("click", ".btn-update", function () {
+        if ($("#webhook_edit").val() == "") {
+            alertCustom("error", "Webhook é obrigatório");
+            return false;
+        }
+        var integrationId = $("#integration_id").val();
+        var form_data = new FormData(
+            document.getElementById("form_update_integration")
+        );
+
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/adooreicheckout/" + integrationId,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            },
+        });
     });
 
     // Load delete modal
