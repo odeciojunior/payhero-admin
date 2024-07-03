@@ -6,6 +6,8 @@ $(document).ready(function () {
             loadOnAny("#content");
         }
 
+        console.log("index");
+
         $.ajax({
             method: "GET",
             url: "/api/apps/utmify",
