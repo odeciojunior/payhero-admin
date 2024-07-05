@@ -73,9 +73,9 @@
                 </div>
             </div>
             <p id='text-info'
-               style="margin-top: 20px; margin-bottom:30px">A cada convite aceito, você vai ganhar
-                {{ Auth::user()->invite_comission / 100 }}% de
-                comissão das vendas efetuadas por cartão de crédito pelos novos usuários que você convidou durante 6 meses.
+               style="margin-top: 20px; margin-bottom:30px">
+                A cada convite aceito, você vai ganhar {{ Auth::user()->invite_comission / 100 }}%
+                das vendas realizadas pelos novos usuários que você indicou.
             </p>
 
             <div class='container col-sm-12 d-lg-block'

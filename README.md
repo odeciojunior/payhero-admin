@@ -45,3 +45,8 @@ php artisan passport:install
 ```
 
 ### O sistema estará disponível em http://localhost.
+
+Ao alterar aquivos `.js` precisamos executar o seguinte comando antes de realizar merge com `main`:
+```shell
+npm run prod
+```
