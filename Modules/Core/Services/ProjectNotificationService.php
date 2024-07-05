@@ -196,7 +196,7 @@ class ProjectNotificationService
                         "subject" => "Seu código de rastreio chegou",
                         "title" => "Código de Rastreio!",
                         "content" =>
-                            "Olá {primeiro_nome}, boas notícias seu pedido ja está a caminho do endereço de entrega. Você pode rastrear a entrega do seu pedido diretamente do site dos Correios.",
+                            "Olá, {primeiro_nome} seu pedido foi enviado! Utilize o link abaixo para rastrear seu pedido: \n https://global.cainiao.com/{codigo_rastreio} \n\n Em até 3 dias úteis este código estará disponível para rastreio no site dos correios.",
                     ]),
                     "notification_enum" => 14,
                     "project_id" => $projectId,
@@ -206,7 +206,7 @@ class ProjectNotificationService
                     "event_enum" => self::TRACKING_CODE,
                     "time" => "Imediato",
                     "message" =>
-                        "Olá {primeiro_nome}, seu código de rastreio chegou: {codigo_rastreio} Acesse: {link_rastreamento}",
+                        "Olá {primeiro_nome}, seu pedido foi enviado! \nLink para rastrear: https://global.cainiao.com/{codigo_rastreio} \nCódigo de rastreio: {codigo_rastreio}",
                     "notification_enum" => 15,
                     "project_id" => $projectId,
                 ],

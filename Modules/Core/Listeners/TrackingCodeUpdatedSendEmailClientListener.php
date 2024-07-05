@@ -135,7 +135,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         "title" => $titleMessage,
                         "content" => $contentMessage,
                         "products" => $products,
-                        "link" => $linkBase,
+                        //"link" => $linkBase,
+                        "link" => "",
                     ];
 
                     $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");
