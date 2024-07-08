@@ -196,7 +196,7 @@ class ProjectNotificationService
                         "subject" => "Seu código de rastreio chegou",
                         "title" => "Código de Rastreio!",
                         "content" =>
-                            "Olá, {primeiro_nome} seu pedido foi enviado! \r\n\r\n Utilize o link abaixo para rastrear seu pedido: \r\n{link_rastreamento}{codigo_rastreio} \r\n\r\n<STRONG>Em até 3 dias úteis este código estará disponível para rastreio no site dos correios.</STRONG>",
+                            "Olá, {primeiro_nome} seu pedido foi enviado! \r\n\r\n Código é {codigo_rastreio}, utilize o link abaixo para rastrear seu pedido: \r\n{link_rastreamento} \r\n\r\n<STRONG>Em até 3 dias úteis este código estará disponível para rastreio no site dos correios.</STRONG>",
                     ]),
                     "notification_enum" => 14,
                     "project_id" => $projectId,
@@ -330,11 +330,11 @@ class ProjectNotificationService
                     if (!empty($domain)) {
                         if ($notificationType == "sms") {
                             $linkShortenerService = new LinkShortenerService();
-                            $linkBase = "https://tracking." . $domain->name . "/";
+                            $linkBase = "https://global.cainiao.com/newDetail.htm?mailNoList=";
                             $link = $linkShortenerService->shorten($linkBase . $trackingCode);
                             $message = str_replace("{link_rastreamento}", $link, $message);
                         } else {
-                            $link = "https://tracking." . $domain->name . "/" . $trackingCode;
+                            $link = "https://global.cainiao.com/newDetail.htm?mailNoList=" . $trackingCode;
                             $message = str_replace("{link_rastreamento}", $link, $message);
                         }
                     }
