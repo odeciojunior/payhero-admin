@@ -196,7 +196,7 @@ class ProjectNotificationService
                         "subject" => "Seu código de rastreio chegou",
                         "title" => "Código de Rastreio!",
                         "content" =>
-                            "Olá, {primeiro_nome} seu pedido foi enviado! \r\n\r\n Utilize o link abaixo para rastrear seu pedido: \r\n{link_rastreamento}{codigo_rastreio} \r\n\r\nEm até 3 dias úteis este código estará disponível para rastreio no site dos correios.",
+                            "Olá, {primeiro_nome} seu pedido foi enviado! \r\n\r\n Utilize o link abaixo para rastrear seu pedido: \r\n{link_rastreamento}{codigo_rastreio} \r\n\r\n<STRONG>Em até 3 dias úteis este código estará disponível para rastreio no site dos correios.</STRONG>",
                     ]),
                     "notification_enum" => 14,
                     "project_id" => $projectId,
