@@ -53,6 +53,12 @@ class ApiToken extends Model
     const INTEGRATION_TYPE_EXTERNAL = 3;
     const INTEGRATION_TYPE_CHECKOUT_API = 4;
     const INTEGRATION_TYPE_SPLIT_API = 5;
+
+    const PLATFORM_ENUM_VEGA_CHECKOUT = "VEGA_CHECKOUT";
+    const PLATFORM_ENUM_GR_SOLUCOES = "GR_SOLUCOES";
+    const PLATFORM_ENUM_ADOOREI_CHECKOUT = "ADOOREI_CHECKOUT";
+    const PLATFORM_ENUM_WEBAPI = "WEBAPI";
+
     /**
      * @var array
      */

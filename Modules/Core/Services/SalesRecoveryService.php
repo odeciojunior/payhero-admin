@@ -102,6 +102,7 @@ class SalesRecoveryService
             ->with([
                 "project",
                 "customer",
+                "apiToken",
                 "project.domains" => function ($query) {
                     $query
                         ->where("status", 3) //dominio aprovado
