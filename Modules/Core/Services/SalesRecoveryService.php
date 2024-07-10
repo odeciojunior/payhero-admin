@@ -167,17 +167,6 @@ class SalesRecoveryService
                 ])
                 ->pluck("id")
                 ->toArray();
-
-            report(
-                new Exception(
-                    json_encode([
-                        "user_id" => $userId,
-                        "company_id" => $company_id,
-                        "projectIds" => $projectIds,
-                        "tokensIds" => $tokensIds,
-                    ]),
-                ),
-            );
         }
 
         $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
@@ -194,9 +183,6 @@ class SalesRecoveryService
                 $salesExpired->whereDate("sales.created_at", "<", $dateEnd);
             }
         }
-
-        $sql = builder2sql($salesExpired);
-        report(new Exception($sql));
 
         return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
     }
