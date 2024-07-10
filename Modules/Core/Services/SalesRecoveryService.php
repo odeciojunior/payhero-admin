@@ -141,7 +141,8 @@ class SalesRecoveryService
         if (!in_array("all", $projectIds)) {
             foreach ($projectIds as $key => $projectId) {
                 if (str_starts_with($projectId, "TOKEN")) {
-                    $tokensIds[] = str_replace("TOKEN-", "", $projectId);
+                    $tokenHash = str_replace("TOKEN-", "", $projectId);
+                    $tokensIds[] = Hashids::decode($tokenHash)[0];
                     unset($projectIds[$key]);
                 }
             }
@@ -183,9 +184,6 @@ class SalesRecoveryService
                 $salesExpired->whereDate("sales.created_at", "<", $dateEnd);
             }
         }
-
-        $sql = builder2sql($salesExpired);
-        report(new Exception($sql));
 
         return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
     }
