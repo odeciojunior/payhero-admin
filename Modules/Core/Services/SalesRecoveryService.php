@@ -147,10 +147,11 @@ class SalesRecoveryService
                 }
             }
         } else {
-            $userId = auth()->user()->account_owner_id;
-
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
             $projectIds = $userProjectsModel
-                ->where([["user_id", $userId], ["type_enum", UserProject::TYPE_PRODUCER_ENUM]])
+                ->where("user_id", $userId)
                 ->pluck("project_id")
                 ->toArray();
 
