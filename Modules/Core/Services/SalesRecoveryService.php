@@ -165,6 +165,7 @@ class SalesRecoveryService
             report(
                 new Exception(
                     json_encode([
+                        "user_id" => $userId,
                         "company_id" => $company_id,
                         "projectIds" => $projectIds,
                         "tokensIds" => $tokensIds,
