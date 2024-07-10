@@ -306,33 +306,36 @@ class SalesRecoveryService
             $customer->telephone = "Numero Inválido";
         }
 
-        $checkout->sale_id = hashids_encode($sale->id, "sale_id");
+        if (!empty($checkout)) {
+            $checkout->sale_id = hashids_encode($sale->id, "sale_id");
 
-        $checkout->hours = with(new Carbon($sale->created_at))->format("H:i:s");
-        $checkout->date = with(new Carbon($sale->created_at))->format("d/m/Y");
-        $checkout->total = number_format($checkout->present()->getSubTotal() / 100, 2, ",", ".");
-        $checkout->src = $checkout->src == "null" || $checkout->src == null ? "" : $checkout->src;
-        $checkout->utm_source =
-            $checkout->utm_source == "null" || $checkout->utm_source == null ? "" : $checkout->utm_source;
-        $checkout->utm_medium =
-            $checkout->utm_medium == "null" || $checkout->utm_medium == null ? "" : $checkout->utm_medium;
-        $checkout->utm_campaign =
-            $checkout->utm_campaign == "null" || $checkout->utm_campaign == null ? "" : $checkout->utm_campaign;
-        $checkout->utm_term = $checkout->utm_term == "null" || $checkout->utm_term == null ? "" : $checkout->utm_term;
-        $checkout->utm_content =
-            $checkout->utm_content == "null" || $checkout->utm_content == null ? "" : $checkout->utm_content;
+            $checkout->hours = with(new Carbon($sale->created_at))->format("H:i:s");
+            $checkout->date = with(new Carbon($sale->created_at))->format("d/m/Y");
+            $checkout->total = number_format($checkout->present()->getSubTotal() / 100, 2, ",", ".");
+            $checkout->src = $checkout->src == "null" || $checkout->src == null ? "" : $checkout->src;
+            $checkout->utm_source =
+                $checkout->utm_source == "null" || $checkout->utm_source == null ? "" : $checkout->utm_source;
+            $checkout->utm_medium =
+                $checkout->utm_medium == "null" || $checkout->utm_medium == null ? "" : $checkout->utm_medium;
+            $checkout->utm_campaign =
+                $checkout->utm_campaign == "null" || $checkout->utm_campaign == null ? "" : $checkout->utm_campaign;
+            $checkout->utm_term =
+                $checkout->utm_term == "null" || $checkout->utm_term == null ? "" : $checkout->utm_term;
+            $checkout->utm_content =
+                $checkout->utm_content == "null" || $checkout->utm_content == null ? "" : $checkout->utm_content;
 
-        $checkout->browser = $checkout->browser == "null" || $checkout->browser == null ? "" : $checkout->browser;
-        $checkout->operational_system =
-            $checkout->operational_system == "null" || $checkout->operational_system == null
-                ? ""
-                : $checkout->operational_system;
+            $checkout->browser = $checkout->browser == "null" || $checkout->browser == null ? "" : $checkout->browser;
+            $checkout->operational_system =
+                $checkout->operational_system == "null" || $checkout->operational_system == null
+                    ? ""
+                    : $checkout->operational_system;
 
-        $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
+            $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
+        }
 
         if ($sale->payment_method == Sale::PAYMENT_TYPE_BANK_SLIP) {
             $customer->error = "Não pago até a data do vencimento";
-        } else {
+        } elseif (!empty($checkout)) {
             $log = $logModel
                 ->where("checkout_id", $checkout->id)
                 ->where("event", "=", "payment error")
@@ -351,7 +354,7 @@ class SalesRecoveryService
             }
         }
 
-        if ($checkout->status != "recovered") {
+        if (empty($checkout) || $checkout->status != "recovered") {
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
                 $status = "Recusado";
             } else {
@@ -376,6 +379,11 @@ class SalesRecoveryService
             $link = "https://demo.azcend.com.br";
         }
 
+        if ($sale->api_flag) {
+            $link = "Integração Externa";
+            goto jump;
+        }
+
         if (empty($link)) {
             $link = "Domínio removido";
             goto jump;
@@ -390,7 +398,7 @@ class SalesRecoveryService
 
         jump:
 
-        $products = $saleService->getProducts($checkout->sale_id);
+        $products = $saleService->getProducts($sale->id);
 
         $customer->document = foxutils()->getDocument($customer->document);
 
