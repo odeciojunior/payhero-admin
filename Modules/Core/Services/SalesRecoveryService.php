@@ -400,6 +400,14 @@ class SalesRecoveryService
 
         $products = $saleService->getProducts($sale->id);
 
+        report(
+            new Exception(
+                json_encode([
+                    "products" => $products,
+                ]),
+            ),
+        );
+
         $customer->document = foxutils()->getDocument($customer->document);
 
         if (!empty($delivery)) {
