@@ -29,7 +29,7 @@ class SalesRecoveryCardRefusedResource extends JsonResource
             $project = $this->project;
             $domain = $project->domains->where("status", (new Domain())->present()->getStatus("approved"))->first();
         } elseif (!empty($this->apiToken)) {
-            report(new Exception("{$this->apiToken->platform_enum}"));
+            report(new Exception($this->apiToken->platform_enum));
 
             $project = (object) [
                 "name" => (($this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_VEGA_CHECKOUT
