@@ -84,7 +84,7 @@ class SalesRecoveryService
             "checkout.id as checkout_id",
             "checkout.id_log_session",
             DB::raw(
-                "(ifnull(products_sales_api, (plan_sale.amount * plan_sale.plan_value), (products_sales_api.price * products_sales_api.quantity)) as value",
+                "(ifnull(products_sales_api.id, (plan_sale.amount * plan_sale.plan_value), (products_sales_api.price * products_sales_api.quantity))) as value",
             ),
         )
 
