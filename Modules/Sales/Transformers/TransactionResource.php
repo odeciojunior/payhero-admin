@@ -41,7 +41,7 @@ class TransactionResource extends JsonResource
             $product = $hasMultipleProducts
                 ? $productName . " e mais " . $extraProducts . " produto" . ($extraProducts > 1 ? "s" : "")
                 : $productName;
-        } else {
+        } elseif (!empty($sale->apiToken)) {
             $project = $sale->apiToken->platform_enum === "VEGA_CHECKOUT" ? "Vega Checkout" : "Integração";
 
             $product = $sale->productsSaleApi->first()->name;

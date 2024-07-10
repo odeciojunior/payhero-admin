@@ -184,6 +184,9 @@ class SalesRecoveryService
             }
         }
 
+        $sql = builder2sql($salesExpired);
+        report(new Exception($sql));
+
         return $salesExpired->orderBy("sales.id", "desc")->paginate(10);
     }
 
