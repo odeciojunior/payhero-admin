@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("withdrawals:release-get-faster")
             ->withoutOverlapping()
-            ->everyThirtyMinutes()
+            ->everyFiveMinutes()
             ->onOneServer();
         $schedule
             ->command("available-balance:update")
