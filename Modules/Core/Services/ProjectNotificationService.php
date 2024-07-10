@@ -81,7 +81,7 @@ class ProjectNotificationService
                         "subject" => "Parabéns - Pegue aqui o seu boleto - Pedido {codigo_venda}",
                         "title" => "Aqui está seu boleto",
                         "content" =>
-                            "Olá {primeiro_nome}, Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).",
+                            "Olá {primeiro_nome}, \r\n\r\nComo você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).",
                     ]),
                     "notification_enum" => 5,
                     "project_id" => $projectId,
@@ -134,7 +134,7 @@ class ProjectNotificationService
                         "subject" => "Você pode perder dinheiro se ignorar esse email",
                         "title" => "A promoção termina hoje",
                         "content" =>
-                            "Olá {primeiro_nome}, Nossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro.",
+                            "Olá {primeiro_nome}, \r\n\r\nNossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro.",
                     ]),
                     "notification_enum" => 9,
                     "project_id" => $projectId,
@@ -196,7 +196,7 @@ class ProjectNotificationService
                         "subject" => "Seu código de rastreio chegou",
                         "title" => "Código de Rastreio!",
                         "content" =>
-                            "Olá {primeiro_nome}, boas notícias seu pedido ja está a caminho do endereço de entrega. Você pode rastrear a entrega do seu pedido diretamente do site dos Correios.",
+                            "Olá, {primeiro_nome} seu pedido foi enviado! \r\n\r\n Código é {codigo_rastreio}, utilize o link abaixo para rastrear seu pedido: \r\n{link_rastreamento} \r\n\r\n<STRONG>Em até 3 dias úteis este código estará disponível para rastreio no site dos correios.</STRONG>",
                     ]),
                     "notification_enum" => 14,
                     "project_id" => $projectId,
@@ -206,7 +206,7 @@ class ProjectNotificationService
                     "event_enum" => self::TRACKING_CODE,
                     "time" => "Imediato",
                     "message" =>
-                        "Olá {primeiro_nome}, seu código de rastreio chegou: {codigo_rastreio} Acesse: {link_rastreamento}",
+                        "Olá {primeiro_nome}, seu pedido foi enviado! \r\nAcesse seu e-mail para consultar link de rastreio. \r\nCódigo de rastreio: {codigo_rastreio}",
                     "notification_enum" => 15,
                     "project_id" => $projectId,
                 ],
@@ -330,11 +330,11 @@ class ProjectNotificationService
                     if (!empty($domain)) {
                         if ($notificationType == "sms") {
                             $linkShortenerService = new LinkShortenerService();
-                            $linkBase = "https://tracking." . $domain->name . "/";
+                            $linkBase = "https://global.cainiao.com/newDetail.htm?mailNoList=";
                             $link = $linkShortenerService->shorten($linkBase . $trackingCode);
                             $message = str_replace("{link_rastreamento}", $link, $message);
                         } else {
-                            $link = "https://tracking." . $domain->name . "/" . $trackingCode;
+                            $link = "https://global.cainiao.com/newDetail.htm?mailNoList=" . $trackingCode;
                             $message = str_replace("{link_rastreamento}", $link, $message);
                         }
                     }

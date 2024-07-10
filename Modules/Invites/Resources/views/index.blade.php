@@ -38,7 +38,7 @@
                 }
             }
 
-            @media only screen and (min-width: 576px) and (max-width : 767px) {
+            @media only screen and (min-width: 576px) and (max-width: 767px) {
                 .col-sm-6.card {
                     margin-right: 10px;
                     max-width: calc(50% - 10px);
@@ -67,15 +67,15 @@
                             type="button"
                             class="btn btn-floating btn-primary"
                             style="position: relative; float: right"
-                            {{-- data-target='#modal' data-toggle='modal' --}}>
+                        {{-- data-target='#modal' data-toggle='modal' --}}>
                         <i class="o-add-1"
                            aria-hidden="true"></i></button>
                 </div>
             </div>
             <p id='text-info'
-               style="margin-top: 20px; margin-bottom:30px">A cada convite aceito, você vai ganhar
-                {{ Auth::user()->invite_comission / 100 }}% de
-                comissão das vendas efetuadas por cartão de crédito pelos novos usuários que você convidou durante 6 meses.
+               style="margin-top: 20px; margin-bottom:30px">
+                A cada convite aceito, você vai ganhar {{ Auth::user()->invite_comission / 100 }}%
+                das vendas realizadas pelos novos usuários que você indicou.
             </p>
 
             <div class='container col-sm-12 d-lg-block'
@@ -122,8 +122,11 @@
             <img src="build/global/img/convites.svg"
                  width="156px" />
             <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
-            <p class="desc gray">Envie convites, e
-                <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong>
+            <p class="desc gray">
+                Envie convites, e
+                <strong>
+                    ganhe {{ Auth::user()->invite_comission / 100 }}% de tudo que seu convidado vender!
+                </strong>
             </p>
         </div>
         <div class="page-content container"
@@ -139,17 +142,17 @@
                     <table class="table table-striped unify"
                            id="table_invites">
                         <thead class="text-center">
-                            <td class="text-left">Convite</td>
-                            <td class="text-center">Email convidado</td>
-                            <td class="text-center">Empresa Recebedora</td>
-                            <td class="text-center">Status</td>
-                            <td class="text-center">Data cadastro</td>
-                            <td class="text-center">Data expiração</td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
+                        <td class="text-left">Convite</td>
+                        <td class="text-center">Email convidado</td>
+                        <td class="text-center">Empresa Recebedora</td>
+                        <td class="text-center">Status</td>
+                        <td class="text-center">Data cadastro</td>
+                        <td class="text-center">Data expiração</td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
                         </thead>
                         <tbody id='table-body-invites'>
-                            {{-- js invites carrega --}}
+                        {{-- js invites carrega --}}
                         </tbody>
                     </table>
                 </div>

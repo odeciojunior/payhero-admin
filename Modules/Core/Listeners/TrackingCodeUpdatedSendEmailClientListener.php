@@ -81,7 +81,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                     ->where("status", $projectNotificationPresenter->getStatus("active"))
                     ->first();
 
-                $linkBase = "https://tracking." . ($domain ? $domain->name : "azcend.com.br") . "/";
+                //$linkBase = "https://tracking." . ($domain ? $domain->name : "azcend.com.br") . "/";
+                $linkBase = "https://global.cainiao.com/newDetail.htm?mailNoList=";
                 if (!empty($projectNotificationSms)) {
                     $message = $projectNotificationSms->message;
                     $smsMessage = $projectNotificationService->formatNotificationData(
@@ -136,6 +137,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         "content" => $contentMessage,
                         "products" => $products,
                         "link" => $linkBase,
+                        "link" => "",
                     ];
 
                     $fromEmail = "noreply@" . ($domain ? $domain->name : "azcend.com.br");

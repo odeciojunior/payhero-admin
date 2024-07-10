@@ -15,12 +15,10 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
-use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SalesRecoveryService;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\AbandonedCartReportExport;
@@ -61,7 +59,7 @@ class SalesRecoveryApiController extends Controller
                     [
                         "message" => "Erro ao listar projetos, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
         } catch (Exception $e) {
@@ -72,7 +70,7 @@ class SalesRecoveryApiController extends Controller
                 [
                     "message" => "Erro ao listar projetos, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
     }
@@ -99,7 +97,7 @@ class SalesRecoveryApiController extends Controller
                     [
                         "message" => "Erro ao listar projetos, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             } else {
                 $projectId = null;
@@ -127,7 +125,7 @@ class SalesRecoveryApiController extends Controller
                     $projectId,
                     $startDate,
                     $endDate,
-                    $client
+                    $client,
                 );
             }
         } catch (Exception $e) {
@@ -138,7 +136,7 @@ class SalesRecoveryApiController extends Controller
                 [
                     "message" => "Erro ao listar projetos, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
     }
@@ -165,7 +163,7 @@ class SalesRecoveryApiController extends Controller
                 [
                     "message" => "Ocorreu um erro, tente novamente mais tarde",
                 ],
-                400
+                400,
             );
         }
     }
@@ -182,7 +180,11 @@ class SalesRecoveryApiController extends Controller
                 $projects = explode(",", $data["project"]);
 
                 foreach ($projects as $project) {
-                    array_push($projectIds, current(Hashids::decode($project)));
+                    if (str_starts_with($project, "TOKEN")) {
+                        array_push($projectIds, $project);
+                    } else {
+                        array_push($projectIds, current(Hashids::decode($project)));
+                    }
                 }
             }
 
@@ -215,11 +217,21 @@ class SalesRecoveryApiController extends Controller
                 $dateEnd = $dateRange[1] . " 23:59:59";
             }
 
-            $paymentMethod = (new Sale())->present()->getPaymentType('credit_card');
-            $status        = [3];
+            $paymentMethod = (new Sale())->present()->getPaymentType("credit_card");
+            $status = [3];
 
             $company_id = hashids_decode($data["company"]);
-            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused(
+                $paymentMethod,
+                $status,
+                $projectIds,
+                $dateStart,
+                $dateEnd,
+                $client,
+                $clientDocument,
+                $plans,
+                $company_id,
+            );
 
             return SalesRecoveryCardRefusedResource::collection($sales);
         } catch (Exception $e) {
@@ -243,10 +255,12 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
-            $showFromApi = false;
             foreach ($projects as $project) {
-                $showFromApi = str_starts_with($project,'TOKEN');
-                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
+                if (str_starts_with($project, "TOKEN")) {
+                    array_push($projectIds, $project);
+                } else {
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
             }
         }
 
@@ -282,8 +296,18 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType("boleto");
         $status = [5];
 
-        $company_id = hashids_decode($data["company"]??auth()->user()->company_default);
-        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans, $company_id);
+        $company_id = hashids_decode($data["company"] ?? auth()->user()->company_default);
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused(
+            $paymentMethod,
+            $status,
+            $projectIds,
+            $dateStart,
+            $dateEnd,
+            $client,
+            $clientDocument,
+            $plans,
+            $company_id,
+        );
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
@@ -299,26 +323,28 @@ class SalesRecoveryApiController extends Controller
             $checkoutModel = new Checkout();
             $salesRecoveryService = new SalesRecoveryService();
 
-            if ($request->has('checkout') && !empty($request->input('checkout'))) {
-                $saleId = current(Hashids::decode($request->input('checkout')));
-                $sale   = $saleModel->find($saleId);
+            if ($request->has("checkout") && !empty($request->input("checkout"))) {
+                $saleId = current(Hashids::decode($request->input("checkout")));
+                $sale = $saleModel->find($saleId);
 
                 if (!empty($sale)) {
-                    return SalesRecoverydetailsResourceTransformer::make($salesRecoveryService->getSalesCartOrBoletoDetails($sale));
+                    return SalesRecoverydetailsResourceTransformer::make(
+                        $salesRecoveryService->getSalesCartOrBoletoDetails($sale),
+                    );
                 }
 
                 $checkout = $checkoutModel->find($saleId);
                 if (!empty($checkout)) {
-                    return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
+                    return SalesRecoveryCartAbandonedDetailsResourceTransformer::make(
+                        $salesRecoveryService->getSalesCheckoutDetails($checkout),
+                    );
                 }
 
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+                return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
             }
 
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
-
-        } catch (Exception $e)
-        {
+            return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
+        } catch (Exception $e) {
             report($e);
 
             return response()->json(["message" => "Ocorreu algum erro, tente novamente mais tarde"], 400);
@@ -342,7 +368,7 @@ class SalesRecoveryApiController extends Controller
                     [
                         "message" => "Preencha os dados corretamente.",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -352,29 +378,28 @@ class SalesRecoveryApiController extends Controller
                     [
                         "message" => "[325] Ocorreu um erro, tente novamente mais tarde. ",
                     ],
-                    400
+                    400,
                 );
             }
 
             $totalPaidValue = $sale->original_total_paid_value;
             if (!empty($request->discountValue)) {
-
-                if ($request->discountType == 'percentage') {
-                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
-                    $discount = number_format($discount/100,2,'.',''); //converte para decimal
-                    $totalPaidValue -= $discount*100;
+                if ($request->discountType == "percentage") {
+                    $discount = $totalPaidValue * (foxutils()->onlyNumbers($request->discountValue) / 100);
+                    $discount = number_format($discount / 100, 2, ".", ""); //converte para decimal
+                    $totalPaidValue -= $discount * 100;
                 } else {
                     $discount = (int) preg_replace("/[^0-9]/", "", $request->discountValue);
                     $totalPaidValue -= $discount;
                     $discount = number_format($discount / 100, 2, ".", ""); //converte para decimal
                 }
 
-                if(!empty($sale->shopify_discount)){
-                    $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
+                if (!empty($sale->shopify_discount)) {
+                    $totalPaidValue += foxutils()->onlyNumbers($sale->shopify_discount);
                 }
 
                 $sale->update([
-                    'shopify_discount' => $discount,
+                    "shopify_discount" => $discount,
                 ]);
             }
 
@@ -387,20 +412,25 @@ class SalesRecoveryApiController extends Controller
 
             $checkoutService = new CheckoutService();
 
-            $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-            ->encode($sale->id), $totalPaidValue, $dueDate);
+            $boletoRegenerated = $checkoutService->regenerateBillet(
+                Hashids::connection("sale_id")->encode($sale->id),
+                $totalPaidValue,
+                $dueDate,
+            );
 
-            $message = $boletoRegenerated['message']??'[359] Ocorreu um erro tente novamente mais tarde.';
-            $status  = 400;
-            if ($boletoRegenerated['status'] == 'success') {
-                $message = 'Boleto regenerado com sucesso';
-                $status  = 200;
+            $message = $boletoRegenerated["message"] ?? "[359] Ocorreu um erro tente novamente mais tarde.";
+            $status = 400;
+            if ($boletoRegenerated["status"] == "success") {
+                $message = "Boleto regenerado com sucesso";
+                $status = 200;
             }
 
-            return response()->json([
-                'message' => $message,
-            ], $status);
-
+            return response()->json(
+                [
+                    "message" => $message,
+                ],
+                $status,
+            );
         } catch (Exception $e) {
             report($e);
 
@@ -408,7 +438,7 @@ class SalesRecoveryApiController extends Controller
                 [
                     "message" => "[374] Ocorreu um erro, tente novamente mais tarde. ",
                 ],
-                400
+                400,
             );
         }
     }
@@ -452,10 +482,12 @@ class SalesRecoveryApiController extends Controller
             $projectIds = [];
             $projects = explode(",", $data["project"]);
 
-            $showFromApi = false;
             foreach ($projects as $project) {
-                $showFromApi = str_starts_with($project,'TOKEN');
-                array_push($projectIds, ($showFromApi ? 'TOKEN-':'').current(Hashids::decode(str_replace('TOKEN-','',$project))));
+                if (str_starts_with($project, "TOKEN")) {
+                    array_push($projectIds, $project);
+                } else {
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
             }
         }
 
@@ -501,17 +533,18 @@ class SalesRecoveryApiController extends Controller
             $client,
             $clientDocument,
             $plans,
-            $company_id
+            $company_id,
         );
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
 
-    public function getProjectsWithRecovery(){
+    public function getProjectsWithRecovery()
+    {
         $projects = SalesRecoveryService::getProjectsWithRecovery();
-        $projectsEncoded=[];
-        foreach($projects as $item){
-            $projectsEncoded[]= Hashids::encode($item->project_id);
+        $projectsEncoded = [];
+        foreach ($projects as $item) {
+            $projectsEncoded[] = Hashids::encode($item->project_id);
         }
         return $projectsEncoded;
     }
@@ -523,19 +556,21 @@ class SalesRecoveryApiController extends Controller
 
             $projectIds = [];
             if (!empty($data["project_id"])) {
-            //if (is_array($data["project_id"])) {
-                if(!empty($data['project_id'][0])){ // && $data['project_id'][0]!='all'
-                    $showFromApi = false;
-                    foreach($data['project_id'] as $project){
-                        if(!empty($project)){
-                            $showFromApi = str_starts_with($project,'TOKEN');
-                            array_push($projectIds, ($showFromApi?'TOKEN-':'').hashids_decode(str_replace('TOKEN-','',$project)));
+                //if (is_array($data["project_id"])) {
+                if (!empty($data["project_id"][0])) {
+                    // && $data['project_id'][0]!='all'
+                    foreach ($data["project_id"] as $project) {
+                        if (!empty($project)) {
+                            if (str_starts_with($project, "TOKEN")) {
+                                array_push($projectIds, $project);
+                            } else {
+                                array_push($projectIds, current(Hashids::decode($project)));
+                            }
                         }
-                    };
-                }
-                else{
+                    }
+                } else {
                     $projects = SalesRecoveryService::getProjectsWithRecovery();
-                    foreach($projects as $item){
+                    foreach ($projects as $item) {
                         array_push($projectIds, $item->project_id);
                     }
                 }
@@ -546,40 +581,31 @@ class SalesRecoveryApiController extends Controller
             $plans = null;
 
             if (current($projectIds)) {
-
-                if (!empty($data['search'])) {
-                    $plans = Plan::
-                        where('name', 'like', '%' . $data['search'] . '%')
-                        ->whereIn('project_id', $projectIds)
-                        ->orderby('name')
+                if (!empty($data["search"])) {
+                    $plans = Plan::where("name", "like", "%" . $data["search"] . "%")
+                        ->whereIn("project_id", $projectIds)
+                        ->orderby("name")
                         ->limit(30)
                         ->get();
-
                 } else {
-                    $plans = Plan::
-                        whereIn('project_id', $projectIds)
-                        ->orderby('name')
+                    $plans = Plan::whereIn("project_id", $projectIds)
+                        ->orderby("name")
                         ->limit(30)
                         ->get();
-
                 }
                 return PlansSelectResource::collection($plans);
             } else {
-
                 $userProjects = SalesRecoveryService::getProjectsWithRecovery();
 
-                if (!empty($data['search'])) {
-                    $plans = Plan::
-                        where('name', 'like', '%' . $data['search'] . '%')
+                if (!empty($data["search"])) {
+                    $plans = Plan::where("name", "like", "%" . $data["search"] . "%")
                         ->whereIn("project_id", $userProjects)
-                        ->orderby('name')
+                        ->orderby("name")
                         ->limit(30)
                         ->get();
-
                 } else {
-                    $plans = Plan::
-                        whereIn("project_id", $userProjects)
-                        ->orderby('name')
+                    $plans = Plan::whereIn("project_id", $userProjects)
+                        ->orderby("name")
                         ->limit(30)
                         ->get();
                 }
@@ -591,7 +617,7 @@ class SalesRecoveryApiController extends Controller
                 [
                     "message" => "Ocorreu um erro, ao buscar dados dos planos",
                 ],
-                400
+                400,
             );
         }
     }

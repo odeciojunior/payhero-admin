@@ -7,11 +7,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
-use Monolog\Handler\SlackHandler;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryCardRefusedResource extends JsonResource
@@ -24,8 +24,23 @@ class SalesRecoveryCardRefusedResource extends JsonResource
     public function toArray($request)
     {
         $customer = $this->customer;
-        $project = $this->project;
-        $domain = $project->domains->where("status", (new Domain())->present()->getStatus("approved"))->first();
+
+        if (!empty($this->project)) {
+            $project = $this->project;
+            $domain = $project->domains->where("status", (new Domain())->present()->getStatus("approved"))->first();
+        } elseif (!empty($this->apiToken)) {
+            report(new Exception("{$this->apiToken->platform_enum}"));
+
+            $project = (object) [
+                "name" => (($this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_VEGA_CHECKOUT
+                            ? "Vega Checkout"
+                            : $this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_GR_SOLUCOES)
+                        ? "GR Soluções"
+                        : $this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_ADOOREI_CHECKOUT)
+                    ? "Adoorei Checkout"
+                    : "Integração externa",
+            ];
+        }
 
         $status = "Expirado";
         $type = "expired";
