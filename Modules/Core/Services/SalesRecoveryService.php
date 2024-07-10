@@ -5,17 +5,16 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Log as CheckoutLog;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
 use Vinkla\Hashids\Facades\Hashids;
@@ -36,7 +35,7 @@ class SalesRecoveryService
         string $projectId = null,
         string $dateStart = null,
         string $dateEnd = null,
-        string $client = null
+        string $client = null,
     ) {
         if ($type == 2) {
             $paymentMethod = 2; // boleto
@@ -72,7 +71,7 @@ class SalesRecoveryService
         string $customer = null,
         string $customerDocument = null,
         array $plans = null,
-        int $company_id = null
+        int $company_id = null,
     ) {
         $userProjectsModel = new UserProject();
         $customerModel = new Customer();
@@ -83,7 +82,7 @@ class SalesRecoveryService
             "checkout.sms_sent_amount",
             "checkout.id as checkout_id",
             "checkout.id_log_session",
-            DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value")
+            DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value"),
         )
             ->leftJoin("plans_sales as plan_sale", function ($join) {
                 $join->on("plan_sale.sale_id", "=", "sales.id");
@@ -93,10 +92,6 @@ class SalesRecoveryService
             })
             ->leftJoin("customers as customer", function ($join) {
                 $join->on("sales.customer_id", "=", "customer.id");
-                // })->leftJoin('checkout_configs as checkout_config', function ($join) {
-                //     $join->on('sales.project_id', '=', 'checkout_config.project_id');
-                // })
-                // ->where('checkout_config.company_id', $company_id)
             })
             ->leftJoin("transactions as transaction", function ($join) use ($company_id) {
                 $join->on("sales.id", "=", "transaction.sale_id")->where("transaction.company_id", $company_id);
@@ -142,7 +137,7 @@ class SalesRecoveryService
         }
 
         $tokensIds = [];
-        if (!empty($projectIds) && !in_array("all", $projectIds)) {
+        if (!in_array("all", $projectIds)) {
             foreach ($projectIds as $key => $projectId) {
                 if (str_starts_with($projectId, "TOKEN")) {
                     $tokensIds[] = str_replace("TOKEN-", "", $projectId);
@@ -161,6 +156,15 @@ class SalesRecoveryService
                     ["type_enum", UserProject::TYPE_PRODUCER_ENUM],
                 ])
                 ->pluck("project_id")
+                ->toArray();
+
+            $tokensIds = ApiToken::where(
+                "user_id",
+                auth()
+                    ->user()
+                    ->getAccountOwnerId(),
+            )
+                ->pluck("id")
                 ->toArray();
         }
 
@@ -411,7 +415,7 @@ class SalesRecoveryService
                 "owner_id",
                 auth()
                     ->user()
-                    ->getAccountOwnerId()
+                    ->getAccountOwnerId(),
             )
             ->where("status", 3);
 
@@ -426,13 +430,13 @@ class SalesRecoveryService
                         "affiliates.user_id",
                         auth()
                             ->user()
-                            ->getAccountOwnerId()
+                            ->getAccountOwnerId(),
                     )
                     ->orWhere(
                         "companies.user_id",
                         auth()
                             ->user()
-                            ->getAccountOwnerId()
+                            ->getAccountOwnerId(),
                     );
             })
             ->where("checkouts.status_enum", 2)
