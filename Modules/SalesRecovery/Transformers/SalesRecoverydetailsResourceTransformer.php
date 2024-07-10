@@ -2,7 +2,6 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
-use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SalesRecoverydetailsResourceTransformer extends JsonResource
@@ -15,9 +14,8 @@ class SalesRecoverydetailsResourceTransformer extends JsonResource
     {
         $products = [];
         foreach ($this["products"] as $product) {
-            report(new Exception(json_encode($product)));
             $products[] = [
-                "photo" => $product->photo,
+                "photo" => !empty($product->photo) ? $product->photo : null,
                 "name" => $product->name,
                 "amount" => $product->amount,
             ];
