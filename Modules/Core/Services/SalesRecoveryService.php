@@ -16,6 +16,7 @@ use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Log as CheckoutLog;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleInformation;
 use Modules\Core\Entities\UserProject;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -332,6 +333,10 @@ class SalesRecoveryService
 
             $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
         } else {
+            $saleInformation = SaleInformation::where("sale_id", $sale->id)
+                ->orderByDesc("id")
+                ->first();
+
             $checkout = new Checkout();
             $checkout->id = "";
             $checkout->sale_id = hashids_encode($sale->id, "sale_id");
@@ -344,8 +349,9 @@ class SalesRecoveryService
             $checkout->utm_campaign = "";
             $checkout->utm_term = "";
             $checkout->utm_content = "";
-            $checkout->browser = "";
-            $checkout->operational_system = "";
+            $checkout->ip = $saleInformation->ip ?? "";
+            $checkout->browser = $saleInformation->browser ?? "";
+            $checkout->operational_system = $saleInformation->operational_system ?? "";
             $checkout->is_mobile = "";
         }
 
@@ -396,7 +402,7 @@ class SalesRecoveryService
         }
 
         if ($sale->api_flag) {
-            $link = "Integração Externa";
+            $link = null;
             goto jump;
         }
 

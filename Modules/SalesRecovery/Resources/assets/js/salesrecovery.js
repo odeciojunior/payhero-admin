@@ -705,13 +705,15 @@ $(document).ready(function () {
             $("#div_delivery").show();
         }
         if (!isEmpty(data.link)) {
-            $("#link-sale").html(
-                'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
-                    data.link +
-                    '" title="Copiar link"><span class="o-copy-1"></span> </a> '
-            );
+            $("#link-sale")
+                .show()
+                .html(
+                    'Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' +
+                        data.link +
+                        '" title="Copiar link"><span class="o-copy-1"></span> </a> '
+                );
         } else {
-            $("#link-sale").html("Link: " + data.link);
+            $("#link-sale").hide();
         }
 
         $("#checkout-ip").html("IP: " + data.checkout.ip);
