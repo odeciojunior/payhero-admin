@@ -147,27 +147,27 @@ class SalesRecoveryService
                 }
             }
         } else {
+            $userId = auth()
+                ->user()
+                ->getAccountOwnerId();
+
             $projectIds = $userProjectsModel
-                ->where([
-                    [
-                        "user_id",
-                        auth()
-                            ->user()
-                            ->getAccountOwnerId(),
-                    ],
-                    ["type_enum", UserProject::TYPE_PRODUCER_ENUM],
-                ])
+                ->where([["user_id", $userId], ["type_enum", UserProject::TYPE_PRODUCER_ENUM]])
                 ->pluck("project_id")
                 ->toArray();
 
-            $tokensIds = ApiToken::where(
-                "user_id",
-                auth()
-                    ->user()
-                    ->getAccountOwnerId(),
-            )
-                ->pluck("id")
-                ->toArray();
+            $tokensIdsQuery = ApiToken::where("user_id", $userId)
+                ->whereIn("integration_type_enum", [
+                    ApiToken::INTEGRATION_TYPE_CHECKOUT_API,
+                    ApiToken::INTEGRATION_TYPE_SPLIT_API,
+                ])
+                ->whereNull("deleted_at");
+
+            if ($company_id) {
+                $tokensIdsQuery->where("company_id", $company_id);
+            }
+
+            $tokensIds = $tokensIdsQuery->pluck("id")->toArray();
         }
 
         $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
