@@ -147,7 +147,13 @@ class SalesRecoveryService
                 }
             }
         } else {
-            $userId = auth()->user()->account_owner_id;
+            if ($company_id == null) {
+                $userId = auth()
+                    ->user()
+                    ->getAccountOwnerId();
+            } else {
+                $userId = Company::find($company_id)->user_id;
+            }
 
             $projectIds = $userProjectsModel
                 ->where("user_id", $userId)
