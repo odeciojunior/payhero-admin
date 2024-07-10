@@ -147,9 +147,7 @@ class SalesRecoveryService
                 }
             }
         } else {
-            $userId = auth()
-                ->user()
-                ->getAccountOwnerId();
+            $userId = auth()->user()->account_owner_id;
 
             $projectIds = $userProjectsModel
                 ->where([["user_id", $userId], ["type_enum", UserProject::TYPE_PRODUCER_ENUM]])
@@ -161,7 +159,6 @@ class SalesRecoveryService
                     ApiToken::INTEGRATION_TYPE_CHECKOUT_API,
                     ApiToken::INTEGRATION_TYPE_SPLIT_API,
                 ])
-                ->whereNull("deleted_at")
                 ->pluck("id")
                 ->toArray();
         }
