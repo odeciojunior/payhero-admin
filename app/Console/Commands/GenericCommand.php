@@ -14,5 +14,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        dd(hashids_decode("KZb5VL43", "sale_id"));
     }
 }

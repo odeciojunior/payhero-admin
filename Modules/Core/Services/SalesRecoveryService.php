@@ -84,7 +84,7 @@ class SalesRecoveryService
             "checkout.id as checkout_id",
             "checkout.id_log_session",
             DB::raw(
-                "COALESCE(products_sales_api.id, (plan_sale.amount * plan_sale.plan_value), ((products_sales_api.price * products_sales_api.quantity) / 100)) AS value",
+                "IF(products_sales_api.id IS NOT NULL, (products_sales_api.price * products_sales_api.quantity) / 100, (plan_sale.amount * plan_sale.plan_value)) AS value",
             ),
         )
 
