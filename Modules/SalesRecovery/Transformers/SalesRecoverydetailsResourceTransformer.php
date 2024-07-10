@@ -3,7 +3,6 @@
 namespace Modules\SalesRecovery\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoverydetailsResourceTransformer extends JsonResource
 {
@@ -13,6 +12,14 @@ class SalesRecoverydetailsResourceTransformer extends JsonResource
      */
     public function toArray($request)
     {
+        report(
+            new Exception(
+                json_encode([
+                    "products" => $this["products"],
+                ]),
+            ),
+        );
+
         $products = [];
         foreach ($this["products"] as $product) {
             $products[] = [
