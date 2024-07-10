@@ -2,6 +2,7 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SalesRecoverydetailsResourceTransformer extends JsonResource
