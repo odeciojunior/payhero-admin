@@ -150,6 +150,7 @@ class SalesRecoveryService
             $userId = auth()
                 ->user()
                 ->getAccountOwnerId();
+
             $projectIds = $userProjectsModel
                 ->where("user_id", $userId)
                 ->pluck("project_id")
@@ -162,6 +163,16 @@ class SalesRecoveryService
                 ])
                 ->pluck("id")
                 ->toArray();
+
+            report(
+                new Exception(
+                    json_encode([
+                        "company_id" => $company_id,
+                        "projectIds" => $projectIds,
+                        "tokensIds" => $tokensIds,
+                    ]),
+                ),
+            );
         }
 
         $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
