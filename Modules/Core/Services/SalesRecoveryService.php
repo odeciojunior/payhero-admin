@@ -171,7 +171,7 @@ class SalesRecoveryService
         }
 
         $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
-            $qr->whereIn("sales.project_id", $projectIds)->orWhere("sales.api_token_id", $tokensIds);
+            $qr->whereIn("sales.project_id", $projectIds)->orWhereIn("sales.api_token_id", $tokensIds);
         });
 
         if (!empty($dateStart) && !empty($dateEnd)) {
