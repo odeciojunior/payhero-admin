@@ -83,10 +83,16 @@ class SalesRecoveryService
             "checkout.sms_sent_amount",
             "checkout.id as checkout_id",
             "checkout.id_log_session",
-            DB::raw("(plan_sale.amount * plan_sale.plan_value ) AS value"),
+            DB::raw(
+                "(ifnull(products_sales_api, (plan_sale.amount * plan_sale.plan_value), (products_sales_api.price * products_sales_api.quantity)) as value",
+            ),
         )
+
             ->leftJoin("plans_sales as plan_sale", function ($join) {
                 $join->on("plan_sale.sale_id", "=", "sales.id");
+            })
+            ->leftJoin("products_sales_api", function ($join) {
+                $join->on("products_sales_api.sale_id", "=", "sales.id");
             })
             ->leftJoin("checkouts as checkout", function ($join) {
                 $join->on("sales.checkout_id", "=", "checkout.id");
