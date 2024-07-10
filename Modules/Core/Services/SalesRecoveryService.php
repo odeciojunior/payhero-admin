@@ -156,18 +156,14 @@ class SalesRecoveryService
                 ->pluck("project_id")
                 ->toArray();
 
-            $tokensIdsQuery = ApiToken::where("user_id", $userId)
+            $tokensIds = ApiToken::where("user_id", $userId)
                 ->whereIn("integration_type_enum", [
                     ApiToken::INTEGRATION_TYPE_CHECKOUT_API,
                     ApiToken::INTEGRATION_TYPE_SPLIT_API,
                 ])
-                ->whereNull("deleted_at");
-
-            if ($company_id) {
-                $tokensIdsQuery->where("company_id", $company_id);
-            }
-
-            $tokensIds = $tokensIdsQuery->pluck("id")->toArray();
+                ->whereNull("deleted_at")
+                ->pluck("id")
+                ->toArray();
         }
 
         $salesExpired->where(function ($qr) use ($projectIds, $tokensIds) {
