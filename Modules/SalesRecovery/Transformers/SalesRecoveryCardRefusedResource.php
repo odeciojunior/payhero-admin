@@ -30,13 +30,14 @@ class SalesRecoveryCardRefusedResource extends JsonResource
             $domain = $project->domains->where("status", (new Domain())->present()->getStatus("approved"))->first();
         } elseif (!empty($this->apiToken)) {
             $project = (object) [
-                "name" => (($this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_VEGA_CHECKOUT
-                            ? "Vega Checkout"
-                            : $this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_GR_SOLUCOES)
-                        ? "GR Soluções"
-                        : $this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_ADOOREI_CHECKOUT)
-                    ? "Adoorei Checkout"
-                    : "Integração externa",
+                "name" =>
+                    $this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_VEGA_CHECKOUT
+                        ? "Vega Checkout"
+                        : ($this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_GR_SOLUCOES
+                            ? "GR Soluções"
+                            : ($this->apiToken->platform_enum === ApiToken::PLATFORM_ENUM_ADOOREI_CHECKOUT
+                                ? "Adoorei Checkout"
+                                : "Integração externa")),
             ];
         }
 
