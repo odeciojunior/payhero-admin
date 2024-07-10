@@ -331,6 +331,22 @@ class SalesRecoveryService
                     : $checkout->operational_system;
 
             $checkout->is_mobile = $checkout->is_mobile == 1 ? "Dispositivo: Celular" : "Dispositivo: Computador";
+        } else {
+            $checkout = new Checkout();
+            $checkout->id = "";
+            $checkout->sale_id = hashids_encode($sale->id, "sale_id");
+            $checkout->hours = with(new Carbon($sale->created_at))->format("H:i:s");
+            $checkout->date = with(new Carbon($sale->created_at))->format("d/m/Y");
+            $checkout->total = number_format($sale->present()->getSubTotal() / 100, 2, ",", ".");
+            $checkout->src = "";
+            $checkout->utm_source = "";
+            $checkout->utm_medium = "";
+            $checkout->utm_campaign = "";
+            $checkout->utm_term = "";
+            $checkout->utm_content = "";
+            $checkout->browser = "";
+            $checkout->operational_system = "";
+            $checkout->is_mobile = "";
         }
 
         if ($sale->payment_method == Sale::PAYMENT_TYPE_BANK_SLIP) {
@@ -354,7 +370,7 @@ class SalesRecoveryService
             }
         }
 
-        if (empty($checkout) || $checkout->status != "recovered") {
+        if ($checkout->status != "recovered") {
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
                 $status = "Recusado";
             } else {
