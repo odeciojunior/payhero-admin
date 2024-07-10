@@ -13,16 +13,9 @@ class SalesRecoverydetailsResourceTransformer extends JsonResource
      */
     public function toArray($request)
     {
-        report(
-            new Exception(
-                json_encode([
-                    "products" => $this["products"],
-                ]),
-            ),
-        );
-
         $products = [];
         foreach ($this["products"] as $product) {
+            report(new Exception(json_encode($product)));
             $products[] = [
                 "photo" => $product->photo,
                 "name" => $product->name,
