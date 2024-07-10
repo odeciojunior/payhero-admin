@@ -327,6 +327,15 @@ class SalesRecoveryApiController extends Controller
                 $saleId = current(Hashids::decode($request->input("checkout")));
                 $sale = $saleModel->find($saleId);
 
+                report(
+                    new Exception(
+                        json_encode([
+                            "saleId" => $saleId,
+                            "sale" => !empty($sale) ? $sale->toArray() : null,
+                        ]),
+                    ),
+                );
+
                 if (!empty($sale)) {
                     return SalesRecoverydetailsResourceTransformer::make(
                         $salesRecoveryService->getSalesCartOrBoletoDetails($sale),
