@@ -66,7 +66,7 @@ class TransactionResource extends JsonResource
             "id" => Hashids::connection("sale_id")->encode($sale->id),
             "id_default" => Hashids::encode($this->sale->id),
             "upsell" => Hashids::connection("sale_id")->encode($this->sale->upsell_id),
-            "project" => $project,
+            "project" => $project ?? "Integração via API",
             "product" => $product,
             "client" => $customerName ?? "",
             "method" => $sale->payment_method,
