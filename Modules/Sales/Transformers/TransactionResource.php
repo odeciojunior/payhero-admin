@@ -42,7 +42,14 @@ class TransactionResource extends JsonResource
                 ? $productName . " e mais " . $extraProducts . " produto" . ($extraProducts > 1 ? "s" : "")
                 : $productName;
         } elseif (!empty($sale->apiToken)) {
-            $project = $sale->apiToken->platform_enum === "VEGA_CHECKOUT" ? "Vega Checkout" : "Integração";
+            
+            if  ($sale->apiToken->platform_enum === "VEGA_CHECKOUT") {
+                $project = "Vega Checkout";
+            } else if ($sale->apiToken->platform_enum === "ADOOREI_CHECKOUT") {
+                $project = "Adoorei Checkout";
+            } else {
+                $project = "Integração via API";
+            }
 
             $product = $sale->productsSaleApi->first()->name;
             $hasMultipleProducts = count($sale->productsSaleApi) > 1;
@@ -66,8 +73,8 @@ class TransactionResource extends JsonResource
             "id" => Hashids::connection("sale_id")->encode($sale->id),
             "id_default" => Hashids::encode($this->sale->id),
             "upsell" => Hashids::connection("sale_id")->encode($this->sale->upsell_id),
-            "project" => $project ?? "Integração via API",
-            "product" => $product,
+            "project" => $project ?? "",
+            "product" => $product ?? "",
             "client" => $customerName ?? "",
             "method" => $sale->payment_method,
             "status" => $sale->status,
