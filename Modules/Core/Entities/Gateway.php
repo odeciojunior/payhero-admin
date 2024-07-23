@@ -65,6 +65,9 @@ class Gateway extends Model
     public const SIMPAY_PRODUCTION_ID = 13;
     public const SIMPAY_SANDBOX_ID = 14;
 
+    public const EFIPAY_PRODUCTION_ID = 15;
+    public const EFIPAY_SANDBOX_ID = 16;
+
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;
