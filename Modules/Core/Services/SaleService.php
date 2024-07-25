@@ -350,6 +350,9 @@ class SaleService
         $progressiveDiscount = $sale->progressive_discount ?? 0;
         $total -= $progressiveDiscount;
 
+        
+        $total = $sale->total_paid_value; //reescrevendo valor total para corrigir erro quando a venda vem via api
+        
         $comission = 'R$ ' . number_format($value / 100, 2, ",", ".");
 
         //valor do afiliado
