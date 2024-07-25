@@ -282,7 +282,7 @@ class SaleService
                 DB::raw(
                     "count(sales.id) as total_sales,
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
-                              sum(sales.total_paid_value / 100) as total",
+                              sum(sales.total_paid_value) as total",
                 ),
             )
             ->first()
