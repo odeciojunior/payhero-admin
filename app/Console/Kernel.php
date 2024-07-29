@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("withdrawals:release-get-faster")
             ->withoutOverlapping()
-            ->everyFiveMinutes()
+            ->everyMinute()
             ->onOneServer();
         $schedule
             ->command("available-balance:update")
@@ -88,13 +88,13 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command("iugu:create-seller-account")
-            ->everyFiveMinutesMinutes()
+            ->everyMinutes()
             ->withoutOverlapping()
             ->onOneServer();
 
         $schedule
             ->command("iugu:verification-account")
-            ->everyTenMinutesMinutes()
+            ->everyTwoMinutes()
             ->withoutOverlapping()
             ->onOneServer();
         $schedule
