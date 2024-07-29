@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\Gateways\AsaasService;
@@ -39,7 +40,7 @@ class AsaasTransfersSurplusBalance extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        $this->gatewayId = FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
     }
 
     /**
