@@ -88,7 +88,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command("iugu:create-seller-account")
-            ->everyMinutes()
+            ->everyMinute()
             ->withoutOverlapping()
             ->onOneServer();
 
