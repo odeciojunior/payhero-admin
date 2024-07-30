@@ -44,7 +44,7 @@ class IuguVerificationAccount extends Command
             ->whereNotNull("c.zip_code")
             ->whereNotNull("c.street")
             ->where("cba.is_default", true)
-            ->whereNotNull("cba.deleted_at")
+            ->whereNull("cba.deleted_at")
             ->get();
 
         $this->line(count($companiesCredentials) . " registros");
