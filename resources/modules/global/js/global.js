@@ -1820,9 +1820,27 @@ $(document).ready(function () {
         $(this).siriusSelect();
     });
 
-    $(document).on("DOMSubtreeModified propertychange change", ".sirius-select-container select", function () {
-        renderSiriusSelect(this);
+    // Função que será chamada quando uma mudança for detectada
+    function handleMutations(mutationsList, observer) {
+        mutationsList.forEach(mutation => {
+            if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                renderSiriusSelect(mutation.target);
+            }
+        });
+    }
+
+    // Seleciona todos os elementos '.sirius-select-container select'
+    document.querySelectorAll('.sirius-select-container select').forEach(select => {
+        // Cria uma instância de MutationObserver e passa a função de callback
+        const observer = new MutationObserver(handleMutations);
+
+        // Configura as opções de observação: observe mudanças nos filhos, atributos e no próprio nó
+        const config = { childList: true, subtree: true, attributes: true };
+
+        // Começa a observar o elemento alvo com as configurações especificadas
+        observer.observe(select, config);
     });
+
 
     $(document).on("click", ".sirius-select-text", function () {
         let $target = $(this);
