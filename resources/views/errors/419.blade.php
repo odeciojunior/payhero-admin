@@ -23,8 +23,11 @@
         <div class="content-error d-flex text-center">
             <img class="svgorange"
                  src="{!! mix('build/global/img/error.png') !!}">
-            <h1 class="big"> Oopppss!</h1>
-            <p style="font-size:12px">Ocorreu algum erro. </p>
+            <h1 class="big"> Desculpe, não foi possível carregar esta página!</h1>
+            <p style="font-size:16px">Estamos com alguma instabilidade, mas não se procupe os demais serviços estão funcionando!</p>
+            <p style="font-size:16px">Suas venda continuam processando normalmente, seu Admin Dashboard retornará em alguns minutos.</p>
+            <a href="{{ route('home') }}"
+               class="btn orange">Voltar para a página inicial</a>
         </div>
 
     </div>

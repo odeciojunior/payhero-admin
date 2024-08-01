@@ -40,6 +40,8 @@ class IuguCreateSellerAccount extends Command
             ->whereNull("gcc.company_id")
             ->where("cba.transfer_type", "TED")
             ->where("cba.status", "VERIFIED")
+            ->where("cba.is_default", true)
+            ->where("cba.deleted_at", null)
             ->get();
 
         $this->line(count($bankAccounts) . " registros");

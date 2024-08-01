@@ -9,6 +9,7 @@ use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Modules\Core\Services\FoxUtils;
 
 class RegisterWebhookAsaas extends Command
 {
@@ -33,7 +34,7 @@ class RegisterWebhookAsaas extends Command
     {
         parent::__construct();
 
-        $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        $this->gatewayId = FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
         $this->api = new CheckoutGateway($this->gatewayId);
     }
 
