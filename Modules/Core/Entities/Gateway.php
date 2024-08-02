@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
-use Modules\Core\Presenters\GatewayPresenter;
-use Spatie\Activitylog\Traits\LogsActivity;
 use LogicException;
+use Modules\Core\Presenters\GatewayPresenter;
 use Modules\Core\Services\Gateways\AbmexService;
-use Modules\Core\Services\Gateways\AsaasService;
-use Modules\Core\Services\Gateways\CieloService;
-use Modules\Core\Services\Gateways\GerencianetService;
-use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\Gateways\IuguService;
+use Modules\Core\Services\Gateways\MalgaService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\VegaService;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Gateway
@@ -64,6 +61,9 @@ class Gateway extends Model
 
     public const SIMPAY_PRODUCTION_ID = 13;
     public const SIMPAY_SANDBOX_ID = 14;
+
+    public const MALGA_PRODUCTION_ID = 19;
+    public const MALGA_SANDBOX_ID = 20;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -128,6 +128,10 @@ class Gateway extends Model
             case self::SIMPAY_PRODUCTION_ID:
             case self::SIMPAY_SANDBOX_ID:
                 return new SimPayService();
+
+            case self::MALGA_PRODUCTION_ID:
+            case self::MALGA_SANDBOX_ID:
+                return new MalgaService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:
