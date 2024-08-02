@@ -46,10 +46,11 @@ class MalgaCreateSellerAccount extends Command
         $progress = $this->getOutput()->createProgressBar(count($bankAccounts));
 
         $checkoutGateway = new CheckoutGateway($gatewayId);
+        $results = [];
         foreach ($bankAccounts as $bankAccount) {
             try {
-                $this->line("Company " . $bankAccount->company_id);
-                $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
+                $result = $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
+                $results[] = $result;
             } catch (Exception $e) {
                 $this->error("Error: " . $e->getMessage());
             }
@@ -58,5 +59,7 @@ class MalgaCreateSellerAccount extends Command
         }
 
         $progress->finish();
+
+        $this->info(json_encode($results, JSON_PRETTY_PRINT));
     }
 }
