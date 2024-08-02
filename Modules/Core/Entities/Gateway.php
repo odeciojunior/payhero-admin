@@ -65,6 +65,9 @@ class Gateway extends Model
     public const MALGA_PRODUCTION_ID = 19;
     public const MALGA_SANDBOX_ID = 20;
 
+    public const EFIPAY_PRODUCTION_ID = 15;
+    public const EFIPAY_SANDBOX_ID = 16;
+
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;

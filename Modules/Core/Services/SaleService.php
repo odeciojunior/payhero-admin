@@ -282,7 +282,7 @@ class SaleService
                 DB::raw(
                     "count(sales.id) as total_sales,
                               sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
-                              sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total",
+                              sum(sales.total_paid_value) as total",
                 ),
             )
             ->first()
@@ -349,6 +349,9 @@ class SaleService
         $cashbackValue = $sale->cashback->value ?? 0;
         $progressiveDiscount = $sale->progressive_discount ?? 0;
         $total -= $progressiveDiscount;
+
+        
+        $total = foxutils()->onlyNumbers($sale->total_paid_value); //reescrevendo valor total para corrigir erro quando a venda vem via api
 
         $comission = 'R$ ' . number_format($value / 100, 2, ",", ".");
 

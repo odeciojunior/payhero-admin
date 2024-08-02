@@ -10,6 +10,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\CheckoutGateway;
+use Modules\Core\Services\FoxUtils;
 
 class CreateAccountAsaas extends Command
 {
@@ -39,7 +40,7 @@ class CreateAccountAsaas extends Command
     {
         parent::__construct();
 
-        $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        $this->gatewayId = FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
         $this->api = new CheckoutGateway($this->gatewayId);
     }
 

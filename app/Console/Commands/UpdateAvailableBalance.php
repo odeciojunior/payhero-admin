@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Services\Gateways\AbmexService;
+use Modules\Core\Services\Gateways\EfipayService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\SimPayService;
 
@@ -28,6 +29,7 @@ class UpdateAvailableBalance extends Command
         IuguService::class,
         AbmexService::class,
         SimPayService::class,
+        EfipayService::class,
         //Safe2PayService::class,
         // AsaasService::class,
         // GerencianetService::class,
