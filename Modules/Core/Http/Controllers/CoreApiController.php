@@ -207,23 +207,23 @@ class CoreApiController extends Controller
 
             $link = null;
             $refused = false;
-            
+
             $companyAddressPending = $companyService->companyAddressPending();
-                
+
             if (!empty($companyAddressPending)) {
                 $refused = true;
                 $companyCode = hashids_encode($companyAddressPending->id);
                 $link = env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . $companyCode;
             } else {
                 $companyBankAccountPending = $companyService->companyBankAccountPending();
-                
+
                 if (!empty($companyBankAccountPending)) {
                     $refused = true;
                     $companyCode = hashids_encode($companyBankAccountPending->id);
                     $link = env("ACCOUNT_FRONT_URL") . "/companies/company-detail/" . $companyCode;
                 }
             }
-            
+
             return response()->json([
                 "message" => "Verificar dados bancários e endereço!",
                 "refused" => $refused,

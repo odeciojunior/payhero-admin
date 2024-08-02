@@ -4,16 +4,13 @@ namespace Modules\Sales\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Exception;
-use Modules\Core\Entities\Gateway;
-use PDF;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\GetnetBackOfficeService;
+use PDF;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -52,12 +49,14 @@ class SalesController extends Controller
                     Gateway::IUGU_PRODUCTION_ID,
                     Gateway::ABMEX_PRODUCTION_ID,
                     Gateway::SIMPAY_PRODUCTION_ID,
+                    Gateway::MALGA_PRODUCTION_ID,
                 ]
                 : [
                     Gateway::SAFE2PAY_SANDBOX_ID,
                     Gateway::IUGU_SANDBOX_ID,
                     Gateway::ABMEX_SANDBOX_ID,
                     Gateway::SIMPAY_SANDBOX_ID,
+                    Gateway::MALGA_SANDBOX_ID,
                 ];
 
             $transaction = Transaction::with(["sale", "company"])

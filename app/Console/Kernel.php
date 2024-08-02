@@ -97,6 +97,13 @@ class Kernel extends ConsoleKernel
             ->everyTwoMinutes()
             ->withoutOverlapping()
             ->onOneServer();
+
+        $schedule
+            ->command("malga:create-seller-account")
+            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->onOneServer();
+
         $schedule
             ->command("demo:create-fake-withdrawal")
             ->days([Schedule::MONDAY, Schedule::WEDNESDAY, Schedule::FRIDAY])
