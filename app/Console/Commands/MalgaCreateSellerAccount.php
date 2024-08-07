@@ -33,29 +33,32 @@ class MalgaCreateSellerAccount extends Command
     public function handle()
     {
         $gatewayId = foxutils()->isProduction() ? Gateway::MALGA_PRODUCTION_ID : Gateway::MALGA_SANDBOX_ID;
-        $bankAccounts = DB::table("company_bank_accounts as cba")
+        $bankAccountsQuery = DB::table("company_bank_accounts as cba")
             ->select("cba.company_id")
             ->leftJoin("gateways_companies_credentials as gcc", function (JoinClause $join) use ($gatewayId) {
                 $join->on("cba.company_id", "=", "gcc.company_id")->where("gcc.gateway_id", $gatewayId);
             })
             ->whereNull("gcc.company_id")
             ->where("cba.transfer_type", "TED")
-            ->where("cba.status", "VERIFIED")
-            ->get();
+            ->where("cba.status", "VERIFIED");
 
-        $progress = $this->getOutput()->createProgressBar(count($bankAccounts));
+        $progress = $this->getOutput()->createProgressBar($bankAccountsQuery->count());
 
         $checkoutGateway = new CheckoutGateway($gatewayId);
-        foreach ($bankAccounts as $bankAccount) {
-            try {
-                $result = $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
-                $this->info(json_encode($result, JSON_PRETTY_PRINT));
-            } catch (Exception $e) {
-                $this->error("Error: " . $e->getMessage());
-            }
 
-            $progress->advance();
-        }
+        $bankAccountsQuery->chunk(60, function ($bankAccounts) use ($checkoutGateway, $progress) {
+            foreach ($bankAccounts as $bankAccount) {
+                try {
+                    $result = $checkoutGateway->createAccount(["companyId" => $bankAccount->company_id]);
+                    $this->info(json_encode($result, JSON_PRETTY_PRINT));
+                } catch (Exception $e) {
+                    $this->error("Error: " . $e->getMessage());
+                }
+
+                sleep(1);
+                $progress->advance();
+            }
+        });
 
         $progress->finish();
     }
