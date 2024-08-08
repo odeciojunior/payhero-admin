@@ -952,7 +952,6 @@ function copyToClipboard(elem) {
     var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
     var origSelectionStart, origSelectionEnd;
 
-    console.log(elem.tagName);
     if (isInput) {
         // can just use the original source element for the selection and copy
         target = elem;

@@ -193,7 +193,6 @@ $(() => {
         $("#modal_detalhes").modal("show");
         $("#refundAmount").mask("##.###,#0", { reverse: true });
         $("#refundBilletAmount").mask("##.###,#0", { reverse: true });
-        console.log("detalhes_venda");
         $.ajax({
             method: "GET",
             url: "/api/sales/" + sale,
@@ -641,7 +640,6 @@ $(() => {
             $("#nav-woo-tab").show();
             if (sale.woocommerce_order) {
                 var order = "Status: <strong>" + sale.woocommerce_order.status + "</strong>";
-                // console.log(sale)
                 $("#woo_order").html(order);
 
                 $("#resendWoocommerceOrder").addClass("d-none");

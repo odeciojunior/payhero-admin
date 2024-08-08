@@ -117,7 +117,6 @@ $(window).on("load", function () {
 
     window.gatewayCode = "v2RmA83EbZPVpYB"; //window.location.href.split("/")[4];
     //getGateway(window.gatewayCode);
-    console.log(window.gatewayCode);
     function getGateway(nome) {
         switch (nome) {
             case "NzJqoR32egVj5D6":

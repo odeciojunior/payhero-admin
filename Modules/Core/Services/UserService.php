@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Modules\Core\DataTransferObjects\BureauUserDataInterface;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
+use Symfony\Component\HttpFoundation\Response;
 
-class UserService
+final class UserService
 {
-    private $bureauService;
+    private BigBoostService $bureauService;
 
     public function __construct()
     {
@@ -32,8 +37,8 @@ class UserService
         }
 
         if (!empty($user)) {
-            return $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
-                $user->biometry_status == User::BIOMETRY_STATUS_APPROVED;
+            return User::DOCUMENT_STATUS_APPROVED === $user->address_document_status &&
+                UserBiometryStatusEnum::isApproved($user->biometry_status);
         }
 
         return false;
@@ -41,58 +46,34 @@ class UserService
 
     public function haveAnyDocumentApproved(): bool
     {
-        $user = User::find(auth()->user()->account_owner_id);
+        $user = User::query()->find(auth()->user()->account_owner_id);
 
-        if (
-            $user->address_document_status == UserDocument::STATUS_APPROVED &&
-            $user->biometry_status == User::BIOMETRY_STATUS_APPROVED
-        ) {
-            return true;
-        }
-
-        return false;
+        return UserDocument::STATUS_APPROVED === $user->address_document_status &&
+            UserBiometryStatusEnum::isApproved($user->biometry_status);
     }
 
     public function haveAnyDocumentPending(): bool
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if (
-            $user->address_document_status == UserDocument::STATUS_PENDING ||
-            $user->biometry_status == User::BIOMETRY_STATUS_PENDING
-        ) {
-            return true;
-        }
-
-        return false;
+        return UserDocument::STATUS_PENDING === $user->address_document_status ||
+            $user->biometry_status === UserBiometryStatusEnum::PENDING->value;
     }
 
     public function haveAnyDocumentAnalyzing(): bool
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if (
-            $user->address_document_status == UserDocument::STATUS_ANALYZING ||
-            $user->biometry_status == User::BIOMETRY_STATUS_IN_PROCESS
-        ) {
-            return true;
-        }
-
-        return false;
+        return UserDocument::STATUS_ANALYZING === $user->address_document_status ||
+            UserBiometryStatusEnum::IN_PROCESS->value === $user->biometry_status;
     }
 
     public function haveAnyDocumentRefused(): bool
     {
         $user = User::find(auth()->user()->account_owner_id);
 
-        if (
-            $user->address_document_status == UserDocument::STATUS_REFUSED ||
-            $user->biometry_status == User::BIOMETRY_STATUS_REFUSED
-        ) {
-            return true;
-        }
-
-        return false;
+        return UserDocument::STATUS_REFUSED === $user->address_document_status ||
+            UserBiometryStatusEnum::REFUSED->value === $user->biometry_status;
     }
 
     public function verifyCpf($cpf): bool
@@ -119,27 +100,36 @@ class UserService
     {
         if (empty($user->email)) {
             return true;
-        } elseif (empty($user->cellphone)) {
-            return true;
-        } elseif (empty($user->document)) {
-            return true;
-        } elseif (empty($user->zip_code)) {
-            return true;
-        } elseif (empty($user->country)) {
-            return true;
-        } elseif (empty($user->state)) {
-            return true;
-        } elseif (empty($user->city)) {
-            return true;
-        } elseif (empty($user->neighborhood)) {
-            return true;
-        } elseif (empty($user->street)) {
-            return true;
-        } elseif (empty($user->number)) {
-            return true;
-        } else {
-            return false;
         }
+        if (empty($user->cellphone)) {
+            return true;
+        }
+        if (empty($user->document)) {
+            return true;
+        }
+        if (empty($user->zip_code)) {
+            return true;
+        }
+        if (empty($user->country)) {
+            return true;
+        }
+        if (empty($user->state)) {
+            return true;
+        }
+        if (empty($user->city)) {
+            return true;
+        }
+        if (empty($user->neighborhood)) {
+            return true;
+        }
+        if (empty($user->street)) {
+            return true;
+        }
+        if (empty($user->number)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function verifyIsValidCPF($cpf): bool
@@ -192,25 +182,21 @@ class UserService
              */
             sleep(3);
 
-            if (!empty($userProtocol) && $userStatus["status_code"] == 200) {
+            if (!empty($userProtocol) && Response::HTTP_OK === $userStatus["status_code"]) {
                 $user = $idewallService->getReportByProtocolNumber($userProtocol);
 
                 return json_decode($user, true);
             }
 
             return false;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
 
     public function userWithdrawalBlocked($user): bool
     {
-        if ($user->status == (new User())->present()->getStatus("withdrawal blocked")) {
-            return true;
-        }
-
-        return false;
+        return $user->status === (new User())->present()->getStatus("withdrawal blocked");
     }
 
     public function removePromotionalTax(PromotionalTax $promotionalTax): void
@@ -231,7 +217,7 @@ class UserService
                     ->where("id", $company_id)
                     ->first();
 
-                if ($tax == PromotionalTax::PROMOTIONAL_TAX) {
+                if (PromotionalTax::PROMOTIONAL_TAX === $tax) {
                     $tax = (new CompanyService())->getTax($company->credit_card_tax);
                 }
 
@@ -287,22 +273,23 @@ class UserService
 
     /**
      * @param $cpf
-     * @return false|mixed
+     * @return BureauUserDataInterface
+     * @throws Exception
      */
     public function getBureauUserData($cpf): BureauUserDataInterface
     {
         try {
             if (FoxUtils::isEmpty($cpf)) {
-                throw new \InvalidArgumentException("Trying to query an Invalid CPF on BigId");
+                throw new InvalidArgumentException("Trying to query an Invalid CPF on BigId");
             }
             return $this->bureauService->getUserData($cpf);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
     }
 
-    public function updateUserDataFromBureau($cpf)
+    public function updateUserDataFromBureau($cpf): void
     {
         try {
             /** @var User $user */
@@ -328,7 +315,7 @@ class UserService
                     Carbon::now()->format("d/m/Y à\s H:i:s");
             }
             $user->save();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
         }
     }

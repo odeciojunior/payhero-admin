@@ -174,7 +174,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                console.log(response);
                 fillSelectProject(
                     companiesAndProjects,
                     "#select_projects_edit",

@@ -681,8 +681,6 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log('erro')
-                console.log(response)
             },
             success: function success(response) {
                 return response;

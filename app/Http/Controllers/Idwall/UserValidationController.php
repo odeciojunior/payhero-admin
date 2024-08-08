@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Idwall;
 
 use App\Http\Controllers\Controller;
@@ -8,9 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserBiometryResult;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserValidationController extends Controller
+final class UserValidationController extends Controller
 {
     public function validateUser(Request $request)
     {
@@ -24,7 +28,7 @@ class UserValidationController extends Controller
                     [
                         "status" => "error",
                     ],
-                    400
+                    Response::HTTP_BAD_REQUEST
                 );
             }
 
@@ -49,9 +53,9 @@ class UserValidationController extends Controller
                 "response_data" => json_encode($response->body()),
             ]);
 
-            if ($response->status() >= 200 && $response->status() < 300) {
+            if ($response->status() >= Response::HTTP_OK && $response->status() < Response::HTTP_MULTIPLE_CHOICES) {
                 $user->update([
-                    "biometry_status" => User::BIOMETRY_STATUS_IN_PROCESS,
+                    "biometry_status" => UserBiometryStatusEnum::IN_PROCESS->value,
                 ]);
             }
 
@@ -62,7 +66,7 @@ class UserValidationController extends Controller
                 [
                     "status" => "error",
                 ],
-                400
+                Response::HTTP_BAD_REQUEST
             );
         }
     }

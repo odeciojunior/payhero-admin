@@ -321,7 +321,6 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
-                        // console.log(response);
                         loadingOnScreenRemove();
                         refreshIntegrations();
                         alertCustom("success", response.message);
@@ -355,7 +354,6 @@ $(document).ready(function () {
                         errorAjaxResponse(response);
                     },
                     success: (response) => {
-                        // console.log(response);
                         loadingOnScreenRemove();
                         refreshIntegrations();
                         alertCustom("success", response.message);

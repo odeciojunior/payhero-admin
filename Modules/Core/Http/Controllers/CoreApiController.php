@@ -1,39 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Http\Controllers;
 
-use Exception;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
-use DateTime;
+use Exception;
 use Firebase\JWT\JWT;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\Ticket;
 use Illuminate\Routing\Controller;
-use Modules\Core\Events\UserRegistrationFinishedEvent;
-use Modules\Core\Entities\Company;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\UserService;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\BonusBalance;
-use Modules\Core\Entities\CheckoutConfig;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Services\CompanyService;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
-use Symfony\Component\HttpFoundation\Response;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
-use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
-use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Events\UserRegistrationFinishedEvent;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\Gateways\Safe2PayService;
+use Modules\Core\Services\UserService;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
-class CoreApiController extends Controller
+final class CoreApiController extends Controller
 {
     public function verifyAccount($id)
     {
@@ -48,7 +48,6 @@ class CoreApiController extends Controller
             $userInformations = UserInformation::where("document", $user->document)->exists();
 
             $userStatus = null;
-            $userBiometryStatus = $user->present()->getBiometryStatus($user->biometry_status);
 
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $user->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
@@ -73,8 +72,7 @@ class CoreApiController extends Controller
                 ->where("active_flag", true)
                 ->get();
 
-            if ($companies->count() == 0) {
-                $companyStatus = null;
+            if (0 === $companies->count()) {
                 $companyRedirect = "/companies";
             } else {
                 $companyApproved = $companyService->companyDocumentApproved();
@@ -126,10 +124,10 @@ class CoreApiController extends Controller
         }
     }
 
-    public function updateUserStatus($user, $userInformations, $userStatus, $companyStatus)
+    public function updateUserStatus($user, $userInformations, $userStatus, $companyStatus): void
     {
         if (!$user->account_is_approved) {
-            if ($userStatus == "approved" && $companyStatus == "approved" && $userInformations) {
+            if ("approved" === $userStatus && "approved" === $companyStatus && $userInformations) {
                 $user->update([
                     "account_is_approved" => 1,
                 ]);
@@ -150,7 +148,7 @@ class CoreApiController extends Controller
             $refused = false;
             $analyzing = false;
             $user = auth()->user();
-            $accountType = $user->id == $user->account_owner_id ? "owner" : "collaborator";
+            $accountType = $user->id === $user->account_owner_id ? "owner" : "collaborator";
 
             if ($userDocumentRefused) {
                 $refused = true;
@@ -162,7 +160,7 @@ class CoreApiController extends Controller
                     $refused = true;
                     $companyCode = hashids_decode($companyDocumentRefused->id);
                     if (
-                        $companyDocumentRefused->company_type ==
+                        $companyDocumentRefused->company_type ===
                         $companyDocumentRefused->present()->getCompanyType("physical person")
                     ) {
                         $link = "/personal-info";
@@ -281,7 +279,7 @@ class CoreApiController extends Controller
                 });
 
                 $company_default_name =
-                    $companyDefault->company_type == 1
+                    1 === $companyDefault->company_type
                         ? "Pessoa física"
                         : Str::limit($companyDefault->fantasy_name, 20) ?? "";
 
@@ -298,9 +296,10 @@ class CoreApiController extends Controller
                 ];
             }
 
-            $companies = cache()->remember("companies-" . $user->account_owner_id, 60, function () use ($user) {
-                return Company::where("user_id", $user->account_owner_id)->get();
-            });
+            $companies = cache()->remember(
+                "companies-" . $user->account_owner_id, 60,
+                fn() => Company::where("user_id", $user->account_owner_id)->get()
+            );
 
             $return["companies"] = collect(CompaniesSelectResource::collection($companies))
                 ->sortBy("order_priority")
@@ -334,7 +333,7 @@ class CoreApiController extends Controller
         }
 
         $user = Auth::user();
-        if ($user->company_default == $companyId) {
+        if ($user->company_default === $companyId) {
             return; //response()->json(['message'=>'A empresa selecionada já é a default.'],400);
         }
 
@@ -380,7 +379,7 @@ class CoreApiController extends Controller
                 ->where("company_id", $company->id)
                 ->first();
 
-            $response = (object) [
+            $response = (object)[
                 "allow_block" => $availableBalance + $pendingBalance >= $transaction->value,
             ];
 
@@ -481,12 +480,11 @@ class CoreApiController extends Controller
         try {
             $user = User::find(hashids_decode($id));
             $accountOwner = User::find($user->account_owner_id);
-            $checkUserBiometry = $accountOwner->biometry_status;
 
             return response()->json(
                 [
                     "data" => [
-                        "check_user_biometry" => $checkUserBiometry !== User::BIOMETRY_STATUS_APPROVED,
+                        "check_user_biometry" => !UserBiometryStatusEnum::isApproved($accountOwner->biometry_status),
                     ],
                 ],
                 Response::HTTP_OK

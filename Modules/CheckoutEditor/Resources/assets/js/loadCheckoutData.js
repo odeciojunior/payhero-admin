@@ -1055,7 +1055,6 @@ $(() => {
                     }, 4000);
                 },
                 error: function (response) {
-                    console.log("RESPONSE", response);
                     $('.select-type').removeClass('low-opacity')
                     $('.visual').removeClass('low-opacity')
                     $('.payment').removeClass('low-opacity')

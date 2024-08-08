@@ -40,7 +40,6 @@ $(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log(response);
             },
             success: function success(response) {
                 gateway_tax = parseFloat(response.data.gateway_tax);
@@ -2866,7 +2865,6 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response.plan.products);
 
                 $(modal).find("#name").tooltip("enable");
                 $(modal).find("#description").tooltip("enable");
@@ -3485,8 +3483,6 @@ $(function () {
 
     // Get Products Config Cost
     function getPlansConfig(modal) {
-        console.log(modal);
-
         $(modal).find(".product-photo").unbind("load");
         $(modal).find(".modal-body").css("height", "auto").attr("style", "padding-bottom: 0px !important");
 

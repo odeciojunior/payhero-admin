@@ -63,7 +63,6 @@ window.loadWithdrawalsTable = function (link = null) {
             .replace(/\s+/g, "")
             .replace("-", "- ");
     }
-    console.log(window.gatewayCode);
     $.ajax({
         method: "GET",
         url: link,

@@ -1,21 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Affiliate;
-use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\CheckoutConfig;
-use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\User;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
 use Modules\Core\Services\CompanyService;
-use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CompaniesSelectResource extends JsonResource
+final class CompaniesSelectResource extends JsonResource
 {
     public function toArray($request): array
     {
@@ -35,8 +34,8 @@ class CompaniesSelectResource extends JsonResource
 
         $companyIsApproved = false;
         if (
-            $companyDocumentStatus == "approved" &&
-            $userAddressDocumentStatus == "approved"
+            "approved" === $companyDocumentStatus &&
+            "approved" === $userAddressDocumentStatus
         ) {
             $companyIsApproved = true;
         }
@@ -119,15 +118,15 @@ class CompaniesSelectResource extends JsonResource
         return [
             "id" => Hashids::encode($this->id),
             "country" => $this->country,
-            "name" => $this->company_type == 1 ? "Pessoa física" : $this->fantasy_name,
+            "name" => 1 === $this->company_type ? "Pessoa física" : $this->fantasy_name,
             "document" => foxutils()->getDocument($this->document),
             "company_document_status" => $companyDocumentStatus,
             "company_has_sale_before_getnet" => auth()->user()->has_sale_before_getnet,
             "active_flag" => $activeFlag,
-            "has_pix_key" => !empty($bankAccount) && $bankAccount->transfer_type == "PIX",
+            "has_pix_key" => ! empty($bankAccount) && "PIX" === $bankAccount->transfer_type,
             "company_type" => $this->present()->getCompanyType($this->company_type),
             "user_address_document_status" => $userAddressDocumentStatus,
-            "user_personal_document_status" => $this->user->biometry_status == User::BIOMETRY_STATUS_APPROVED,
+            "user_personal_document_status" => UserBiometryStatusEnum::isApproved($this->user->biometry_status),
             "company_is_approved" => $companyIsApproved,
             "order_priority" => $this->order_priority,
             "projects" => $projects,

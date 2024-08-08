@@ -42,7 +42,6 @@ $(document).ready(function () {
     function loadData(elementButton, elementFunction) {
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
 
             switch (elementFunction) {
                 case 1:
@@ -169,8 +168,6 @@ $(document).ready(function () {
                         let dataDay = dataParse[0]
                         let dataTime = dataParse[1]
 
-                        console.log(dataDay);
-                        console.log(dataTime);
 
                         if (value.percentage == "" || value.percentage == "0")
                             value.percentage = "0%";
@@ -384,8 +381,6 @@ $(document).ready(function () {
                 $("#modal-edit-affiliate .btn-update").unbind("click");
                 $("#modal-edit-affiliate .btn-update").on("click", function () {
                     let formData = new FormData(document.getElementById("form-update-affiliate"));
-                    //console.log(formData);
-                    // formData.append("integration_id", integrationId);
 
                     let affiliate = $(
                         "#modal-edit-affiliate .affiliate-id"

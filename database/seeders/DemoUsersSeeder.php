@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Core\Entities\User;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -24,7 +25,7 @@ class DemoUsersSeeder extends Seeder
             "document" => "00000000000",
             "account_is_approved" => true,
             "cellphone" => "5511999999999",
-            "biometry_status" => 3,
+            "biometry_status" => UserBiometryStatusEnum::APPROVED->value,
             "address_document_status" => 3,
             "cellphone_verified" => 1,
             "email_verified" => 1,
