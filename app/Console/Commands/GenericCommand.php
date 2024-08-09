@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
+use Modules\Core\Services\FoxUtils;
 
 class GenericCommand extends Command
 {
@@ -14,6 +15,13 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        dd(hashids_decode("KZb5VL43", "sale_id"));
+        $jsonConfig = FoxUtils::xorEncrypt(
+            json_encode([
+                "client_id" =>'x',
+                "client_secret" => 'x',
+                "auth_basic" => 'x',
+            ])
+        );
+        $this->line($jsonConfig);
     }
 }
