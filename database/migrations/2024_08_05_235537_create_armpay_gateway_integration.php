@@ -16,39 +16,15 @@ return new class extends Migration {
      */
     public function up()
     {
-      
-        $jsonConfig = FoxUtils::xorEncrypt(
-            json_encode([
-                "api_token" => "",
-            ])
-        );
+        $jsonConfig = 'WwJDTElFTlR/SUQCGgISFxhERUFBQUEQERRFRRMSGRMQQUFGGRYWFhFBEBlBEBkYExYYRkIQGUNERBkYFxYUE0QRFhZFQxERRBcWERkYRRkZExFEQRcWFkIQEhARFxkRQRYVAgwCQ0xJRU5Uf1NFQ1JFVAIaAhYWQhASEBEXGRFBFhYSFxhERUFBQUEQERRFRRMSGRMQQUFGGRYWFhFBEBlBEBQVFBRFFhYUFhlEGEFCFEUUQRMYQRIUQhZDRRFCFkMTRUEZERITQREXFxkXFxQWFBhEEEYZEkYUEkMTERUQFxQRRBgWEhJGGUIXRENFFRRBAgwCQVVUSH9CQVNJQwIaAkRnSEhCZ1gVQxBiSEVNbkxCTXFVeRIZVGxNallvS2ZTQ2dISG1KbR0CXQ==';
         DB::statement("INSERT INTO `gateways`
         (`id`,`gateway_enum`,`name`,`json_config`,`production_flag`,`enabled_flag`,`deleted_at`,`created_at`,`updated_at`)
         VALUES (21,10,'armpay_production','{$jsonConfig}',1,1,null,NOW(),NOW());");
 
-        $jsonConfig2 = FoxUtils::xorEncrypt(
-            json_encode([
-                "api_token" => "",
-            ])
-        );
+        $jsonConfig2 = $jsonConfig;
         DB::statement("INSERT INTO `gateways`
         (`id`,`gateway_enum`,`name`,`json_config`,`production_flag`,`enabled_flag`,`deleted_at`,`created_at`,`updated_at`)
         VALUES (22,10,'armpay_sandbox','{$jsonConfig2}',0,1,null,NOW(),NOW());");
-
-        $flags = [
-            ["gateway_id" => 13, "slug" => "pix", "name" => "Pix", "card_flag_enum" => 51],
-            ["gateway_id" => 14, "slug" => "pix", "name" => "Pix", "card_flag_enum" => 51],
-        ];
-        foreach ($flags as $flag) {
-            $gatewayFlag = GatewayFlag::create($flag);
-
-            GatewayFlagTax::create([
-                "gateway_flag_id" => $gatewayFlag->id,
-                "installments" => 1,
-                "type_enum" => 1,
-                "percent" => 1.0,
-            ]);
-        }
     }
 
     /**
