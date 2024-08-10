@@ -40,7 +40,8 @@ class MalgaCreateSellerAccount extends Command
             })
             ->whereNull("gcc.company_id")
             ->where("cba.transfer_type", "TED")
-            ->where("cba.status", "VERIFIED");
+            ->where("cba.status", "VERIFIED")
+            ->orderBy("cba.company_id");
 
         $progress = $this->getOutput()->createProgressBar($bankAccountsQuery->count());
 
