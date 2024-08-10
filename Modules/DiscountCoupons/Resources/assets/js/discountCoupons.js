@@ -147,7 +147,6 @@ function coupon_rules(data) {
         html += "<strong>dinheiro</strong>";
         value = "R$" + data.value;
     }
-    console.log(data);
     //if(!expires) data.nao_vence = 1
     var expires = data.nao_vence ? "Não vence" : "";
     if (data.nao_vence) data.expires_days = null;
@@ -170,7 +169,6 @@ function coupon_rules(data) {
         $("#c-edit_status_label").html("Desativado");
         $("#c-edit_status").prop("checked", false);
     }
-    //console.log(data.expires_days);
     html += "<br><small>" + expires + "</small><br>";
     html +=
         "<strong>" +
@@ -438,7 +436,6 @@ function run_search(search, now) {
         //animateItemsPlaceholder()
 
         var items_saved = mount_selected_items(search, search2);
-        // console.log(items_saved);
         var items_saved_array = [];
         for (i in items_selected) {
             items_saved_array.push({ id: items_selected[i].id });
@@ -524,7 +521,6 @@ function run_search(search, now) {
                                 </div>`;
                     items += item;
                 }
-                //console.log(items.length , items_saved);
                 if (items || items_saved.length) {
                     $("#search_result, #search_result2").html(items_saved + items);
 
@@ -1236,7 +1232,6 @@ $(function () {
                     $("#edit_step0").show();
                     $("#edit_step1").hide();
                     $("#edit_step2").hide();
-                    // console.log(response);
                     $("#edit-discount").show();
                     $("#edit-coupon").hide();
 
@@ -1328,7 +1323,6 @@ $(function () {
                         $("#nao_vence2").prop("checked", false);
                         $("#date_range2").prop("disabled", false);
                     }
-                    // console.log(response.status);
                     if (response.status == 1) {
                         // $('#c-edit_status_label').css('color', '#41DC8F');
                         $("#c-edit_status_label").html("Desconto ativo");
@@ -2423,7 +2417,6 @@ $(function () {
             $("#minimum_value").focus().addClass("warning-input");
             return false;
         }
-        // console.log($('#date_range').val(), $('#nao_vence').is(':checked')); return false;
         if ($("#date_range").val() == "" && !$("#nao_vence").is(":checked")) {
             $("#date_range").focus().addClass("warning-input");
             alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
@@ -2541,7 +2534,6 @@ $(function () {
 
                 $("#c-edit-name").show();
 
-                console.log("oi");
                 //coupon_rules()
                 // show_rules(edit_rules)
                 plans_count2();
@@ -2613,7 +2605,6 @@ $(function () {
     }
 
     $("#c-edit-plans").click(function () {
-        // console.log('oi');
         // $('#search_result, #search_result2').html('');
 
         // $('.form-control').each(function(){
@@ -2687,7 +2678,6 @@ $(function () {
     });
 
     $(".c-edit-plans-save").click(function () {
-        // console.log(items_selected);
         $("#edited-plans").val(JSON.stringify(items_selected));
         $("#c-save_name_edit").click();
         plans_count();

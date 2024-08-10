@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\WithdrawalSettings;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\Gateways\AsaasService;
@@ -65,8 +66,8 @@ class CheckAutomaticWithdrawals extends Command
 
                 //It only generates the automatic withdrawal if the account is active
                 if (
-                    $company->user->status == User::STATUS_ACTIVE &&
-                    $company->user->biometry_status == User::BIOMETRY_STATUS_APPROVED
+                    $company->user->status === User::STATUS_ACTIVE &&
+                    UserBiometryStatusEnum::isApproved($company->user->biometry_status)
                 ) {
                     foreach ($this->defaultGateways as $gatewayClass) {
                         $gatewayService = new $gatewayClass();

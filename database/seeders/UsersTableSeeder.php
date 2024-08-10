@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Modules\Core\Entities\User;
+use Modules\Core\Enums\User\UserBiometryStatusEnum;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -53,7 +54,7 @@ class UsersTableSeeder extends Seeder
             "cellphone" => "5566999999999",
             "account_is_approved" => true,
             "personal_document_status" => 3,
-            "biometry_status" => 3,
+            "biometry_status" => UserBiometryStatusEnum::APPROVED->value,
             "address_document_status" => 3,
             "cellphone_verified" => 1,
             "email_verified" => 1,

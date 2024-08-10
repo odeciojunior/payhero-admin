@@ -332,7 +332,6 @@ jQuery(function () {
         elementButton = $("#btn-filtro");
         if (searchIsLocked(elementButton) != "true") {
             lockSearch(elementButton);
-            console.log(elementButton.attr("block_search"));
             updateProducts();
         }
     }

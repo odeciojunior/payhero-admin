@@ -33,8 +33,6 @@ window.fillProjectsSelect = function () {
             Accept: "application/json",
         },
         error: function error(response) {
-            console.log("erro");
-            console.log(response);
         },
         success: function success(response) {
             return response;
@@ -148,8 +146,6 @@ function getProjects(data, origin = "") {
             Accept: "application/json",
         },
         error: function error(response) {
-            console.log("erro");
-            console.log(response);
             loadingOnScreenRemove();
         },
         success: function success(response) {

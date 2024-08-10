@@ -19,7 +19,6 @@ function loadData() {
     elementButton = $("#bt_filtro");
     if (searchIsLocked(elementButton) != "true") {
         lockSearch(elementButton);
-        console.log(elementButton.attr("block_search"));
         atualizar();
     }
 }
@@ -716,8 +715,6 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             error: function error(response) {
-                console.log("erro");
-                console.log(response);
                 if (origin == "") loadingOnScreen();
             },
             success: function success(response) {

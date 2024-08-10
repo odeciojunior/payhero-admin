@@ -104,14 +104,11 @@ $(document).ready(function () {
     let btnSave = $("#btn-save");
     btnSave.on("click", () => {
         if (verifyFields()) {
-            console.log('formData errrrr');
             return false;
         } else {
             btnSave.prop("disabled", true);
             loadingOnScreen();
             let formData = new FormData(document.querySelector('#form-create-project'));
-            console.log('formData');
-            console.log(formData);
             //return;
             $.ajax({
                 method: "post",

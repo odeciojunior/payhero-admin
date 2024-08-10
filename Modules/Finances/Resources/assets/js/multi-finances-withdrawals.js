@@ -4,7 +4,6 @@ window.defaultWithdrawal = function (gatewayId) {
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
-    console.log($("#available-balance-" + gatewayId).html());
     if ($("#modal-withdrawal").css("display") === "none") {
         $("#modal-withdrawal").removeAttr("style");
     }
@@ -595,7 +594,6 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         return false;
     }
 
-    console.log('toTransfer:'+toTransfer);
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");

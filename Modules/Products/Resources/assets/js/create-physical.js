@@ -11,13 +11,11 @@ $(document).ready(function () {
     function verify() {
         let ver = true;
         if ($.trim($("#name").val()) === "") {
-            console.log("error", "O campo Nome é obrigatório");
             alertCustom("error", "O campo Nome é obrigatório");
             ver = false;
             $("#name").focus();
         }
         if ($.trim($("#description").val()) === "") {
-            console.log("error", "O campo Descrição é obrigatório");
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
             $("#description").focus();

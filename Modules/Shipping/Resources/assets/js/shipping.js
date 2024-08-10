@@ -451,7 +451,6 @@ $(document).ready(function () {
         }
         if ($(".shipping-regions-edit").is(":checked") == false) {
             $(".shipping-value").val(0);
-            console.log($(".regions_values").val());
         }
 
         let formData = new FormData(document.querySelector("#modal-edit-shipping #form-update-shipping"));
