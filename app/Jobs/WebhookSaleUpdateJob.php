@@ -64,11 +64,15 @@ class WebhookSaleUpdateJob implements ShouldQueue
                 return;
             }
 
-            $webhook = Webhook::where("company_id", $companyId)->first();
+            $webhooks = Webhook::where("company_id", $companyId)
+                ->whereNull("deleted_at")
+                ->get();
 
             if (!empty($webhook)) {
-                $service = new WebhookService($webhook);
-                $service->saleStatusUpdate($this->sale);
+                foreach ($webhooks as $webhook) {
+                    $service = new WebhookService($webhook);
+                    $service->saleStatusUpdate($this->sale);
+                }
             }
         } catch (Exception $e) {
             report($e);
