@@ -57,8 +57,6 @@ class CheckCompany extends Command
 
         $companies->chunk(100, function ($companies) use ($companyService, $bar) {
             foreach ($companies as $company) {
-                $bar->advance();
-
                 try {
                     $cleanDocument = foxutils()->onlyNumbers($company->document);
                     if (strlen($cleanDocument) == 14) {
@@ -66,13 +64,13 @@ class CheckCompany extends Command
 
                         if ($getCompany) {
                             if (
+                                isset($getCompany["message"]) &&
                                 !strtolower(foxutils()->removeAccents($getCompany["message"])) ==
-                                "cnpj $cleanDocument invalido"
+                                    "cnpj $cleanDocument invalido"
                             ) {
                                 $message = "returnSearch: " . json_encode($getCompany);
                                 $this->warn($message);
-                                report(new Exception($message));
-                                continue;
+                                throw new Exception($message);
                             }
 
                             $situation = isset($getCompany["situacaoCadastral"])
@@ -102,8 +100,11 @@ class CheckCompany extends Command
                         ]);
                     }
                 } catch (Exception $e) {
+                    report($e);
                     $this->error("Error: " . $e->getMessage());
                 }
+
+                $bar->advance();
             }
         });
 
