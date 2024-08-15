@@ -88,7 +88,7 @@ class CheckCompany extends Command
                                 ]);
                             }
                         }
-                        sleep(21);
+                        sleep(1);
                     } else {
                         $situation = $companyService->getSituation("invalido ");
                         $company->update([
