@@ -86,7 +86,7 @@ class CheckCompany extends Command
                             $getCompany['situacao'] = 'invalido';
                         }
 
-                        $situation = $companyService->getSituation($getCompany['situacao']);
+                        $situation = $companyService->getSituation($getCompany['descricao_situacao_cadastral']);
 
                         if($situation) {
 
@@ -95,6 +95,7 @@ class CheckCompany extends Command
                                     'situation' => $situation['situation'],
                                     'situation_enum' => $situation['situation_enum'],
                                     'date_check_situation' => Carbon::now()->format("Y-m-d H:i:s"),
+                                    "company_data" => $requestData,
                                 ]
                             ]);
                         }

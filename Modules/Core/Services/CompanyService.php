@@ -198,20 +198,47 @@ class CompanyService
     public function getCompanyByApiCNPJ($cnpj)
     {
         try {
-            $cnpj = foxutils()->onlyNumbers($cnpj);
+            $token = false;
+
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://www.receitaws.com.br/v1/cnpj/" . $cnpj);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_URL, "https://gateway.apiserpro.serpro.gov.br/token");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Authorization: Basic " . env('SERPRO')
+            ));
+
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
+
             $response = curl_exec($ch);
-            $err = curl_error($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if ($err) return false;
+            $token = json_decode($response, true);
 
-            return json_decode($response, true);
+            if (empty($token["access_token"])) {
+                return false;
+            }
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://gateway.apiserpro.serpro.gov.br/consulta-cnpj-df/v2/empresa/" . $cnpj);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Authorization: Bearer ". $token["access_token"]
+            ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $data = json_decode($response, true);
+
+            return $data;
         } catch (Exception $e) {
             return false;
         }
