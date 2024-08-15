@@ -41,25 +41,25 @@ class CheckCompany extends Command
      */
     public function handle()
     {
-        try {
-            $companyService = new CompanyService();
+        $companyService = new CompanyService();
 
-            $subThreeDays = Carbon::now()
-                ->subDays(5)
-                ->format("Y-m-d");
+        $subThreeDays = Carbon::now()
+            ->subDays(5)
+            ->format("Y-m-d");
 
-            $companies = Company::where("company_type", Company::JURIDICAL_PERSON)
-                ->where("situation->situation_enum", 1)
-                ->where("situation->date_check_situation", "<", $subThreeDays);
+        $companies = Company::where("company_type", Company::JURIDICAL_PERSON)
+            ->where("situation->situation_enum", 1)
+            ->where("situation->date_check_situation", "<", $subThreeDays);
 
-            $total = $companies->count();
-            $bar = $this->output->createProgressBar($total);
-            $bar->start();
+        $total = $companies->count();
+        $bar = $this->output->createProgressBar($total);
+        $bar->start();
 
-            $companies->chunk(100, function ($companies) use ($companyService, $bar) {
-                foreach ($companies as $company) {
-                    $bar->advance();
+        $companies->chunk(100, function ($companies) use ($companyService, $bar) {
+            foreach ($companies as $company) {
+                $bar->advance();
 
+                try {
                     $cleanDocument = foxutils()->onlyNumbers($company->document);
                     if (strlen($cleanDocument) == 14) {
                         $getCompany = $companyService->getCompanyByApiCNPJ($company->document);
@@ -101,12 +101,12 @@ class CheckCompany extends Command
                             ],
                         ]);
                     }
+                } catch (Exception $e) {
+                    $this->error("Error: " . $e->getMessage());
                 }
-            });
+            }
+        });
 
-            $bar->finish();
-        } catch (Exception $e) {
-            report($e);
-        }
+        $bar->finish();
     }
 }
