@@ -249,7 +249,16 @@ class CompanyService
         $situation = strtolower(foxutils()->removeAccents(trim($companySituation)));
         $situationArray = [];
         switch ($situation) {
+            case 'nula':
+            case '1':
+                $situationArray = [
+                    'situation' => 'invalid',
+                    'situation_enum' => 5
+                ];
+                break;
+
             case 'ativa':
+            case '2':
                 $situationArray = [
                     'situation' => 'active',
                     'situation_enum' => 1
@@ -257,18 +266,21 @@ class CompanyService
                 break;
 
             case 'suspensa':
+            case '3':
                 $situationArray = [
                     'situation' => 'suspended',
                     'situation_enum' => 2
                 ];
                 break;
             case 'inapta':
+            case '4':
                 $situationArray = [
                     'situation' => 'unfit',
                     'situation_enum' => 3
                 ];
                 break;
             case 'baixada':
+            case '5':
                 $situationArray = [
                     'situation' => 'downloaded',
                     'situation_enum' => 4
@@ -282,7 +294,10 @@ class CompanyService
                 break;
 
             default:
-                # code...'
+                $situationArray = [
+                    'situation' => 'invalid',
+                    'situation_enum' => 5
+                ];
                 break;
         }
 
