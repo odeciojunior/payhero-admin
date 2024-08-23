@@ -28,7 +28,7 @@ use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-final class WithdrawalsApiController
+class WithdrawalsApiController
 {
     public function index(Request $request)
     {
