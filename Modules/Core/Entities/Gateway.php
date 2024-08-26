@@ -11,6 +11,7 @@ use Modules\Core\Presenters\GatewayPresenter;
 use Modules\Core\Services\Gateways\AbmexService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\MalgaService;
+use Modules\Core\Services\Gateways\PayupService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\VegaService;
@@ -62,11 +63,14 @@ class Gateway extends Model
     public const SIMPAY_PRODUCTION_ID = 13;
     public const SIMPAY_SANDBOX_ID = 14;
 
-    public const MALGA_PRODUCTION_ID = 19;
-    public const MALGA_SANDBOX_ID = 20;
-
     public const EFIPAY_PRODUCTION_ID = 15;
     public const EFIPAY_SANDBOX_ID = 16;
+
+    public const PAYUP_PRODUCTION_ID = 17;
+    public const PAYUP_SANDBOX_ID = 18;
+
+    public const MALGA_PRODUCTION_ID = 19;
+    public const MALGA_SANDBOX_ID = 20;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -131,6 +135,10 @@ class Gateway extends Model
             case self::SIMPAY_PRODUCTION_ID:
             case self::SIMPAY_SANDBOX_ID:
                 return new SimPayService();
+
+            case self::PAYUP_PRODUCTION_ID:
+            case self::PAYUP_SANDBOX_ID:
+                return new PayupService();
 
             case self::MALGA_PRODUCTION_ID:
             case self::MALGA_SANDBOX_ID:
