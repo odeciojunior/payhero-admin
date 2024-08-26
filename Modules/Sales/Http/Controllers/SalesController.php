@@ -49,6 +49,7 @@ class SalesController extends Controller
                     Gateway::IUGU_PRODUCTION_ID,
                     Gateway::ABMEX_PRODUCTION_ID,
                     Gateway::SIMPAY_PRODUCTION_ID,
+                    Gateway::PAYUP_PRODUCTION_ID,
                     Gateway::MALGA_PRODUCTION_ID,
                 ]
                 : [
@@ -56,6 +57,7 @@ class SalesController extends Controller
                     Gateway::IUGU_SANDBOX_ID,
                     Gateway::ABMEX_SANDBOX_ID,
                     Gateway::SIMPAY_SANDBOX_ID,
+                    Gateway::PAYUP_SANDBOX_ID,
                     Gateway::MALGA_SANDBOX_ID,
                 ];
 
