@@ -26,7 +26,7 @@
             <h1 class="big"> Desculpe, não foi possível carregar esta página!</h1>
             <p style="font-size:16px">Estamos com alguma instabilidade, mas não se procupe os demais serviços estão funcionando!</p>
             <p style="font-size:16px">Suas venda continuam processando normalmente, seu Admin Dashboard retornará em alguns minutos.</p>
-            <a href="{{ route('home') }}"
+            <a href="{{ route('/') }}"
                class="btn orange">Voltar para a página inicial</a>
         </div>
 
