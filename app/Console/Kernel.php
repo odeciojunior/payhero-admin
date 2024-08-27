@@ -258,6 +258,11 @@ class Kernel extends ConsoleKernel
             ->onOneServer();
 
         $schedule
+            ->command("check:payup:chargbacks")
+            ->dailyAt("23:00")
+            ->onOneServer();
+
+        $schedule
             ->command("check:company")
             ->saturdays()
             ->at("05:00")

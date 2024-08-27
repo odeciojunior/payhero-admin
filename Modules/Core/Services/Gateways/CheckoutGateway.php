@@ -1,8 +1,6 @@
 <?php namespace Modules\Core\Services\Gateways;
 
 use DB;
-use Exception;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\FoxUtils;
 
 class CheckoutGateway extends GatewayAbstract
@@ -194,6 +192,14 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function checkPayupChargebacks()
+    {
+        $options = new GatewayCurlOptions([
+            "endpoint" => "checkPayupChargebacks",
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl)
     {
         $this->baseUrl = $newUrl;
@@ -274,6 +280,10 @@ class CheckoutGateway extends GatewayAbstract
             ],
             "processPostbackPaylab" => [
                 "route" => "postback/process/paylab",
+                "method" => "POST",
+            ],
+            "checkPayupChargebacks" => [
+                "route" => "check-payup-chargebacks",
                 "method" => "POST",
             ],
         ];
