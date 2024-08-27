@@ -23,6 +23,9 @@ return new class extends Migration {
                         "client_id" => "",
                         "api_key" => "",
                         "merchant_id" => "",
+                        "seller_id" => "",
+                        "zoop_marketplace_id" => "",
+                        "zoop_api_key" => "",
                     ]),
                 ),
                 "production_flag" => 1,
@@ -35,9 +38,12 @@ return new class extends Migration {
                         "client_id" => "",
                         "api_key" => "",
                         "merchant_id" => "",
+                        "seller_id" => "",
+                        "zoop_marketplace_id" => "",
+                        "zoop_api_key" => "",
                     ]),
                 ),
-                "production_flag" => 1,
+                "production_flag" => 0,
             ],
         ];
 
