@@ -20,7 +20,6 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use PHPHtmlParser\Dom;
 use stdClass;
-use function Sentry\captureMessage;
 
 /**
  * Class CloudFlareService
@@ -652,7 +651,7 @@ class CloudFlareService
                 $dom->load($data);
                 $metas = $dom->find("meta");
 
-                captureMessage("Metas: " . json_encode($metas));
+                report(new Exception("Metas: " . json_encode($metas)));
 
                 foreach ($metas as $meta) {
                     if ($meta->getAttribute("name") == $metaName && $meta->getAttribute("content") == $metaContent) {
