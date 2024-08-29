@@ -661,6 +661,7 @@ class CloudFlareService
 
                 return false;
             } else {
+                report(new Exception("Response: " . json_encode($response)));
                 return false;
             }
         } catch (Exception $e) {
