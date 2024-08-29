@@ -664,6 +664,7 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
+            report($e);
             return false;
         }
     }
