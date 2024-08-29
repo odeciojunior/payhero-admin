@@ -20,6 +20,7 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use PHPHtmlParser\Dom;
 use stdClass;
+use function Sentry\captureMessage;
 
 /**
  * Class CloudFlareService
@@ -236,7 +237,7 @@ class CloudFlareService
         string $content,
         int $ttl = 0,
         bool $proxied = true,
-        $priority = "0"
+        $priority = "0",
     ) {
         $options = [
             "type" => $type,
@@ -434,7 +435,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -457,7 +458,7 @@ class CloudFlareService
                     $responseDns->host,
                     $responseDns->data,
                     0,
-                    false
+                    false,
                 );
                 $this->getDomainRecordModel()->create([
                     "domain_id" => $domainModelId,
@@ -579,7 +580,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -603,7 +604,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -650,6 +651,8 @@ class CloudFlareService
                 $dom = new Dom();
                 $dom->load($data);
                 $metas = $dom->find("meta");
+
+                captureMessage("Metas: " . json_encode($metas));
 
                 foreach ($metas as $meta) {
                     if ($meta->getAttribute("name") == $metaName && $meta->getAttribute("content") == $metaContent) {
