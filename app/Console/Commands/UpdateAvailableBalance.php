@@ -8,6 +8,7 @@ use Modules\Core\Services\Gateways\AbmexService;
 use Modules\Core\Services\Gateways\EfipayService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\SimPayService;
+use Modules\Core\Services\Gateways\ArmPayService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -30,6 +31,7 @@ class UpdateAvailableBalance extends Command
         AbmexService::class,
         SimPayService::class,
         EfipayService::class,
+        ArmpayService::class,
         //Safe2PayService::class,
         // AsaasService::class,
         // GerencianetService::class,
