@@ -98,11 +98,11 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->onOneServer();
 
-        //        $schedule
-        //            ->command("malga:create-seller-account")
-        //            ->everyTenMinutes()
-        //            ->withoutOverlapping()
-        //            ->onOneServer();
+        $schedule
+            ->command("malga:create-seller-account")
+            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->onOneServer();
 
         $schedule
             ->command("demo:create-fake-withdrawal")
@@ -255,6 +255,11 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("check:menv-tracking")
             ->dailyAt("20:45")
+            ->onOneServer();
+
+        $schedule
+            ->command("check:payup:chargbacks")
+            ->dailyAt("23:00")
             ->onOneServer();
 
         $schedule

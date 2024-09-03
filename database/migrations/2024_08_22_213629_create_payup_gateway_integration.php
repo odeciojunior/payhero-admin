@@ -16,31 +16,21 @@ return new class extends Migration {
     {
         $gateways = [
             [
-                "id" => 19,
-                "name" => "malga_production",
+                "id" => 17,
+                "name" => "payup_production",
                 "json_config" => FoxUtils::xorEncrypt(
                     json_encode([
-                        "client_id" => "",
                         "api_key" => "",
-                        "merchant_id" => "",
-                        "seller_id" => "",
-                        "zoop_marketplace_id" => "",
-                        "zoop_api_key" => "",
                     ]),
                 ),
                 "production_flag" => 1,
             ],
             [
-                "id" => 20,
-                "name" => "malga_sandbox",
+                "id" => 18,
+                "name" => "payup_sandbox",
                 "json_config" => FoxUtils::xorEncrypt(
                     json_encode([
-                        "client_id" => "",
                         "api_key" => "",
-                        "merchant_id" => "",
-                        "seller_id" => "",
-                        "zoop_marketplace_id" => "",
-                        "zoop_api_key" => "",
                     ]),
                 ),
                 "production_flag" => 0,
@@ -50,7 +40,7 @@ return new class extends Migration {
         foreach ($gateways as $gateway) {
             DB::table("gateways")->insert([
                 "id" => $gateway["id"],
-                "gateway_enum" => 9,
+                "gateway_enum" => 10,
                 "name" => $gateway["name"],
                 "json_config" => $gateway["json_config"],
                 "production_flag" => $gateway["production_flag"],
@@ -62,7 +52,6 @@ return new class extends Migration {
         }
 
         $flags = [
-            ["slug" => "card", "name" => "Card", "card_flag_enum" => 1],
             ["slug" => "visa", "name" => "Visa", "card_flag_enum" => 2],
             ["slug" => "mastercard", "name" => "Master Card", "card_flag_enum" => 13],
             ["slug" => "elo", "name" => "Elo", "card_flag_enum" => 4],
@@ -73,7 +62,7 @@ return new class extends Migration {
         foreach ($flags as $flag) {
             foreach ($gateways as $gateway) {
                 $gatewayFlag = GatewayFlag::create([
-                    "gateway_id" => $flag["slug"] === "card" ? null : $gateway["id"],
+                    "gateway_id" => $gateway["id"],
                     "slug" => $flag["slug"],
                     "name" => $flag["name"],
                     "card_flag_enum" => $flag["card_flag_enum"],
@@ -104,104 +93,90 @@ return new class extends Migration {
                 $query
                     ->select("id")
                     ->from("gateway_flags")
-                    ->whereIn("gateway_id", [19, 20]);
+                    ->whereIn("gateway_id", [17, 18]);
             })
             ->delete();
 
         DB::table("gateway_flags")
-            ->whereIn("gateway_id", [19, 20])
+            ->whereIn("gateway_id", [17, 18])
             ->delete();
         DB::table("gateways")
-            ->whereIn("id", [19, 20])
+            ->whereIn("id", [17, 18])
             ->delete();
     }
 
     private function getInstallmentsTax($slug)
     {
         $taxes = [
-            "card" => [
-                1 => 3.03,
-                2 => 3.68,
-                3 => 3.68,
-                4 => 3.68,
-                5 => 3.68,
-                6 => 3.68,
-                7 => 3.93,
-                8 => 3.93,
-                9 => 3.93,
-                10 => 3.93,
-                11 => 3.93,
-                12 => 3.93,
+            "visa" => [
+                1 => 4.68,
+                2 => 6.58,
+                3 => 7.64,
+                4 => 8.72,
+                5 => 9.78,
+                6 => 10.85,
+                7 => 13.26,
+                8 => 14.31,
+                9 => 15.37,
+                10 => 16.44,
+                11 => 17.49,
+                12 => 18.55,
             ],
             "mastercard" => [
-                1 => 3.03,
-                2 => 3.68,
-                3 => 3.68,
-                4 => 3.68,
-                5 => 3.68,
-                6 => 3.68,
-                7 => 3.93,
-                8 => 3.93,
-                9 => 3.93,
-                10 => 3.93,
-                11 => 3.93,
-                12 => 3.93,
-            ],
-            "visa" => [
-                1 => 3.12,
-                2 => 3.34,
-                3 => 3.34,
-                4 => 3.34,
-                5 => 3.34,
-                6 => 3.34,
-                7 => 3.68,
-                8 => 3.68,
-                9 => 3.68,
-                10 => 3.68,
-                11 => 3.68,
-                12 => 3.68,
+                1 => 4.65,
+                2 => 6.8,
+                3 => 7.87,
+                4 => 8.93,
+                5 => 10.0,
+                6 => 11.06,
+                7 => 13.23,
+                8 => 14.29,
+                9 => 15.34,
+                10 => 16.41,
+                11 => 17.47,
+                12 => 18.52,
             ],
             "elo" => [
-                1 => 3.56,
-                2 => 3.81,
-                3 => 3.81,
-                4 => 3.81,
-                5 => 3.81,
-                6 => 3.81,
-                7 => 4.16,
-                8 => 4.16,
-                9 => 4.16,
-                10 => 4.16,
-                11 => 4.16,
-                12 => 4.16,
-            ],
-            "amex" => [
-                1 => 3.56,
-                2 => 3.82,
-                3 => 3.82,
-                4 => 3.82,
-                5 => 3.82,
-                6 => 3.82,
-                7 => 3.97,
-                8 => 3.97,
-                9 => 3.97,
-                10 => 3.97,
-                11 => 3.97,
-                12 => 3.97,
+                1 => 6.03,
+                2 => 8.15,
+                3 => 9.19,
+                4 => 10.25,
+                5 => 11.3,
+                6 => 12.35,
+                7 => 14.74,
+                8 => 15.78,
+                9 => 16.83,
+                10 => 17.87,
+                11 => 18.91,
+                12 => 19.95,
             ],
             "hipercard" => [
-                1 => 3.03,
-                2 => 3.68,
-                3 => 3.68,
-                4 => 3.68,
-                5 => 3.68,
-                6 => 3.68,
-                7 => 3.93,
-                8 => 3.93,
-                9 => 3.93,
-                10 => 3.93,
-                11 => 3.93,
-                12 => 3.93,
+                1 => 5.19,
+                2 => 7.67,
+                3 => 8.73,
+                4 => 9.78,
+                5 => 10.84,
+                6 => 11.89,
+                7 => 14.19,
+                8 => 15.23,
+                9 => 16.28,
+                10 => 17.33,
+                11 => 18.38,
+                12 => 19.42,
+            ],
+            "amex" => [
+                1 => 6.0,
+                2 => 7.84,
+                3 => 8.9,
+                4 => 9.95,
+                5 => 11.01,
+                6 => 12.07,
+                7 => 14.22,
+                8 => 15.26,
+                9 => 16.31,
+                10 => 17.36,
+                11 => 18.4,
+                12 => 19.45,
             ],
         ];
 

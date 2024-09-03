@@ -194,7 +194,7 @@ abstract class GatewayServicesAbstract
                     "gateway_id" => $this->getGatewayId(),
                 ];
 
-                // $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
 
                 $withdrawal = Withdrawal::create($data);
             } else {
@@ -203,9 +203,9 @@ abstract class GatewayServicesAbstract
                     "value" => $withdrawalValueSum,
                 ];
 
-                // if ($withdrawal->transfer_type != $this->companyBankAccount->transfer_type) {
-                //     $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
-                // }
+                if ($withdrawal->transfer_type != $this->companyBankAccount->transfer_type) {
+                    $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                }
 
                 $withdrawal->update($data);
             }
@@ -248,7 +248,7 @@ abstract class GatewayServicesAbstract
         try {
             DB::beginTransaction();
 
-            $transactions = Transaction::with(["company", "user" , "sales"])
+            $transactions = Transaction::with(["company", "user", "sales"])
                 ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
@@ -275,19 +275,37 @@ abstract class GatewayServicesAbstract
                     $reserveDays = $user->security_reserve_days;
                     $security_reserve_tax = $user->security_reserve_tax;
                 } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax));
-                    $reserveDays = ($user->security_reserve_days_pix ? $user->security_reserve_days_pix : $user->security_reserve_days);
-                    $security_reserve_tax = ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax);
+                    $reserveValue = ceil(
+                        ($transaction->value / 100) *
+                            ($user->security_reserve_tax_pix
+                                ? $user->security_reserve_tax_pix
+                                : $user->security_reserve_tax)
+                    );
+                    $reserveDays = $user->security_reserve_days_pix
+                        ? $user->security_reserve_days_pix
+                        : $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax_pix
+                        ? $user->security_reserve_tax_pix
+                        : $user->security_reserve_tax;
                 } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax));
-                    $reserveDays = ($user->security_reserve_days_billet ? $user->security_reserve_days_billet : $user->security_reserve_days);
-                    $security_reserve_tax = ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax);
+                    $reserveValue = ceil(
+                        ($transaction->value / 100) *
+                            ($user->security_reserve_tax_billet
+                                ? $user->security_reserve_tax_billet
+                                : $user->security_reserve_tax)
+                    );
+                    $reserveDays = $user->security_reserve_days_billet
+                        ? $user->security_reserve_days_billet
+                        : $user->security_reserve_days;
+                    $security_reserve_tax = $user->security_reserve_tax_billet
+                        ? $user->security_reserve_tax_billet
+                        : $user->security_reserve_tax;
                 } else {
                     $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
                     $security_reserve_tax = $user->security_reserve_tax;
                 }
-                
+
                 $transferValue = $transaction->value - $reserveValue;
 
                 $company->update([

@@ -35,10 +35,12 @@ class MalgaCreateSellerAccount extends Command
         $gatewayId = foxutils()->isProduction() ? Gateway::MALGA_PRODUCTION_ID : Gateway::MALGA_SANDBOX_ID;
         $bankAccountsQuery = DB::table("company_bank_accounts as cba")
             ->select("cba.company_id")
+            ->join("companies as c", "cba.company_id", "=", "c.id")
             ->leftJoin("gateways_companies_credentials as gcc", function (JoinClause $join) use ($gatewayId) {
                 $join->on("cba.company_id", "=", "gcc.company_id")->where("gcc.gateway_id", $gatewayId);
             })
             ->whereNull("gcc.company_id")
+            ->whereNotNull(DB::raw("json_extract(c.situation, '$.company_data')"))
             ->where("cba.transfer_type", "TED")
             ->where("cba.status", "VERIFIED")
             ->orderBy("cba.company_id");

@@ -236,7 +236,7 @@ class CloudFlareService
         string $content,
         int $ttl = 0,
         bool $proxied = true,
-        $priority = "0"
+        $priority = "0",
     ) {
         $options = [
             "type" => $type,
@@ -434,7 +434,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -457,7 +457,7 @@ class CloudFlareService
                     $responseDns->host,
                     $responseDns->data,
                     0,
-                    false
+                    false,
                 );
                 $this->getDomainRecordModel()->create([
                     "domain_id" => $domainModelId,
@@ -579,7 +579,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -603,7 +603,7 @@ class CloudFlareService
                         $responseDns->host,
                         $responseDns->data,
                         0,
-                        false
+                        false,
                     );
                     $this->getDomainRecordModel()->create([
                         "domain_id" => $domainModelId,
@@ -651,6 +651,8 @@ class CloudFlareService
                 $dom->load($data);
                 $metas = $dom->find("meta");
 
+                report(new Exception("Metas: " . json_encode($metas)));
+
                 foreach ($metas as $meta) {
                     if ($meta->getAttribute("name") == $metaName && $meta->getAttribute("content") == $metaContent) {
                         return true;
@@ -659,9 +661,11 @@ class CloudFlareService
 
                 return false;
             } else {
+                report(new Exception("Response: " . json_encode($response)));
                 return false;
             }
         } catch (Exception $e) {
+            report($e);
             return false;
         }
     }
