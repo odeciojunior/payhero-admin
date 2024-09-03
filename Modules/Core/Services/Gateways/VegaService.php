@@ -22,6 +22,8 @@ class VegaService extends GatewayServicesAbstract
             Gateway::PAYUP_SANDBOX_ID,
             Gateway::MALGA_PRODUCTION_ID,
             Gateway::MALGA_SANDBOX_ID,
+            Gateway::ARMPAY_PRODUCTION_ID,
+            Gateway::ARMPAY_SANDBOX_ID,
             Gateway::VEGA_PRODUCTION_ID,
             Gateway::VEGA_SANDBOX_ID,
         ];

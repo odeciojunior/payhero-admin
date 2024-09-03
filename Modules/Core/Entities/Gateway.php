@@ -14,6 +14,7 @@ use Modules\Core\Services\Gateways\MalgaService;
 use Modules\Core\Services\Gateways\PayupService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
+use Modules\Core\Services\Gateways\ArmPayService;
 use Modules\Core\Services\Gateways\VegaService;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -71,6 +72,9 @@ class Gateway extends Model
 
     public const MALGA_PRODUCTION_ID = 19;
     public const MALGA_SANDBOX_ID = 20;
+
+    public const ARMPAY_PRODUCTION_ID = 21;
+    public const ARMPAY_SANDBOX_ID = 22;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -143,6 +147,10 @@ class Gateway extends Model
             case self::MALGA_PRODUCTION_ID:
             case self::MALGA_SANDBOX_ID:
                 return new MalgaService();
+
+            case self::ARMPAY_PRODUCTION_ID:
+            case self::ARMPAY_SANDBOX_ID:
+                return new ArmPayService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:
