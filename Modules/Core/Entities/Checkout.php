@@ -38,6 +38,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property string $src
  * @property boolean $is_mobile
  * @property string $referer
+ * @property string $original_url
+ * @property string $pixel_data
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $utm_source
@@ -118,6 +120,8 @@ class Checkout extends Model
         "sms_sent_amount",
         "client_name",
         "referer",
+        "original_url",
+        "pixel_data",
         "client_telephone",
         "template_type",
         "created_at",
