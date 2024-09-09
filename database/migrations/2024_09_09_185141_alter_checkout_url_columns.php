@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -14,15 +15,35 @@ return new class extends Migration
     public function up()
     {
         Schema::table('checkouts', function (Blueprint $table) {
-            // Modificando os campos para TEXT
-            $table->text('referer')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('utm_source')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('utm_medium')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('utm_campaign')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('utm_term')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('utm_content')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('src')->collation('utf8mb4_unicode_ci')->change();
-            $table->text('original_url')->collation('utf8mb4_unicode_ci')->change();
+            // Verificar se os índices existem antes de tentar removê-los
+            $indexes = DB::select(DB::raw('SHOW INDEXES FROM checkouts'));
+
+            $indexNames = array_column($indexes, 'Key_name');
+
+            if (in_array('checkouts_src_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_src_IDX');
+            }
+            if (in_array('checkouts_referer_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_referer_IDX');
+            }
+            if (in_array('checkouts_original_url_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_original_url_IDX');
+            }
+            if (in_array('checkouts_utm_source_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_utm_source_IDX');
+            }
+            if (in_array('checkouts_utm_medium_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_utm_medium_IDX');
+            }
+            if (in_array('checkouts_utm_campaign_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_utm_campaign_IDX');
+            }
+            if (in_array('checkouts_utm_term_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_utm_term_IDX');
+            }
+            if (in_array('checkouts_utm_content_IDX', $indexNames)) {
+                $table->dropIndex('checkouts_utm_content_IDX');
+            }
         });
     }
 
@@ -34,15 +55,15 @@ return new class extends Migration
     public function down()
     {
         Schema::table('checkouts', function (Blueprint $table) {
-            // Revertendo os campos para VARCHAR(255)
-            $table->string('referer', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('utm_source', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('utm_medium', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('utm_campaign', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('utm_term', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('utm_content', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('src', 255)->collation('utf8mb4_unicode_ci')->change();
-            $table->string('original_url', 255)->collation('utf8mb4_unicode_ci')->change();
+            // Recriar os índices removidos
+            $table->index('src', 'checkouts_src_IDX');
+            $table->index('referer', 'checkouts_referer_IDX');
+            $table->index('original_url', 'checkouts_original_url_IDX');
+            $table->index('utm_source', 'checkouts_utm_source_IDX');
+            $table->index('utm_medium', 'checkouts_utm_medium_IDX');
+            $table->index('utm_campaign', 'checkouts_utm_campaign_IDX');
+            $table->index('utm_term', 'checkouts_utm_term_IDX');
+            $table->index('utm_content', 'checkouts_utm_content_IDX');
         });
     }
 };
