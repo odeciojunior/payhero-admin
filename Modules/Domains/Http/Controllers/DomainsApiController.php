@@ -5,7 +5,7 @@ namespace Modules\Domains\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\Response as ResponseStatusCode;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -45,7 +45,7 @@ class DomainsApiController extends Controller
                 ->tap(function (Activity $activity) use ($projectId) {
                     $activity->log_name = "visualization";
                 })
-                ->log("Visualizou tela todos os domínios para o projeto: " . $project->name);
+                ->log("Visualizou tela todos os domínios para o projeto: ".$project->name);
 
             if (!Gate::allows("index", [$project])) {
                 return response()->json(["message" => "Sem permissão para visualizar os domínios"], 400);
@@ -103,7 +103,7 @@ class DomainsApiController extends Controller
             $requestData["name"] = str_replace("http://", "", $requestData["name"]);
             $requestData["name"] = str_replace("https://", "", $requestData["name"]);
             $requestData["name"] = str_replace("www.", "", $requestData["name"]);
-            $requestData["name"] = "http://" . $requestData["name"];
+            $requestData["name"] = "http://".$requestData["name"];
             $requestData["name"] = parse_url($requestData["name"], PHP_URL_HOST);
 
             if (Domain::where("name", $requestData["name"])->count() > 0) {
@@ -354,9 +354,9 @@ class DomainsApiController extends Controller
                     $activity->log_name = "visualization";
                     $activity->subject_id = $domain->id;
                 })
-                ->log("Verificação domínio: " . $domain->name);
+                ->log("Verificação domínio: ".$domain->name);
 
-            if (!$cloudFlareService->checkHtmlMetadata("https://checkout." . $domain->name, "checkout-azcend", "1")) {
+            if (!$cloudFlareService->checkHtmlMetadata("https://checkout.".$domain->name, "checkout-azcend", "1")) {
                 $domain->update(["status" => Domain::STATUS_PENDING]);
 
                 return response()->json(
@@ -402,7 +402,8 @@ class DomainsApiController extends Controller
                 );
 
                 if ($integrationTemplate["failed"]) {
-                    return response()->json(["message" => $integrationTemplate["message"]], Response::HTTP_BAD_REQUEST);
+                    return response()->json(["message" => $integrationTemplate["message"]],
+                        ResponseStatusCode::HTTP_BAD_REQUEST);
                 }
 
                 return response()->json(["message" => "Domínio validado com sucesso"], 200);
@@ -440,64 +441,66 @@ class DomainsApiController extends Controller
             activity()
                 ->on($domainModel)
                 ->tap(function (Activity $activity) use ($domain) {
-                    $activity->log_name = "visualization";
+                    $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($domain));
                 })
-                ->log("Visualizou tela verificação domínio: " . $domain);
+                ->log(sprintf('Visualizou tela verificação domínio: %s', $domain));
 
-            if (!empty($domain)) {
-                $cloudFlareService = new CloudFlareService();
-
-                $domain = $domainModel
-                    ->with(["project"])
-                    ->where("id", current(Hashids::decode($domain)))
-                    ->first();
-
-                if (Gate::allows("edit", [$domain->project])) {
-                    $newNameServers = [];
-                    $domainHost = " ";
-                    foreach ($cloudFlareService->getZones() as $zone) {
-                        if ($zone->name == $domain->name) {
-                            foreach ($zone->name_servers as $new_name_server) {
-                                $newNameServers[] = $new_name_server;
-                            }
-                            if ($zone->original_registrar != "") {
-                                $domainHost = "(" . $zone->original_registrar . ")";
-                            }
-                        }
-                    }
-
-                    return response()->json(
-                        [
-                            "message" => "Dados do dominio",
-                            "data" => [
-                                "id_code" => Hashids::encode($domain->id),
-                                "zones" => $newNameServers,
-                                "domainHost" => $domainHost,
-                                "status" => $domain->status,
-                            ],
-                        ],
-                        200,
-                    );
-                } else {
-                    return response()->json(["message" => "Sem permissão para visualizar o domínio"], 400);
-                }
-            } else {
+            if (is_null($domain)) {
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, dominio nao encontrado",
+                        'message' => 'Ocorreu um erro, domínio nao encontrado',
                     ],
-                    400,
+                    ResponseStatusCode::HTTP_NOT_FOUND,
                 );
             }
+
+            $cloudFlareService = new CloudFlareService();
+
+            $domain = $domainModel
+                ->with(["project"])
+                ->where("id", current(Hashids::decode($domain)))
+                ->first();
+
+            if (!Gate::allows("edit", [$domain->project])) {
+                return response()
+                    ->json([
+                        "message" => "Sem permissão para visualizar o domínio"
+                    ], ResponseStatusCode::HTTP_BAD_REQUEST,);
+            }
+
+            $newNameServers = [];
+            $domainHost = " ";
+            foreach ($cloudFlareService->getZones() as $zone) {
+                if ($zone->name === $domain->name) {
+                    foreach ($zone->name_servers as $new_name_server) {
+                        $newNameServers[] = $new_name_server;
+                    }
+                    if ($zone->original_registrar !== "") {
+                        $domainHost = "(".$zone->original_registrar.")";
+                    }
+                }
+            }
+
+            return response()->json(
+                [
+                    "message" => "Dados do domínio",
+                    "data" => [
+                        "id_code" => Hashids::encode($domain->id),
+                        "zones" => $newNameServers,
+                        "domainHost" => $domainHost,
+                        "status" => $domain->status,
+                    ],
+                ],
+            );
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
 
             return response()->json(
                 [
-                    "message" => $message,
+                    'message' => $message,
                 ],
-                400,
+                ResponseStatusCode::HTTP_BAD_REQUEST,
             );
         }
     }
