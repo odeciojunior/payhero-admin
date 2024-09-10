@@ -13,13 +13,13 @@ use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Response;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use PHPHtmlParser\Dom;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 /**
  * Class CloudFlareService
@@ -122,7 +122,7 @@ class CloudFlareService
     }
 
     /**
-     * @param string $domain
+     * @param  string  $domain
      * @return $this
      * @throws EndpointException
      */
@@ -141,7 +141,7 @@ class CloudFlareService
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @return mixed
      */
     public function getZones(string $name = "")
@@ -152,7 +152,7 @@ class CloudFlareService
     }
 
     /**
-     * @param string $zone
+     * @param  string  $zone
      * @return bool|stdClass
      */
     public function addZone(string $zone)
@@ -165,14 +165,14 @@ class CloudFlareService
     }
 
     /**
-     * @param string $domain
+     * @param  string  $domain
      * @return bool
      */
     public function deleteZone(string $domain)
     {
         try {
             $zoneID = $this->zones->getZoneID($domain);
-            $user = $this->adapter->delete("zones/" . $zoneID);
+            $user = $this->adapter->delete("zones/".$zoneID);
 
             $body = json_decode($user->getBody());
 
@@ -187,13 +187,13 @@ class CloudFlareService
     }
 
     /**
-     * @param string $zoneId
+     * @param  string  $zoneId
      * @return bool
      */
     public function deleteZoneById(string $zoneId)
     {
         try {
-            $user = $this->adapter->delete("zones/" . $zoneId);
+            $user = $this->adapter->delete("zones/".$zoneId);
 
             $body = json_decode($user->getBody());
 
@@ -208,7 +208,7 @@ class CloudFlareService
     }
 
     /**
-     * @param string|null $domain
+     * @param  string|null  $domain
      * @return mixed
      * @throws EndpointException
      */
@@ -222,12 +222,12 @@ class CloudFlareService
     }
 
     /**
-     * @param string $type | A, CNAME, AAAA
-     * @param string $name | dominio, subdominio
-     * @param string $content | IP, dominio
-     * @param int $ttl
-     * @param bool $proxied
-     * @param string $priority
+     * @param  string  $type  | A, CNAME, AAAA
+     * @param  string  $name  | dominio, subdominio
+     * @param  string  $content  | IP, dominio
+     * @param  int  $ttl
+     * @param  bool  $proxied
+     * @param  string  $priority
      * @return array
      */
     public function addRecord(
@@ -263,7 +263,7 @@ class CloudFlareService
             $options["data"] = $data;
         }
 
-        $user = $this->adapter->post("zones/" . $this->zoneID . "/dns_records", $options);
+        $user = $this->adapter->post("zones/".$this->zoneID."/dns_records", $options);
 
         $this->body = json_decode($user->getBody());
 
@@ -275,9 +275,9 @@ class CloudFlareService
     }
 
     /**
-     * @param string $zoneID
-     * @param string $recordID
-     * @param array $details
+     * @param  string  $zoneID
+     * @param  string  $recordID
+     * @param  array  $details
      * @return mixed|object
      */
     public function updateRecordDetails(string $zoneID, string $recordID, array $details)
@@ -287,7 +287,7 @@ class CloudFlareService
                 return false;
             }
 
-            $response = $this->adapter->put("zones/" . $zoneID . "/dns_records/" . $recordID, $details);
+            $response = $this->adapter->put("zones/".$zoneID."/dns_records/".$recordID, $details);
 
             return json_decode($response->getBody())->success;
         } catch (Exception $e) {
@@ -300,20 +300,20 @@ class CloudFlareService
     }
 
     /**
-     * @param string $recordId
+     * @param  string  $recordId
      * @return bool
      */
     public function deleteRecord(string $recordId)
     {
         try {
-            $this->adapter->delete("zones/" . $this->zoneID . "/dns_records/" . $recordId);
+            $this->adapter->delete("zones/".$this->zoneID."/dns_records/".$recordId);
         } catch (Exception $e) {
             report($e);
         }
     }
 
     /**
-     * @param string $domain
+     * @param  string  $domain
      * @return bool
      */
     public function activationCheck(string $domain)
@@ -625,53 +625,43 @@ class CloudFlareService
         }
     }
 
-    /**
-     * @param $url
-     * @param $metaName
-     * @param $metaContent
-     * @return bool
-     * @throws GuzzleException
-     */
-    public function checkHtmlMetadata($url, $metaName, $metaContent)
+    public function checkHtmlMetadata($url, $metaName, $metaContent): bool
     {
         try {
             $client = new Client([
-                "base_uri" => $url,
-                "timeout" => 0,
-                "connect_timeout" => 0,
-                //'headers'  => $headers,
-                "Accept" => "application/json",
+                'base_uri' => $url,
+                'timeout' => 0,
+                'connect_timeout' => 0,
+                'Accept' => 'application/json',
             ]);
 
             $response = $client->request("get", "/");
 
-            if ($response->getStatusCode() == Response::HTTP_OK) {
+            if ($response->getStatusCode() === ResponseAlias::HTTP_OK) {
                 $data = $response->getBody()->getContents();
                 $dom = new Dom();
                 $dom->load($data);
                 $metas = $dom->find("meta");
 
-                report(new Exception("Metas: " . json_encode($metas)));
-
                 foreach ($metas as $meta) {
-                    if ($meta->getAttribute("name") == $metaName && $meta->getAttribute("content") == $metaContent) {
+                    if ($meta->getAttribute("name") === $metaName && $meta->getAttribute("content") === $metaContent) {
                         return true;
                     }
                 }
 
                 return false;
-            } else {
-                report(new Exception("Response: " . json_encode($response)));
-                return false;
             }
-        } catch (Exception $e) {
+
+            return false;
+        } catch (Throwable $e) {
             report($e);
+
             return false;
         }
     }
 
     /**
-     * @param string $domain
+     * @param  string  $domain
      * @return array|false|string
      */
     public function getSSLSetting(string $domain)
@@ -696,8 +686,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string $value
-     * @param string|null $domain
+     * @param  string  $value
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function setSSLSetting(string $value, string $domain = null)
@@ -722,8 +712,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string $value
-     * @param string|null $domain
+     * @param  string  $value
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function setHTTPSRedirectSetting(string $value, string $domain = null)
@@ -748,8 +738,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string $value
-     * @param string|null $domain
+     * @param  string  $value
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function setHTTPSRewritesSetting(string $value, string $domain = null)
@@ -774,7 +764,7 @@ class CloudFlareService
     }
 
     /**
-     * @param string|null $domain
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function enableTLS13(string $domain = null)
@@ -799,8 +789,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string $value
-     * @param string|null $domain
+     * @param  string  $value
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function setOpportunisticEncryptionSetting(string $value, string $domain = null)
@@ -825,8 +815,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string $value
-     * @param string|null $domain
+     * @param  string  $value
+     * @param  string|null  $domain
      * @return array|bool
      */
     public function setOnionRoutingSetting(string $value, string $domain = null)
@@ -851,8 +841,8 @@ class CloudFlareService
     }
 
     /**
-     * @param string|null $domain
-     * @param array $options
+     * @param  string|null  $domain
+     * @param  array  $options
      * @return bool
      */
     public function setCloudFlareConfig(string $domain = null, array $options = [])
@@ -952,7 +942,7 @@ class CloudFlareService
         if (!in_array($level, ["off", "essentially_off", "low", "medium", "high", "under_attack"])) {
             return false;
         }
-        $return = $this->adapter->patch("zones/" . $zoneId . "/settings/security_level", [
+        $return = $this->adapter->patch("zones/".$zoneId."/settings/security_level", [
             "value" => $level,
         ]);
 
