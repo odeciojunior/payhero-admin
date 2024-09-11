@@ -13,6 +13,7 @@ use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Contracts\Foundation\Application;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
@@ -630,32 +631,37 @@ class CloudFlareService
         try {
             $client = new Client([
                 'base_uri' => $url,
-                'timeout' => 0,
-                'connect_timeout' => 0,
+                'timeout' => 10,
+                'connect_timeout' => 10,
                 'Accept' => 'application/json',
             ]);
 
             $response = $client->request("get", "/");
 
-            if ($response->getStatusCode() === ResponseAlias::HTTP_OK) {
-                $data = $response->getBody()->getContents();
-                $dom = new Dom();
-                $dom->load($data);
-                $metas = $dom->find("meta");
-
-                foreach ($metas as $meta) {
-                    if ($meta->getAttribute("name") === $metaName && $meta->getAttribute("content") === $metaContent) {
-                        return true;
-                    }
-                }
-
+            if ($response->getStatusCode() !== ResponseAlias::HTTP_OK) {
                 return false;
+            }
+
+            $data = $response->getBody()->getContents();
+            $dom = new Dom();
+            $dom->load($data);
+            $metas = $dom->find("meta");
+
+            foreach ($metas as $meta) {
+                if ($meta->getAttribute("name") === $metaName &&
+                    $meta->getAttribute("content") === $metaContent
+                ) {
+                    return true;
+                }
             }
 
             return false;
         } catch (Throwable $e) {
-            report($e);
+            if ($e instanceof ConnectException) {
+                return false;
+            }
 
+            report($e);
             return false;
         }
     }
