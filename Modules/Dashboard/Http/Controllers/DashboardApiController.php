@@ -34,6 +34,7 @@ use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
 use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 
 class DashboardApiController extends Controller
@@ -271,12 +272,12 @@ class DashboardApiController extends Controller
             }
 
             $companyId = current(Hashids::decode($companyHash));
-            $company = Company::find($companyId);
-            $user = $company->user;
-
-            if (empty($company)) {
+            $company = Company::query()->find($companyId);
+            if (is_null($company)) {
                 return [];
             }
+
+            $user = $company->user;
 
             return [
                 "level" => $user->level,
@@ -287,7 +288,7 @@ class DashboardApiController extends Controller
                     $user->attendance_score > 1 ? round($user->attendance_score, 1) : $user->attendance_score,
                 "tracking_score" => $user->tracking_score > 1 ? round($user->tracking_score, 1) : $user->tracking_score,
             ];
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             report($e);
 
             return [];
@@ -618,7 +619,7 @@ class DashboardApiController extends Controller
             $notfication = DashboardNotification::firstOrCreate([
                 "user_id" => $user->id,
                 "subject_id" => 1,
-                "subject_type" => DashboardApiController::class . "/verifyPixOnboarding",
+                "subject_type" => DashboardApiController::class."/verifyPixOnboarding",
             ]);
 
             if (!empty($notfication->read_at)) {
@@ -637,7 +638,7 @@ class DashboardApiController extends Controller
                     ->addMinute()
                     ->unix()
             );
-            $urlAuth = env("ACCOUNT_FRONT_URL") . "/redirect/" . $userId . "/" . (string) $expiration;
+            $urlAuth = env("ACCOUNT_FRONT_URL")."/redirect/".$userId."/".(string) $expiration;
 
             return \response()->json(
                 [
@@ -795,7 +796,7 @@ class DashboardApiController extends Controller
 
             report($exception);
             return \response()->json(
-                ["message" => "Ocorreu um erro => " . $exception->getMessage()],
+                ["message" => "Ocorreu um erro => ".$exception->getMessage()],
                 Response::HTTP_BAD_REQUEST
             );
         }

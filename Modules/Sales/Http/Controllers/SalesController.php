@@ -51,6 +51,7 @@ class SalesController extends Controller
                     Gateway::SIMPAY_PRODUCTION_ID,
                     Gateway::PAYUP_PRODUCTION_ID,
                     Gateway::MALGA_PRODUCTION_ID,
+                    Gateway::ARMPAY_PRODUCTION_ID,
                 ]
                 : [
                     Gateway::SAFE2PAY_SANDBOX_ID,
@@ -59,6 +60,7 @@ class SalesController extends Controller
                     Gateway::SIMPAY_SANDBOX_ID,
                     Gateway::PAYUP_SANDBOX_ID,
                     Gateway::MALGA_SANDBOX_ID,
+                    Gateway::ARMPAY_SANDBOX_ID,
                 ];
 
             $transaction = Transaction::with(["sale", "company"])

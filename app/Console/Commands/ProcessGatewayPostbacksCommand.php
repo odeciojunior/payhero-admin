@@ -30,6 +30,7 @@ class ProcessGatewayPostbacksCommand extends Command
             $this->processPostbackIugu();
             $this->processPostbackAbmex();
             $this->processPostbackSimPay();
+            $this->processPostbackArmPay();
         } catch (Exception $e) {
             report($e);
         }
@@ -158,6 +159,27 @@ class ProcessGatewayPostbacksCommand extends Command
                 ->toArray();
 
             $url = getenv("CHECKOUT_URL") . "/api/postback/process/simpay";
+
+            foreach ($postbacks as $postback) {
+                $this->runCurl($url, "POST", ["postback_id" => hashids_encode($postback["id"])]);
+            }
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    private function processPostbackArmPay()
+    {
+        try {
+            $postbacks = GatewayPostback::select("id")
+                ->where("processed_flag", false)
+                ->where("gateway_id", 13)
+                ->orderBy("id", "asc")
+                ->limit(150)
+                ->get()
+                ->toArray();
+
+            $url = getenv("CHECKOUT_URL") . "/api/postback/process/armpay";
 
             foreach ($postbacks as $postback) {
                 $this->runCurl($url, "POST", ["postback_id" => hashids_encode($postback["id"])]);
