@@ -274,39 +274,24 @@ abstract class GatewayServicesAbstract
                 $reserveValue = 0;
 
                 if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
-                    $security_reserve_tax = $user->security_reserve_tax;
+                    $security_reserve_tax = (float) $user->security_reserve_tax;
                     $hasSecurityReserve = true;
                 } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
-                    if ($user->security_reserve_tax_pix && $user->security_reserve_tax_pix>0) {
-                        $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_pix);
+                    if ($user->security_reserve_tax_pix && (float) $user->security_reserve_tax_pix > 0) {
+                        $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax_pix);
                         $reserveDays = $user->security_reserve_days_pix;
-                        $security_reserve_tax = $user->security_reserve_tax_pix;
-                        $hasSecurityReserve = true;
-                    } else {
-                        $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
-                        $reserveDays = $user->security_reserve_days;
-                        $security_reserve_tax = $user->security_reserve_tax;
+                        $security_reserve_tax = (float) $user->security_reserve_tax_pix;
                         $hasSecurityReserve = true;
                     }
                 } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
-                    if ($user->security_reserve_tax_billet && $user->security_reserve_tax_billet>0) {
-                        $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax_billet);
+                    if ($user->security_reserve_tax_billet && (float) $user->security_reserve_tax_billet>0) {
+                        $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax_billet);
                         $reserveDays = $user->security_reserve_days_billet;
-                        $security_reserve_tax = $user->security_reserve_tax_billet;
-                        $hasSecurityReserve = true;
-                    } else {
-                        $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
-                        $reserveDays = $user->security_reserve_days;
-                        $security_reserve_tax = $user->security_reserve_tax;
+                        $security_reserve_tax = (float) $user->security_reserve_tax_billet;
                         $hasSecurityReserve = true;
                     }
-                } else {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
-                    $reserveDays = $user->security_reserve_days;
-                    $security_reserve_tax = $user->security_reserve_tax;
-                    $hasSecurityReserve = true;
                 }
                 
                 $transferValue = $transaction->value - $reserveValue;
