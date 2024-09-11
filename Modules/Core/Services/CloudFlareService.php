@@ -14,6 +14,7 @@ use Cloudflare\API\Endpoints\Zones;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Foundation\Application;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
@@ -657,7 +658,7 @@ class CloudFlareService
 
             return false;
         } catch (Throwable $e) {
-            if ($e instanceof ConnectException) {
+            if ($e instanceof ConnectException || $e instanceof RequestException) {
                 return false;
             }
 
