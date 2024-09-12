@@ -270,22 +270,28 @@ abstract class GatewayServicesAbstract
                 $user = $transaction->user;
                 $sale = $transaction->sale;
 
+                $hasSecurityReserve = false;
+                $reserveValue = 0;
+
                 if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
+                    $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax);
                     $reserveDays = $user->security_reserve_days;
-                    $security_reserve_tax = $user->security_reserve_tax;
+                    $security_reserve_tax = (float) $user->security_reserve_tax;
+                    $hasSecurityReserve = true;
                 } elseif ($sale->payment_method == Sale::PIX_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax));
-                    $reserveDays = ($user->security_reserve_days_pix ? $user->security_reserve_days_pix : $user->security_reserve_days);
-                    $security_reserve_tax = ($user->security_reserve_tax_pix ? $user->security_reserve_tax_pix : $user->security_reserve_tax);
+                    if ($user->security_reserve_tax_pix && (float) $user->security_reserve_tax_pix > 0) {
+                        $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax_pix);
+                        $reserveDays = $user->security_reserve_days_pix;
+                        $security_reserve_tax = (float) $user->security_reserve_tax_pix;
+                        $hasSecurityReserve = true;
+                    }
                 } elseif ($sale->payment_method == Sale::BILLET_PAYMENT) {
-                    $reserveValue = ceil(($transaction->value / 100) * ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax));
-                    $reserveDays = ($user->security_reserve_days_billet ? $user->security_reserve_days_billet : $user->security_reserve_days);
-                    $security_reserve_tax = ($user->security_reserve_tax_billet ? $user->security_reserve_tax_billet : $user->security_reserve_tax);
-                } else {
-                    $reserveValue = ceil(($transaction->value / 100) * $user->security_reserve_tax);
-                    $reserveDays = $user->security_reserve_days;
-                    $security_reserve_tax = $user->security_reserve_tax;
+                    if ($user->security_reserve_tax_billet && (float) $user->security_reserve_tax_billet>0) {
+                        $reserveValue = ceil(($transaction->value / 100) * (float) $user->security_reserve_tax_billet);
+                        $reserveDays = $user->security_reserve_days_billet;
+                        $security_reserve_tax = (float) $user->security_reserve_tax_billet;
+                        $hasSecurityReserve = true;
+                    }
                 }
                 
                 $transferValue = $transaction->value - $reserveValue;
@@ -304,19 +310,21 @@ abstract class GatewayServicesAbstract
                     "gateway_id" => $this->getGatewayId(),
                 ]);
 
-                SecurityReserve::create([
-                    "company_id" => $company->id,
-                    "sale_id" => $transaction->sale_id,
-                    "transaction_id" => $transaction->id,
-                    "transfer_id" => $transfer->id,
-                    "user_id" => $transaction->user_id,
-                    "tax" => $security_reserve_tax,
-                    "value" => $reserveValue,
-                    "release_date" => Carbon::now()
-                        ->addDays($reserveDays)
-                        ->format("Y-m-d"),
-                    "status" => SecurityReserve::STATUS_PENDING,
-                ]);
+                if ($hasSecurityReserve) {
+                    SecurityReserve::create([
+                        "company_id" => $company->id,
+                        "sale_id" => $transaction->sale_id,
+                        "transaction_id" => $transaction->id,
+                        "transfer_id" => $transfer->id,
+                        "user_id" => $transaction->user_id,
+                        "tax" => $security_reserve_tax,
+                        "value" => $reserveValue,
+                        "release_date" => Carbon::now()
+                            ->addDays($reserveDays)
+                            ->format("Y-m-d"),
+                        "status" => SecurityReserve::STATUS_PENDING,
+                    ]);
+                }
             }
 
             DB::commit();

@@ -38,6 +38,6 @@ class WithdrawalService
         return Withdrawal::where("company_id", $companyId)
             ->where("gateway_id", $gatewayId)
             ->whereDate("created_at", now())
-            ->count() < 5;
+            ->count() < 10;
     }
 }
