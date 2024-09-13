@@ -194,7 +194,15 @@ abstract class GatewayServicesAbstract
                     "gateway_id" => $this->getGatewayId(),
                 ];
 
-                $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                if (!empty($this->companyBankAccount)) {
+                    $data = array_merge($data, $this->setBankAccountArray($this->companyBankAccount));
+                } else {
+                    $data = array_merge($data, [
+                        "transfer_type" => "PIX",
+                        "type_key_pix" => $this->company->company_type == Company::JURIDICAL_PERSON ? "CNPJ" : "CPF",
+                        "key_pix" => $this->company->document,
+                    ]);
+                }
 
                 $withdrawal = Withdrawal::create($data);
             } else {

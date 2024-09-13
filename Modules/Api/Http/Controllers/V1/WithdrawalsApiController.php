@@ -89,9 +89,9 @@ class WithdrawalsApiController extends Controller
                 return response()->json(["message" => "Valor para saque inválido"], 400);
             }
 
-            // if (!$gatewayService->existsBankAccountApproved()) {
-            //     return response()->json(["message" => "Cadastre um meio de recebimento para solicitar saques"], 400);
-            // }
+            if (!$gatewayService->existsBankAccountApproved()) {
+                return response()->json(["message" => "Cadastre um meio de recebimento para solicitar saques"], 400);
+            }
 
             $response = $gatewayService->createWithdrawal($withdrawalValue);
 
