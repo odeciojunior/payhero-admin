@@ -2328,7 +2328,7 @@ function getCompaniesAndProjects(removeLoadingFunction = null) {
                                 itemSelected +
                                 " " +
                                 itemDisabled +
-                                ">" +
+                                '  title="'+companies[i].name+'">' +
                                 companyName +
                                 "</option>"
                         );
