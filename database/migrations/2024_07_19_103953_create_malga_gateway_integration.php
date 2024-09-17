@@ -14,19 +14,21 @@ return new class extends Migration {
      */
     public function up()
     {
+        $json_config_null = [
+            "client_id" => "",
+            "api_key" => "",
+            "merchant_id" => "",
+            "seller_id" => "",
+            "zoop_marketplace_id" => "",
+            "zoop_api_key" => "",
+        ];
+
         $gateways = [
             [
                 "id" => 19,
                 "name" => "malga_production",
                 "json_config" => FoxUtils::xorEncrypt(
-                    json_encode([
-                        "client_id" => "",
-                        "api_key" => "",
-                        "merchant_id" => "",
-                        "seller_id" => "",
-                        "zoop_marketplace_id" => "",
-                        "zoop_api_key" => "",
-                    ]),
+                    json_encode($json_config_null),
                 ),
                 "production_flag" => 1,
             ],
@@ -34,14 +36,7 @@ return new class extends Migration {
                 "id" => 20,
                 "name" => "malga_sandbox",
                 "json_config" => FoxUtils::xorEncrypt(
-                    json_encode([
-                        "client_id" => "",
-                        "api_key" => "",
-                        "merchant_id" => "",
-                        "seller_id" => "",
-                        "zoop_marketplace_id" => "",
-                        "zoop_api_key" => "",
-                    ]),
+                    json_encode($json_config_null),
                 ),
                 "production_flag" => 0,
             ],
@@ -52,7 +47,7 @@ return new class extends Migration {
                 "id" => $gateway["id"],
                 "gateway_enum" => 9,
                 "name" => $gateway["name"],
-                "json_config" => $gateway["json_config"],
+                "json_config" => $gateway["json_config"] ?? '',
                 "production_flag" => $gateway["production_flag"],
                 "enabled_flag" => 1,
                 "deleted_at" => null,

@@ -42,7 +42,7 @@ return new class extends Migration {
                 "id" => $gateway["id"],
                 "gateway_enum" => 10,
                 "name" => $gateway["name"],
-                "json_config" => $gateway["json_config"],
+                "json_config" => $gateway["json_config"] ?? '',
                 "production_flag" => $gateway["production_flag"],
                 "enabled_flag" => 1,
                 "deleted_at" => null,
