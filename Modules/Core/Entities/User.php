@@ -19,6 +19,7 @@ use Modules\Core\Presenters\UserPresenter;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Collection as SupportCollection;
 
@@ -374,7 +375,7 @@ class User extends Authenticable
     }
 
     /**
-     * @param string $token
+     * @param  string  $token
      */
     public function sendPasswordResetNotification($token)
     {
@@ -474,7 +475,20 @@ class User extends Authenticable
             $this->removeRole($role);
         }
 
+        $this->load('roles');
+
         return $this->assignRole($newRoles);
+    }
+
+    public function removeRole($role)
+    {
+        $this->roles()->detach($this->getStoredRole($role));
+
+        if (is_a($this, get_class($this->getPermissionClass()))) {
+            $this->forgetCachedPermissions();
+        }
+
+        return $this;
     }
 
     public function getGuardAllPermissions($guard = "web")
@@ -493,10 +507,22 @@ class User extends Authenticable
         foreach ($permissions as $permission) {
             $this->revokePermissionTo($permission);
         }
+        $this->load('permissions');
 
         foreach ($newPermissions as $permissions) {
             $this->givePermissionTo($permissions);
         }
         return true;
+    }
+
+    protected function revokePermissionTo($permission): static
+    {
+        $this->permissions()->detach($this->getStoredPermission($permission));
+
+        if (is_a($this, get_class(app(PermissionRegistrar::class)->getRoleClass()))) {
+            $this->forgetCachedPermissions();
+        }
+
+        return $this;
     }
 }
