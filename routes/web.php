@@ -1,25 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Entities\DiscountCoupon;
-use Modules\Core\Entities\Project;
-use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-//Route::post('/guard/broadcast/auth', function(\Illuminate\Support\Facades\Request $req) {
-//    return true;
-//})->middleware('broadcast')->name('broadcast.auth');
-
-Route::get("/", "\App\Http\Controllers\Auth\LoginController@showLoginForm");
+Route::get("/", [LoginController::class, 'showLoginForm'])
+    ->name('login-form');
 
 Route::get("/up", function () {
     return "System is up";
