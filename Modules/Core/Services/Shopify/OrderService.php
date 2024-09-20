@@ -3,8 +3,12 @@
 namespace Modules\Core\Services\Shopify;
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Log;
 use stdClass;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class OrderService
 {
@@ -64,14 +68,24 @@ class OrderService
     /**
      * @throws Exception
      */
-    public function find(int $orderId): stdClass
+    public function find(int $orderId): ?stdClass
     {
         try {
             $response = $this->client->getClient()->get("orders/$orderId.json");
-            $content = json_decode($response->getBody()->getContents());
-            return $content->order;
-        } catch (GuzzleException $e) {
-            throw new Exception("Error retrieving order: " . $e->getMessage());
+            return json_decode(
+                $response->getBody()->getContents(),
+                false,
+                512,
+                JSON_THROW_ON_ERROR
+            )->order;
+        } catch (Throwable $t) {
+            if ($t instanceof ClientException && $t->getCode() === Response::HTTP_FORBIDDEN) {
+                Log::alert($t->getMessage());
+
+                return null;
+            }
+
+            throw new Exception("Error retrieving order: ".$t->getMessage());
         }
     }
 
