@@ -90,3 +90,5 @@ result_migrations
 *ngrok
 
 .vscode
+
+.phpunit.result.cache
