@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
             ->onOneServer();
         $schedule
             ->command("available-balance:update")
-            ->everyTenMinutes()            
+            ->everyMinute()            
             ->withoutOverlapping()
             ->onOneServer();
         $schedule
