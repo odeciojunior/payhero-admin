@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $ip Ip com comprador
  * @property string|null $url Url de origem da compra
  * @property string|null $referer Referer de origem da compra
+ * @property string|null $return_url Url de retorno da compra
  * @property string|null $customer_name Nome do comprador
  * @property string|null $customer_email Email do comprador
  * @property string|null $customer_phone Telefone do comprador
@@ -93,6 +94,7 @@ class SaleInformation extends Model
         "ip",
         "url",
         "referer",
+        "return_url",
         "customer_name",
         "customer_email",
         "customer_phone",
