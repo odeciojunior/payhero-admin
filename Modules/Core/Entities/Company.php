@@ -169,6 +169,8 @@ class Company extends Model
         "installment_tax",
         "checkout_tax",
         "credit_card_release_money_days",
+        "credit_card_release_time",
+        "credit_card_release_on_weekends",
         "bank_slip_release_money_days",
         "pix_release_money_days",
         "document_issue_date",
