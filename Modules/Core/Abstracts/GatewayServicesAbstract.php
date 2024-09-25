@@ -268,13 +268,20 @@ abstract class GatewayServicesAbstract
 
             $columnBalanceName = $this->companyColumnBalance;
 
+            $currentTime = Carbon::now()->format("H:i:s");
+
             foreach ($transactions->cursor() as $transaction) {
+
+                $company = $transaction->company;
+                if(!empty($company->credit_card_time) && $currentTime < $company->credit_card_time){
+                    continue;
+                }
+                
                 $transaction->update([
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-
-                $company = $transaction->company;
+                
                 $user = $transaction->user;
                 $sale = $transaction->sale;
 
