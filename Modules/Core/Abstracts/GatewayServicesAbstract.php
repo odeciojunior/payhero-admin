@@ -289,7 +289,6 @@ abstract class GatewayServicesAbstract
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-
                 $user = $transaction->user;
                 $sale = $transaction->sale;
 
