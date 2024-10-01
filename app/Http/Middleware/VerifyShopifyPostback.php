@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Entities\Project;
 use Closure;
-use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
 class VerifyShopifyPostback
@@ -15,7 +14,7 @@ class VerifyShopifyPostback
      * @param $myShopifyToken
      * @return bool
      */
-    function verify_webhook($data, $hmac_header, $myShopifyToken)
+    public function verify_webhook($data, $hmac_header, $myShopifyToken)
     {
         $calculated_hmac = base64_encode(hash_hmac("sha256", $data, $myShopifyToken, true));
 

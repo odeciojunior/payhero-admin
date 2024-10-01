@@ -43,19 +43,18 @@ class AbandonedCartCheckout extends Command
     {
         Config::set('database.default', 'demo');
 
-        $checkouts = DB::table('checkouts as c')->select('c.id')->where('c.status_enum',Checkout::STATUS_ACCESSED)
-        ->leftJoin('sales as s','c.id','=','s.checkout_id')
-        ->whereNull('s.id')->where('c.created_at','<=',Carbon::now()->subDay())
+        $checkouts = DB::table('checkouts as c')->select('c.id')->where('c.status_enum', Checkout::STATUS_ACCESSED)
+        ->leftJoin('sales as s', 'c.id', '=', 's.checkout_id')
+        ->whereNull('s.id')->where('c.created_at', '<=', Carbon::now()->subDay())
         ->get();
-        
-        foreach ($checkouts as $checkout)
-        {                        
+
+        foreach ($checkouts as $checkout) {
             Checkout::find($checkout->id)->update([
-                'status'=>'abandoned cart',
-                'status_enum'=>Checkout::STATUS_ABANDONED_CART
+                'status' => 'abandoned cart',
+                'status_enum' => Checkout::STATUS_ABANDONED_CART
             ]);
-            
+
             $this->line('Atualizando checkout '.$checkout->id);
-        }  
+        }
     }
 }

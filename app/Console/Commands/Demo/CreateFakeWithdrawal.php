@@ -51,15 +51,14 @@ class CreateFakeWithdrawal extends Command
 
         $gatewayService->setCompany(Company::find(Company::DEMO_ID));
         $balance =  $gatewayService->getAvailableBalance();
-        
-        if($balance>0){
-            $gatewayService->existsBankAccountApproved();
-            $withdrawal = $gatewayService->createWithdrawal(mt_rand(5000,round($balance/2)));
 
-            if(!empty($withdrawal))
-            {
+        if ($balance > 0) {
+            $gatewayService->existsBankAccountApproved();
+            $withdrawal = $gatewayService->createWithdrawal(mt_rand(5000, round($balance / 2)));
+
+            if (!empty($withdrawal)) {
                 $withdrawal->update([
-                    'status'=>Withdrawal::STATUS_TRANSFERRED
+                    'status' => Withdrawal::STATUS_TRANSFERRED
                 ]);
 
                 Transfer::create(

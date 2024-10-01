@@ -33,7 +33,7 @@ use Modules\Core\Transformers\CompaniesSelectResource;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-final class CoreApiController extends Controller
+class CoreApiController extends Controller
 {
     public function verifyAccount($id)
     {

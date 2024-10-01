@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Dotenv\Dotenv;
 use Illuminate\Support\Facades\File;
 
 class EasyInstall extends Command

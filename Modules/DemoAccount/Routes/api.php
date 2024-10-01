@@ -106,9 +106,6 @@ Route::group(
             Route::get("/affiliates/{id}", "AffiliatesApiDemoController@show");
             Route::get("/affiliates/{id}/edit", "AffiliatesApiDemoController@edit");
 
-            Route::get("/affiliatelinks", "AffiliateLinksApiDemoController@index");
-            Route::get("/affiliatelinks/{id}", "AffiliateLinksApiDemoController@show");
-            Route::get("/affiliatelinks/{id}/edit", "AffiliateLinksApiDemoController@edit");
         });
 
         //Apps
@@ -482,11 +479,6 @@ Route::group(
                 "uses" => "WooCommerceApiDemoController@keysGet",
                 "as" => "woocommerce.keys.get",
             ]);
-        });
-
-        Route::group([], function () {
-            Route::get("webhooks", "WebhooksApiDemoController@index");
-            Route::get("webhooks/{id}", "WebhooksApiDemo@show");
         });
 
         Route::group([], function () {

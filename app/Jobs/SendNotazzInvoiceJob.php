@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -10,7 +9,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Services\NotazzService;
 
 /**
@@ -19,7 +17,10 @@ use Modules\Core\Services\NotazzService;
  */
 class SendNotazzInvoiceJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
     private $notazzInvoiceId;
 
     /**

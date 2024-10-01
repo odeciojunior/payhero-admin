@@ -44,7 +44,7 @@ class ShippingApiController extends Controller
                     ->tap(function (Activity $activity) {
                         $activity->log_name = "visualization";
                     })
-                    ->log("Visualizou tela todos os fretes do projeto " . $project->name);
+                    ->log("Visualizou tela todos os fretes do projeto ".$project->name);
 
                 if (Gate::allows("edit", [$project])) {
                     $shippings = $shippingModel->where("project_id", $project->id);
@@ -80,7 +80,7 @@ class ShippingApiController extends Controller
     }
 
     /**
-     * @param ShippingStoreRequest $request
+     * @param  ShippingStoreRequest  $request
      * @param $projectId
      * @return JsonResponse
      */
@@ -207,7 +207,7 @@ class ShippingApiController extends Controller
                         $activity->log_name = "visualization";
                         $activity->subject_id = current(Hashids::decode($id));
                     })
-                    ->log("Visualizou tela detalhes do frete " . $shipping->name);
+                    ->log("Visualizou tela detalhes do frete ".$shipping->name);
 
                 if (Gate::allows("edit", [$project])) {
                     if ($shipping) {
@@ -240,37 +240,35 @@ class ShippingApiController extends Controller
     public function edit($projectId, $id)
     {
         try {
-            if (isset($projectId) && isset($id)) {
-                $shippingModel = new Shipping();
-                $projectModel = new Project();
-
-                $shipping = $shippingModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
-
-                activity()
-                    ->on($projectModel)
-                    ->tap(function (Activity $activity) use ($shipping) {
-                        $activity->log_name = "visualization";
-                        $activity->subject_id = $shipping->id;
-                    })
-                    ->log("Visualizou tela editar configuração do frete " . $shipping->name);
-
-                if (Gate::allows("edit", [$project])) {
-                    if ($shipping) {
-                        $shipping->makeHidden(["id", "project_id", "campaing_id"])->unsetRelation("project");
-
-                        return response()->json(ShippingResource::make($shipping), 200);
-                    } else {
-                        return response()->json(["message" => "Erro ao tentar editar o frete!"], 400);
-                    }
-                } else {
-                    return response()->json(["message" => "Sem permissão para editar este frete"], 403);
-                }
+            if (!isset($projectId, $id)) {
+                return response()->json(["message" => "Erro ao tentar editar frete!"], 400);
             }
 
-            return response()->json(["message" => "Erro ao tentar editar frete!"], 400);
+            $shippingModel = new Shipping();
+
+            $shipping = $shippingModel->newQuery()->find(current(Hashids::decode($id)));
+            if (!$shipping) {
+                return response()->json(["message" => "Erro ao tentar editar o frete!"], 400);
+            }
+
+            $projectModel = new Project();
+            $project = $projectModel->newQuery()->find(current(Hashids::decode($projectId)));
+            if (!Gate::allows("edit", [$project])) {
+                return response()->json(["message" => "Sem permissão para editar este frete"], 403);
+            }
+
+            activity()
+                ->on($projectModel)
+                ->tap(function (Activity $activity) use ($shipping) {
+                    $activity->log_name = "visualization";
+                    $activity->subject_id = $shipping->id;
+                })
+                ->log("Visualizou tela editar configuração do frete ".$shipping->name);
+
+            $shipping->makeHidden(["id", "project_id", "campaing_id"])->unsetRelation("project");
+
+            return response()->json(ShippingResource::make($shipping));
         } catch (Exception $e) {
-            Log::warning("Erro ao tentar acessar pagina editar frete (ShippingController - edit)");
             report($e);
 
             return response()->json(["message" => "Erro ao tentar editar frete!"], 400);

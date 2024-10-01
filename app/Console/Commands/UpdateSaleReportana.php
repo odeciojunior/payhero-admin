@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Presenters\ReportanaIntegrationPresenter;
 use Modules\Core\Services\ReportanaService;
 

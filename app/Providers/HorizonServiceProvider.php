@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
-use Modules\Core\Entities\User;
-use Illuminate\Support\Facades\Session;
 
 class HorizonServiceProvider extends HorizonApplicationServiceProvider
 {
@@ -15,11 +16,11 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
 
-        if (request()->has("horizon_access") && request("horizon_access") == "VHIkkugCPtxZge7cVGOYtoFwhvMA3z") {
+        if (request()->has("horizon_access") && "VHIkkugCPtxZge7cVGOYtoFwhvMA3z" === request("horizon_access")) {
             Session::put("horizon_access", "true");
         }
 
@@ -36,7 +37,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      *
      * @return void
      */
-    protected function gate()
+    protected function gate(): void
     {
         Gate::define("viewHorizon", function ($user = null) {
             return Session::has("horizon_access");

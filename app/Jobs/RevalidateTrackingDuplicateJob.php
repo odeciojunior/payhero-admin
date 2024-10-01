@@ -11,7 +11,10 @@ use Modules\Core\Services\TrackingService;
 
 class RevalidateTrackingDuplicateJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private string $trackingCode;
 

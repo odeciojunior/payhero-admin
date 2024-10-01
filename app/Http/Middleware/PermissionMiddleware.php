@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Exceptions\UnauthorizedException;
+use Closure;
 
 class PermissionMiddleware
 {

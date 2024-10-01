@@ -16,7 +16,10 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ImportShopifyTrackingCodesJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Project $project;
     private ShopifyService $shopifyService;

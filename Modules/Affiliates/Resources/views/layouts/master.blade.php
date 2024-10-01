@@ -46,14 +46,6 @@
           href="{{ mix('build/layouts/affiliates/master.min.css') }}">
     @stack('css')
 
-    @if (env('APP_ENV', 'production') == 'production')
-        <script src="{{ mix('build/layouts/master/sentry-bundle.min.js') }}"></script>
-        <script>
-            Sentry.init({
-                        dsn: {{ getenv('SENTRY_LARAVEL_DSN') }});
-        </script>
-    @endif
-
     <script src="{{ mix('build/layouts/affiliates/master2.min.js') }}"></script>
     <script>
         Breakpoints();
@@ -67,18 +59,20 @@
 </head>
 
 <body>
-    {{-- loading --}}
-    <div id='loadingOnScreen'
-         style='height:100%; width:100%; position:absolute'>
-    </div>
-    @yield('content')
+{{-- loading --}}
+<div id='loadingOnScreen'
+     style='height:100%; width:100%; position:absolute'>
+</div>
+@yield('content')
 
-    <!-- JS -->
-    <script src="{{ mix('build/layouts/affiliates/master.min.js') }}"></script>
-    <script>
-        verifyDocumentPending();
-    </script>
-    @stack('scripts')
+<x-sentry />
+
+<!-- JS -->
+<script src="{{ mix('build/layouts/affiliates/master.min.js') }}"></script>
+<script>
+    verifyDocumentPending();
+</script>
+@stack('scripts')
 
 </body>
 

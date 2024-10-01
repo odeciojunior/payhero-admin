@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -11,7 +13,7 @@ class VerifyFrozenAccountWeb
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -20,8 +22,8 @@ class VerifyFrozenAccountWeb
             return $next($request);
         }
         if (
-            (auth()->user()->status ?? null) == User::STATUS_ACCOUNT_FROZEN &&
-            $this->inExceptArray($request) == false
+            (auth()->user()->status ?? null) === User::STATUS_ACCOUNT_FROZEN &&
+            false === $this->inExceptArray($request)
         ) {
             return response()
                 ->redirectTo("/dashboard")
@@ -56,7 +58,7 @@ class VerifyFrozenAccountWeb
         ];
 
         foreach ($excepts as $except) {
-            if ($except !== "/") {
+            if ("/" !== $except) {
                 $except = trim($except, "/");
             }
 

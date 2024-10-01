@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -84,9 +86,9 @@ class LoginController extends Controller
                 ->withErrors(["accountErrors" => "Nome de usuário ou senha é inválido!"]);
         }
 
-        if (!empty($user) && $user->status == User::STATUS_ACCOUNT_BLOCKED) {
+        if (! empty($user) && User::STATUS_ACCOUNT_BLOCKED === $user->status) {
             activity()
-                ->tap(function (Activity $activity) {
+                ->tap(function (Activity $activity): void {
                     $activity->log_name = "account_blocked";
                 })
                 ->withProperties([
@@ -103,9 +105,9 @@ class LoginController extends Controller
                 ->withErrors(["accountErrors" => "Conta bloqueada"]);
         }
 
-        if (!empty($user) && $user->status == User::STATUS_ACCOUNT_EXCLUDED) {
+        if (! empty($user) && User::STATUS_ACCOUNT_EXCLUDED === $user->status) {
             activity()
-                ->tap(function (Activity $activity) {
+                ->tap(function (Activity $activity): void {
                     $activity->log_name = "account_blocked";
                 })
                 ->withProperties([
@@ -134,7 +136,7 @@ class LoginController extends Controller
             activity()
                 ->causedBy($user)
                 ->on($userModel)
-                ->tap(function (Activity $activity) use ($user) {
+                ->tap(function (Activity $activity) use ($user): void {
                     $activity->log_name = "login";
                     $activity->subject_id = $user->id;
                 })
@@ -160,9 +162,9 @@ class LoginController extends Controller
 
         activity()
             ->on($userModel)
-            ->tap(function (Activity $activity) use ($user) {
+            ->tap(function (Activity $activity) use ($user): void {
                 $activity->log_name = "login_failed";
-                if (!empty($user)) {
+                if (! empty($user)) {
                     $activity->causer_id = $user->id;
                 }
             })
@@ -185,12 +187,12 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         activity()
-            ->tap(function (Activity $activity) {
+            ->tap(function (Activity $activity): void {
                 $activity->log_name = "logout";
             })
             ->log("Logout");
 
-        if (!empty(auth()->user())) {
+        if (! empty(auth()->user())) {
             Redis::del("user-logged-" . auth()->user()->id);
         }
 
@@ -237,7 +239,7 @@ class LoginController extends Controller
 
             $user = User::find(hashids_decode($userId, "login"));
 
-            if (!$user) {
+            if (! $user) {
                 throw new Exception("Usuário não existe");
             }
 
@@ -269,12 +271,12 @@ class LoginController extends Controller
                 $route = explode("_", $permission);
                 $redirect = $route["0"];
                 if (count($route) > 1) {
-                    if ($route["0"] == "report") {
+                    if ("report" === $route["0"]) {
                         $redirect = $route["0"] . "s/" . $route["1"];
                     }
                 }
 
-                $redirect = $redirect === "attendance" ? "customer-service" : $redirect;
+                $redirect = "attendance" === $redirect ? "customer-service" : $redirect;
                 return response()->redirectTo("/{$redirect}");
             }
         } catch (Exception $e) {
@@ -316,7 +318,7 @@ class LoginController extends Controller
             $route = explode("_", $permission);
             $redirect = $route["0"];
             if (count($route) > 1) {
-                if ($route["0"] == "report") {
+                if ("report" === $route["0"]) {
                     $redirect = $route["0"] . "s/" . $route["1"];
                 }
             }

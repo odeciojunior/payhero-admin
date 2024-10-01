@@ -2,9 +2,7 @@
 
 namespace App\Rules;
 
-use App\Models\Company;
 use Illuminate\Validation\Validator as BaseValidator;
-use Intervention\Image\Facades\Image;
 
 /**
  * @author Daniel Rodrigues Lima

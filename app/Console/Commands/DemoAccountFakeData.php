@@ -4,15 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyBankAccount;
-use Modules\Core\Services\BoletoService;
 use Modules\Core\Services\DemoAccount\DemoFakeDataService;
-use Modules\Core\Services\Gateways\Safe2PayService;
-use Modules\Core\Services\PixService;
-use Modules\Notazz\Http\Controllers\NotazzController;
-use ParagonIE\Sodium\Compat;
 
 class DemoAccountFakeData extends Command
 {
@@ -50,11 +42,11 @@ class DemoAccountFakeData extends Command
         Config::set('database.default', 'demo');
 
         $demo =  new DemoFakeDataService();
-        
+
         // $demo->createFakeTicket();
 
         // $demo->verifyAbandonedCarts();
-        
-    }        
+
+    }
 
 }
