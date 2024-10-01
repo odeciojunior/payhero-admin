@@ -11,7 +11,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Illuminate\Support\Facades\Log;
 
 class GetAllStatementChargebacks extends Command
 {

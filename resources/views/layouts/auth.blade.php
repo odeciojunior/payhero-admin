@@ -54,33 +54,36 @@
 </head>
 
 <body style='background:none;padding:0%'>
-    <img src="{{ asset('build/global/adminremark/assets/images/gradient-bg.png') }}"
-         style='width:100%;height:100%;position:fixed;z-index:-100;left:0%;top:0%;'
-         alt="Background">
-    {{-- <div class="loading">
-    <div class="loader">
-    </div>
+<img src="{{ asset('build/global/adminremark/assets/images/gradient-bg.png') }}"
+     style='width:100%;height:100%;position:fixed;z-index:-100;left:0%;top:0%;'
+     alt="Background">
+{{-- <div class="loading">
+<div class="loader">
+</div>
 </div> --}}
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: url(https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/gradient-bg.png) bottom left no-repeat;
-        }
-    </style>
-    @yield('content')
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        background: url(https://nexuspay-digital-products.s3.amazonaws.com/admin/admin-002/gradient-bg.png) bottom left no-repeat;
+    }
+</style>
+@yield('content')
 
-    <script>
-        (function(document, window, $) {
-            'use strict';
+<script>
+    (function(document, window, $) {
+        "use strict";
 
-            var Site = window.Site;
-            $(document).ready(function() {
-                Site.run();
-            });
-        })(document, window, jQuery);
-    </script>
-    @stack('scripts')
+        var Site = window.Site;
+        $(document).ready(function() {
+            Site.run();
+        });
+    })(document, window, jQuery);
+</script>
+@stack('scripts')
+
+<x-sentry />
+
 </body>
 
 </html>

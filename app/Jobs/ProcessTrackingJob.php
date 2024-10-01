@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,7 +12,10 @@ use Modules\Core\Services\TrackingService;
 
 class ProcessTrackingJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Tracking $tracking;
 
@@ -35,12 +36,12 @@ class ProcessTrackingJob implements ShouldQueue
      */
     public function handle()
     {
- 
-            $trackingService = new TrackingService();
-            $trackingService->createOrUpdateTracking(
-                $this->tracking->tracking_code,
-                $this->tracking->product_plan_sale_id,
-            );
+
+        $trackingService = new TrackingService();
+        $trackingService->createOrUpdateTracking(
+            $this->tracking->tracking_code,
+            $this->tracking->product_plan_sale_id,
+        );
 
     }
 }

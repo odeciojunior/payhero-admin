@@ -121,19 +121,19 @@ class CheckAutomaticWithdrawals extends Command
             switch ($settings->frequency) {
                 case WithdrawalSettings::FREQUENCY_DAILY:
                     $withdrawalValue = $availableBalance;
-                break;
+                    break;
                 case WithdrawalSettings::FREQUENCY_WEEKLY:
                     if ($settings->weekday == date("w")) {
                         $withdrawalValue = $availableBalance;
                     }
-                break;
+                    break;
                 case WithdrawalSettings::FREQUENCY_MONTHLY:
                     $isFebruary = date("m") == 2;
                     $isFebruaryLastDay = $isFebruary && in_array(date("d"), [28, 29]);
                     if ($settings->day == date("d") || ($settings->day == 30 && $isFebruaryLastDay)) {
                         $withdrawalValue = $availableBalance;
                     }
-                break;
+                    break;
             }
         }
 

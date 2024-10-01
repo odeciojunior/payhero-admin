@@ -56,30 +56,6 @@ Route::group([], function () {
     //      ->name('mail.verification');
 });
 
-Route::group(
-    [
-        "prefix" => "dev",
-        "as" => "dev.",
-        "middleware" => ["web", "auth"],
-        "namespace" => "\App\Http\Controllers\Dev",
-    ],
-    function () {
-        // rotas autenticadas
-        Route::get("/code/{code}", "TesteController@code");
-
-        Route::get("/teste", "TesteController@index");
-
-        Route::get("/julio", "JulioController@julioFunction");
-        Route::get("/joao", "TesteController@joaoLucasFunction");
-        Route::get("/thales", "TesteController@thalesFunction");
-        Route::get("/jean", "TesteController@jeanFunction");
-        Route::get("/fausto", "TesteController@faustoFunction");
-        Route::get("/rmcharacter", "TesteController@removeSpecialCharacter");
-        Route::get("/trackingcode", "TesteController@trackingCodeFunction");
-        Route::get("/documentstatus", "TesteController@documentStatus");
-        Route::get("/test-job-with-database", "TesteController@testJobWithDatabase");
-    }
-);
 
 // utilitário para QA
 // desabilitado em produção

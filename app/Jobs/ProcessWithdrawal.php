@@ -10,7 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\Gateways\GetnetService;
-use Modules\Withdrawals\Services\WithdrawalService;
 
 class ProcessWithdrawal implements ShouldQueue
 {

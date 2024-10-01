@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use Auth;
 use Firebase\JWT\JWT;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -29,7 +31,7 @@ class HomeController extends Controller
 
     public function generateZendesktoken()
     {
-        $user = \Auth::user();
+        $user = Auth::user();
         $carbon = \Carbon\Carbon::now()->timestamp;
 
         $payload = [

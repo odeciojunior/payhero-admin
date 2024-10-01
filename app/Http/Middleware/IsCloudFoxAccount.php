@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\User;
 
 class IsCloudFoxAccount
 {

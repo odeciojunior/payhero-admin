@@ -51,6 +51,6 @@ class UpdateFinancialFakeData extends Command
 
         $pixService = new PixService();
         $pixService->changePixToCanceled();
-        
+
     }
 }

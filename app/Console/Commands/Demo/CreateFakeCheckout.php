@@ -8,10 +8,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\CheckoutPlan;
 use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Log as CheckoutLog;
 
 class CreateFakeCheckout extends Command

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
+
 class UpdateRedisSaleTracking extends Command
 {
     protected $signature = "redis:update-sale-tracking";

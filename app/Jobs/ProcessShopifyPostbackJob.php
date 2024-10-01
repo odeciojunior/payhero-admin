@@ -14,7 +14,10 @@ use Modules\Core\Services\ShopifyService;
 
 class ProcessShopifyPostbackJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private int $projectId;
     private array $postback;

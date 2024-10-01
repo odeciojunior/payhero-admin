@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
-use Modules\Core\Services\FoxUtils;
 
 class GenericCommand extends Command
 {

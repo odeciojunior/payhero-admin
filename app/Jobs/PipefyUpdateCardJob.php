@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,7 +12,10 @@ use Modules\Core\Services\Pipefy\PipefyService;
 
 class PipefyUpdateCardJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private $user;
 
@@ -38,7 +40,7 @@ class PipefyUpdateCardJob implements ShouldQueue
 
             (new PipefyService())->updateCardUserinformations($this->user);
 
-        } catch( Exception $e){
+        } catch (Exception $e) {
             report($e);
             return false;
         }

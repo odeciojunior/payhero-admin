@@ -191,8 +191,7 @@ class CreateAccountSafe2Pay extends Command
         $gatewaysCompaniesCredential = new GatewaysCompaniesCredential();
 
         if (
-            !$gatewaysCompaniesCredential
-                ::where("company_id", $companyId)
+            !$gatewaysCompaniesCredential::where("company_id", $companyId)
                 ->where("gateway_id", $gatewayId)
                 ->exists()
         ) {

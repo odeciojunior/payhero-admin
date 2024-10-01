@@ -16,7 +16,10 @@ use Modules\Core\Services\TrackingService;
 
 class ProcessShopifyTrackingPostbackJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private int $projectId;
     private array $postback;

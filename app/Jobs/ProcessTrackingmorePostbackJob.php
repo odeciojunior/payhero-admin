@@ -12,7 +12,10 @@ use Modules\Core\Services\TrackingService;
 
 class ProcessTrackingmorePostbackJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private string $trackingCode;
 

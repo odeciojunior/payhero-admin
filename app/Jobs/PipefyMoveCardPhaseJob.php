@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,7 +12,10 @@ use Modules\Core\Services\Pipefy\PipefyService;
 
 class PipefyMoveCardPhaseJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private $user;
     private $phase;
@@ -40,7 +42,7 @@ class PipefyMoveCardPhaseJob implements ShouldQueue
 
             (new PipefyService())->moveCardToPhase($this->user, $this->phase);
 
-        }catch( Exception $e){
+        } catch (Exception $e) {
             report($e);
             return false;
         }

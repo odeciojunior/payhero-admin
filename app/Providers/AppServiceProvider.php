@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
@@ -12,8 +14,8 @@ use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Observers\CompanyObserver;
-use Modules\Core\Observers\SaleObserver;
 use Modules\Core\Observers\GatewaysCompaniesCredentialObserver;
+use Modules\Core\Observers\SaleObserver;
 use Modules\Core\Observers\TicketMessageObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,12 +25,12 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         //set timezone para este
         date_default_timezone_set("America/Sao_Paulo");
 
-        Queue::failing(function (JobFailed $event) {
+        Queue::failing(function (JobFailed $event): void {
             report($event->exception);
         });
 
@@ -40,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         //força uso do https
-        if (env("APP_ENV", "local") !== "local") {
+        if ("local" !== env("APP_ENV", "local")) {
             URL::forceScheme("https");
         }
     }
@@ -50,8 +52,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //
+
     }
 }

@@ -10,8 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
-use Vinkla\Hashids\Facades\Hashids;
-use App\Jobs\ProcessWooCommercePostbackTracking;
 
 class ProcessWooCommerceOrderNotes implements ShouldQueue
 {

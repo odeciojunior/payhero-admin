@@ -21,7 +21,10 @@ use Modules\Core\Services\WebhookService;
  */
 class WebhookSaleUpdateJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The sale instance.

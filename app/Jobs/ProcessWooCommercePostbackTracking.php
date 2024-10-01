@@ -8,12 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
-use Illuminate\Support\Facades\Log;
 
 class ProcessWooCommercePostbackTracking implements ShouldQueue
 {

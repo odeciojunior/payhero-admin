@@ -33,7 +33,7 @@ class CheckUsersChargebacks extends Command
 
         $users = User::where('contestation_rate', '>', '1.5')->orderBy('contestation_rate', 'desc')->get();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
 
             $contestationsCount = $this->getContestationsCount($user);
             $chargebacksCount = $this->getChargebacksCount($user);

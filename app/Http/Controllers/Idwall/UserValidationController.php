@@ -23,7 +23,7 @@ final class UserValidationController extends Controller
 
             $user = User::find(current(Hashids::decode($data["user_id"])));
 
-            if (!$user) {
+            if (! $user) {
                 return response()->json(
                     [
                         "status" => "error",

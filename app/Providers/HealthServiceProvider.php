@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use Spatie\Health\Facades\Health;
 use Illuminate\Support\ServiceProvider;
 use Modules\Core\Services\CustomChecks\QueueSizeCheck;
-use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
 use Spatie\Health\Checks\Checks\DatabaseConnectionCountCheck;
 use Spatie\Health\Checks\Checks\DatabaseTableSizeCheck;
@@ -14,6 +14,8 @@ use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\HorizonCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
+use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
+use Spatie\Health\Facades\Health;
 
 class HealthServiceProvider extends ServiceProvider
 {
@@ -22,7 +24,7 @@ class HealthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $checks = [
             DatabaseCheck::new()->name("Database check"),
@@ -39,7 +41,7 @@ class HealthServiceProvider extends ServiceProvider
             //CacheCheck::new(),
         ];
 
-        if (env("APP_NAME") == "Azcend-cron") {
+        if ("Azcend-cron" === env("APP_NAME")) {
             $checks[] = ScheduleCheck::new();
             $checks[] = QueueSizeCheck::new()->maxSize(10000);
             $checks[] = DatabaseConnectionCountCheck::new()
@@ -55,8 +57,8 @@ class HealthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        //
+
     }
 }

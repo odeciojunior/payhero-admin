@@ -6,13 +6,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\Gateways\Safe2payGateway;
 
 class ResendBankSlipWebhookSafe2pay extends Command
 {
-    const SAFE2PAY_STATUS_PROCESSAMENTO = 2;
-    const SAFE2PAY_STATUS_AUTORIZADO = 3;
+    public const SAFE2PAY_STATUS_PROCESSAMENTO = 2;
+    public const SAFE2PAY_STATUS_AUTORIZADO = 3;
     /**
      * The name and signature of the console command.
      *

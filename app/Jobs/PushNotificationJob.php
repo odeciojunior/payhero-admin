@@ -14,7 +14,10 @@ use Modules\Mobile\Http\Controllers\Apis\v10\NotificationMachine;
 
 class PushNotificationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
     /**
      * @var PushNotification
      */
