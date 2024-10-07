@@ -29,6 +29,8 @@ class TicketsApiController extends Controller
     {
         try {
             $data = (object)$request->all();
+            if (empty($data)) return null;
+
             $userId = auth()->user()->getAccountOwnerId();
 
             $ticketsQuery = Ticket::select([
