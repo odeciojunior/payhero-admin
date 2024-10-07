@@ -29,7 +29,6 @@ class TicketsApiController extends Controller
     {
         try {
             $data = (object)$request->all();
-            if (empty($data)) return null;
 
             $userId = auth()->user()->getAccountOwnerId();
 
@@ -61,6 +60,10 @@ class TicketsApiController extends Controller
                 }
             }else{
 
+                if (empty($data->company)) {
+                    return response()->json(["message" => "Empresa não encontrada."], 404);
+                }
+                
                 $ticketsQuery->leftJoin('api_tokens as api', 'sales.api_token_id','=','api.id')
                 ->leftJoin('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
                 ->where(function($query) use($data){
