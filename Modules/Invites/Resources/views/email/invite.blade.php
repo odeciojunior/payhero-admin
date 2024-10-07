@@ -31,11 +31,6 @@
                cellpadding="0"
                cellspacing="0">
             <tr>
-                <td style="padding-top: 20px;text-align:center">
-                    <img src="https://azcend-documents.s3.amazonaws.com/azcend/defaults/beta-tester.png">
-                </td>
-            </tr>
-            <tr>
                 <td>
                     <h1 style="text-align:center"> Seu convite chegou! </h1>
                 </td>
