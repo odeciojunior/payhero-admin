@@ -498,7 +498,7 @@
             if (typeof G_vmlCanvasManager !== "undefined") {
                 this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
             }
-            this.ctx = this.canvas.getContext("2d");
+            this.ctx = this.canvas?.getContext("2d");
             h = this.canvas.clientHeight;
             w = this.canvas.clientWidth;
             this.canvas.height = h;
@@ -929,7 +929,7 @@
             if (typeof G_vmlCanvasManager !== "undefined") {
                 this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
             }
-            this.ctx = this.canvas.getContext("2d");
+            this.ctx = this.canvas?.getContext("2d");
             this.setOptions();
             this.render();
         }
