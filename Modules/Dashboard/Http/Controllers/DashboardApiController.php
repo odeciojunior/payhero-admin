@@ -205,6 +205,11 @@ class DashboardApiController extends Controller
     {
         try {
             $company = Company::find(current(Hashids::decode($companyHash)));
+
+            if (empty($company)) {
+                return response()->json(["message" => "Empresa não encontrada."], 404);
+            }
+
             $user = $company->user;
             $taskService = new TaskService();
             $benefitService = new BenefitsService();
