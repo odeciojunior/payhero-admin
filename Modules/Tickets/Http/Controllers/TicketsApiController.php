@@ -60,7 +60,7 @@ class TicketsApiController extends Controller
                 }
             }else{
 
-                if (empty($data->company)) {
+                if (empty($data) || !isset($data->company)) {
                     return response()->json(["message" => "Empresa não encontrada."], 404);
                 }
                 
