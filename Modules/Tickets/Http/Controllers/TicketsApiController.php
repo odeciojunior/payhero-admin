@@ -170,14 +170,17 @@ class TicketsApiController extends Controller
                     ->join("customers", "sales.customer_id", "=", "customers.id")
                     ->find($ticketId);
 
+                if (empty($ticket)) {
+                    return response()->json(["message" => "Chamado não encontrado!"], 404);
+                }
+
                 return new TicketShowResource($ticket);
             } else {
-                return response()->json(["message" => "Chamado não encontrado!"], 400);
+                return response()->json(["message" => "Chamado não encontrado!"], 404);
             }
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(["message" => "Erro ao carregar chamado"], 400);
+            return response()->json(["message" => "Erro ao carregar chamado"], 500);
         }
     }
 
