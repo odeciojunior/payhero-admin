@@ -12,6 +12,10 @@ class TicketShowResource extends JsonResource
 {
     public function toArray($request)
     {
+        if (!isset($this->messages)) {
+            return null;
+        }
+        
         $messages = $this->messages
             ->merge($this->attachments)
             ->sort(function ($a, $b) {
