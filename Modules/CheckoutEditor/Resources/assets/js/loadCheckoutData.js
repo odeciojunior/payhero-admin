@@ -291,7 +291,7 @@ $(() => {
                 });
             })
             .on("hidden.bs.modal", function () {
-                cropper.destroy();
+                cropper?.destroy();
                 cropper = null;
             });
 
