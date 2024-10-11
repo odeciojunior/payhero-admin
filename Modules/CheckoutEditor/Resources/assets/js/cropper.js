@@ -3454,7 +3454,7 @@
 
                             url = element.src;
                         } else if (tagName === "canvas" && window.HTMLCanvasElement) {
-                            url = element.toDataURL();
+                            url = element?.toDataURL();
                         }
 
                         this.load(url);
