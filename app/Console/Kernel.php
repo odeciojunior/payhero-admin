@@ -45,11 +45,11 @@ class Kernel extends ConsoleKernel
             ->everyTenMinutes()
             ->onOneServer();
 
-        $schedule
-            ->command("demo:create-fake-checkout")
-            ->everyTenMinutes()
-            ->withoutOverlapping()
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-checkout")
+        //     ->everyTenMinutes()
+        //     ->withoutOverlapping()
+        //     ->onOneServer();
         $schedule
             ->command("withdrawals:release-get-faster")
             ->withoutOverlapping()
@@ -65,11 +65,11 @@ class Kernel extends ConsoleKernel
             ->everyFifteenMinutes()
             ->withoutOverlapping()
             ->onOneServer();
-        $schedule
-            ->command("demo:create-fake-sale")
-            ->withoutOverlapping()
-            ->everyThirtyMinutes()
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-sale")
+        //     ->withoutOverlapping()
+        //     ->everyThirtyMinutes()
+        //     ->onOneServer();
 
         $schedule
             ->command("verify:pendingdomains")
@@ -104,11 +104,11 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->onOneServer();
 
-        $schedule
-            ->command("demo:create-fake-withdrawal")
-            ->days([Schedule::MONDAY, Schedule::WEDNESDAY, Schedule::FRIDAY])
-            ->at("05:20")
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-withdrawal")
+        //     ->days([Schedule::MONDAY, Schedule::WEDNESDAY, Schedule::FRIDAY])
+        //     ->at("05:20")
+        //     ->onOneServer();
         $schedule
             ->command("woocommerce:check-tracking-codes")
             ->sundays()
@@ -167,14 +167,14 @@ class Kernel extends ConsoleKernel
             ->command("tasks:check-completed-sales-tasks")
             ->dailyAt("05:30")
             ->onOneServer();
-        $schedule
-            ->command("demo:abandoned-cart-checkout")
-            ->dailyAt("05:35")
-            ->onOneServer();
-        $schedule
-            ->command("demo:update-financial-fake-data")
-            ->dailyAt("06:20")
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:abandoned-cart-checkout")
+        //     ->dailyAt("05:35")
+        //     ->onOneServer();
+        // $schedule
+        //     ->command("demo:update-financial-fake-data")
+        //     ->dailyAt("06:20")
+        //     ->onOneServer();
         $schedule
             ->command("user:benefits:update")
             ->dailyAt("06:30")
@@ -207,14 +207,14 @@ class Kernel extends ConsoleKernel
             ->dailyAt("08:30")
             ->onOneServer();
 
-        $schedule
-            ->command("demo:create-fake-ticket")
-            ->dailyAt("08:50")
-            ->onOneServer();
-        $schedule
-            ->command("demo:create-fake-contestation")
-            ->dailyAt("09:00")
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-ticket")
+        //     ->dailyAt("08:50")
+        //     ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-contestation")
+        //     ->dailyAt("09:00")
+        //     ->onOneServer();
         $schedule
             ->command("verify:boletowaitingpayment")
             ->dailyAt("09:30")
@@ -238,14 +238,14 @@ class Kernel extends ConsoleKernel
             ->dailyAt("16:30")
             ->onOneServer();
 
-        $schedule
-            ->command("demo:create-fake-ticket")
-            ->dailyAt("16:50")
-            ->onOneServer();
-        $schedule
-            ->command("demo:create-fake-contestation")
-            ->dailyAt("17:00")
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-ticket")
+        //     ->dailyAt("16:50")
+        //     ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-contestation")
+        //     ->dailyAt("17:00")
+        //     ->onOneServer();
 
         $schedule
             ->command("verify:trackingWithoutInfo")
@@ -268,10 +268,10 @@ class Kernel extends ConsoleKernel
             ->at("05:00")
             ->onOneServer();
 
-        $schedule
-            ->command("demo:create-fake-invite")
-            ->weekly()
-            ->onOneServer();
+        // $schedule
+        //     ->command("demo:create-fake-invite")
+        //     ->weekly()
+        //     ->onOneServer();
     }
 
     protected function commands()
