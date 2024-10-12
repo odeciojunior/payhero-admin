@@ -186,6 +186,7 @@ class Company extends Model
         "situation",
         "fantasy_name_custom",
         "document_custom",
+        'observation',
         "created_at",
         "updated_at",
         "deleted_at",
