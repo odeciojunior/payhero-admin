@@ -138,13 +138,22 @@ abstract class GatewayServicesAbstract
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
+    public function getAvailableBalanceByTransfers(){
+        $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers 
+        WHERE company_id = :companyId",["companyId"=>$this->company->id]);
+
+        $pendingWithdrawal = Withdrawal::where("company_id",$this->company->id)->where("status",Withdrawal::STATUS_PENDING)->sum("value");
+
+        return intval($balance[0]->total ?? 0) + intval($pendingWithdrawal);
+    }
+
     public function withdrawalValueIsValid($value): bool
     {
         if (empty($value) || $value < 1) {
             return false;
         }
 
-        $availableBalance = $this->getAvailableBalance();
+        $availableBalance = $this->getAvailableBalanceByTransfers();
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
