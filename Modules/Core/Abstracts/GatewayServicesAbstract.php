@@ -144,7 +144,7 @@ abstract class GatewayServicesAbstract
 
         $pendingWithdrawal = Withdrawal::where("company_id",$this->company->id)->where("status",Withdrawal::STATUS_PENDING)->sum("value");
 
-        return intval($balance[0]->total ?? 0) + intval($pendingWithdrawal);
+        return intval($balance[0]->total ?? 0) - intval($pendingWithdrawal);
     }
 
     public function withdrawalValueIsValid($value): bool
