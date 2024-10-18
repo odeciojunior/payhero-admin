@@ -139,7 +139,7 @@ abstract class GatewayServicesAbstract
     }
 
     public function getAvailableBalanceByTransfers(){
-        $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers 
+        $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers
         WHERE company_id = :companyId",["companyId"=>$this->company->id]);
 
         $pendingWithdrawal = Withdrawal::where("company_id",$this->company->id)->where("status",Withdrawal::STATUS_PENDING)->sum("value");
@@ -153,7 +153,7 @@ abstract class GatewayServicesAbstract
             return false;
         }
 
-        $availableBalance = $this->getAvailableBalanceByTransfers();
+        $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
@@ -285,12 +285,12 @@ abstract class GatewayServicesAbstract
                 if(!empty($company->credit_card_time) && $currentTime < $company->credit_card_time){
                     continue;
                 }
-                
+
                 $transaction->update([
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-                
+
                 $user = $transaction->user;
                 $sale = $transaction->sale;
 
