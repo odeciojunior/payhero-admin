@@ -153,7 +153,7 @@ abstract class GatewayServicesAbstract
             return false;
         }
 
-        $availableBalance = $this->getAvailableBalanceByTransfers();
+        $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
