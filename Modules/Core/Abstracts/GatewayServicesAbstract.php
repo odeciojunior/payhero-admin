@@ -153,7 +153,7 @@ abstract class GatewayServicesAbstract
             return false;
         }
 
-        $availableBalance = $this->getAvailableBalance();
+        $availableBalance = $this->getAvailableBalanceByTransfers();
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
@@ -280,9 +280,8 @@ abstract class GatewayServicesAbstract
             $currentTime = Carbon::now()->format("H:i:s");
 
             foreach ($transactions->cursor() as $transaction) {
-
                 $company = $transaction->company;
-                if(!empty($company->credit_card_time) && $currentTime < $company->credit_card_time){
+                if (!empty($company->credit_card_time) && $currentTime < $company->credit_card_time) {
                     continue;
                 }
 
