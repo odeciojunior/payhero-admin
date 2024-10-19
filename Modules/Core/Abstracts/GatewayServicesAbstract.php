@@ -357,6 +357,21 @@ abstract class GatewayServicesAbstract
         }
     }
 
+    public function updateAllCompaniesBalance()
+    {
+        $companies = Company::all();
+
+        foreach ($companies as $company) {
+            $this->setCompany($company);
+            $availableBalanceByTransfers = $this->getAvailableBalanceByTransfers();
+            $columnBalanceName = $this->companyColumnBalance;
+
+            $company->update([
+                $columnBalanceName => $availableBalanceByTransfers,
+            ]);
+        }
+    }
+
     public function getStatement($filters)
     {
         return (new StatementService())->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
