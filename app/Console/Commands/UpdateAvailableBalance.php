@@ -9,6 +9,7 @@ use Modules\Core\Services\Gateways\EfipayService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\ArmPayService;
+use Modules\Core\Services\Gateways\VegaService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -64,8 +65,10 @@ class UpdateAvailableBalance extends Command
             foreach ($this->defaultGateways as $gatewayClass) {
                 $gatewayService = app()->make($gatewayClass);
                 $gatewayService->updateAvailableBalance();
-                $gatewayService->updateAllCompaniesBalance();
             }
+
+            $vegaService = new VegaService();
+            $vegaService->updateAllCompaniesBalance();
 
             settings()
                 ->group("withdrawal_request")
