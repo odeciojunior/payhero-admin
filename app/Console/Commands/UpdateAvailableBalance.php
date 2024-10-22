@@ -65,7 +65,6 @@ class UpdateAvailableBalance extends Command
             foreach ($this->defaultGateways as $gatewayClass) {
                 $gatewayService = app()->make($gatewayClass);
                 $gatewayService->updateAvailableBalance();
-                $gatewayService->updateAllCompaniesBalance();
             }
 
             $vegaService = new VegaService();
