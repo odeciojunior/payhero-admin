@@ -121,7 +121,7 @@ class WithdrawalsApiController
             }
 
             if (!(new WithdrawalService())->companyCanWithdraw($company->id, $gatewayId)) {
-                return response()->json(["message" => "Você só pode fazer 5 pedidos de saque por dia."], 403);
+                return response()->json(["message" => "Você só pode fazer 10 pedidos de saque por dia."], 403);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);
