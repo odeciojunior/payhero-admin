@@ -27,10 +27,12 @@ return new class extends Migration
                     ->on("companies");
             // $table->string("document", 100)->nullable();
             $table->string("invoice_id", 100)->nullable();
-            $table->string("value");
+            $table->string("value")->nullable();
             $table->string("description")->nullable();
-            $table->string("tax_iss");
-            $table->string("invoice_date");
+            $table->string("tax_iss")->nullable();
+            $table->string("invoice_date")->nullable();
+            $table->integer('status')->nullable();
+            $table->string("notazz_id")->nullable();
             $table->timestamps();
             $table->timestamp("deleted_at");
         });
