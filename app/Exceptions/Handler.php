@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Laravel\Passport\Exceptions\MissingScopeException;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Sentry\Laravel\Integration;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -24,7 +23,9 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            Integration::captureUnhandledException($e);
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($e); // Ajuste para capturar exceções
+            }
         });
     }
 

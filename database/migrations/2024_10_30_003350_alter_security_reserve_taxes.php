@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterDefaultsSecurityTaxAndDays202410 extends Migration
+class AlterSecurityReserveTaxes extends Migration
 {
     /**
      * Run the migrations.
