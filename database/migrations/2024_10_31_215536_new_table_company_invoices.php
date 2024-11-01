@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,10 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-        // Deleta a tabela se ela já existir
-        if (Schema::hasTable('company_invoices')) {
+        // Deleta a tabela se ela já existir e estiver vazia
+        if (Schema::hasTable('company_invoices') && DB::table('company_invoices')->count() == 0) {
             Schema::drop('company_invoices');
         }
+       
+        Schema::table('companies', function (Blueprint $table) {
+            $table->index('document');
+        });
 
         // Cria a tabela
         Schema::create('company_invoices', function (Blueprint $table) {
