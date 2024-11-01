@@ -142,7 +142,9 @@ abstract class GatewayServicesAbstract
         $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers
         WHERE company_id = :companyId",["companyId"=>$this->company->id]);
 
-        $pendingWithdrawal = Withdrawal::where("company_id",$this->company->id)->where("status",Withdrawal::STATUS_PENDING)->sum("value");
+        $pendingWithdrawal = Withdrawal::where("company_id", $this->company->id)
+            ->whereNot("status", Withdrawal::STATUS_TRANSFERRED)
+            ->sum("value");
 
         return intval($balance[0]->total ?? 0) - intval($pendingWithdrawal);
     }
