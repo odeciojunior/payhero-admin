@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 
-/**
- * Class Kernel
- * @package App\Console
- */
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
         //
     ];
 
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         setlocale(LC_ALL, "pt_BR");
 
@@ -45,11 +43,6 @@ class Kernel extends ConsoleKernel
             ->everyTenMinutes()
             ->onOneServer();
 
-        // $schedule
-        //     ->command("demo:create-fake-checkout")
-        //     ->everyTenMinutes()
-        //     ->withoutOverlapping()
-        //     ->onOneServer();
         $schedule
             ->command("withdrawals:release-get-faster")
             ->withoutOverlapping()
@@ -65,11 +58,6 @@ class Kernel extends ConsoleKernel
             ->everyFifteenMinutes()
             ->withoutOverlapping()
             ->onOneServer();
-        // $schedule
-        //     ->command("demo:create-fake-sale")
-        //     ->withoutOverlapping()
-        //     ->everyThirtyMinutes()
-        //     ->onOneServer();
 
         $schedule
             ->command("verify:pendingdomains")
@@ -98,17 +86,6 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->onOneServer();
 
-        //        $schedule
-        //            ->command("malga:create-seller-account")
-        //            ->everyTenMinutes()
-        //            ->withoutOverlapping()
-        //            ->onOneServer();
-
-        // $schedule
-        //     ->command("demo:create-fake-withdrawal")
-        //     ->days([Schedule::MONDAY, Schedule::WEDNESDAY, Schedule::FRIDAY])
-        //     ->at("05:20")
-        //     ->onOneServer();
         $schedule
             ->command("woocommerce:check-tracking-codes")
             ->sundays()
@@ -167,14 +144,7 @@ class Kernel extends ConsoleKernel
             ->command("tasks:check-completed-sales-tasks")
             ->dailyAt("05:30")
             ->onOneServer();
-        // $schedule
-        //     ->command("demo:abandoned-cart-checkout")
-        //     ->dailyAt("05:35")
-        //     ->onOneServer();
-        // $schedule
-        //     ->command("demo:update-financial-fake-data")
-        //     ->dailyAt("06:20")
-        //     ->onOneServer();
+
         $schedule
             ->command("user:benefits:update")
             ->dailyAt("06:30")
@@ -207,14 +177,6 @@ class Kernel extends ConsoleKernel
             ->dailyAt("08:30")
             ->onOneServer();
 
-        // $schedule
-        //     ->command("demo:create-fake-ticket")
-        //     ->dailyAt("08:50")
-        //     ->onOneServer();
-        // $schedule
-        //     ->command("demo:create-fake-contestation")
-        //     ->dailyAt("09:00")
-        //     ->onOneServer();
         $schedule
             ->command("verify:boletowaitingpayment")
             ->dailyAt("09:30")
@@ -238,15 +200,6 @@ class Kernel extends ConsoleKernel
             ->dailyAt("16:30")
             ->onOneServer();
 
-        // $schedule
-        //     ->command("demo:create-fake-ticket")
-        //     ->dailyAt("16:50")
-        //     ->onOneServer();
-        // $schedule
-        //     ->command("demo:create-fake-contestation")
-        //     ->dailyAt("17:00")
-        //     ->onOneServer();
-
         $schedule
             ->command("verify:trackingWithoutInfo")
             ->dailyAt("18:00")
@@ -269,12 +222,13 @@ class Kernel extends ConsoleKernel
             ->onOneServer();
 
         $schedule->command('shortlinks:delete-expired')
-            ->twiceDaily(8, 20);
+            ->twiceDaily(8, 20)
+            ->onOneServer();
     }
 
-    protected function commands()
+    protected function commands(): void
     {
-        $this->load(__DIR__ . "/Commands");
+        $this->load(__DIR__."/Commands");
 
         require base_path("routes/console.php");
     }
