@@ -268,10 +268,8 @@ class Kernel extends ConsoleKernel
             ->at("05:00")
             ->onOneServer();
 
-        // $schedule
-        //     ->command("demo:create-fake-invite")
-        //     ->weekly()
-        //     ->onOneServer();
+        $schedule->command('shortlinks:delete-expired')
+            ->twiceDaily(8, 20);
     }
 
     protected function commands()

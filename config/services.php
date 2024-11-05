@@ -46,4 +46,9 @@ return [
         "client_secret" => env("SHOPIFY_SECRET"),
         "redirect" => env("SHOPIFY_REDIRECT"),
     ],
+
+    'short_io' => [
+        'domain' => env('SHORT_IO_DOMAIN', 'https://api.short.io'),
+        'api_key' => env('SHORT_IO_API_KEY'),
+    ],
 ];
