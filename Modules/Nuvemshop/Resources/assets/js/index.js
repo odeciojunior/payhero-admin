@@ -102,14 +102,15 @@ function getNuvemshopIntegrations() {
                 var data = nuvemshopIntegration;
                 $("#content").append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${nuvemshopIntegration.id}">
+                            <div class="card shadow card-edit">
 
                             <svg
-                            class="open-cfg" app="${data.id}"
+                            class="open-cfg" data-integration="${data.id}"
+                            data-project="${data.project_id}"
                             data-img="${!data.project_photo ? "/build/global/img/produto.svg" : data.project_photo}"
                             data-name="${data.project_name}"
-                            data-token="${data.token}"
-                            data-skip="${nuvemshopIntegration.skip_to_cart}"
+                            data-url="${data.authorization_url}"
+                            data-status="${data.status}"
                             style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
@@ -125,15 +126,13 @@ function getNuvemshopIntegrations() {
                                 <title>Configurações da Integração</title>
                             </svg>
                                 <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.svg'" src="${
-                                    !nuvemshopIntegration.project_photo
-                                        ? "/build/global/img/produto.svg"
-                                        : nuvemshopIntegration.project_photo
+                                    !data.project_photo ? "/build/global/img/produto.svg" : data.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h4 class="card-title">${nuvemshopIntegration.project_name}</h4>
-                                            <p class="card-text sm">Criado em ${nuvemshopIntegration.created_at}</p>
+                                            <h4 class="card-title">${data.project_name}</h4>
+                                            <p class="card-text sm">Criado em ${data.created_at}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +140,7 @@ function getNuvemshopIntegrations() {
                         </div>
                     `);
 
-                // $(".open-cfg").on("click", openCfg);
+                $(".open-cfg").on("click", openCfg);
             });
         },
     });
@@ -225,3 +224,25 @@ $("#bt_integration").on("click", function () {
         },
     });
 });
+
+function openCfg() {
+    const projectId = $(this).attr("data-project");
+    const integrationId = $(this).attr("data-integration");
+    const name = $(this).attr("data-name");
+    const img = $(this).attr("data-img");
+    const url = $(this).attr("data-url");
+    const status = $(this).attr("data-status");
+
+    localStorage.setItem("nuvemshop_pending_integration", integrationId);
+
+    const container = $("#modal-configs");
+
+    container.find("#configs-project-id").val(projectId);
+    container.find("#configs-integration-id").val(integrationId);
+    container.find("#configs-project-image").attr("src", img);
+    container.find("#configs-project-name").text(name);
+    container.find("#btn-authorize").attr("href", url);
+    container.find("#btn-authorize").html(status === "PENDING" ? "Autorizar" : "Reautorizar");
+
+    container.modal("show");
+}

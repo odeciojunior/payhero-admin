@@ -16,11 +16,17 @@ class NuvemshopResource extends JsonResource
     {
         $integration = NuvemshopIntegration::where("project_id", $this->id)->first();
 
+        $authorizationUrl =
+            "https://" . $integration->url_store . "/admin/apps/" . NuvemshopIntegration::APP_ID . "/authorize";
+
         return [
-            "id" => Hashids::encode($this->id),
+            "id" => Hashids::encode($integration->id),
+            "project_id" => Hashids::encode($this->id),
             "project_name" => substr($this->name, 0, 25),
             "project_photo" => $this->photo,
-            "skip_to_cart" => $integration->skip_to_cart,
+            "authorization_url" => $authorizationUrl,
+            "status" => $integration->status,
+            "token" => $integration->token,
             "created_at" => $this->created_at->format("d/m/Y"),
         ];
     }

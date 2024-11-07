@@ -182,6 +182,35 @@ class NuvemshopApiController extends Controller
 
     public function finalizeIntegration(): JsonResponse
     {
-        return response()->json(["message" => "Integração finalizada com sucesso"], 200);
+        try {
+            $data = request()->all();
+
+            if (empty($data["integration_id"])) {
+                return response()->json(["message" => "Integração não encontrada"], 400);
+            }
+
+            $integrationId = hashids_decode($data["integration_id"]);
+
+            $nuvemshopIntegration = NuvemshopIntegration::find($integrationId);
+
+            if (empty($nuvemshopIntegration)) {
+                return response()->json(["message" => "Integração não encontrada"], 400);
+            }
+
+            if (empty($data["token"])) {
+                return response()->json(["message" => "Token não encontrado"], 400);
+            }
+
+            $nuvemshopIntegration->token = $data["token"];
+            $nuvemshopIntegration->status = NuvemshopIntegration::STATUS_ACTIVE;
+            $nuvemshopIntegration->save();
+
+            // job sincronizar produtos
+
+            return response()->json(["message" => "Integração finalizada com sucesso"], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Problema ao finalizar integração, tente novamente mais tarde"], 400);
+        }
     }
 }

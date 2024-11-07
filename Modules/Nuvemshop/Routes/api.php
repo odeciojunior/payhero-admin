@@ -9,6 +9,6 @@ Route::group(
     function () {
         Route::get("/apps/nuvemshop", "NuvemshopApiController@index");
         Route::post("/apps/nuvemshop", "NuvemshopApiController@store");
-        Route::post("/apps/nuvemshop/finalize", "NuvemshopApiController@store");
+        Route::post("/apps/nuvemshop/finalize", "NuvemshopApiController@finalizeIntegration");
     },
 );

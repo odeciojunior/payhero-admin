@@ -24,7 +24,6 @@ class NuvemshopIntegration extends Model
         "url_store",
         "token",
         "status",
-        "skip_to_cart",
         "created_at",
         "updated_at",
         "deleted_at",

@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->unsignedInteger("project_id")->nullable();
             $table->string("url_store");
             $table->string("token")->nullable();
-            $table->boolean("skip_to_cart")->default(false);
             $table->enum("status", ["PENDING", "ACTIVE", "INACTIVE"])->default("PENDING");
             $table->timestamps();
             $table->softDeletes();

@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="modal fade example-modal-lg modal-3d-flip-vertical"
+        <div class="modal fade modal-3d-flip-vertical"
              id="modal_add_integration"
              role="dialog"
              tabindex="-1">
@@ -110,6 +110,49 @@
             </div>
         </div>
 
+        <div class="modal fade modal-3d-flip-vertical" id="modal-configs">
+            <div class="modal-dialog modal-lg d-flex justify-content-center">
+                <div class="modal-content w-450">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="font-weight-700">Configurações da Integração</h4>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <input type="hidden" id="configs-project-id">
+                        <input type="hidden" id="configs-integration-id">
+                        <div class="d-flex align-items-center">
+                            <img id="configs-project-image" onerror="this.src = '/build/global/img/produto.svg'" />
+                            <div id="configs-project-name" class="font-weight-bold font-size-18"></div>
+                        </div>
+
+                        <div class="d-flex align-items-end justify-content-between gap-1">
+                            <div>
+                                <div id="authorize-title" class="font-size-16 font-weight-bold pt-20" >
+                                    Autorização
+                                </div>
+                                <small>Autorize o aplicativo Azcend em sua loja Nuvemshop</small>
+                            </div>
+
+                            <a class="btn btn-sm btn-primary mt-20" id="btn-authorize" target="_self">Autorizar</a>
+                        </div>
+
+                        <div  class="font-size-16 font-weight-bold mt-20" >
+                            Sincronizar
+                        </div>
+                        <small>Escolha a opção que deseja sincronizar</small>
+
+                        <div class="d-flex align-items-center justify-content-around gap-1 pt-20">
+                            <div class="btn-sync">Produtos</div>
+                            <div class="btn-sync">Rastreios</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         @include('nuvemshop::not-integration')
     </div>

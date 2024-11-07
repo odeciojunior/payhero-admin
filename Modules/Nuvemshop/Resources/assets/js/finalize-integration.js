@@ -28,18 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    if (!localStorage.getItem("nuvemshop_pending_integration")) {
+    const integrationId = localStorage.getItem("nuvemshop_pending_integration");
+    if (!integrationId) {
         showAlert("error", "Integração não encontrada.");
         redirect();
         return;
     }
 
+    const authorization = document.head.querySelector('meta[name="access-token"]').getAttribute("content");
+
     fetch("/api/apps/nuvemshop/finalize", {
         method: "POST",
         headers: {
+            Authorization: authorization,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: token }),
+        body: JSON.stringify({
+            integration_id: integrationId,
+            token,
+        }),
     })
         .then((response) => {
             if (response.ok) {
