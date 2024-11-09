@@ -17,7 +17,7 @@ class NuvemshopResource extends JsonResource
         $integration = NuvemshopIntegration::where("project_id", $this->id)->first();
 
         $authorizationUrl =
-            "https://" . $integration->url_store . "/admin/apps/" . NuvemshopIntegration::APP_ID . "/authorize";
+            "https://" . $integration->url_store . "/admin/apps/" . env("NUVEMSHOP_CLIENT_ID") . "/authorize";
 
         return [
             "id" => Hashids::encode($integration->id),

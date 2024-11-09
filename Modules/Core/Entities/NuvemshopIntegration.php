@@ -12,8 +12,6 @@ class NuvemshopIntegration extends Model
 
     protected $table = "nuvemshop_integrations";
 
-    public const APP_ID = 14330;
-
     public const STATUS_PENDING = "PENDING";
     public const STATUS_ACTIVE = "ACTIVE";
     public const STATUS_INACTIVE = "INACTIVE";
@@ -23,6 +21,7 @@ class NuvemshopIntegration extends Model
         "project_id",
         "url_store",
         "token",
+        "store_id",
         "status",
         "created_at",
         "updated_at",

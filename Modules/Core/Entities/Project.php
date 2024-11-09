@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,6 +13,7 @@ use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property integer $carrier_id
@@ -30,6 +30,7 @@ use Spatie\Activitylog\LogOptions;
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
  * @property string $woocommerce_id
+ * @property string $nuvemshop_id
  * @property string $cookie_duration
  * @property boolean $url_cookies_checkout
  * @property string $boleto_redirect
@@ -104,6 +105,7 @@ class Project extends Model
         "automatic_affiliation",
         "shopify_id",
         "woocommerce_id",
+        "nuvemshop_id",
         "cookie_duration",
         "url_cookies_checkout",
         "boleto_redirect",

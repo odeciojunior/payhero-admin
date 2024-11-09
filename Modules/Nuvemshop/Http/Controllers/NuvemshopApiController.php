@@ -16,8 +16,8 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\NuvemshopErrors;
-use Modules\Core\Services\NuvemshopService;
+use Modules\Core\Events\ImportNuvemshoProductsEvent;
+use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TaskService;
@@ -166,7 +166,7 @@ class NuvemshopApiController extends Controller
             TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
             $integrationId = hashids_encode($nuvemshopIntegration->id);
-            $returnUrl = "https://" . $urlStore . "/admin/apps/" . NuvemshopIntegration::APP_ID . "/authorize";
+            $returnUrl = "https://" . $urlStore . "/admin/apps/" . env("NUVEMSHOP_CLIENT_ID") . "/authorize";
 
             $response = [
                 "url" => $returnUrl,
@@ -201,11 +201,20 @@ class NuvemshopApiController extends Controller
                 return response()->json(["message" => "Token não encontrado"], 400);
             }
 
-            $nuvemshopIntegration->token = $data["token"];
+            $response = NuvemshopAPI::authenticate($data["token"]);
+
+            if (empty($response["access_token"])) {
+                return response()->json(["message" => "Token inválido"], 400);
+            }
+
+            Project::where("id", $nuvemshopIntegration->project_id)->update(["nuvemshop_id" => $response["user_id"]]);
+
+            $nuvemshopIntegration->token = $response["access_token"];
+            $nuvemshopIntegration->store_id = $response["user_id"];
             $nuvemshopIntegration->status = NuvemshopIntegration::STATUS_ACTIVE;
             $nuvemshopIntegration->save();
 
-            // job sincronizar produtos
+            event(new ImportNuvemshoProductsEvent($nuvemshopIntegration));
 
             return response()->json(["message" => "Integração finalizada com sucesso"], 200);
         } catch (Exception $e) {

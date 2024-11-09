@@ -58,6 +58,7 @@ class ProjectsResource extends JsonResource
             "created_at" => (new Carbon($this->created_at))->format("d/m/Y"),
             "shopify_id" => $this->shopify_id,
             "woocommerce_id" => $this->woocommerce_id,
+            "nuvemshop_id" => $this->nuvemshop_id,
             "url_page" => $this->url_page,
             "boleto_redirect" => $this->boleto_redirect,
             "billet_release_days" => $billterReleaseDays ?? "",

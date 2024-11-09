@@ -737,6 +737,11 @@ class FoxUtils
             curl_setopt($ch, CURLOPT_NOBODY, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); # handles 301/2 redirects
             curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt(
+                $ch,
+                CURLOPT_USERAGENT,
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
+            );
             curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
