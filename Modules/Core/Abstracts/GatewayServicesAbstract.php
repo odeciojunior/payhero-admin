@@ -283,7 +283,7 @@ abstract class GatewayServicesAbstract
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
-                if (!empty($company->credit_card_time) && $currentTime < $company->credit_card_time) {
+                if (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time) {
                     continue;
                 }
 
