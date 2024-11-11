@@ -283,7 +283,10 @@ abstract class GatewayServicesAbstract
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
-                if (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time && $transactions->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                $user = $transaction->user;
+                $sale = $transaction->sale;
+                
+                if (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time && $sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                     continue;
                 }
 
@@ -291,8 +294,7 @@ abstract class GatewayServicesAbstract
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-                $user = $transaction->user;
-                $sale = $transaction->sale;
+                
 
                 $hasSecurityReserve = false;
                 $reserveValue = 0;
