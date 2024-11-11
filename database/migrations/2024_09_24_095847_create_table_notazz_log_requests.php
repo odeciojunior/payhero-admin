@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('company_id')->nullable();
             $table->json("request");
             $table->json("response");
-            $table->timestamp("created_at");
-            $table->timestamp("updated_at");
+            $table->timestamp("created_at")->useCurrent();
+            $table->timestamp("updated_at")->useCurrent()->useCurrentOnUpdate();
         });
     }
 
