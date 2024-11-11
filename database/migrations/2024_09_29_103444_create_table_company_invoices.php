@@ -34,7 +34,7 @@ return new class extends Migration
             $table->integer('status')->nullable();
             $table->string("notazz_id")->nullable();
             $table->timestamps();
-            $table->timestamp("deleted_at");
+            $table->softDeletes(); 
         });
     }
 
