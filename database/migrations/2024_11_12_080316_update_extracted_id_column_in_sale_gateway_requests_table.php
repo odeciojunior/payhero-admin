@@ -15,7 +15,7 @@ class UpdateExtractedIdColumnInSaleGatewayRequestsTable extends Migration
         // Update the extracted_id column with the value extracted from gateway_result
         DB::statement("
             UPDATE sale_gateway_requests
-            SET extracted_id = JSON_UNQUOTE(JSON_EXTRACT(gateway_result, '$.id'))
+            SET extracted_id = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(gateway_result, '$.id')),'0')
         ");
     }
 
