@@ -286,7 +286,17 @@ abstract class GatewayServicesAbstract
                 $user = $transaction->user;
                 $sale = $transaction->sale;
                 
-                if (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time && $sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                // Check if the current date is a national holiday in Brazil
+                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+                $isHoliday = false;
+                foreach ($holidays as $holiday) {
+                    if ($holiday['date'] == Carbon::now()->format('Y-m-d')) {
+                        $isHoliday = true;
+                        break;
+                    }
+                }
+
+                if ($isHoliday || (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time && $sale->payment_method == Sale::CREDIT_CARD_PAYMENT)) {
                     continue;
                 }
 
