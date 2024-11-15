@@ -296,7 +296,10 @@ abstract class GatewayServicesAbstract
                     }
                 }
 
-                if ($isHoliday || (!empty($company->credit_card_release_time) && $currentTime < $company->credit_card_release_time && $sale->payment_method == Sale::CREDIT_CARD_PAYMENT)) {
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
+                        && ($isHoliday || ( !empty($company->credit_card_release_time) 
+                                            && $currentTime < $company->credit_card_release_time)
+                            )) {
                     continue;
                 }
 
