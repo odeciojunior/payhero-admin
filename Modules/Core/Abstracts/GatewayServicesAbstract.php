@@ -287,7 +287,12 @@ abstract class GatewayServicesAbstract
                 $sale = $transaction->sale;
                 
                 // Check if the current date is a national holiday in Brazil
-                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+                try {
+                    $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+                } catch (Exception $e) {
+                    $holidays = [];
+                }
+                
                 $isHoliday = false;
                 foreach ($holidays as $holiday) {
                     if ($holiday['date'] == Carbon::now()->format('Y-m-d')) {
