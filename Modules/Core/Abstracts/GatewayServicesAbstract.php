@@ -281,17 +281,17 @@ abstract class GatewayServicesAbstract
 
             $currentTime = Carbon::now()->format("H:i:s");
 
+            // Check if the current date is a national holiday in Brazil
+            try {
+                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+            } catch (Exception $e) {
+                $holidays = [];
+            }
+
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
                 $user = $transaction->user;
                 $sale = $transaction->sale;
-                
-                // Check if the current date is a national holiday in Brazil
-                try {
-                    $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
-                } catch (Exception $e) {
-                    $holidays = [];
-                }
                 
                 $isHoliday = false;
                 foreach ($holidays as $holiday) {
