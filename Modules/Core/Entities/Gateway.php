@@ -76,6 +76,9 @@ class Gateway extends Model
     public const ARMPAY_PRODUCTION_ID = 21;
     public const ARMPAY_SANDBOX_ID = 22;
 
+    public const VOLUTI_PRODUCTION_ID = 23;
+    public const VOLUTI_SANDBOX_ID = 24;
+
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;
