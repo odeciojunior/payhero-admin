@@ -16,6 +16,7 @@ use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\ArmPayService;
 use Modules\Core\Services\Gateways\VegaService;
+use Modules\Core\Services\Gateways\VolutiService;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -154,6 +155,10 @@ class Gateway extends Model
             case self::ARMPAY_PRODUCTION_ID:
             case self::ARMPAY_SANDBOX_ID:
                 return new ArmPayService();
+
+            case self::VOLUTI_PRODUCTION_ID:
+            case self::VOLUTI_SANDBOX_ID:
+                return new VolutiService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:

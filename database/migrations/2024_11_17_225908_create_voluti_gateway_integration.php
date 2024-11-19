@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Modules\Core\Services\FoxUtils;
 
 return new class extends Migration
@@ -19,12 +17,7 @@ return new class extends Migration
             [
                 "id" => 23,
                 "name" => "voluti_production",
-                "json_config" => FoxUtils::xorEncrypt(
-                    json_encode([
-                        "client_id" => "00011170841314184000141",
-                        "client_secret"=>"zBlMWUwOGItZGY4YS00NzQwLWExYmMtN"
-                    ]),
-                ),
+                "json_config" => "WwJDTElFTlR/SUQCGgIQEBAREREXEBgUERMRFBEYFBAQEBEUEQIMAkNMSUVOVH9TRUNSRVQCGgJaYkxtd3VXb2dpVHpneRR5cxAQblpxV2x3ZVh5TW1UbgJd",
                 "production_flag" => 1,
             ],
             [
@@ -43,7 +36,7 @@ return new class extends Migration
         foreach ($gateways as $gateway) {
             DB::table("gateways")->insert([
                 "id" => $gateway["id"],
-                "gateway_enum" => 11,
+                "gateway_enum" => 12,
                 "name" => $gateway["name"],
                 "json_config" => $gateway["json_config"] ?? '',
                 "production_flag" => $gateway["production_flag"],
@@ -53,6 +46,7 @@ return new class extends Migration
                 "updated_at" => now(),
             ]);
         }
+        
     }
 
     /**
@@ -62,6 +56,13 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voluti_gateway_integration');
+        DB::table("gateway_flag_taxes")
+            ->whereIn("gateway_flag_id", function ($query) {
+                $query
+                    ->select("id")
+                    ->from("gateway_flags")
+                    ->whereIn("gateway_id", [23, 24]);
+            })
+            ->delete();
     }
 };
