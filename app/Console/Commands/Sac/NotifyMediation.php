@@ -59,8 +59,10 @@ class NotifyMediation extends Command
         $query->chunk(500, function ($tickets) use ($bar, $sendGridService, $smsService) {
             foreach ($tickets as $ticket) {
                 try {
-                    $project = $ticket->sale->project;
-                    $projectName = $project->name;
+                    $projectName = '';
+                    if (!empty($ticket->sale->project)) {
+                        $projectName = $ticket->sale->project->name ?? '';
+                    }
 
                     $customer = $ticket->sale->customer;
                     $customerName = current(explode(" ", $customer->name));
