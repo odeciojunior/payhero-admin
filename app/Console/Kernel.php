@@ -222,7 +222,8 @@ class Kernel extends ConsoleKernel
             ->onOneServer();
 
         $schedule->command('shortlinks:delete-expired')
-            ->cron('0 */3 * * *')
+            ->withoutOverlapping()
+            ->everyFourHours()
             ->onOneServer();
     }
 
