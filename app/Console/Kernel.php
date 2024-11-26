@@ -48,11 +48,13 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyMinute()
             ->onOneServer();
+            
         $schedule
             ->command("available-balance:update")
             ->everyMinute()
             ->withoutOverlapping()
             ->onOneServer();
+
         $schedule
             ->command("verify:abandonedcarts")
             ->everyFifteenMinutes()
