@@ -227,6 +227,16 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyFourHours()
             ->onOneServer();
+
+        // Add the new command with success and failure logging
+        $schedule->command('health:schedule-check-heartbeat')
+            ->everyMinute()
+            ->onSuccess(function () {
+            })
+            ->onFailure(function () {
+                \Log::error('Erro ao executar o comando health:schedule-check-heartbeat.');
+                \Report::error('Erro ao executar o comando health:schedule-check-heartbeat.');
+            });
     }
 
     protected function commands(): void
