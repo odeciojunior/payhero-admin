@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Modules\Core\Services\FoxUtils;
 
-return new class extends Migration
-{
+return new class extends Migration{
     /**
      * Run the migrations.
      *
@@ -15,22 +16,21 @@ return new class extends Migration
     {
         $gateways = [
             [
-                "id" => 23,
-                "name" => "voluti_production",
-                "json_config" => "WwJDTElFTlR/SUQCGgIQEBAREREXEBgUERMRFBEYFBAQEBEUEQIMAkNMSUVOVH9TRUNSRVQCGgJaYkxtd3VXb2dpVHpneRR5cxAQblpxV2x3ZVh5TW1UbgJd",
+                "id" => 25,
+                "name" => "axisbanking_production",
+                "json_config" => "WwJTRUNSRVR/S0VZAhoCExRBRhYSGEINRhIVQw0UGENGDRkZEUENEkJCFBVEExdFEUUWAl0=",
                 "production_flag" => 1,
             ],
             [
-                "id" => 24,
-                "name" => "voluti_sandbox",
+                "id" => 26,
+                "name" => "axisbanking_sandbox",
                 "json_config" => FoxUtils::xorEncrypt(
-                    json_encode([
-                        "client_id" => "",
-                        "client_secret"=>""
+                    json_encode([                        
+                        "secret_key"=>""
                     ]),
                 ),
                 "production_flag" => 0,
-            ],
+            ]
         ];
 
         foreach ($gateways as $gateway) {
@@ -55,11 +55,7 @@ return new class extends Migration
      * @return void
      */
     public function down()
-    {
-        
-
-            DB::table("gateways")
-        ->whereIn("id", [23, 24])            
-        ->delete();
+    {        
+        DB::table("gateways")->whereIn("id", [25, 26])->delete();
     }
-};
+}
