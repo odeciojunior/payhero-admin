@@ -7,6 +7,8 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
+use Illuminate\Support\Facades\Log;
+use Sentry\Laravel\Facade as Sentry;
 
 class Kernel extends ConsoleKernel
 {
@@ -234,8 +236,9 @@ class Kernel extends ConsoleKernel
             ->onSuccess(function () {
             })
             ->onFailure(function () {
-                \Log::error('Erro ao executar o comando health:schedule-check-heartbeat.');
-                \Report::error('Erro ao executar o comando health:schedule-check-heartbeat.');
+                $exception = new \Exception('Erro ao executar o comando health:schedule-check-heartbeat.');
+                Sentry::captureException($exception);
+                Log::error('Erro ao executar o comando health:schedule-check-heartbeat.');
             });
     }
 
