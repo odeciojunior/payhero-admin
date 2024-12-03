@@ -20,6 +20,10 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, "pt_BR");
 
+        $schedule->command('cache:clear')->everyFourHours()->withoutOverlapping();
+        $schedule->command('config:clear')->everyFourHours()->withoutOverlapping();
+        $schedule->command('route:clear')->everyFourHours()->withoutOverlapping();
+        $schedule->command('view:clear')->everyFourHours()->withoutOverlapping();
         $schedule
             ->command(ScheduleCheckHeartbeatCommand::class)
             ->everyMinute()
