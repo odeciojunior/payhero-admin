@@ -308,7 +308,7 @@ abstract class GatewayServicesAbstract
                 //     continue;
                 // }
                 
-                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT && $company->id != 802) {
                     continue;
                 }
 
