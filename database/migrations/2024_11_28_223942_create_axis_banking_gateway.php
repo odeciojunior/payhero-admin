@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Core\Services\FoxUtils;
 
-return new class extends Migration{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -25,12 +25,12 @@ return new class extends Migration{
                 "id" => 26,
                 "name" => "axisbanking_sandbox",
                 "json_config" => FoxUtils::xorEncrypt(
-                    json_encode([                        
-                        "secret_key"=>""
-                    ]),
+                    json_encode([
+                        "secret_key" => "",
+                    ])
                 ),
                 "production_flag" => 0,
-            ]
+            ],
         ];
 
         foreach ($gateways as $gateway) {
@@ -38,7 +38,7 @@ return new class extends Migration{
                 "id" => $gateway["id"],
                 "gateway_enum" => 12,
                 "name" => $gateway["name"],
-                "json_config" => $gateway["json_config"] ?? '',
+                "json_config" => $gateway["json_config"] ?? "",
                 "production_flag" => $gateway["production_flag"],
                 "enabled_flag" => 1,
                 "deleted_at" => null,
@@ -46,7 +46,6 @@ return new class extends Migration{
                 "updated_at" => now(),
             ]);
         }
-        
     }
 
     /**
@@ -55,7 +54,9 @@ return new class extends Migration{
      * @return void
      */
     public function down()
-    {        
-        DB::table("gateways")->whereIn("id", [25, 26])->delete();
+    {
+        DB::table("gateways")
+            ->whereIn("id", [25, 26])
+            ->delete();
     }
-}
+};
