@@ -16,11 +16,15 @@ Route::group(
         Route::post("/trackingmore", "PostBackTrackingmoreController@postBackListener");
 
         Route::post("/shopify/{project_id}/tracking", "PostBackShopifyController@postBackTracking")->middleware(
-            "throttle:400,1"
+            "throttle:400,1",
         );
 
         Route::post("/shopify/{project_id}", "PostBackShopifyController@postBackListener")->middleware(
-            "throttle:400,1"
+            "throttle:400,1",
+        );
+
+        Route::post("/nuvemshop/{project_id}", "PostBackNuvemshopController@postBackListener")->middleware(
+            "throttle:400,1",
         );
 
         Route::any("/getnet", "PostBackGetnetController@postBackGetnet");
@@ -30,5 +34,5 @@ Route::group(
         Route::any("/woocommerce/{project_id}/product/update", "PostBackWooCommerceController@postBackProductUpdate");
 
         Route::any("/woocommerce/{project_id}/product/create", "PostBackWooCommerceController@postBackProductCreate");
-    }
+    },
 );

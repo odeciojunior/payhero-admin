@@ -21,7 +21,7 @@ use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
-use Modules\Core\Events\ImportNuvemshoProductsEvent;
+use Modules\Core\Events\ImportNuvemshopProductsEvent;
 use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Events\NotifyUserAchievementEvent;
@@ -60,7 +60,7 @@ use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
-use Modules\Core\Listeners\ImportNuvemshoProductsListener;
+use Modules\Core\Listeners\ImportNuvemshopProductsListener;
 use Modules\Core\Listeners\ManualRefundedSendEmailListener;
 use Modules\Core\Listeners\NotificacoesInteligentesPixExpiredListener;
 use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
@@ -185,7 +185,7 @@ class EventServiceProvider extends ServiceProvider
             NotifyAntifraudChargebackListener::class,
         ],
         ReportanaTrackingEvent::class => [ReportanaSaleListener::class],
-        ImportNuvemshoProductsEvent::class => [ImportNuvemshoProductsListener::class],
+        ImportNuvemshopProductsEvent::class => [ImportNuvemshopProductsListener::class],
     ];
 
     /**

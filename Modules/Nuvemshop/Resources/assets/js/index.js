@@ -246,3 +246,65 @@ function openCfg() {
 
     container.modal("show");
 }
+
+$("#btn-sync-products").on("click", function () {
+    const container = $("#modal-configs");
+    const projectId = container.find("#configs-project-id").val();
+
+    loadingOnScreen();
+
+    $.ajax({
+        method: "POST",
+        url: "/api/apps/nuvemshop/sync/products",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        data: {
+            project_id: projectId,
+        },
+        error: function error(response) {
+            loadOnAny("#content", true);
+            loadingOnScreenRemove();
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            loadOnAny("#content", true);
+            loadingOnScreenRemove();
+            alertCustom("success", response.message);
+            container.modal("hide");
+        },
+    });
+});
+
+$("#btn-sync-trackings").on("click", function () {
+    const container = $("#modal-configs");
+    const projectId = container.find("#configs-project-id").val();
+
+    loadingOnScreen();
+
+    $.ajax({
+        method: "POST",
+        url: "/api/apps/nuvemshop/sync/trackings",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        data: {
+            project_id: projectId,
+        },
+        error: function error(response) {
+            loadOnAny("#content", true);
+            loadingOnScreenRemove();
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            loadOnAny("#content", true);
+            loadingOnScreenRemove();
+            alertCustom("success", response.message);
+            container.modal("hide");
+        },
+    });
+});

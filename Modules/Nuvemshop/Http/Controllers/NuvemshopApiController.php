@@ -3,6 +3,7 @@
 namespace Modules\Nuvemshop\Http\Controllers;
 
 use App\Jobs\ImportNuvemshopProductsStore;
+use App\Jobs\ImportNuvemshopTrackingCodesJob;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Events\ImportNuvemshoProductsEvent;
+use Modules\Core\Events\ImportNuvemshopProductsEvent;
 use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
@@ -214,12 +215,53 @@ class NuvemshopApiController extends Controller
             $nuvemshopIntegration->status = NuvemshopIntegration::STATUS_ACTIVE;
             $nuvemshopIntegration->save();
 
-            event(new ImportNuvemshoProductsEvent($nuvemshopIntegration));
+            event(new ImportNuvemshopProductsEvent($nuvemshopIntegration));
 
             return response()->json(["message" => "Integração finalizada com sucesso"], 200);
         } catch (Exception $e) {
             report($e);
             return response()->json(["message" => "Problema ao finalizar integração, tente novamente mais tarde"], 400);
+        }
+    }
+
+    public function syncProducts(Request $request): JsonResponse
+    {
+        try {
+            $projectId = hashids_decode($request->project_id);
+            $nuvemshopIntegration = NuvemshopIntegration::where("project_id", $projectId)->first();
+
+            if (empty($nuvemshopIntegration)) {
+                return response()->json(["message" => "Integração não encontrada"], 400);
+            }
+
+            event(new ImportNuvemshopProductsEvent($nuvemshopIntegration));
+
+            return response()->json(["message" => "Os produtos estão sendo sincronizados."], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(["message" => "Problema ao sincronizar produtos, tente novamente mais tarde"], 400);
+        }
+    }
+
+    public function syncTrackings(Request $request): JsonResponse
+    {
+        try {
+            $projectId = hashids_decode($request->project_id);
+            $nuvemshopIntegration = NuvemshopIntegration::where("project_id", $projectId)->first();
+
+            if (empty($nuvemshopIntegration)) {
+                return response()->json(["message" => "Integração não encontrada"], 400);
+            }
+
+            ImportNuvemshopTrackingCodesJob::dispatch($nuvemshopIntegration);
+
+            return response()->json(["message" => "Os códigos de rastreio estão sendo sincronizados."], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(
+                ["message" => "Problema ao sincronizar códigos de rastreio, tente novamente mais tarde"],
+                400,
+            );
         }
     }
 }

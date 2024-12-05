@@ -169,7 +169,7 @@
                                      alt="">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">Nuvemshop</h5>
+                                <h5 class="card-title">Nuvemshop (Beta)</h5>
                                 <p class="card-text sm">Integre suas lojas com Nuvemshop</p>
                             </div>
                         </div>

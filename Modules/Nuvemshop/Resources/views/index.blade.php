@@ -146,8 +146,8 @@
                         <small>Escolha a opção que deseja sincronizar</small>
 
                         <div class="d-flex align-items-center justify-content-around gap-1 pt-20">
-                            <div class="btn-sync">Produtos</div>
-                            <div class="btn-sync">Rastreios</div>
+                            <div class="btn-sync" id="btn-sync-products">Produtos</div>
+                            <div class="btn-sync" id="btn-sync-trackings">Rastreios</div>
                         </div>
                     </div>
                 </div>

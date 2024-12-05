@@ -4,7 +4,7 @@ namespace Modules\Core\Events;
 
 use Modules\Core\Entities\NuvemshopIntegration;
 
-class ImportNuvemshoProductsEvent
+class ImportNuvemshopProductsEvent
 {
     public $integration;
 
