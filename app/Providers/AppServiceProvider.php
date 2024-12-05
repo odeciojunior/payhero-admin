@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use GuzzleHttp\Client;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;
@@ -17,6 +18,9 @@ use Modules\Core\Observers\CompanyObserver;
 use Modules\Core\Observers\GatewaysCompaniesCredentialObserver;
 use Modules\Core\Observers\SaleObserver;
 use Modules\Core\Observers\TicketMessageObserver;
+use Modules\GatewayIntegrations\Clients\ShortIOClient;
+use Modules\GatewayIntegrations\Gateways\ShortenLinks\contract\ShortenLinkGatewayInterface;
+use Modules\GatewayIntegrations\Gateways\ShortenLinks\ShortIOGateway;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,6 +58,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
+        $this->app->bind(
+            ShortenLinkGatewayInterface::class,
+            function () {
+                return new ShortIOGateway(
+                    new ShortIOClient(
+                        new Client(
+                            [
+                                'base_uri' => config('services.short_io.domain'),
+                                'headers' => [
+                                    'Accept' => 'application/json',
+                                    'Content-Type' => 'application/json',
+                                    'Authorization' => config('services.short_io.api_key'),
+                                ],
+                            ]
+                        )
+                    )
+                );
+            }
+        );
     }
 }

@@ -143,7 +143,7 @@ abstract class GatewayServicesAbstract
         WHERE company_id = :companyId",["companyId"=>$this->company->id]);
 
         $pendingWithdrawal = Withdrawal::where("company_id", $this->company->id)
-            ->whereNotIn("status", [Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED])
+            ->whereNotIn("status", [Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED, Withdrawal::STATUS_LIQUIDATING])
             ->sum("value");
 
         return intval($balance[0]->total ?? 0) - intval($pendingWithdrawal);
@@ -281,9 +281,34 @@ abstract class GatewayServicesAbstract
 
             $currentTime = Carbon::now()->format("H:i:s");
 
+            // Check if the current date is a national holiday in Brazil
+            try {
+                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+            } catch (Exception $e) {
+                $holidays = [];
+            }
+
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
-                if (!empty($company->credit_card_time) && $currentTime < $company->credit_card_time) {
+                $user = $transaction->user;
+                $sale = $transaction->sale;
+                
+                $isHoliday = false;
+                foreach ($holidays as $holiday) {
+                    if ($holiday['date'] == Carbon::now()->format('Y-m-d')) {
+                        $isHoliday = true;
+                        break;
+                    }
+                }
+                
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT && $company->id != 802) {
+                    continue;
+                }
+
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
+                        && ($isHoliday || ( !empty($company->credit_card_release_time) 
+                                            && $currentTime < $company->credit_card_release_time)
+                            )) {
                     continue;
                 }
 
@@ -291,8 +316,7 @@ abstract class GatewayServicesAbstract
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-                $user = $transaction->user;
-                $sale = $transaction->sale;
+                
 
                 $hasSecurityReserve = false;
                 $reserveValue = 0;

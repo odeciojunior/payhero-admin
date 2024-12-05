@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67fa08b6751eefcb292906934a4f18a6",
+    "content-hash": "3127a0097de1487dc596614e71083fe6",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -253,16 +253,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.325.0",
+            "version": "3.325.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ea36e53745cff21519c2dadd808e2482f0bfadf5"
+                "reference": "5ac57c98062f1c45d094c2baa94a7e557989465f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ea36e53745cff21519c2dadd808e2482f0bfadf5",
-                "reference": "ea36e53745cff21519c2dadd808e2482f0bfadf5",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5ac57c98062f1c45d094c2baa94a7e557989465f",
+                "reference": "5ac57c98062f1c45d094c2baa94a7e557989465f",
                 "shasum": ""
             },
             "require": {
@@ -345,9 +345,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.325.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.325.1"
             },
-            "time": "2024-10-30T18:11:21+00:00"
+            "time": "2024-10-31T18:15:14+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -4482,23 +4482,23 @@
         },
         {
             "name": "lorisleiva/cron-translator",
-            "version": "v0.3.2",
+            "version": "v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lorisleiva/cron-translator.git",
-                "reference": "d49dd7732197c2e967a66968c9323c81826c86e5"
+                "reference": "3c7d8e3984c845a33bc1ae3cdc36c0b38f4783e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lorisleiva/cron-translator/zipball/d49dd7732197c2e967a66968c9323c81826c86e5",
-                "reference": "d49dd7732197c2e967a66968c9323c81826c86e5",
+                "url": "https://api.github.com/repos/lorisleiva/cron-translator/zipball/3c7d8e3984c845a33bc1ae3cdc36c0b38f4783e9",
+                "reference": "3c7d8e3984c845a33bc1ae3cdc36c0b38f4783e9",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5.21 || ^9.5"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
@@ -4526,7 +4526,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lorisleiva/cron-translator/issues",
-                "source": "https://github.com/lorisleiva/cron-translator/tree/v0.3.2"
+                "source": "https://github.com/lorisleiva/cron-translator/tree/v0.4.5"
             },
             "funding": [
                 {
@@ -4534,7 +4534,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-16T07:37:33+00:00"
+            "time": "2024-02-02T10:51:56+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -5498,30 +5498,30 @@
         },
         {
             "name": "nwidart/laravel-modules",
-            "version": "8.6.0",
+            "version": "v9.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nWidart/laravel-modules.git",
-                "reference": "8f0d90d9f7ba986a98f9be20ae2d2487cb6a0119"
+                "reference": "a31b003b9e1dd100d2bcf7da7e036a758d33986d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/8f0d90d9f7ba986a98f9be20ae2d2487cb6a0119",
-                "reference": "8f0d90d9f7ba986a98f9be20ae2d2487cb6a0119",
+                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/a31b003b9e1dd100d2bcf7da7e036a758d33986d",
+                "reference": "a31b003b9e1dd100d2bcf7da7e036a758d33986d",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.3"
+                "php": ">=8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "laravel/framework": "^8.0",
-                "mockery/mockery": "~1.0",
-                "orchestra/testbench": "^6.2",
-                "phpstan/phpstan": "^0.12.14",
-                "phpunit/phpunit": "^8.5",
-                "spatie/phpunit-snapshot-assertions": "^2.1.0|^4.2"
+                "friendsofphp/php-cs-fixer": "^3.6",
+                "laravel/framework": "^9.21",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^7.0",
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9.5",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
             },
             "type": "library",
             "extra": {
@@ -5534,7 +5534,7 @@
                     }
                 },
                 "branch-alias": {
-                    "dev-master": "8.0-dev"
+                    "dev-master": "9.0-dev"
                 }
             },
             "autoload": {
@@ -5567,19 +5567,15 @@
             ],
             "support": {
                 "issues": "https://github.com/nWidart/laravel-modules/issues",
-                "source": "https://github.com/nWidart/laravel-modules/tree/8.6.0"
+                "source": "https://github.com/nWidart/laravel-modules/tree/v9.0.6"
             },
             "funding": [
-                {
-                    "url": "https://github.com/dcblogdev",
-                    "type": "github"
-                },
                 {
                     "url": "https://github.com/nwidart",
                     "type": "github"
                 }
             ],
-            "time": "2024-02-02T15:32:19+00:00"
+            "time": "2022-10-28T11:50:28+00:00"
         },
         {
             "name": "nyholm/psr7",
@@ -8089,33 +8085,34 @@
         },
         {
             "name": "spatie/laravel-schedule-monitor",
-            "version": "3.0.3",
+            "version": "3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-schedule-monitor.git",
-                "reference": "c18c9dfffbee2d7f3b1a9ed019cbf16453259892"
+                "reference": "d240ab3bd669beaa2a272d3b8acb4a5b3d8f1693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/c18c9dfffbee2d7f3b1a9ed019cbf16453259892",
-                "reference": "c18c9dfffbee2d7f3b1a9ed019cbf16453259892",
+                "url": "https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/d240ab3bd669beaa2a272d3b8acb4a5b3d8f1693",
+                "reference": "d240ab3bd669beaa2a272d3b8acb4a5b3d8f1693",
                 "shasum": ""
             },
             "require": {
-                "illuminate/bus": "^9.0",
-                "lorisleiva/cron-translator": "^0.3.0",
-                "nesbot/carbon": "^2.41.3",
-                "nunomaduro/termwind": "^1.10.1",
+                "illuminate/bus": "^9.0|^10.0|^11.0",
+                "lorisleiva/cron-translator": "^0.3.0|^0.4.0",
+                "nesbot/carbon": "^2.63|^3.0",
+                "nunomaduro/termwind": "^1.10.1|^2.0",
                 "php": "^8.0",
                 "spatie/laravel-package-tools": "^1.9"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
                 "ohdearapp/ohdear-php-sdk": "^3.0",
-                "orchestra/testbench": "^7.0",
-                "pestphp/pest": "^1.20",
-                "pestphp/pest-plugin-laravel": "^1.2",
-                "spatie/phpunit-snapshot-assertions": "^4.2",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.20|^2.34",
+                "pestphp/pest-plugin-laravel": "^1.2|^2.3",
+                "spatie/pest-plugin-snapshots": "^1.1|^2.1",
+                "spatie/phpunit-snapshot-assertions": "^4.2|^5.1",
                 "spatie/test-time": "^1.2"
             },
             "suggest": {
@@ -8155,7 +8152,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-schedule-monitor/issues",
-                "source": "https://github.com/spatie/laravel-schedule-monitor/tree/3.0.3"
+                "source": "https://github.com/spatie/laravel-schedule-monitor/tree/3.8.1"
             },
             "funding": [
                 {
@@ -8163,7 +8160,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-13T06:38:50+00:00"
+            "time": "2024-07-29T08:25:07+00:00"
         },
         {
             "name": "spatie/regex",
@@ -13036,12 +13033,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b9d92910c727387dcb8f5dac744acab5a0190866"
+                "reference": "e3b44e38648ef5386687032582759f9c616c8d19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b9d92910c727387dcb8f5dac744acab5a0190866",
-                "reference": "b9d92910c727387dcb8f5dac744acab5a0190866",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e3b44e38648ef5386687032582759f9c616c8d19",
+                "reference": "e3b44e38648ef5386687032582759f9c616c8d19",
                 "shasum": ""
             },
             "conflict": {
@@ -13361,6 +13358,7 @@
                 "laravel/fortify": "<1.11.1",
                 "laravel/framework": "<6.20.44|>=7,<7.30.6|>=8,<8.75",
                 "laravel/laravel": ">=5.4,<5.4.22",
+                "laravel/reverb": "<1.4",
                 "laravel/socialite": ">=1,<2.0.10",
                 "latte/latte": "<2.10.8",
                 "lavalite/cms": "<=9|==10.1",
@@ -13771,7 +13769,7 @@
                 "xataface/xataface": "<3",
                 "xpressengine/xpressengine": "<3.0.15",
                 "yab/quarx": "<2.4.5",
-                "yeswiki/yeswiki": "<4.1",
+                "yeswiki/yeswiki": "<=4.4.4",
                 "yetiforce/yetiforce-crm": "<=6.4",
                 "yidashi/yii2cmf": "<=2",
                 "yii2mod/yii2-cms": "<1.9.2",
@@ -13862,7 +13860,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-30T23:05:00+00:00"
+            "time": "2024-10-31T18:06:19+00:00"
         },
         {
             "name": "sebastian/cli-parser",
