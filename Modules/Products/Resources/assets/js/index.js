@@ -220,10 +220,10 @@ jQuery(function () {
             },
             success: function (response) {
                 removeFilterLoadingSkeleton();
+                $("#filter-products").show();
 
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
-                    $("#filter-products").show();
                     $("#data-table-products").html("");
                     let dados = "";
                     $.each(response.data, function (index, value) {
