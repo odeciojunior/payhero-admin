@@ -65,6 +65,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property string|null $cupom_code
  * @property string|null $shopify_order
  * @property string|null $woocommerce_order
+ * @property string|null $nuvemshop_order
  * @property string|null $shopify_discount
  * @property string|null $dolar_quotation
  * @property int $first_confirmation
@@ -209,6 +210,7 @@ class Sale extends Model
         "cupom_code",
         "shopify_order",
         "woocommerce_order",
+        "nuvemshop_order",
         "shopify_discount",
         "dolar_quotation",
         "first_confirmation",
