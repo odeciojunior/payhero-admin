@@ -48,6 +48,8 @@ class ProjectsResource extends JsonResource
         $notazzConfig = json_decode($this->notazz_configs);
         $billterReleaseDays = $this->usersProjects->first()->company->bank_slip_release_money_days;
 
+        $status = (isset($this->nuvemshop_id) ? ($this->status ? 1 : 0) : isset($this->domains[0]->name)) ? 1 : 0;
+
         return [
             "id" => hashids_encode($this->id),
             "photo" => $this->photo,
@@ -67,7 +69,7 @@ class ProjectsResource extends JsonResource
             "analyzing_redirect" => $this->analyzing_redirect,
             "cost_currency_type" => $this->present()->getCurrencyCost($notazzConfig->cost_currency_type ?? 1),
             "update_cost_shopify" => $notazzConfig->update_cost_shopify ?? 1,
-            "status" => isset($this->domains[0]->name) ? 1 : 0,
+            "status" => $status,
             "terms_affiliates" => $this->terms_affiliates,
             "cookie_duration" => $this->cookie_duration,
             "automatic_affiliation" => $this->automatic_affiliation,
