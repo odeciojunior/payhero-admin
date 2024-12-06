@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\NuvemshopIntegration;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
@@ -17,6 +18,8 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Exceptions\Services\ServiceException;
+use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
+use Modules\Core\Services\Nuvemshop\NuvemshopService;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -60,6 +63,10 @@ class ProjectService
      * @var WooCommerceIntegration
      */
     private $wooCommerceIntegrationModel;
+
+    private NuvemshopAPI $nuvemshopApi;
+
+    private NuvemshopIntegration $nuvemshopIntegrationModel;
 
     /**
      * @param  string|null  $urlStore
@@ -178,7 +185,7 @@ class ProjectService
             Log::warning("ProjectService - Erro ao remover projeto");
             report($e);
 
-            throw new ServiceException("ProjectService - hasSales - ".$e->getMessage(), $e->getCode(), $e);
+            throw new ServiceException("ProjectService - hasSales - " . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -194,6 +201,7 @@ class ProjectService
                 ->with([
                     "domains",
                     "shopifyIntegrations",
+                    "nuvemshopIntegrations",
                     "plans",
                     "plans.productsPlans",
                     "plans.productsPlans.product",
@@ -239,7 +247,7 @@ class ProjectService
                     $deleteDomain = $domainService->deleteDomain($domain);
 
                     if (!$deleteDomain["success"]) {
-                        report('Erro ao excluir domínio do projetoId: '.$project->id.', domain: '.$domain->name);
+                        report("Erro ao excluir domínio do projetoId: " . $project->id . ", domain: " . $domain->name);
                     }
                 } catch (Exception $e) {
                     report($e);
@@ -256,7 +264,7 @@ class ProjectService
                 $wooCommerceService = $this->getWooCommerceService(
                     $wooCommerceIntegration->url_store,
                     $wooCommerceIntegration->token_user,
-                    $wooCommerceIntegration->token_pass
+                    $wooCommerceIntegration->token_pass,
                 );
 
                 $wooCommerceService->deleteHooks($project->id);
@@ -277,6 +285,15 @@ class ProjectService
                 }
 
                 $shopifyIntegration->delete();
+            }
+
+            //remover integração do nuvemshop
+            $nuvemshopIntegration = NuvemshopIntegration::where("project_id", $project->id)->first();
+
+            if (!empty($nuvemshopIntegration)) {
+                $nuvemshopIntegration->delete();
+                $nuvemshopService = new NuvemshopService($nuvemshopIntegration);
+                $nuvemshopService->deleteWebhooks();
             }
 
             $products = Product::where("project_id", $project->id)->get();
@@ -327,7 +344,7 @@ class ProjectService
             }
 
             $projectUpdated = $project->update([
-                "name" => $project->name." (Excluído)",
+                "name" => $project->name . " (Excluído)",
                 "status" => (new Project())->present()->getStatus("disabled"),
             ]);
 
@@ -335,14 +352,14 @@ class ProjectService
                 return true;
             }
 
-            report("Erro ao atualizar nome e status do projeto: id-> (".$project->id.")");
+            report("Erro ao atualizar nome e status do projeto: id-> (" . $project->id . ")");
 
             return false;
         } catch (Exception $e) {
             throw new ServiceException(
-                "ProjectService - Erro ao remover projeto - ".$e->getMessage(),
+                "ProjectService - Erro ao remover projeto - " . $e->getMessage(),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }
@@ -388,8 +405,8 @@ class ProjectService
                     "affiliates.status_enum as affiliate_status",
                     DB::raw("CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id"),
                     DB::raw(
-                        "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p"
-                    )
+                        "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p",
+                    ),
                 )
                 ->whereIn("projects.status", $status)
                 ->where("users_projects.user_id", $userId)
@@ -451,7 +468,7 @@ class ProjectService
         $tokens = $tokensQr->get();
 
         foreach ($tokens as $item) {
-            $item->id = "TOKEN-".Hashids::encode($item->id);
+            $item->id = "TOKEN-" . Hashids::encode($item->id);
         }
         return ["data" => $projects, "tokens" => $tokens];
     }

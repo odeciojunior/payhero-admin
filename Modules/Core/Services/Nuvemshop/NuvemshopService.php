@@ -25,11 +25,7 @@ class NuvemshopService
 
     public function createWebhooks()
     {
-        $currentWebhooks = $this->api->findAllWebhooks();
-
-        foreach ($currentWebhooks as $webhook) {
-            $this->api->deleteWebhook($webhook["id"]);
-        }
+        $this->deleteWebhooks();
 
         $url = env("APP_URL") . "/postback/nuvemshop/{$this->integration->project_id}";
 
@@ -47,6 +43,15 @@ class NuvemshopService
             "event" => "order/fulfilled",
             "url" => $url,
         ]);
+    }
+
+    public function deleteWebhooks()
+    {
+        $currentWebhooks = $this->api->findAllWebhooks();
+
+        foreach ($currentWebhooks as $webhook) {
+            $this->api->deleteWebhook($webhook["id"]);
+        }
     }
 
     public function createProduct(array $nuvemshopProduct)
