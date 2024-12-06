@@ -2,12 +2,13 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\NuvemshopIntegration;
 use Modules\Core\Events\ImportNuvemshopProductsEvent;
 use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
 use Modules\Core\Services\Nuvemshop\NuvemshopService;
 
-class ImportNuvemshopProductsListener
+class ImportNuvemshopProductsListener implements ShouldQueue
 {
     public $queue = "long";
 
