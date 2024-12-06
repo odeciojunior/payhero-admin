@@ -208,7 +208,10 @@ class NuvemshopApiController extends Controller
                 return response()->json(["message" => "Token inválido"], 400);
             }
 
-            Project::where("id", $nuvemshopIntegration->project_id)->update(["nuvemshop_id" => $response["user_id"]]);
+            Project::where("id", $nuvemshopIntegration->project_id)->update([
+                "nuvemshop_id" => $response["user_id"],
+                "status" => Project::STATUS_ACTIVE,
+            ]);
 
             $nuvemshopIntegration->token = $response["access_token"];
             $nuvemshopIntegration->store_id = $response["user_id"];
