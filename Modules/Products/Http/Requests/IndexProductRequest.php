@@ -14,7 +14,7 @@ class IndexProductRequest extends FormRequest
     {
         return [
             "name" => "nullable|max:100|string",
-            "shopify" => "nullable|in:2,1,0",
+            "shopify" => "nullable|in:3,2,1,0",
             "project" => "nullable|string",
         ];
     }
