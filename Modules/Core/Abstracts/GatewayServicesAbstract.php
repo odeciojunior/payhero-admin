@@ -26,6 +26,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 
 abstract class GatewayServicesAbstract
 {
+    const EXCLUDED_COMPANY_IDS = [802, 1112, 971, 1013, 1055, 945, 989, 1050, 236, 1116, 992, 622, 1026, 1068, 1029, 993, 1089, 23];
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
@@ -301,9 +302,11 @@ abstract class GatewayServicesAbstract
                     }
                 }
                 
-                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                // trava de liberação de cartão por conta da IUGU segurar os saques
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
+                    && !in_array($company->id, [802,1112,971,1013,1055,945,989,1050,236,1116,992,622,1026,1068,1029,993,1089,23])) {
                     continue;
-                } //trava de liberação de cartão por conta da IUGU segurar os saques
+                }
 
                 if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
                         && ($isHoliday || ( !empty($company->credit_card_release_time) 
