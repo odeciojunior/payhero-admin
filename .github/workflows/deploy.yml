@@ -8,7 +8,7 @@ run-name: Workflow initiated by ${{ github.actor }}
 on:
     # Triggers the workflow on push for the main branch
     push:
-        branch: [main]
+        branches: [main]
 
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
@@ -26,6 +26,7 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
+
             - name: Deploy to EC2
               run: |
                   aws ssm send-command \
@@ -35,23 +36,24 @@ jobs:
                   --parameters '
                         {
                             "commands": [
-                                "echo cfpDeploy Logs - Deploy performed in: $(date)",
-                                "echo",
-                                "echo '"'"'> Atualizando o GIT'"'"'",
                                 "service nginx stop",
-                                "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard'"'"'",
+                                "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard origin/main'"'"'",
                                 "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br pull'"'"'",
                                 "rm -rf /var/www/html/admin.azcend.com.br/storage",
-                                "sudo -H -u ubuntu bash -c '"'"'ln -s /var/www/html/efs-admin-azc-prd/storage /var/www/html/admin.azcend.com.br/storage'"'"'",
-                                "chown ubuntu:www-data /var/www/html/admin.azcend.com.br/storage",
+                                "ln -s /var/www/html/efs-admin-azc-prd/storage /var/www/html/admin.azcend.com.br/storage",
                                 "service nginx start",
-                                "echo '"'"'> Resetando o Supervisor'"'"'",
                                 "supervisorctl restart all",
-                                "echo '"'"'> Executando Migratins'"'"'",
-                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'",
-                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --database=demo --force'"'"'",
-                                "echo '"'"'> Fim do script'"'"'",
-                                "echo"
+                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan horizon:publish'"'"'",
+                                "php /var/www/html/admin.azcend.com.br/artisan cache:clear",
+                                "php /var/www/html/admin.azcend.com.br/artisan config:clear",
+                                "php /var/www/html/admin.azcend.com.br/artisan route:clear",
+                                "php /var/www/html/admin.azcend.com.br/artisan view:clear",
+                                "chown -R ubuntu:www-data /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "chmod -R 775 /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -R -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
+                                "setfacl -R -m g:www-data:rwx /var/www/html/admin.azcend.com.br",
+                                "setfacl -dR -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
+                                "setfacl -dR -m g:www-data:rwx /var/www/html/admin.azcend.com.br"
                             ],
                             "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
                             "executionTimeout": ["3600"]
