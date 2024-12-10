@@ -269,7 +269,7 @@ abstract class GatewayServicesAbstract
             DB::beginTransaction();
 
             $transactions = Transaction::with(["company", "user", "sales"])
-                ->where("release_date", "<=", Carbon::now()->format("Y-m-d"))
+                ->where("release_date", "<", Carbon::now()->format("Y-m-d"))
                 ->where("status_enum", Transaction::STATUS_PAID)
                 ->whereIn("gateway_id", $this->gatewayIds)
                 ->whereNotNull("company_id");
@@ -308,12 +308,12 @@ abstract class GatewayServicesAbstract
                 //     continue;
                 // }
 
-                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
-                        && ($isHoliday || ( !empty($company->credit_card_release_time) 
-                                            && $currentTime < $company->credit_card_release_time)
-                            )) {
-                    continue;
-                }
+                // if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
+                //         && ($isHoliday || ( !empty($company->credit_card_release_time) 
+                //                             && $currentTime < $company->credit_card_release_time)
+                //             )) {
+                //     continue;
+                // }
 
                 $transaction->update([
                     "status" => "transfered",
