@@ -382,7 +382,9 @@ $(document).ready(function () {
     });
 
     $("#bt-delete-integration").on("click", function () {
-        alertConfirm("Deseja deletar a integração?", deleteIntegration);
+        if (confirm("Deseja deletar a integração?")) {
+            deleteIntegration(projectId);
+        }
     });
 
     /**
