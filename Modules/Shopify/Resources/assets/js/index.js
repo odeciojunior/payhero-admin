@@ -381,6 +381,37 @@ $(document).ready(function () {
         $("#bt-close").trigger("click");
     });
 
+    $("#bt-update-keys").on("click", function () {
+        alertConfirm("Deseja deletar a integração?", deleteIntegration);
+    });
+
+    /**
+     * Deletes a Shopify integration by its ID.
+     * @param {number} id - The ID of the integration to delete.
+     */
+    function deleteIntegration(id) {
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/shopify/delete",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            data: {
+                id: id,
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                alertCustom("success", response.message);
+            },
+        });
+    }
+
+    $("#bt-close").trigger("click");
+
     $(".sync-tracking").click(function () {
         syncAction = "tracking";
         toggle_confirm(

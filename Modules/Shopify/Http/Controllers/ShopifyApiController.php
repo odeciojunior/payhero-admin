@@ -23,6 +23,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\Shopify\ShopService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
@@ -295,6 +296,31 @@ class ShopifyApiController extends Controller
         }
     }
 
+    public function destroy(Request $request): JsonResponse
+    {
+        try {
+            $dataRequest = $request->all();
+
+            if (isset($dataRequest["id"])) {
+                return response()->json(["message" => "O token deve ter entre 10 e 100 letras e números!"], 400);
+            }
+
+            ShopifyIntegration::deleteShopifyIntegration($dataRequest["id"]);
+
+            return response()->json(
+                [
+                    "message" => "Integração excluída!",
+                ],
+                200,
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(["message" => "Problema ao criar integração, tente novamente mais tarde"], 400);
+        }
+    }
+
+    
     public function undoIntegration(Request $request)
     {
         try {
