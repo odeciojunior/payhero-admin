@@ -408,6 +408,8 @@ $(document).ready(function () {
             },
             success: function (response) {
                 alertCustom("success", response.message);
+                $("#modal_edit").modal("hide");
+                getCompanies();
             },
         });
     }
