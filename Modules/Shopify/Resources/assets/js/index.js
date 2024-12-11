@@ -381,7 +381,7 @@ $(document).ready(function () {
         $("#bt-close").trigger("click");
     });
 
-    $("#bt-update-keys").on("click", function () {
+    $("#bt-delete-integration").on("click", function () {
         alertConfirm("Deseja deletar a integração?", deleteIntegration);
     });
 
