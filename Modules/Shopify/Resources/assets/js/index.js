@@ -383,7 +383,7 @@ $(document).ready(function () {
 
     $("#bt-delete-integration").on("click", function () {
         if (confirm("Deseja deletar a integração?")) {
-            deleteIntegration(shopifyIntegration.id);
+            deleteIntegration(projectId);
         }
     });
 

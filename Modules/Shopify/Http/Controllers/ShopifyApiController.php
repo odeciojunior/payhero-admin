@@ -307,11 +307,15 @@ class ShopifyApiController extends Controller
                 return response()->json(["message" => "É necessário enviar o id da integração"], 400);
             }
 
-            $shopifyIntegrationId = current(Hashids::decode($dataRequest["id"]));
-            $shopifyIntegration = ShopifyIntegration::find($shopifyIntegrationId ?? 0);
+            $projectId = current(Hashids::decode($dataRequest["id"]));
+            if (!$projectId) {
+                return response()->json(["message" => "ID de integração inválido"], 400);
+            }
+            
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $projectId)->first();
 
             if (empty($shopifyIntegration)) {
-                return response()->json(["message" => "Integração {$shopifyIntegrationId} não encontrada!"], 400);
+                return response()->json(["message" => "Integração não encontrada!"], 400);
             }
 
             // Delete the shop record
