@@ -302,7 +302,7 @@ class ShopifyApiController extends Controller
             $dataRequest = $request->all();
 
             if (isset($dataRequest["id"])) {
-                return response()->json(["message" => "O token deve ter entre 10 e 100 letras e números!"], 400);
+                return response()->json(["message" => "Integração não encontrada!"], 400);
             }
 
             ShopifyIntegration::deleteShopifyIntegration($dataRequest["id"]);
