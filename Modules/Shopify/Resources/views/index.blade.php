@@ -710,7 +710,7 @@
                             <button id="bt-delete-integration"
                                     type="button"
                                     class="btn btn-secondary"
-                                    style="display: none; padding: 12px 32px; font-size: 16px; font-weight: 600">Excluir</button>
+                                    style="padding: 12px 32px; font-size: 16px; font-weight: 600">Excluir</button>
                         </div>
 
                     </div>
