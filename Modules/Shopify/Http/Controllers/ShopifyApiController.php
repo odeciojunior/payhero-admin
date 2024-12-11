@@ -310,25 +310,14 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationId = current(Hashids::decode($dataRequest["id"]));
             $shopifyIntegration = ShopifyIntegration::find($shopifyIntegrationId ?? 0);
 
-            if (isEmpty($shopifyIntegration)) {
-                return response()->json(["message" => "Integração não encontrada!"], 400);
+            if (empty($shopifyIntegration)) {
+                return response()->json(["message" => "Integração {$shopifyIntegrationId} não encontrada!"], 400);
             }
 
-            try {
-                // Find the shop by ID
-                $shop = ShopifyIntegration::find($shopifyIntegrationId);
-    
-                if (!$shop) {
-                    throw new \Exception('Integração de Loja Shopify não encontrada');
-                }
-    
-                // Delete the shop record
-                $shop->delete();
-    
-                return response()->json(['message' => 'Shopify excluída com sucesso!'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 400);
-            }
+            // Delete the shop record
+            $shopifyIntegration->delete();
+
+            return response()->json(['message' => 'Shopify excluída com sucesso!'], 200);
 
             return response()->json(
                 [
