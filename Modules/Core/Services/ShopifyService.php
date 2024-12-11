@@ -1174,23 +1174,4 @@ class ShopifyService
             return null;
         }
     }
-
-    public function deleteShopifyIntegration($shopId)
-    {
-        try {
-            // Find the shop by ID
-            $shop = ShopifyIntegration::find($shopId);
-
-            if (!$shop) {
-                throw new \Exception('Integração de Loja Shopify não encontrada');
-            }
-
-            // Delete the shop record
-            $shop->delete();
-
-            return response()->json(['message' => 'Shopify excluída com sucesso!'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
-    }
 }

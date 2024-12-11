@@ -32,6 +32,8 @@ use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ShopifyApiController extends Controller
 {
     public function index(Request $request)
@@ -301,11 +303,32 @@ class ShopifyApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            if (isset($dataRequest["id"])) {
+            if (!isset($dataRequest["id"])) {
+                return response()->json(["message" => "É necessário enviar o id da integração"], 400);
+            }
+
+            $shopifyIntegrationId = current(Hashids::decode($dataRequest["id"]));
+            $shopifyIntegration = ShopifyIntegration::find($shopifyIntegrationId ?? 0);
+
+            if (isEmpty($shopifyIntegration)) {
                 return response()->json(["message" => "Integração não encontrada!"], 400);
             }
 
-            ShopifyIntegration::deleteShopifyIntegration($dataRequest["id"]);
+            try {
+                // Find the shop by ID
+                $shop = ShopifyIntegration::find($shopifyIntegrationId);
+    
+                if (!$shop) {
+                    throw new \Exception('Integração de Loja Shopify não encontrada');
+                }
+    
+                // Delete the shop record
+                $shop->delete();
+    
+                return response()->json(['message' => 'Shopify excluída com sucesso!'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
 
             return response()->json(
                 [
@@ -319,7 +342,6 @@ class ShopifyApiController extends Controller
             return response()->json(["message" => "Problema ao criar integração, tente novamente mais tarde"], 400);
         }
     }
-
     
     public function undoIntegration(Request $request)
     {
