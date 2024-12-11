@@ -710,10 +710,6 @@
                             <button id="bt-delete-integration"
                                     type="button"
                                     class="btn btn-secondary"
-                                    data-dismiss="modal"></button>
-
-                            <button type="button"
-                                    class="btn btn-primary"
                                     style="display: none; padding: 12px 32px; font-size: 16px; font-weight: 600">Excluir</button>
                         </div>
 
