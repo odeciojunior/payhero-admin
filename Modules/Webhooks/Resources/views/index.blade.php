@@ -4,6 +4,7 @@
     @push('css')
         <link rel="stylesheet"
               href="{{ mix('build/layouts/webhooks/index.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('build/input-copy-styles.min.css') }}">
     @endpush
     <div class="page new-layout">
 
@@ -80,14 +81,14 @@
                      role="tabpanel">
                     <table class="table table-striped unify">
                         <thead>
-                            <tr>
-                                <td class="">Descrição</td>
-                                <td class="">URL</td>
-                                <td class=""></td>
-                            </tr>
+                        <tr>
+                            <td class="">Descrição</td>
+                            <td class="">URL</td>
+                            <td class=""></td>
+                        </tr>
                         </thead>
                         <tbody id="table-body-webhook">
-                            {{-- js webhooks carrega --}}
+                        {{-- js webhooks carrega --}}
                         </tbody>
                     </table>
                 </div>
@@ -159,7 +160,8 @@
                             <div class="modal-footer">
                                 <button id="btn-save-webhook"
                                         type="button"
-                                        class="btn btn-lg btn-primary">Cadastrar</button>
+                                        class="btn btn-lg btn-primary">Cadastrar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -220,6 +222,22 @@
                                 <small class="text-muted">Digite uma URL válida</small>
                             </div>
                         </div>
+
+                        <!-- X-Signature Section -->
+                        <div class="row">
+                            <x-copy-input
+                                label="X-Signature"
+                                id="x-signature-edit"
+                                name="x-signature"
+                                value=""
+                                placeholder="Cabeçalho de Assinatura"
+                                tooltip="Copiar Cabeçalho Assinatura"
+                                description="Todas as solicitações enviadas aos seus endpoints de webhook são assinadas para garantir que você
+                                        possa verificar se o tráfego está realmente vindo da Azcend.
+                                        Esta assinatura é incluída no X-Signature cabeçalho HTTP, permitindo que o cliente verifique se ela
+                                        foi criada usando o mesmo segredo."
+                            />
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="hidden"
@@ -227,7 +245,8 @@
                                name="webhook_id">
                         <button id="btn-edit-webhook"
                                 type="button"
-                                class="btn btn-lg btn-primary">Atualizar</button>
+                                class="btn btn-lg btn-primary">Atualizar
+                        </button>
                     </div>
                 </div>
             </div>

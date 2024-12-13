@@ -13,20 +13,20 @@ $(document).ready(function () {
         });
     });
 
-    var companiesAndProjects = ''
+    let companiesAndProjects = ''
 
     getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data
         getProjects();
     });
 
-    var badgeAffiliateRequest = {
+    let badgeAffiliateRequest = {
         1: "primary",
         2: "warning",
         3: "success",
         4: "danger",
     };
-    var badgeAffiliates = {
+    let badgeAffiliates = {
         1: "success",
         2: "disable",
     };
@@ -121,13 +121,13 @@ $(document).ready(function () {
     }
 
     function getAffiliates() {
-        var link =
+        let link =
             arguments.length > 0 && arguments[0] !== undefined
                 ? arguments[0]
                 : null;
 
-        var project = $("#project-affiliate").val();
-        var name = $("#name-affiliate").val();
+        let project = $("#project-affiliate").val();
+        let name = $("#name-affiliate").val();
 
         project = project ? project : null;
         name = name ? name : null;
@@ -421,13 +421,13 @@ $(document).ready(function () {
         });
     }
     function getAffiliatesRequest() {
-        var link =
+        let link =
             arguments.length > 0 && arguments[0] !== undefined
                 ? arguments[0]
                 : null;
 
-        var project = $("#project-affiliate-request").val();
-        var name = $("#name-affiliate-request").val();
+        let project = $("#project-affiliate-request").val();
+        let name = $("#name-affiliate-request").val();
 
         project = project ? project : null;
         name = name ? name : null;
@@ -470,7 +470,7 @@ $(document).ready(function () {
                         let dataDay = dataParse[0]
                         let dataTime = dataParse[1]
 
-                        data = "";
+                        let data = "";
                         data += "<tr>";
                         data +=
                             '<td class="ellipsis-text" style="vertical-align: middle;">' +

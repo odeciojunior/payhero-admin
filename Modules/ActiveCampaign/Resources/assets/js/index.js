@@ -13,7 +13,7 @@ $(document).ready(function () {
         });
     });
 
-    var companiesAndProjects = "";
+    let companiesAndProjects = "";
 
     getCompaniesAndProjects().done(function (data) {
         companiesAndProjects = data;
@@ -163,7 +163,7 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(document.getElementById("form_add_integration"));
+        let form_data = new FormData(document.getElementById("form_add_integration"));
 
         $.ajax({
             method: "POST",
@@ -193,8 +193,8 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var integrationId = $("#integration_id").val();
-        var form_data = new FormData(document.getElementById("form_update_integration"));
+        let integrationId = $("#integration_id").val();
+        let form_data = new FormData(document.getElementById("form_update_integration"));
 
         $.ajax({
             method: "POST",
@@ -222,7 +222,7 @@ $(document).ready(function () {
     $(document).on("click", ".delete-integration", function (e) {
         e.stopPropagation();
         let project = $(this).attr("project");
-        var card = $(this).parent().parent().parent().parent().parent();
+        let card = $(this).parent().parent().parent().parent().parent();
         card.find(".card-edit").unbind("click");
         $("#modal-delete-integration .btn-delete").attr("project", project);
         $("#modal-delete-integration").modal("show");
@@ -230,7 +230,7 @@ $(document).ready(function () {
     //destroy
     $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
         e.stopPropagation();
-        var project = $(this).attr("project");
+        let project = $(this).attr("project");
 
         $.ajax({
             method: "DELETE",

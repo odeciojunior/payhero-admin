@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\SalesBlackListAntifraud\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -15,7 +17,5 @@ class SalesBlackListAntifraudDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call("OthersTableSeeder");
     }
 }

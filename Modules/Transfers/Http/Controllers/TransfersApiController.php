@@ -27,7 +27,7 @@ class TransfersApiController
             report($e);
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );
@@ -62,7 +62,7 @@ class TransfersApiController
             report($exception);
 
             $error = [
-                "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                "message" => __('messages.unexpected_error'),
             ];
 
             $error += [
@@ -97,7 +97,7 @@ class TransfersApiController
             report($exception);
 
             $error = [
-                "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                "message" => __('messages.unexpected_error'),
             ];
 
             $error += [

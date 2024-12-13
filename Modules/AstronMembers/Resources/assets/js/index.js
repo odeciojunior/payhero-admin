@@ -13,7 +13,7 @@ $(document).ready(function () {
         });
     });
 
-    var companiesAndProjects = "";
+    let companiesAndProjects = "";
 
     function index(loading = "y") {
         if (loading == "y") loadingOnScreen();
@@ -237,7 +237,7 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var form_data = new FormData(
+        let form_data = new FormData(
             document.getElementById("form_add_integration")
         );
 
@@ -269,8 +269,8 @@ $(document).ready(function () {
             alertCustom("error", "Dados informados inválidos");
             return false;
         }
-        var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
+        let integrationId = $("#integration_id").val();
+        let form_data = new FormData(
             document.getElementById("form_update_integration")
         );
 
@@ -308,7 +308,7 @@ $(document).ready(function () {
         "#modal-delete-integration .btn-delete",
         function (e) {
             e.stopPropagation();
-            var project = $(this).attr("project");
+            let project = $(this).attr("project");
             $.ajax({
                 method: "DELETE",
                 url: "/api/apps/astronmembers/" + project,

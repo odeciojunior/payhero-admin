@@ -72,7 +72,7 @@ class Whatsapp2ApiController extends Controller
                 'token_whatsapp2' => hashids_encode($accountOwnerId, 'whatsapp2_token'),
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -95,7 +95,7 @@ class Whatsapp2ApiController extends Controller
 
             return new Whatsapp2Resource($whatsapp2Integration);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

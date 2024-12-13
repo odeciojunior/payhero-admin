@@ -20,6 +20,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
 use Modules\Core\Services\Nuvemshop\NuvemshopService;
+use Modules\Projects\Exceptions\CannotDeleteProjectException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -190,13 +191,15 @@ class ProjectService
     }
 
     /**
-     * @param $projectId
-     * @return bool
      * @throws ServiceException
+     * @throws CannotDeleteProjectException
      */
     public function delete($projectId)
     {
         try {
+            /**
+             * @var Project $project
+             */
             $project = $this->getProjectModel()
                 ->with([
                     "domains",
@@ -215,12 +218,19 @@ class ProjectService
                     "affiliates.affiliateLinks",
                     "upsellConfig",
                     "checkoutConfig",
+                    "apiToken",
                 ])
                 ->where("id", $projectId)
                 ->first();
 
             if (empty($project)) {
                 return false;
+            }
+
+            if (!is_null($project->apiToken)) {
+                throw new CannotDeleteProjectException(
+                    message: "O projeto {$project->id} não pode ser removido porque pertence a um token de integração."
+                );
             }
 
             if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
@@ -247,7 +257,7 @@ class ProjectService
                     $deleteDomain = $domainService->deleteDomain($domain);
 
                     if (!$deleteDomain["success"]) {
-                        report("Erro ao excluir domínio do projetoId: " . $project->id . ", domain: " . $domain->name);
+                        report('Erro ao excluir domínio do projetoId: '.$project->id.', domain: '.$domain->name);
                     }
                 } catch (Exception $e) {
                     report($e);
@@ -352,25 +362,24 @@ class ProjectService
                 return true;
             }
 
-            report("Erro ao atualizar nome e status do projeto: id-> (" . $project->id . ")");
+            report("Erro ao atualizar nome e status do projeto: id-> (".$project->id.")");
 
             return false;
         } catch (Exception $e) {
+
+            if ($e instanceof CannotDeleteProjectException) {
+                throw new CannotDeleteProjectException($e->getMessage());
+            }
+
             throw new ServiceException(
-                "ProjectService - Erro ao remover projeto - " . $e->getMessage(),
+                "ProjectService - Erro ao remover projeto - ".$e->getMessage(),
                 $e->getCode(),
-                $e,
+                $e
             );
         }
     }
 
-    /**
-     * @param  string  $pagination
-     * @param  array  $status
-     * @param  bool  $affiliate
-     * @return AnonymousResourceCollection
-     */
-    public function getUserProjects(string $pagination, array $status, $affiliate = false, $companyId = "")
+    public function getUserProjects(bool $pagination, array $status, $affiliate = false, $companyId = ""): AnonymousResourceCollection
     {
         $userId = auth()
             ->user()
@@ -452,7 +461,7 @@ class ProjectService
         return ProjectsResource::collection($projects);
     }
 
-    public function getUserProjectsAndTokens(string $pagination, array $status, $affiliate = false, $companyId = "")
+    public function getUserProjectsAndTokens(bool $pagination, array $status, $affiliate = false, $companyId = "")
     {
         $projects = $this->getUserProjects($pagination, $status, $affiliate, $companyId);
         $userId =

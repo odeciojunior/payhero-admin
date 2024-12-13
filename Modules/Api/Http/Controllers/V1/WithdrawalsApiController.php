@@ -99,10 +99,10 @@ class WithdrawalsApiController extends Controller
                 return response()->json(["message" => "Saque em processamento"], 200);
             }
 
-            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde!"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde!"], 403);
+            return response()->json(["message" => __('messages.unexpected_error')], 403);
         }
     }
 }

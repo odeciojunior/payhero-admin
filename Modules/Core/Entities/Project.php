@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,9 +15,9 @@ use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
+ * @property int $id
  * @property integer $carrier_id
  * @property string $photo
  * @property string $visibility
@@ -69,6 +71,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property Collection $orderBumpRules
  * @property PixelConfig $pixelConfigs
  * @property CheckoutConfig $checkoutConfig
+ * @property ApiToken $apiToken
  * @method ProjectPresenter present()
  */
 class Project extends Model
@@ -244,5 +247,17 @@ class Project extends Model
     public function checkoutConfig(): HasOne
     {
         return $this->hasOne(CheckoutConfig::class);
+    }
+
+    public function apiToken(): BelongsTo
+    {
+        return $this->belongsTo(ApiToken::class, 'id', 'project_id');
+    }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->created_at
+            ? $this->created_at->format('d/m/Y H:i')
+            : null;
     }
 }

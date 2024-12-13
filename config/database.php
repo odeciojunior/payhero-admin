@@ -38,8 +38,10 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
+            'url' => env('DATABASE_URL'),
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
         'mysql' => [
@@ -67,7 +69,7 @@ return [
         ],
 
         'demo' => [
-            
+
             'host' => env('DB_HOST_DEMO', '127.0.0.1'),
             'port' => env('DB_PORT_DEMO', '3307'),
             'database' => env('DB_DATABASE_DEMO', 'forge'),
@@ -84,7 +86,7 @@ return [
         ],
 
         'stage' => [
-            
+
             'host' => env('DB_HOST_STAGE', '127.0.0.1'),
             'port' => env('DB_PORT_STAGE', '3306'),
             'database' => env('DB_DATABASE_STAGE', 'forge'),

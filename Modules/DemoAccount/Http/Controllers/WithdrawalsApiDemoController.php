@@ -22,7 +22,7 @@ class WithdrawalsApiDemoController extends WithdrawalsApiController
 
             $company = Company::find(hashids_decode($data['company_id']));
             $gatewayId = hashids_decode($data['gateway_id']);
-       
+
             $withdrawalValueRequested = (int) FoxUtils::onlyNumbers($data['withdrawal_value']);
 
             $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);
@@ -31,21 +31,21 @@ class WithdrawalsApiDemoController extends WithdrawalsApiController
 
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
+            return response()->json(['message' => __('messages.unexpected_error')], 403);
         }
     }
 
     public function getAccountInformation(Request $request): JsonResponse
     {
         try {
-            
+
             return response()->json([
                 'message' => 'Sem documentos pendentes',
                 'data' => []
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
+            return response()->json(['message' => __('messages.unexpected_error')], 403);
         }
     }
 }

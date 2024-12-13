@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
@@ -54,7 +55,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyMinute()
             ->onOneServer();
-            
+
         $schedule
             ->command("available-balance:update")
             ->everyMinute()
@@ -237,10 +238,9 @@ class Kernel extends ConsoleKernel
         // Add the new command with success and failure logging
         $schedule->command('health:schedule-check-heartbeat')
             ->everyMinute()
-            ->onSuccess(function () {
-            })
+            ->onSuccess(function () {})
             ->onFailure(function () {
-                $exception = new \Exception('Erro ao executar o comando health:schedule-check-heartbeat.');
+                $exception = new Exception('Erro ao executar o comando health:schedule-check-heartbeat.');
                 Sentry::captureException($exception);
                 Log::error('Erro ao executar o comando health:schedule-check-heartbeat.');
             });

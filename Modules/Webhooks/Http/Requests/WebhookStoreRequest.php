@@ -1,27 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Webhooks\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class WebhookStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): true
     {
         return true;
     }
 
-    /**
-     * Get data to be validated from the request.
-     *
-     * @return array
-     */
-    public function validationData()
+    public function validationData(): array
     {
         $this->merge(["user_id" => auth()->user()->account_owner_id]);
         $this->merge(["company_id" => hashids_decode($this->company_id)]);
@@ -29,12 +21,7 @@ class WebhookStoreRequest extends FormRequest
         return $this->all();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             "user_id" => "required|exists:users,id",
@@ -44,12 +31,7 @@ class WebhookStoreRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
+    public function messages(): array
     {
         return [
             "user_id.required" => "Utilize um usuário",

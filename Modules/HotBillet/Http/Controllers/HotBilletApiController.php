@@ -69,7 +69,7 @@ class HotBilletApiController extends Controller
             ]);
         } catch (Exception $e) {
             Log::debug($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -203,7 +203,7 @@ class HotBilletApiController extends Controller
                 } else {
                     return response()->json(
                         [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                            "message" => __('messages.unexpected_error'),
                         ],
                         400
                     );
@@ -211,7 +211,7 @@ class HotBilletApiController extends Controller
             } else {
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        "message" => __('messages.unexpected_error'),
                     ],
                     400
                 );
@@ -222,7 +222,7 @@ class HotBilletApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );

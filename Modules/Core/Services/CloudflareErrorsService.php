@@ -40,7 +40,7 @@ class CloudflareErrorsService
         ) {
             $message = "Dominios (.cf, .ga, .gq, .ml, ou .tk) não podem ser cadastrados ou atualizados";
         } else {
-            $message = "Ocorreu um erro, tente novamente mais tarde!";
+            $message = __('messages.unexpected_error');
             report($e);
         }
 

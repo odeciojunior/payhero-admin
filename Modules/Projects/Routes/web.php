@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 //role:account_owner|admin
 Route::group(
     [

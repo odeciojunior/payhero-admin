@@ -70,7 +70,7 @@ class ShopifyApiController extends Controller
 
             return ShopifyResource::collection(collect($projects));
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], Response::HTTP_BAD_REQUEST);
+            return response()->json(["message" => __('messages.unexpected_error')], Response::HTTP_BAD_REQUEST);
         }
     }
 

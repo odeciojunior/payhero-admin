@@ -69,7 +69,7 @@ class SmartfunnelApiController extends Controller
                 "projects" => ProjectsSelectResource::collection($projects),
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -97,7 +97,7 @@ class SmartfunnelApiController extends Controller
 
             return new SmartfunnelResource($smartfunnelIntegration);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -200,7 +200,7 @@ class SmartfunnelApiController extends Controller
                 } else {
                     return response()->json(
                         [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                            "message" => __('messages.unexpected_error'),
                         ],
                         400
                     );
@@ -208,7 +208,7 @@ class SmartfunnelApiController extends Controller
             } else {
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        "message" => __('messages.unexpected_error'),
                     ],
                     400
                 );
@@ -219,7 +219,7 @@ class SmartfunnelApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );

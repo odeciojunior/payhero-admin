@@ -115,10 +115,10 @@ class UtmifyApiController extends Controller
 
                 return $integration
                     ? response()->json(["projects" => $projects, "integration" => $integration])
-                    : response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde!"], 400);
+                    : response()->json(["message" => __('messages.unexpected_error')], 400);
             }
 
-            return response()->json(["message" => "Ocorreu um erro, tente novamente mais tarde!"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         } catch (Exception $e) {
             return $this->handleException(
                 $e,
@@ -196,6 +196,6 @@ class UtmifyApiController extends Controller
         if ($e) {
             report($e);
         }
-        return response()->json(["message" => "Ocorreu algum erro"], 400);
+        return response()->json(["message" => __('messages.unexpected_error')], 400);
     }
 }

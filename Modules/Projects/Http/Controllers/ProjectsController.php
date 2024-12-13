@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Projects\Http\Controllers;
 
-use Throwable;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\View\Factory;
-use Modules\Core\Services\ProjectService;
-use Modules\Projects\Transformers\ProjectsSelectResource;
 
 class ProjectsController extends Controller
 {

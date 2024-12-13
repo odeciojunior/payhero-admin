@@ -1,5 +1,10 @@
 let mix = require("laravel-mix");
 
+mix.styles(
+    ['resources/assets/input-copy-styles.css'],
+    'public/build/input-copy-styles.min.css',
+);
+
 /**
  * Modules/ActiveCampaign/Resources/views/index.blade.php
  */

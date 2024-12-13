@@ -1,8 +1,8 @@
 $(function () {
-    var projectId = $(window.location.pathname.split("/")).get(-2);
-    var affiliateId = $(window.location.pathname.split("/")).get(-1);
+    let projectId = $(window.location.pathname.split("/")).get(-2);
+    let affiliateId = $(window.location.pathname.split("/")).get(-1);
 
-    var pageCurrent;
+    let pageCurrent;
 
     $(".tab_links-panel").on("click", function () {
         index();
@@ -185,7 +185,7 @@ $(function () {
      * Update Table Link
      */
     function index() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         pageCurrent = link;
 
         loadOnTable("#data-table-link", "#table-links");
@@ -195,7 +195,7 @@ $(function () {
             link = "/api/affiliatelinks" + link;
         }
 
-        var planName = $("#plan-name").val();
+        let planName = $("#plan-name").val();
         $.ajax({
             method: "GET",
             url: link,
@@ -349,7 +349,7 @@ $(function () {
         }
 
         $(".table-links").on("click", ".copy_link", function () {
-            var temp = $("<input>");
+            let temp = $("<input>");
             $("#table-links").append(temp);
             temp.val($(this).attr("link")).select();
             document.execCommand("copy");
@@ -358,7 +358,7 @@ $(function () {
         });
 
         $(".table-links").on("click", ".copy_link_plan", function () {
-            var temp = $("<input>");
+            let temp = $("<input>");
             $("#table-links").append(temp);
             temp.val($(this).attr("link")).select();
             document.execCommand("copy");

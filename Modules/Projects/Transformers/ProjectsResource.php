@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Projects\Transformers;
 
 use Carbon\Carbon;
@@ -94,6 +96,7 @@ class ProjectsResource extends JsonResource
             "approved_sales_value" => $this->approved_sales_value
                 ? substr_replace(@$this->approved_sales_value, ".", strlen(@$this->approved_sales_value) - 2, 0)
                 : 0,
+            'created_by_checkout_integration' => !is_null($this->apiToken),
         ];
     }
 }

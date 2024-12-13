@@ -57,7 +57,7 @@ class ActiveCampaignEventApiController extends Controller
 
             return ActivecampaignEventResource::collection($events);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -89,7 +89,7 @@ class ActiveCampaignEventApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -263,7 +263,7 @@ class ActiveCampaignEventApiController extends Controller
                 } else {
                     return response()->json(
                         [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                            "message" => __('messages.unexpected_error'),
                         ],
                         400
                     );
@@ -271,7 +271,7 @@ class ActiveCampaignEventApiController extends Controller
             } else {
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        "message" => __('messages.unexpected_error'),
                     ],
                     400
                 );
@@ -284,7 +284,7 @@ class ActiveCampaignEventApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );
@@ -470,7 +470,7 @@ class ActiveCampaignEventApiController extends Controller
 
             return response()->json(["tags" => $tags, "lists" => $lists, "events" => $events], 200);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

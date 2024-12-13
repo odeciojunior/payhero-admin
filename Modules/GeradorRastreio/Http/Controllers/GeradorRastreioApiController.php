@@ -68,7 +68,7 @@ class GeradorRastreioApiController extends Controller
                 "projects" => ProjectsSelectResource::collection($projects),
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -96,7 +96,7 @@ class GeradorRastreioApiController extends Controller
 
             return new WebhookTrackingsResource($WebhookTracking);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -115,14 +115,14 @@ class GeradorRastreioApiController extends Controller
                 if (empty($data["clientid"])) {
                     return response()->json(["message" => "CLIENT ID é obrigatório!"], 400);
                 }
-                
+
                 $token = new ApiToken();
                 $tokenid = $token->newQuery()
                     ->where('description', 'GR_Solucoes')
                     ->where('user_id', auth()->user()->account_owner_id)
                     ->where('deleted_at', null)
                     ->first();
-                
+
                 $integrationCreated = $WebhookTrackingsModel->firstOrCreate([
                     "user_id" => auth()->user()->account_owner_id,
                     "project_id" => $projectId,
@@ -246,7 +246,7 @@ class GeradorRastreioApiController extends Controller
                 "clientid" => $data["clientid"],
                 "credit_flag" => $data["credit_flag_edit"] ?? 0,
                 "pix_flag" => $data["pix_flag_edit"] ?? 0,
-                "billet_flag" => $data["billet_flag_edit"] ?? 0,                
+                "billet_flag" => $data["billet_flag_edit"] ?? 0,
             ]);
 
             if ($integrationUpdated) {

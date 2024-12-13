@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Reportana\Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -15,7 +17,5 @@ class ReportanaDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call("OthersTableSeeder");
     }
 }

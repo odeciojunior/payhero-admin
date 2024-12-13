@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
@@ -9,6 +11,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Laracasts\Presenter\PresentableTrait;
@@ -22,11 +25,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class ApiToken
- * @property integer $id
+ * @property int $id
  * @property int $user_id
+ * @property int $company_id
+ * @property int $project_id
  * @property string $token_id
  * @property string $access_token
  * @property string $scopes
+ * @property string $platform_enum
  * @property int $integration_type_enum
  * @property string $description
  * @property string $postback
@@ -40,24 +46,29 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class ApiToken extends Model
 {
-    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity, HasFactory;
+    use FoxModelTrait;
+    use HasFactory;
+    use LogsActivity;
+    use PaginatableTrait;
+    use PresentableTrait;
+    use SoftDeletes;
 
-    const TOKEN_SCOPE_ADMIN = "admin";
-    const TOKEN_SCOPE_USER = "user";
-    const TOKEN_SCOPE_SALE = "sale";
-    const TOKEN_SCOPE_PRODUCT = "product";
-    const TOKEN_SCOPE_CLIENT = "client";
+    public const TOKEN_SCOPE_ADMIN = "admin";
+    public const TOKEN_SCOPE_USER = "user";
+    public const TOKEN_SCOPE_SALE = "sale";
+    public const TOKEN_SCOPE_PRODUCT = "product";
+    public const TOKEN_SCOPE_CLIENT = "client";
 
-    const INTEGRATION_TYPE_ADMIN = 1;
-    const INTEGRATION_TYPE_PERSONAL = 2;
-    const INTEGRATION_TYPE_EXTERNAL = 3;
-    const INTEGRATION_TYPE_CHECKOUT_API = 4;
-    const INTEGRATION_TYPE_SPLIT_API = 5;
+    public const INTEGRATION_TYPE_ADMIN = 1;
+    public const INTEGRATION_TYPE_PERSONAL = 2;
+    public const INTEGRATION_TYPE_EXTERNAL = 3;
+    public const INTEGRATION_TYPE_CHECKOUT_API = 4;
+    public const INTEGRATION_TYPE_SPLIT_API = 5;
 
-    const PLATFORM_ENUM_VEGA_CHECKOUT = "VEGA_CHECKOUT";
-    const PLATFORM_ENUM_GR_SOLUCOES = "GR_SOLUCOES";
-    const PLATFORM_ENUM_ADOOREI_CHECKOUT = "ADOOREI_CHECKOUT";
-    const PLATFORM_ENUM_WEBAPI = "WEBAPI";
+    public const PLATFORM_ENUM_VEGA_CHECKOUT = "VEGA_CHECKOUT";
+    public const PLATFORM_ENUM_GR_SOLUCOES = "GR_SOLUCOES";
+    public const PLATFORM_ENUM_ADOOREI_CHECKOUT = "ADOOREI_CHECKOUT";
+    public const PLATFORM_ENUM_WEBAPI = "WEBAPI";
 
     /**
      * @var array
@@ -69,32 +80,37 @@ class ApiToken extends Model
         self::TOKEN_SCOPE_PRODUCT => "Data Product Access",
         self::TOKEN_SCOPE_CLIENT => "Data Client Access",
     ];
+
     /**
      * @var string
      */
     protected $presenter = ApiTokenPresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = "integer";
+
     /**
      * @var array
      */
     protected $fillable = [
-        "user_id",
-        "company_id",
-        "token_id",
-        "access_token",
-        "scopes",
-        "integration_type_enum",
-        "description",
-        "postback",
-        "platform_enum",
-        "created_at",
-        "updated_at",
-        "deleted_at",
+        'user_id',
+        'company_id',
+        'project_id',
+        'token_id',
+        'access_token',
+        'scopes',
+        'integration_type_enum',
+        'description',
+        'postback',
+        'platform_enum',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
+
     /**
      * The attributes that should be hidden for serialization.
      * @var array
@@ -107,6 +123,11 @@ class ApiToken extends Model
             ->logOnlyDirty()
             ->logFillable()
             ->dontSubmitEmptyLogs();
+    }
+
+    public function project(): hasOne
+    {
+        return $this->hasOne(Project::class, 'id', 'project_id');
     }
 
     /**
@@ -154,9 +175,9 @@ class ApiToken extends Model
     }
 
     /**
-     * @param string $name
-     * @param string|array $scopes
-     * @param User $user
+     * @param  string  $name
+     * @param  string|array  $scopes
+     * @param  User  $user
      * @return PersonalAccessTokenResult
      * @throws BindingResolutionException
      */

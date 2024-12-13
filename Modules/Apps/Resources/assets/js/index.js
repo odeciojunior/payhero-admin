@@ -12,7 +12,7 @@ $(document).ready(function () {
         });
     });
 
-    var companiesAndProjects = "";
+    let companiesAndProjects = "";
 
     loadingSkeletonCards($(".loading-container"));
 

@@ -1348,7 +1348,9 @@ function infoCard() {
                 $("#card-info").hide();
             }
         })
-        .catch((e) => console.log("error =>" + e));
+        .catch((e) => function() {
+
+        });
 }
 
 function recurrence() {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\Core\Services;
+namespace Modules\Webhooks\Services;
 
 use Exception;
 use Modules\Core\Entities\Webhook;

@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Integrations\Transformers;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\User;
 use Vinkla\Hashids\Facades\Hashids;
@@ -19,26 +18,16 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class ApiTokenResource extends JsonResource
 {
-    /**
-     * @var string
-     */
-    private $format = "d/m/Y";
+    private string $format = "d/m/Y";
 
-    /**
-     * Transform the resource into an array.
-     * @param Request
-     * @return array
-     * @throws BindingResolutionException
-     * @throws PresenterException
-     */
-    public function toArray($request)
+    public function toArray($request): array
     {
         $this->defineTimezone();
         $token = $this->resource->token;
         $revoked = $token->revoked ?? null;
         if ($this->resource->user) {
-            $antifraudUrl = env("CHECKOUT_URL") . "/api/v1/antifraud/" . hashids()->encode($this->resource->user->id);
-            $antifraudUrl = "https://" . str_replace(["http://", "https://"], "", $antifraudUrl);
+            $antifraudUrl = env("CHECKOUT_URL")."/api/v1/antifraud/".hashids()->encode($this->resource->user->id);
+            $antifraudUrl = "https://".str_replace(["http://", "https://"], "", $antifraudUrl);
         }
 
         return [
@@ -69,7 +58,7 @@ class ApiTokenResource extends JsonResource
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      * @return string
      */
     protected function getFormatDate($date)

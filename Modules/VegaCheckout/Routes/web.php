@@ -1,9 +1,15 @@
 <?php
 
-Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
-    Route::get("apps/vegacheckout", "VegaCheckoutController@index");
-    Route::get("apps/vegacheckout/{id}", "VegaCheckoutController@show");
-    Route::get("apps/vegacheckout/{id}/edit", "VegaCheckoutController@edit");
-    Route::post("apps/vegacheckout/", "VegaCheckoutApiController@store");
-    Route::delete("apps/vegacheckout/{id}", "VegaCheckoutApiController@destroy")->name("vegacheckout.destroy");
-});
+declare(strict_types=1);
+
+use Illuminate\Support\Facades\Route;
+use Modules\VegaCheckout\Http\Controllers\VegaCheckoutController;
+
+Route::prefix('apps')
+    ->name('apps.')
+    ->middleware(['web', 'auth', 'permission:apps'])
+    ->group(function () {
+        Route::resource('vegacheckout', VegaCheckoutController::class)
+            ->only(['index'])
+            ->names('vegacheckout');
+    });
