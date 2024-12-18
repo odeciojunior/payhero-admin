@@ -25,16 +25,12 @@ class ManualRefundedSendEmailListener implements ShouldQueue
         //
     }
 
-    /**
-     * @param ManualRefundEvent $event
-     * @return bool
-     */
-    public function handle(ManualRefundEvent $event)
+    public function handle(ManualRefundEvent $event): void
     {
         try {
             $sale = $event->sale;
-            if ($sale->api) {
-                return false;
+            if ($sale->api_flag || $sale->api) {
+                return;
             }
 
             $emailService = new SendgridService();
@@ -49,7 +45,7 @@ class ManualRefundedSendEmailListener implements ShouldQueue
             $sale->setRelation("customer", $event->sale->customer);
             $customer = $sale->customer;
             if (stristr($customer->email, "invalido") !== false) {
-                return false;
+                return;
             }
 
             $saleCode = hashids_encode($sale->id, "sale_id");

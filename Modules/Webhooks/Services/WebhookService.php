@@ -10,6 +10,9 @@ use Modules\Core\Entities\WebhookLog;
 
 class WebhookService
 {
+    private float $startResponseTime = 0;
+    private float $endResponseTime = 0;
+
     public function __construct(
         private readonly Webhook $webhook
     ) {
@@ -58,6 +61,7 @@ class WebhookService
     private function sendPost($data, $saleId = null): void
     {
         try {
+            $this->startResponseTime = microtime(true);
             $curl = curl_init();
 
             curl_setopt_array($curl, [
@@ -71,6 +75,7 @@ class WebhookService
             $response = curl_exec($curl);
             $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
+            $this->endResponseTime = microtime(true);
 
             $this->storeWebhookLogs($response, $status, $data, $saleId);
         } catch (Exception $e) {
@@ -90,6 +95,7 @@ class WebhookService
                 'sent_data' => json_encode($data),
                 'response' => !json_decode($response) ? json_encode($response) : $response,
                 'response_status' => $status,
+                'response_time' => ($this->endResponseTime - $this->startResponseTime) * 1000,
             ]);
         } catch (Exception $e) {
             report($e);

@@ -99,6 +99,7 @@ use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
+use Modules\Webhooks\Listeners\WebhookSaleListener;
 
 /**
  * Class EventServiceProvider
@@ -121,8 +122,13 @@ class EventServiceProvider extends ServiceProvider
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
+            WebhookSaleListener::class,
         ],
-        ManualRefundEvent::class => [ManualRefundedSendEmailListener::class, IntegrationOrderCancelListener::class],
+        ManualRefundEvent::class => [
+            ManualRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
+            WebhookSaleListener::class,
+        ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
             NotifyUserShopifyIntegrationStoreListener::class,

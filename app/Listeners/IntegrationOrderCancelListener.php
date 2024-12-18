@@ -36,6 +36,9 @@ class IntegrationOrderCancelListener implements ShouldQueue
     public function handle($event)
     {
         $sale = $event->sale;
+        if ($sale->api_flag) {
+            return;
+        }
 
         //Shopify
         if (!empty($sale->shopify_order)) {

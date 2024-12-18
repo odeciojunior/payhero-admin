@@ -48,6 +48,7 @@ class WebhookLog extends Model
         "sent_data",
         "response",
         "response_status",
+        "response_time",
         "created_at",
         "updated_at",
         "deleted_at",
