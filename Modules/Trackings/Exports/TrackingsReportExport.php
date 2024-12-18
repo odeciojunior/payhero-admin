@@ -147,23 +147,23 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
     public function headings(): array
     {
         return [
-            "Código da Venda",
-            "Código de Rastreio",
-            "Código do Produto",
+            "Codigo da Venda",
+            "Codigo de Rastreio",
+            "Codigo do Produto",
             "Produto",
             "Quantidade",
             "SKU",
             "Nome do Cliente",
             "Documento",
-            "Endereço",
-            "Número",
+            "Endereco",
+            "Numero",
             "Complemento",
             "Bairro",
             "Cep",
             "Cidade",
             "Estado",
             "País",
-            "Data Aprovação",
+            "Data Aprovacao",
         ];
     }
 }
