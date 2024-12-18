@@ -19,13 +19,13 @@
                 <div id="export-excel" class="row justify-content-lg-end">
                     <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                         <div class="d-flex align-items-center">
-                            <!-- <span class="o-download-cloud-1 mr-2"></span>
-                            <div class="btn-group" role="group"> -->
+                            <span class="o-download-cloud-1 mr-2"></span>
+                            <div class="btn-group" role="group">
                                 <!-- <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left border-right-0">.XLS
                                 </button> -->
-                                <!-- <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill">.CSV
+                                <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill">.CSV
                                 </button>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     @can('trackings_manage')
