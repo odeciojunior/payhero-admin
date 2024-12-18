@@ -350,7 +350,7 @@ class SaleService
         $progressiveDiscount = $sale->progressive_discount ?? 0;
         $total -= $progressiveDiscount;
 
-        
+
         $total = foxutils()->onlyNumbers($sale->total_paid_value); //reescrevendo valor total para corrigir erro quando a venda vem via api
 
         $comission = 'R$ ' . number_format($value / 100, 2, ",", ".");
@@ -745,9 +745,7 @@ class SaleService
                 "balance" => $sale->customer->balance + foxutils()->onlyNumbers($sale->total_paid_value),
             ]);
 
-            if (!$sale->api_flag) {
-                event(new ManualRefundEvent($sale));
-            }
+            event(new ManualRefundEvent($sale));
 
             DB::commit();
 
@@ -1370,9 +1368,7 @@ class SaleService
 
             $gatewayService->cancel($sale, $result["response"], $refundObservation);
 
-            if (!$sale->api_flag) {
-                event(new SaleRefundedEvent($sale));
-            }
+            event(new SaleRefundedEvent($sale));
 
             $message = $result["message"];
         } else {
