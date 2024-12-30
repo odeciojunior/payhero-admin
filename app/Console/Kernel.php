@@ -83,17 +83,17 @@ class Kernel extends ConsoleKernel
             ->hourly()
             ->onOneServer();
 
-        $schedule
-            ->command("iugu:create-seller-account")
-            ->everyMinute()
-            ->withoutOverlapping()
-            ->onOneServer();
+        // $schedule
+        //     ->command("iugu:create-seller-account")
+        //     ->everyMinute()
+        //     ->withoutOverlapping()
+        //     ->onOneServer();
 
-        $schedule
-            ->command("iugu:verification-account")
-            ->everyTwoMinutes()
-            ->withoutOverlapping()
-            ->onOneServer();
+        // $schedule
+        //     ->command("iugu:verification-account")
+        //     ->everyTwoMinutes()
+        //     ->withoutOverlapping()
+        //     ->onOneServer();
 
         $schedule
             ->command("woocommerce:check-tracking-codes")
