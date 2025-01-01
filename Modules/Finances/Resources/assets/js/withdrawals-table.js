@@ -6,7 +6,7 @@ window.loadWithdrawalsTable = function (link = null) {
         4: "danger",
         5: "primary",
         6: "primary",
-        7: "danger",
+        7: "warning",
         8: "primary",
         9: "partially-liquidating",
     };
