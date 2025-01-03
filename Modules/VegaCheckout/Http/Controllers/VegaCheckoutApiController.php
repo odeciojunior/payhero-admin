@@ -164,7 +164,7 @@ class VegaCheckoutApiController extends Controller
             ]);
         } catch (InvalidUrlException) {
             return response()->json([
-                'message' => __('messages.invalid_url')
+                'message' => __('messages.url.invalid')
             ], ResponseStatus::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             report($e);

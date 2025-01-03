@@ -13,10 +13,12 @@ return [
     ],
     'unexpected_error' => 'Ocorreu um erro, tente novamente mais tarde!',
     'unauthorized' => 'Sem permissão',
-    'invalid_url' => 'URL Inválida',
-
 
     // mensagens relacionadas a operações em entidades
+    'url' => [
+        'invalid' => 'URL Inválida',
+    ],
+
     'webhook' => [
         'created' => 'Webhook criado com sucesso!',
         'updated' => 'Webhook atualizado com sucesso!',

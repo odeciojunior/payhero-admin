@@ -12,6 +12,7 @@ use Modules\AdooreiCheckout\Actions\DeleteAdooreiCheckoutAction;
 use Modules\AdooreiCheckout\Http\Requests\UpdateAdooreiCheckoutRequest;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Webhook;
+use Modules\Core\Exceptions\InvalidUrlException;
 use Modules\Core\ValueObjects\Url;
 use Modules\Integrations\Actions\CreateTokenAction;
 use Modules\Integrations\Exceptions\ApiTokenNotFoundException;
@@ -162,6 +163,11 @@ class AdooreiCheckoutApiController extends Controller
             return response()->json([
                 'message' => __('messages.integration.created'),
             ]);
+        } catch (InvalidUrlException) {
+            return response()
+                ->json([
+                    'message' => __('messages.url.invalid')
+                ], ResponseStatus::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             report($e);
 

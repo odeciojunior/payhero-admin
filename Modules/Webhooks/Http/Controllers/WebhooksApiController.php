@@ -33,8 +33,7 @@ class WebhooksApiController extends Controller
                 ->newQuery()
                 ->where('user_id', $request->user_id)
                 ->where('company_id', $request->company_id)
-                ->where('description', '!=', 'Vega_Checkout')
-                ->where('description', '!=', 'Adoorei_Checkout')
+                ->whereNotIn('description', ['Vega_Checkout', 'Adoorei_Checkout'])
                 ->paginate(5);
 
             return new WebhooksCollection($webhooks);
