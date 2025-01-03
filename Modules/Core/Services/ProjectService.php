@@ -204,7 +204,6 @@ class ProjectService
                 ->with([
                     "domains",
                     "shopifyIntegrations",
-                    "nuvemshopIntegrations",
                     "plans",
                     "plans.productsPlans",
                     "plans.productsPlans.product",
