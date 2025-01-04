@@ -10,6 +10,8 @@ use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Webhook;
+use Modules\Core\Exceptions\InvalidUrlException;
+use Modules\Core\ValueObjects\Url;
 use Modules\Webhooks\Actions\GenerateSignatureWebhookAction;
 use Modules\Webhooks\Services\WebhookService;
 use Throwable;
@@ -60,6 +62,7 @@ class WebhookSaleListener
 
     /**
      * @throws JsonException
+     * @throws InvalidUrlException
      */
     private function createWebhookBySalePostbackUrl(Sale $sale, int $companyId): void
     {
@@ -83,7 +86,7 @@ class WebhookSaleListener
                     'user_id' => $sale->owner_id,
                     'company_id' => $companyId,
                     'description' => 'api_postback_url',
-                    'url' => $saleInformation->return_url,
+                    'url' => new Url($saleInformation->return_url),
                 ])
             ]);
 
@@ -93,7 +96,7 @@ class WebhookSaleListener
                     'user_id' => $sale->owner_id,
                     'company_id' => $companyId,
                     'description' => 'api_postback_url',
-                    'url' => $saleInformation->return_url,
+                    'url' => new Url($saleInformation->return_url),
                 ]),
             ]);
         }
