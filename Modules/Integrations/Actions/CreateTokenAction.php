@@ -97,7 +97,7 @@ class CreateTokenAction
         if (is_null($apiToken->project_id)) {
             $projectId = $this->createProject([
                 'company_id' => $apiToken->company_id,
-                'name' => $apiToken->description,
+                'description' => $apiToken->description,
                 'platform_enum' => $apiToken->platform_enum,
             ]);
 
