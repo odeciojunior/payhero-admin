@@ -10,31 +10,25 @@ use Modules\Core\Services\NotificacoesInteligentesService;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-/**
- * Class NotificacoesInteligentesPixExpiredListener
- * @package App\Listeners
- */
 class NotificacoesInteligentesPixExpiredListener implements ShouldQueue
 {
-    public $queue = "default";
+    public string $queue = "default";
 
-    /**
-     * NotificacoesInteligentesPixExpiredListener constructor.
-     */
     public function __construct()
     {
         //
     }
 
-    /**
-     * @param $event
-     */
-    public function handle(PixExpiredEvent $event)
+    public function handle(PixExpiredEvent $event): void
     {
         try {
             $sale = $event->sale;
+            if ($sale->api_flag) {
+                return;
+            }
 
-            $integration = NotificacoesInteligentesIntegration::where("project_id", $sale->project_id)
+            $integration = NotificacoesInteligentesIntegration::query()
+                ->where("project_id", $sale->project_id)
                 ->where("pix_expired", true)
                 ->first();
 

@@ -17,23 +17,7 @@ class IntegrationOrderCancelListener implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
 
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
-     */
-    public function handle($event)
+    public function handle($event): void
     {
         $sale = $event->sale;
         if ($sale->api_flag) {

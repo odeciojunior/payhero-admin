@@ -26,17 +26,16 @@ class HotBilletPixExpiredListener implements ShouldQueue
         //
     }
 
-    /**
-     * @param $event
-     */
-    public function handle(PixExpiredEvent $event)
+    public function handle(PixExpiredEvent $event): void
     {
         try {
             $sale = $event->sale;
+            if ($sale->api_flag) {
+                return;
+            }
 
-            $hotbilletIntegrationModel = new HotbilletIntegration();
-
-            $hotbilletIntegration = $hotbilletIntegrationModel
+            $hotbilletIntegration = (new HotbilletIntegration())
+                ->newQuery()
                 ->where("project_id", $sale->project_id)
                 ->where("pix_expired", true)
                 ->first();

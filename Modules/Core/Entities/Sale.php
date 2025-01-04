@@ -394,6 +394,11 @@ class Sale extends Model
         return $this->hasMany(SaleInformation::class);
     }
 
+    public function saleInformation(): HasOne
+    {
+        return $this->hasOne(SaleInformation::class);
+    }
+
     /**
      * @return HasMany
      */
@@ -426,6 +431,6 @@ class Sale extends Model
             ->where("type", Transaction::TYPE_PRODUCER)
             ->count();
 
-        return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int) $this->has_valid_tracking;
+        return $trackingNotRequired || $saleIsChargeback || $saleIsDigitalProduct ? 1 : (int)$this->has_valid_tracking;
     }
 }

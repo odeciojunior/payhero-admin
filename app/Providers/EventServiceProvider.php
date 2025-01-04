@@ -138,11 +138,6 @@ class EventServiceProvider extends ServiceProvider
             DomainApprovedNotifyUserListener::class,
             DomainApprovedEmailNotifyUserListener::class,
         ],
-        BoletoPaidEvent::class => [
-            BoletoPaidPusherNotifyUser::class,
-            BoletoPaidNotifyUser::class,
-            BoletoPaidEmailNotifyUser::class,
-        ],
         TrackingsImportedEvent::class => [NotifyTrackingsImportedListener::class],
         SalesExportedEvent::class => [NotifySalesExportedListener::class],
         ExtractExportedEvent::class => [NotifyExtractExportedListener::class],
@@ -182,6 +177,7 @@ class EventServiceProvider extends ServiceProvider
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
             ReportanaSaleRecoveryListener::class,
+            WebhookSaleListener::class,
         ],
         CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
         NewChargebackEvent::class => [
