@@ -15,8 +15,8 @@ class GenerateSignatureWebhookAction
     public static function handle(array $data): string
     {
         return hash_hmac('sha256', json_encode([
-            'user_id' => $data['userId'],
-            'company_id' => $data['companyId'],
+            'user_id' => $data['user_id'],
+            'company_id' => $data['company_id'],
             'description' => $data['description'],
             'url' => $data['url']->getUrl(),
             'created_at' => now()->unix(),

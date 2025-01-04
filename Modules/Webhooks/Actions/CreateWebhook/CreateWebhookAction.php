@@ -35,7 +35,12 @@ class CreateWebhookAction
              */
             if (empty($existingWebhook->signature)) {
                 $existingWebhook->update([
-                    'signature' => GenerateSignatureWebhookAction::handle($inputDTO->toArray()),
+                    'signature' => GenerateSignatureWebhookAction::handle([
+                        'user_id' => $inputDTO->userId,
+                        'company_id' => $inputDTO->companyId,
+                        'description' => $inputDTO->description,
+                        'url' => $inputDTO->url,
+                    ]),
                 ]);
             }
 
@@ -52,7 +57,12 @@ class CreateWebhookAction
                 'company_id' => $inputDTO->companyId,
                 'description' => $inputDTO->description,
                 'url' => $inputDTO->url->getUrl(),
-                'signature' => GenerateSignatureWebhookAction::handle($inputDTO->toArray()),
+                'signature' => GenerateSignatureWebhookAction::handle([
+                    'user_id' => $inputDTO->userId,
+                    'company_id' => $inputDTO->companyId,
+                    'description' => $inputDTO->description,
+                    'url' => $inputDTO->url,
+                ]),
             ]);
 
         return new CreateWebhookOutputDTO($webhook);

@@ -91,8 +91,8 @@ class WebhooksApiController extends Controller
              */
             if (empty($webhook->signature)) {
                 $signature = GenerateSignatureWebhookAction::handle([
-                    'userId' => $webhook->user_id,
-                    'companyId' => $webhook->company_id,
+                    'user_id' => $webhook->user_id,
+                    'company_id' => $webhook->company_id,
                     'description' => $webhook->description,
                     'url' => new Url($webhook->url),
                 ]);

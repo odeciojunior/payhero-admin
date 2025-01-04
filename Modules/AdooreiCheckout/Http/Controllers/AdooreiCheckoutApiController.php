@@ -60,8 +60,8 @@ class AdooreiCheckoutApiController extends Controller
             foreach ($webhook as $item) {
                 if (empty($item->signature)) {
                     $signature = GenerateSignatureWebhookAction::handle([
-                        'userId' => $item->user_id,
-                        'companyId' => $item->company_id,
+                        'user_id' => $item->user_id,
+                        'company_id' => $item->company_id,
                         'description' => $this->description,
                         'url' => new Url($item->url),
                     ]);
