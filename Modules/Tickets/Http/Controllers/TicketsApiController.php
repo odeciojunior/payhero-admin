@@ -29,6 +29,7 @@ class TicketsApiController extends Controller
     {
         try {
             $data = (object)$request->all();
+
             $userId = auth()->user()->getAccountOwnerId();
 
             $ticketsQuery = Ticket::select([
@@ -59,6 +60,10 @@ class TicketsApiController extends Controller
                 }
             }else{
 
+                if (empty($data) || !isset($data->company)) {
+                    return response()->json(["message" => "Empresa não encontrada."], 404);
+                }
+                
                 $ticketsQuery->leftJoin('api_tokens as api', 'sales.api_token_id','=','api.id')
                 ->leftJoin('checkout_configs', 'sales.project_id','=','checkout_configs.project_id')
                 ->where(function($query) use($data){
@@ -165,14 +170,17 @@ class TicketsApiController extends Controller
                     ->join("customers", "sales.customer_id", "=", "customers.id")
                     ->find($ticketId);
 
+                if (empty($ticket)) {
+                    return response()->json(["message" => "Chamado não encontrado!"], 404);
+                }
+
                 return new TicketShowResource($ticket);
             } else {
-                return response()->json(["message" => "Chamado não encontrado!"], 400);
+                return response()->json(["message" => "Chamado não encontrado!"], 404);
             }
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(["message" => "Erro ao carregar chamado"], 400);
+            return response()->json(["message" => "Erro ao carregar chamado"], 500);
         }
     }
 

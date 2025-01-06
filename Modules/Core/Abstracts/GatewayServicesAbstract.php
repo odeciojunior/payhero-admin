@@ -313,7 +313,6 @@ abstract class GatewayServicesAbstract
                             )) {
                     continue;
                 }
-
                 $transaction->update([
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,

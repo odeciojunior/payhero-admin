@@ -617,6 +617,10 @@ class WooCommerceService
     {
         $model = SaleWoocommerceRequests::where("id", $id)->first();
 
+        if (empty($model)) {
+            return $model;
+        }
+
         $model->status = $status;
         $model->received_data = $received_data;
         $model->save();

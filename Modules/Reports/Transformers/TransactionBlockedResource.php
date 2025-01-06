@@ -14,6 +14,10 @@ class TransactionBlockedResource extends JsonResource
     {
         $sale = $this->sale;
 
+        if (empty($sale) || empty($sale->project)) {
+            return null;
+        }
+
         $data = [
             "sale_code" => "#" . Hashids::connection("sale_id")->encode($sale->id),
             "id" => Hashids::connection("sale_id")->encode($sale->id),

@@ -64,9 +64,9 @@ class NotifyMediation extends Command
                         $projectName = $ticket->sale->project->name ?? '';
                     }
 
-                    $customer = $ticket->sale->customer;
+                    $customer = $ticket->sale->customer ?? null;
                     $customerName = current(explode(" ", $customer->name));
-                    $customerEmail = $customer->email;
+                    $customerEmail = $customer->email ?? null;
 
                     if (empty($customerEmail)) {
                         $data = [

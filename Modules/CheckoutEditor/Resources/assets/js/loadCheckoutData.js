@@ -291,7 +291,7 @@ $(() => {
                 });
             })
             .on("hidden.bs.modal", function () {
-                cropper.destroy();
+                cropper?.destroy();
                 cropper = null;
             });
 
@@ -340,7 +340,7 @@ $(() => {
         $("#button-crop").on("click", function () {
             if (cropper) {
                 var canvas = cropper.getCroppedCanvas();
-                var src = canvas.toDataURL("image/png", 0.7);
+                var src = canvas?.toDataURL("image/png", 0.7);
 
                 $("#preview_banner_img_mobile").attr("src", src);
                 $("#preview_banner_img_desktop").attr("src", src);

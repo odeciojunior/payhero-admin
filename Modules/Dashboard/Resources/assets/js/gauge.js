@@ -169,7 +169,7 @@
             }
             if (force || this.displayedValue !== this.value) {
                 if (this.ctx && this.clear) {
-                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.clearRect(0, 0, this.canvas?.width, this.canvas.height);
                 }
                 diff = this.value - this.displayedValue;
                 if (Math.abs(diff / this.animationSpeed) <= 0.001) {
@@ -498,7 +498,7 @@
             if (typeof G_vmlCanvasManager !== "undefined") {
                 this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
             }
-            this.ctx = this.canvas.getContext("2d");
+            this.ctx = this.canvas?.getContext("2d");
             h = this.canvas.clientHeight;
             w = this.canvas.clientWidth;
             this.canvas.height = h;
@@ -522,7 +522,7 @@
             this.availableHeight = this.canvas.height * (1 - this.paddingTop - this.paddingBottom);
             this.lineWidth = this.availableHeight * this.options.lineWidth;
             this.radius = (this.availableHeight - this.lineWidth / 2) / (1.0 + this.extraPadding);
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.clearRect(0, 0, this.canvas?.width, this.canvas.height);
             ref = this.gp;
             for (j = 0, len = ref.length; j < len; j++) {
                 gauge = ref[j];
@@ -929,7 +929,7 @@
             if (typeof G_vmlCanvasManager !== "undefined") {
                 this.canvas = window.G_vmlCanvasManager.initElement(this.canvas);
             }
-            this.ctx = this.canvas.getContext("2d");
+            this.ctx = this.canvas?.getContext("2d");
             this.setOptions();
             this.render();
         }
