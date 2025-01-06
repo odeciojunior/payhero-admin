@@ -1,9 +1,9 @@
 # This workflow deploys to production by pushing changes to the main branch or manually.
 # It's a very simple script that makes an API call on AWS Systems Manager via CLI and invokes the execution of a script document (passing the commands) that will be executed by SSM.
 
-name: App Admin
+name: Deploy App Admin to Production
 
-run-name: Workflow initiated by ${{ github.actor }}
+run-name: Deployment initiated by ${{ github.actor }}
 
 on:
     # Triggers the workflow on push for the main branch
@@ -48,13 +48,22 @@ jobs:
                                 "php /var/www/html/admin.azcend.com.br/artisan config:clear",
                                 "php /var/www/html/admin.azcend.com.br/artisan route:clear",
                                 "php /var/www/html/admin.azcend.com.br/artisan view:clear",
-                                "chown -R ubuntu:www-data /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache",
-                                "chmod -R 775 /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache",
-                                "setfacl -R -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
-                                "setfacl -R -m g:www-data:rwx /var/www/html/admin.azcend.com.br",
-                                "setfacl -dR -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
+                                "find /var/www/html/admin.azcend.com.br/storage -type f -exec chown ubuntu:www-data {} +",
+                                "find /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache -type d -exec chmod 775 {} \;",
+                                "find /var/www/html/admin.azcend.com.br/storage /var/www/html/admin.azcend.com.br/bootstrap/cache -type f -exec chmod 664 {} \;",
+                                "setfacl -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br/storage",
+                                "setfacl -m g:www-data:rwx /var/www/html/admin.azcend.com.br/storage",
+                                "setfacl -m g:www-data:rwx /var/www/html/admin.azcend.com.br/storage",
+                                "setfacl -m g:www-data:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -d -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br/storage",
+                                "setfacl -d -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -d -m g:www-data:rwx /var/www/html/admin.azcend.com.br/storage",
+                                "setfacl -d -m g:www-data:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -m g:www-data:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -d -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
+                                "setfacl -d -m g:www-data:rwx /var/www/html/admin.azcend.com.br/bootstrap/cache",
                                 "setfacl -dR -m g:www-data:rwx /var/www/html/admin.azcend.com.br",
-                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'",
+                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'"
                             ],
                             "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
                             "executionTimeout": ["3600"]
