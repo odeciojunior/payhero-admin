@@ -36,6 +36,8 @@ class WithdrawalPresenter extends Presenter
                     return "liquidating";
                 case 9:
                     return "partially_liquidated";
+                case 10:
+                    return "automatic_transfered";
             }
             return "";
         } else {
@@ -58,6 +60,8 @@ class WithdrawalPresenter extends Presenter
                     return 8;
                 case "partially_liquidated":
                     return 9;
+                case "automatic_transfered":
+                    return 10;
             }
             return "";
         }
