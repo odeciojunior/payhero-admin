@@ -144,7 +144,7 @@ abstract class GatewayServicesAbstract
         WHERE company_id = :companyId",["companyId"=>$this->company->id]);
 
         $pendingWithdrawal = Withdrawal::where("company_id", $this->company->id)
-            ->whereNotIn("status", [Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED, Withdrawal::STATUS_LIQUIDATING])
+            ->whereNotIn("status", [Withdrawal::STATUS_AUTOMATIC_TRANSFERRED, Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED, Withdrawal::STATUS_LIQUIDATING])
             ->sum("value");
 
         return intval($balance[0]->total ?? 0) - intval($pendingWithdrawal);
