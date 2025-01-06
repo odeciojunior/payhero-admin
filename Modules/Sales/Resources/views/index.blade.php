@@ -241,9 +241,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-10 mb-sm-0"
-                             style="height: 30px">
-
+                        <div class="row mb-10 mb-sm-0">
                             <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                 <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                      data-toggle="collapse"

@@ -106,9 +106,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row flex-nowrap mx-0 justify-content-center"
-                     style="height: 0">
-                    <div class="col-auto col-xl-3 offset-xl-6 px-0">
+                <div class="row flex-nowrap mx-0 justify-content-center">
+                    <div class="col-auto col-xl-3 px-lg-10 offset-xl-6">
                         <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center flex-column flex-lg-row"
                              data-toggle="collapse"
                              data-target="#bt_collapse"
@@ -120,7 +119,7 @@
                                   id="text-filtro">Filtros avançados</span>
                         </div>
                     </div>
-                    <div class="col-auto pr-0">
+                    <div class="col-auto col-xl-3 px-lg-10">
                         <div id="bt_filtro"
                              class="btn btn-primary-1 bold d-flex justify-content-center align-items-center flex-column flex-lg-row">
                             <img style="height: 12px; margin-right: 4px"
@@ -248,9 +247,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row flex-nowrap mx-0 justify-content-center"
-                     style="height: 0">
-                    <div class="col-auto col-xl-3 offset-xl-6 px-0">
+                <div class="row flex-nowrap mx-0 justify-content-center">
+                    <div class="col-auto col-xl-3 px-lg-10 offset-xl-6">
                         <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center flex-column flex-lg-row collapsed"
                              data-toggle="collapse"
                              data-target="#bt-collapse-custom"
@@ -263,7 +261,7 @@
                         </div>
                     </div>
 
-                    <div class="col-auto pr-0">
+                    <div class="col-auto col-xl-3 px-lg-10">
                         <div id="bt_filtro_statement"
                              class="btn btn-primary-1 bold d-flex justify-content-center align-items-center flex-column flex-lg-row">
                             <img style="height: 12px; margin-right: 4px"
