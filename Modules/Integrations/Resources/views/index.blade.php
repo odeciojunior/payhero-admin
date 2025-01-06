@@ -55,42 +55,6 @@
                     </button>
                 </div>
             </div>
-
-            <div class="mb-30"
-                 id="content-script"
-                 style='display:none;'>
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-8">
-                        <div class="input-group input-group-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-primary">
-                                    <span class="icon-antifraud-1 mr-5"></span> Script do Antifraude para Checkout API
-                                </span>
-                            </div>
-                            <input type="text"
-                                   class="form-control"
-                                   id="input-url-antifraud"
-                                   readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-primary bg-white btnCopiarLinkAntifraud"
-                                        type="button"
-                                        data-toggle="tooltip"
-                                        title="Copiar URL antifraud"
-                                        style="width: 46px; border-left: 1px solid #F4F4F4;">
-                                    <img src="/build/global/img/icon-copy-b.svg">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-right">
-                    <a href="https://docs.azcend.com.br/" target="_blank" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
-                        <span>Acesse a documentação da API</span>
-                        <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
-                    </a>
-                </div> --}}
-                </div>
-            </div>
-
             <div class="card shadow"
                  id='card-table-integrate'
                  data-plugin="matchHeight"

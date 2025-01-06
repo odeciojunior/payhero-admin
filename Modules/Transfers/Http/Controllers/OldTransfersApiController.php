@@ -108,7 +108,7 @@ class OldTransfersApiController
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );

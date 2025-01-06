@@ -238,7 +238,7 @@ class ActiveCampaignService
                     $checkout = $checkoutModel->find($checkoutId);
 
                     if (empty($checkout)) {
-                        return response()->json(["message" => "Ocorreu algum erro"], 400);
+                        return response()->json(["message" => __('messages.unexpected_error')], 400);
                     }
 
                     $domainName = !empty($domain->name) ? $domain->name : "azcend.com.br";
@@ -265,12 +265,12 @@ class ActiveCampaignService
                     return $this->sendContact($data, $event, $instanceId, $instance, $dataCustom);
                 }
 
-                return response()->json(["message" => "Ocorreu algum erro"], 400);
+                return response()->json(["message" => __('messages.unexpected_error')], 400);
             } else {
                 return response()->json(["message" => "Projeto não integrado com ActiveCampaign"], 400);
             }
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -416,7 +416,7 @@ class ActiveCampaignService
                 "activecampaign_integration_id" => $this->integrationId,
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

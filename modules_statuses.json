@@ -67,5 +67,7 @@
     "GeradorRastreio": true,
     "Utmify": true,
     "VegaCheckout": true,
-    "AdooreiCheckout": true
+    "AdooreiCheckout": true,
+    "Nuvemshop": true,
+    "GatewayIntegrations": true
 }

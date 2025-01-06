@@ -17,9 +17,9 @@ use Modules\Core\Services\ReportanaService;
 
 class ReportanaSaleRecoveryListener implements ShouldQueue
 {
-    public $queue = "default";
+    public string $queue = "default";
 
-    public function handle($event)
+    public function handle($event): void
     {
         try {
             if (!empty($event->sale)) {
@@ -58,7 +58,7 @@ class ReportanaSaleRecoveryListener implements ShouldQueue
                 }
 
                 $reportanaService = new ReportanaService($integration->client_id, $integration->client_secret, $integration->id);
-                
+
                 $reportanaService->sendAbandoned($checkout, $checkout->checkoutPlans, $event->domain, $event->log);
             }
         } catch (Exception $e) {

@@ -9,6 +9,9 @@ use Modules\Core\Services\Gateways\EfipayService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\ArmPayService;
+use Modules\Core\Services\Gateways\AxisBankingService;
+use Modules\Core\Services\Gateways\VegaService;
+use Modules\Core\Services\Gateways\VolutiService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -32,6 +35,8 @@ class UpdateAvailableBalance extends Command
         SimPayService::class,
         EfipayService::class,
         ArmpayService::class,
+        VolutiService::class,
+        AxisBankingService::class,
         //Safe2PayService::class,
         // AsaasService::class,
         // GerencianetService::class,
@@ -65,6 +70,9 @@ class UpdateAvailableBalance extends Command
                 $gatewayService = app()->make($gatewayClass);
                 $gatewayService->updateAvailableBalance();
             }
+
+            $vegaService = new VegaService();
+            $vegaService->updateAllCompaniesBalance();
 
             settings()
                 ->group("withdrawal_request")

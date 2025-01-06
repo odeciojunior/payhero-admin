@@ -15,9 +15,12 @@ class SaleRefundedWhatsapp2Listener implements ShouldQueue
 {
     use Queueable;
 
-    public function handle(SaleRefundedEvent $event)
+    public function handle(SaleRefundedEvent $event): void
     {
         try {
+            if ($event->sale->api_flag) {
+                return;
+            }
             $whatsapp2Integration = Whatsapp2Integration::where("project_id", $event->sale->project_id)
                 ->where("billet_paid", 1)
                 ->first();
@@ -35,7 +38,7 @@ class SaleRefundedWhatsapp2Listener implements ShouldQueue
                 $domain = Domain::where("status", 3)
                     ->where("project_id", $sale->project_id)
                     ->first();
-                return $whatsapp2Service->sendSale($sale, $sale->plansSales, $domain, 6);
+                $whatsapp2Service->sendSale($sale, $sale->plansSales, $domain, 6);
             }
         } catch (Exception $e) {
             Log::warning("erro ao enviar notificação para Whatsapp 2.0 boleto expirado" . $event->sale->id);

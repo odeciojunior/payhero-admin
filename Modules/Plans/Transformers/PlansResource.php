@@ -3,13 +3,12 @@
 namespace Modules\Plans\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
+use Modules\Core\Entities\Company;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Str;
-use Modules\Core\Entities\Company;
 
 class PlansResource extends JsonResource
 {
@@ -22,9 +21,13 @@ class PlansResource extends JsonResource
         $userDocumentValidated = $userService->isDocumentValidated();
 
         if (FoxUtils::isProduction()) {
-            $link = isset($this->project->domains[0]->name)
-                ? "https://checkout." . $this->project->domains[0]->name . "/" . $this->code
-                : "Domínio não configurado";
+            if ($this->project->nuvemshop_id) {
+                $link = env("CHECKOUT_URL", "https://checkout.azcend.com.br") . "/" . $this->code;
+            } else {
+                $link = isset($this->project->domains[0]->name)
+                    ? "https://checkout." . $this->project->domains[0]->name . "/" . $this->code
+                    : "Domínio não configurado";
+            }
         } else {
             $link = env("CHECKOUT_URL", "http://dev.checkout.com.br") . "/" . $this->code;
         }
@@ -42,6 +45,14 @@ class PlansResource extends JsonResource
         $limit_name = 24;
         $limit_description = 38;
 
+        $status = (isset($this->project->nuvemshop_id)
+                ? ($this->project->status
+                    ? 1
+                    : 0)
+                : isset($this->project->domains[0]->name))
+            ? 1
+            : 0;
+
         return [
             "id" => Hashids::encode($this->id),
             "name" => $this->name,
@@ -52,9 +63,9 @@ class PlansResource extends JsonResource
             "description_short_flag" => mb_strwidth($this->description, "UTF-8") <= $limit_description ? false : true,
             "code" => $link,
             "price" => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ",", "."),
-            "status" => isset($this->project->domains[0]->status) ? 1 : 0,
+            "status" => $status,
             "status_code" => $this->status,
-            "status_translated" => isset($this->project->domains[0]->name) ? "Ativo" : "Desativado",
+            "status_translated" => $status ? "Ativo" : "Desativado",
             "document_status" => $companyDocumentValidated && $userDocumentValidated ? "approved" : "pending",
             "currency_project" => $costCurrency->cost_currency_type ?? 1,
             "products_length" => count($this->productsPlans),

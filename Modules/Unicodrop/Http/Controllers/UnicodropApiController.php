@@ -19,10 +19,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class UnicodropApiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
     public function index(Request $request)
     {
         try {
@@ -69,7 +65,7 @@ class UnicodropApiController extends Controller
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -136,7 +132,7 @@ class UnicodropApiController extends Controller
             return response()->json(["message" => "Integração criada com sucesso!"], 200);
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -154,7 +150,7 @@ class UnicodropApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

@@ -69,7 +69,7 @@ class DashboardApiController extends Controller
             $company = Company::find($companyId);
 
             if (empty($company)) {
-                return response()->json(["message" => "Ocorreu algum erro"], 400);
+                return response()->json(["message" => __('messages.unexpected_error')], 400);
             }
 
             $todayBalance = Sale::join("transactions as t", "t.sale_id", "=", "sales.id")
@@ -223,16 +223,14 @@ class DashboardApiController extends Controller
                 "money_cashback" => $this->getCashbackReceivedValue(),
                 "benefits" => $benefitService->getUserBenefits($user),
             ];
-        } catch (Exception $e) {
-            report($e);
-        } catch (Exception $e) {
+        }catch (Exception $e) {
             report($e);
 
             return [];
         }
     }
 
-    function getCashbackReceivedValue()
+    public function getCashbackReceivedValue()
     {
         return number_format(
             intval(

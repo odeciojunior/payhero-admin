@@ -385,7 +385,7 @@ class DomainsController extends Controller
             Log::warning("Erro ao obter form de cadastro de domínios (DomainsController - create)");
             report($e);
 
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

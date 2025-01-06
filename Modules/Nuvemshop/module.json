@@ -1,0 +1,13 @@
+{
+    "name": "Nuvemshop",
+    "alias": "nuvemshop",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Nuvemshop\\Providers\\NuvemshopServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -34,7 +34,7 @@ class FinancesApiController extends Controller
             }
 
             if ($company->id != Company::DEMO_ID && Gate::denies("edit", [$company])) {
-                return response()->json(["message" => "Sem permissão"], Response::HTTP_FORBIDDEN);
+                return response()->json(["message" => __('messages.unauthorized')], Response::HTTP_FORBIDDEN);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId);

@@ -12,14 +12,12 @@ use Modules\Core\Services\ReportanaService;
 
 class ReportanaSaleListener implements ShouldQueue
 {
-    public $queue = "default";
+    public string $queue = "default";
 
-    public function handle($event)
+    public function handle($event): void
     {
         try {
             $sale = $event->sale;
-            $trackingCreatedEvent = !empty($event->trackingCreatedEvent) ? $event->trackingCreatedEvent : false;
-
             if ($sale->api_flag) {
                 return;
             }
@@ -65,13 +63,18 @@ class ReportanaSaleListener implements ShouldQueue
                     }
                 }
 
-                if (isset($column) && isset($eventName)) {
+                if (isset($column, $eventName)) {
                     $integrations = ReportanaIntegration::where("project_id", $sale->project_id)
                         ->where($column, 1)
                         ->get();
+                    $trackingCreatedEvent = !empty($event->trackingCreatedEvent) ? $event->trackingCreatedEvent : false;
 
                     foreach ($integrations as $integration) {
-                        $reportanaService = new ReportanaService($integration->client_id,$integration->client_secret, $integration->id);
+                        $reportanaService = new ReportanaService(
+                            $integration->client_id,
+                            $integration->client_secret,
+                            $integration->id
+                        );
 
                         $sale->load(["customer", "delivery", "plansSales.plan", "trackings"]);
                         $domain = Domain::where("status", 3)

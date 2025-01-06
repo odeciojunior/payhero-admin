@@ -1,15 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Integrations\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ApiToken;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\User;
+use Modules\Integrations\Actions\CreateTokenAction;
+use Modules\Integrations\Actions\DeleteApiTokenAction;
+use Modules\Integrations\Exceptions\ApiTokenNotFoundException;
+use Modules\Integrations\Exceptions\InvalidTokenTypeException;
+use Modules\Integrations\Exceptions\TokenAlreadyExistsException;
+use Modules\Integrations\Exceptions\UnauthorizedApiTokenDeletionException;
+use Modules\Integrations\Http\Requests\StoreApiTokenRequest;
 use Modules\Integrations\Transformers\ApiTokenCollection;
 use Modules\Integrations\Transformers\ApiTokenResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,105 +59,32 @@ class IntegrationsApiController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return ApiTokenResource
-     */
-    public function store(Request $request)
+    public function store(StoreApiTokenRequest $request, CreateTokenAction $action): JsonResponse|ApiTokenResource
     {
         try {
-            $description = $request->get("description");
-            if (empty($description)) {
-                return response()->json(["message" => "O campo Descrição é obrigatório!"], Response::HTTP_BAD_REQUEST);
-            }
-
-            $apiTokenModel = new ApiToken();
-            $hasToken = $apiTokenModel
-                ->newQuery()
-                ->where(
-                    "user_id",
-                    auth()
-                        ->user()
-                        ->getAccountOwnerId(),
-                )
-                ->where("description", $description)
-                ->exists();
-            if ($hasToken) {
-                return response()->json(
-                    ["message" => "Já existe um token com a descrição informada!"],
-                    Response::HTTP_OK,
-                );
-            }
-
-            $tokenTypeEnum = ApiToken::INTEGRATION_TYPE_SPLIT_API;
-            if (empty($tokenTypeEnum)) {
-                return response()->json(
-                    ["message" => "O Tipo de Integração é obrigatório!"],
-                    Response::HTTP_BAD_REQUEST,
-                );
-            }
-
-            $company_id = current(hashids()->decode($request->get("company_id")));
-            if ($tokenTypeEnum == ApiToken::INTEGRATION_TYPE_CHECKOUT_API) {
-                $company = Company::find(current(hashids()->decode($request->get("company_id"))));
-                if (!$company) {
-                    return response()->json(
-                        ["message" => "O campo Empresa é obrigatório para a integração Checkout API"],
-                        Response::HTTP_BAD_REQUEST,
-                    );
-                }
-
-                $postback = $request->get("postback");
-                if (empty($postback)) {
-                    return response()->json(
-                        ["message" => "O campo Postback é obrigatório!"],
-                        Response::HTTP_BAD_REQUEST,
-                    );
-                }
-            }
-
-            /** @var User $user */
-
-            $apiTokenPresenter = $apiTokenModel->present();
-
-            $scopes = $apiTokenPresenter->getTokenScope($tokenTypeEnum);
-            if (empty($scopes)) {
-                return response()->json(["message" => "Tipo do token inválido!"], Response::HTTP_BAD_REQUEST);
-            }
-
-            if (!empty($request->get("platform_enum"))) {
-                $platform_enum = $request->get("platform_enum");
-            } else {
-                $platform_enum = "WEBAPI";
-            }
-
-            $tokenIntegration = ApiToken::generateTokenIntegration($description, $scopes);
-            /** @var ApiToken $token */
-            $token = $apiTokenModel->create([
-                "user_id" => auth()->user()->account_owner_id,
-                "company_id" => $company_id,
-                "token_id" => $tokenIntegration->token->getKey(),
-                "access_token" => $tokenIntegration->accessToken,
-                "scopes" => json_encode($scopes, true),
-                "integration_type_enum" => $tokenTypeEnum,
-                "description" => $description,
-                "postback" => $postback ?? null,
-                "platform_enum" => $platform_enum,
-            ]);
-
-            return new ApiTokenResource($token);
+            $data = $request->validated();
+            $data["company_id"] = current(hashids()->decode($request->get("company_id")));
+            $newToken = $action->handle($data);
+            return new ApiTokenResource($newToken);
+        } catch (TokenAlreadyExistsException) {
+            return response()->json([
+                'message' => 'Já existe um token com a descrição informada!'
+            ], Response::HTTP_OK);
+        } catch (InvalidTokenTypeException) {
+            return response()->json([
+                'message' => 'Tipo do token inválido!'
+            ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $ex) {
-            Log::warning("Ocorreu um erro ao salvar integração.");
             report($ex);
 
-            return response()->json(["message" => "Ocorreu um erro ao salvar."], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => 'Ocorreu um erro ao salvar.'], Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param string $id
+     * @param $encodedId
+     * @return JsonResponse|RedirectResponse
      */
     public function show($encodedId)
     {
@@ -175,7 +111,7 @@ class IntegrationsApiController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param string $encodedId
+     * @param  string  $encodedId
      * @return Response
      */
     public function update(Request $request, $encodedId)
@@ -220,36 +156,35 @@ class IntegrationsApiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param string $encodedId
-     * @return Response
+     * @param  string  $encodedId
+     * @param  DeleteApiTokenAction  $action
+     * @return JsonResponse|RedirectResponse
      */
-    public function destroy($encodedId)
+    public function destroy(string $encodedId, DeleteApiTokenAction $action): JsonResponse|RedirectResponse
     {
         try {
-            $apiTokenModel = new ApiToken();
-            /** @var ApiToken $apiToken */
-            $apiToken = $apiTokenModel->newQuery()->find(current(Hashids::decode($encodedId)));
-            if ($apiToken->user_id !== auth()->user()->account_owner_id) {
-                return response()->json(["message" => "Ocorreu um erro ao excluir."], Response::HTTP_BAD_REQUEST);
-            }
-            if (!$apiToken->delete()) {
-                return response()->json(["message" => "Ocorreu um erro ao excluir."], Response::HTTP_BAD_REQUEST);
-            }
+            $apiTokenDecrypt = current(Hashids::decode($encodedId));
+            $action->handle((int)$apiTokenDecrypt);
 
-            return response()->json(["message" => "Registro excluído com sucesso"], Response::HTTP_OK);
+            return response()->json([
+                'message' => 'Registro excluído com sucesso'
+            ], Response::HTTP_OK);
+        } catch (ApiTokenNotFoundException|UnauthorizedApiTokenDeletionException) {
+            return response()->json([
+                'message' => 'Ocorreu um erro ao excluir.',
+            ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $ex) {
-            Log::debug($ex);
+            report($ex);
 
             return redirect()
                 ->back()
-                ->with("error", "Ocorreu um erro ao excluir.");
+                ->with('error', 'Ocorreu um erro ao excluir.');
         }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param string $encodedId
+     * @param  string  $encodedId
      * @return Response
      */
     public function refreshToken($encodedId)

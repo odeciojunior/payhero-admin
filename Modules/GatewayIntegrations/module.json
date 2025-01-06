@@ -1,0 +1,11 @@
+{
+    "name": "GatewayIntegrations",
+    "alias": "gatewayintegrations",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GatewayIntegrations\\Providers\\GatewayIntegrationsServiceProvider"
+    ],
+    "files": []
+}

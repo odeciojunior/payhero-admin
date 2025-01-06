@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Projects\Transformers;
 
 use Illuminate\Http\Request;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * @property mixed id
@@ -20,11 +22,12 @@ class ProjectsSelectResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'      => Hashids::encode($this->id),
-            'name'    => $this->name,
-            'shopify' => ($this->shopify_id != null ? 1 : 0),
-            'status'  => $this->status,
-            'woocommerce' => ($this->woocommerce_id != null ? 1 : 0),
+            "id" => Hashids::encode($this->id),
+            "name" => $this->name,
+            "shopify" => $this->shopify_id != null ? 1 : 0,
+            "status" => $this->status,
+            "woocommerce" => $this->woocommerce_id != null ? 1 : 0,
+            "nuvemshop" => $this->nuvemshop_id != null ? 1 : 0,
         ];
     }
 }

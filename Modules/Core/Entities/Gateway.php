@@ -15,7 +15,9 @@ use Modules\Core\Services\Gateways\PayupService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
 use Modules\Core\Services\Gateways\ArmPayService;
+use Modules\Core\Services\Gateways\AxisBankingService;
 use Modules\Core\Services\Gateways\VegaService;
+use Modules\Core\Services\Gateways\VolutiService;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -75,6 +77,12 @@ class Gateway extends Model
 
     public const ARMPAY_PRODUCTION_ID = 21;
     public const ARMPAY_SANDBOX_ID = 22;
+
+    public const VOLUTI_PRODUCTION_ID = 23;
+    public const VOLUTI_SANDBOX_ID = 24;
+
+    public const AXISBANKING_PRODUCTION_ID = 25;
+    public const AXISBANKING_SANDBOX_ID = 26;
 
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
@@ -151,6 +159,14 @@ class Gateway extends Model
             case self::ARMPAY_PRODUCTION_ID:
             case self::ARMPAY_SANDBOX_ID:
                 return new ArmPayService();
+
+            case self::VOLUTI_PRODUCTION_ID:
+            case self::VOLUTI_SANDBOX_ID:
+                return new VolutiService();
+            
+            case self::AXISBANKING_PRODUCTION_ID:
+            case self::AXISBANKING_SANDBOX_ID:
+                return new AxisBankingService();
 
             case self::VEGA_PRODUCTION_ID:
             case self::VEGA_SANDBOX_ID:

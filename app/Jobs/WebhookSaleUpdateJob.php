@@ -12,7 +12,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Webhook;
-use Modules\Core\Services\WebhookService;
+use Modules\Webhooks\Services\WebhookService;
 
 /**
  * Class WebhookSaleUpdateJob

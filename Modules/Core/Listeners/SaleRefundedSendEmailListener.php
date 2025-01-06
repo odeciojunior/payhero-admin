@@ -34,7 +34,7 @@ class SaleRefundedSendEmailListener implements ShouldQueue
     {
         try {
             $sale = $event->sale;
-            if ($sale->api) {
+            if ($sale->api_flag || $sale->api) {
                 return false;
             }
 

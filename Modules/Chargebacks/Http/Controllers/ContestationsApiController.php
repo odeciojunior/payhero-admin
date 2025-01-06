@@ -27,7 +27,7 @@ class ContestationsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -41,7 +41,7 @@ class ContestationsApiController extends Controller
             return ContestationResource::collection($getnetChargebacks->paginate(10));
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -83,7 +83,7 @@ class ContestationsApiController extends Controller
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -94,7 +94,7 @@ class ContestationsApiController extends Controller
         if (empty($data["contestation_id"])) {
             return response()->json(
                 [
-                    "message" => "Ocorreu algum erro",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );
@@ -105,7 +105,7 @@ class ContestationsApiController extends Controller
         if (empty($contestation)) {
             return response()->json(
                 [
-                    "message" => "Ocorreu algum erro",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );

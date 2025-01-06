@@ -1,25 +1,25 @@
-$(document).ready(function () {
-    $(".company-navbar").change(function () {
+$(document).ready(function() {
+    $('.company-navbar').change(function() {
         if (verifyIfCompanyIsDefault($(this).val())) return;
-        $("#integration-actions").hide();
-        $("#no-integration-found").hide();
-        $("#project-empty").hide();
-        loadOnAny("#content");
-        updateCompanyDefault().done(function (data1) {
-            getCompaniesAndProjects().done(function (data2) {
+        $('#integration-actions').hide();
+        $('#no-integration-found').hide();
+        $('#project-empty').hide();
+        loadOnAny('#content');
+        updateCompanyDefault().done(function(data1) {
+            getCompaniesAndProjects().done(function(data2) {
                 companiesAndProjects = data2;
                 index(false);
             });
         });
     });
 
-    var companiesAndProjects = "";
+    let companiesAndProjects = '';
 
     function index(loading = true) {
         if (loading) {
             loadingOnScreen();
         } else {
-            loadOnAny("#content");
+            loadOnAny('#content');
         }
 
         let hasProjects = true;
@@ -30,59 +30,59 @@ $(document).ready(function () {
         // }
 
         if (!hasProjects) {
-            $("#integration-actions").hide();
-            $("#no-integration-found").hide();
-            $("#project-empty").show();
+            $('#integration-actions').hide();
+            $('#no-integration-found').hide();
+            $('#project-empty').show();
             loadingOnScreenRemove();
-            loadOnAny("#content", true);
+            loadOnAny('#content', true);
         } else {
             $.ajax({
-                method: "GET",
-                url: "/api/apps/adooreicheckout",
-                dataType: "json",
+                method: 'GET',
+                url: '/api/apps/adooreicheckout',
+                dataType: 'json',
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
+                    Authorization: $('meta[name="access-token"]').attr('content'),
+                    Accept: 'application/json',
                 },
                 error: (response) => {
-                    loadOnAny("#content", true);
+                    loadOnAny('#content', true);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-                    $("#project_id, #select_projects_edit").html("");
-                    fillSelectProject(companiesAndProjects, "#project_id, #select_projects_edit");
+                    $('#project_id, #select_projects_edit').html('');
+                    fillSelectProject(companiesAndProjects, '#project_id, #select_projects_edit');
                     if (isEmpty(response.integrations)) {
-                        $("#no-integration-found").show();
+                        $('#no-integration-found').show();
                     } else {
-                        $("#content").html("");
+                        $('#content').html('');
                         let integrations = response.integrations[0];
                         renderIntegration(integrations);
-                        $("#no-integration-found").hide();
+                        $('#no-integration-found').hide();
                     }
-                    $("#project-empty").hide();
-                    $("#integration-actions").show();
-                    if (loading) loadOnAny("#content", true);
+                    $('#project-empty').hide();
+                    $('#integration-actions').show();
+                    if (loading) loadOnAny('#content', true);
                     loadingOnScreenRemove();
                 },
             });
         }
     }
 
-    getCompaniesAndProjects().done(function (data) {
+    getCompaniesAndProjects().done(function(data) {
         companiesAndProjects = data;
         index();
     });
 
     // Reset the integration modal
     function clearForm() {
-        $("#token").val("");
-        $("#webhook").val("");
+        $('#token').val('');
+        $('#webhook').val('');
     }
 
     // Draw the integration cards
     function renderIntegration(data) {
-        $("#content").append(`
+        $('#content').append(`
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 integration-card" id_code="${data.id_code}">
                 <div class="d-flex align-items-center justify-content-center"   >
                     <img class="card-img-top img-fluid w-full" src="/build/global/img/adoorei.png"/>
@@ -107,27 +107,27 @@ $(document).ready(function () {
     }
 
     // Create
-    $("#btn-add-integration").on("click", function () {
-        $(".modal-title").html("Adicionar nova Integração com Adoorei Checkout");
-        $("#bt_integration").addClass("btn-save");
-        $("#bt_integration").removeClass("btn-update");
-        $("#bt_integration").text("Adicionar integração");
-        $("#bt_integration").show();
-        $("#modal_add_integracao").modal("show");
-        $("#form_update_integration").hide();
-        $("#form_add_integration").show();
+    $('#btn-add-integration').on('click', function() {
+        $('.modal-title').html('Adicionar nova Integração com Adoorei Checkout');
+        $('#bt_integration').addClass('btn-save');
+        $('#bt_integration').removeClass('btn-update');
+        $('#bt_integration').text('Adicionar integração');
+        $('#bt_integration').show();
+        $('#modal_add_integracao').modal('show');
+        $('#form_update_integration').hide();
+        $('#form_add_integration').show();
         clearForm();
     });
 
     // Edit
-    $(document).on("click", ".card-edit", function () {
+    $(document).on('click', '.card-edit', function() {
         $.ajax({
-            method: "GET",
-            url: "/api/apps/adooreicheckout/",
-            dataType: "json",
+            method: 'GET',
+            url: '/api/apps/adooreicheckout/',
+            dataType: 'json',
             headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
+                Authorization: $('meta[name="access-token"]').attr('content'),
+                Accept: 'application/json',
             },
             error: (response) => {
                 errorAjaxResponse(response);
@@ -135,44 +135,57 @@ $(document).ready(function () {
             success: (response) => {
                 const integration = response.integrations[0];
                 const webhook = response.Webhooks[0];
+                const xSignatureDiv = $('#x-signature-div');
 
-                $("#token_edit").val(integration.access_token);
-                $("#integration_id").val(integration.id_code);
-                $("#webhook_edit").val(webhook.url ?? null);
+                $('#token_edit').val(integration.access_token);
+                $('#integration_id').val(integration.id_code);
+                $('#webhook_edit').val(webhook.url ?? null);
+                xSignatureDiv.hide();
 
-                $(".modal-title").html("Integração com Adoorei Checkout");
-                $("#bt_integration").addClass("btn-update");
-                $("#bt_integration").removeClass("btn-save");
-                $("#bt_integration").text("Atualizar");
-                $("#form_update_integration").show();
-                $("#form_add_integration").hide();
-                $("#modal_add_integracao").modal("show");
+                if (webhook.signature.length > 0) {
+                    $('#x-signature-edit').val(webhook.signature);
+                    xSignatureDiv.show();
+                }
+
+                $('.modal-title').html('Integração com Adoorei Checkout');
+                $('#bt_integration').addClass('btn-update');
+                $('#bt_integration').removeClass('btn-save');
+                $('#bt_integration').text('Atualizar');
+                $('#form_update_integration').show();
+                $('#form_add_integration').hide();
+                $('#modal_add_integracao').modal('show');
             },
         });
     });
 
+    $('.btn-copy').on('click', function() {
+        const button = $(this);
+        const input = button.prev('input');
+        copyTextToClipboard(input, 'Copiado com sucesso!');
+    });
+
     // Store
-    $(document).on("click", ".btn-save", function () {
-        if ($("#token").val() === "") {
-            alertCustom("error", "Dados informados inválidos");
+    $(document).on('click', '.btn-save', function() {
+        if ($('#token').val() === '') {
+            alertCustom('error', 'Dados informados inválidos');
             return false;
         }
-        var form_data = new FormData(document.getElementById("form_add_integration"));
+        let form_data = new FormData(document.getElementById('form_add_integration'));
 
         loadingOnScreen();
-        let description = "Adoorei_Checkout";
-        let companyHash = $(".company-navbar").val();
-        let platformEnum = "ADOOREI_CHECKOUT";
+        let description = 'Adoorei_Checkout';
+        let companyHash = $('.company-navbar').val();
+        let platformEnum = 'ADOOREI_CHECKOUT';
 
         storeIntegration(description, companyHash, platformEnum)
-            .then(function (response) {
+            .then(function(response) {
                 $.ajax({
-                    method: "POST",
-                    url: "/api/apps/adooreicheckout",
-                    dataType: "json",
+                    method: 'POST',
+                    url: '/api/apps/adooreicheckout',
+                    dataType: 'json',
                     headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
-                        Accept: "application/json",
+                        Authorization: $('meta[name="access-token"]').attr('content'),
+                        Accept: 'application/json',
                     },
                     processData: false,
                     contentType: false,
@@ -185,40 +198,30 @@ $(document).ready(function () {
                     success: (response) => {
                         index();
                         loadingOnScreenRemove();
-                        alertCustom("success", response.message);
+                        alertCustom('success', response.message);
                     },
                 });
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 loadingOnScreenRemove();
-                console.error("Erro ao executar storeIntegration:", error);
+                console.error('Erro ao executar storeIntegration:', error);
             });
     });
 
-    $(document).on("click", ".btnCopiarLinkToken", function () {
-        var tmpInput = $("<input>");
-        $("body").append(tmpInput);
-        var copyText = $("#token_edit").val();
-        tmpInput.val(copyText).select();
-        document.execCommand("copy");
-        tmpInput.remove();
-        alertCustom("success", "Token copiado!");
-    });
-
     function storeIntegration(description, companyHash, platformEnum = null) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             $.ajax({
-                method: "POST",
-                url: "/api/integrations",
+                method: 'POST',
+                url: '/api/integrations',
                 data: {
                     description: description,
                     company_id: companyHash,
                     platform_enum: platformEnum,
                 },
-                dataType: "json",
+                dataType: 'json',
                 headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
+                    Authorization: $('meta[name="access-token"]').attr('content'),
+                    Accept: 'application/json',
                 },
                 error: (response) => {
                     errorAjaxResponse(response);
@@ -231,24 +234,24 @@ $(document).ready(function () {
         });
     }
 
-     //update
-     $(document).on("click", ".btn-update", function () {
-        if ($("#webhook_edit").val() == "") {
-            alertCustom("error", "Webhook é obrigatório");
+    //update
+    $(document).on('click', '.btn-update', function() {
+        if ($('#webhook_edit').val() == '') {
+            alertCustom('error', 'Webhook é obrigatório');
             return false;
         }
-        var integrationId = $("#integration_id").val();
-        var form_data = new FormData(
-            document.getElementById("form_update_integration")
+        let integrationId = $('#integration_id').val();
+        let form_data = new FormData(
+            document.getElementById('form_update_integration'),
         );
 
         $.ajax({
-            method: "POST",
-            url: "/api/apps/adooreicheckout/" + integrationId,
-            dataType: "json",
+            method: 'POST',
+            url: '/api/apps/adooreicheckout/' + integrationId,
+            dataType: 'json',
             headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
+                Authorization: $('meta[name="access-token"]').attr('content'),
+                Accept: 'application/json',
             },
             processData: false,
             contentType: false,
@@ -259,31 +262,31 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 index();
-                alertCustom("success", response.message);
+                alertCustom('success', response.message);
             },
         });
     });
 
     // Load delete modal
-    $(document).on("click", ".delete-integration", function (e) {
+    $(document).on('click', '.delete-integration', function(e) {
         e.stopPropagation();
-        var id = $(this).attr("id_code");
-        $("#modal-delete-integration .btn-delete").attr("id_code", id);
-        $("#modal-delete-integration").modal("show");
+        let id = $(this).attr('id_code');
+        $('#modal-delete-integration .btn-delete').attr('id_code', id);
+        $('#modal-delete-integration').modal('show');
     });
 
     // Destroy
-    $(document).on("click", "#modal-delete-integration .btn-delete", function (e) {
+    $(document).on('click', '#modal-delete-integration .btn-delete', function(e) {
         e.stopPropagation();
-        var id_code = $(this).attr("id_code");
+        let id_code = $(this).attr('id_code');
 
         $.ajax({
-            method: "DELETE",
-            url: "/api/apps/adooreicheckout/" + id_code,
-            dataType: "json",
+            method: 'DELETE',
+            url: '/api/apps/adooreicheckout/' + id_code,
+            dataType: 'json',
             headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
+                Authorization: $('meta[name="access-token"]').attr('content'),
+                Accept: 'application/json',
             },
             error: (response) => {
                 errorAjaxResponse(response);
@@ -292,7 +295,7 @@ $(document).ready(function () {
                 // Remove the integration card from the screen
                 $(`.integration-card[id_code="${id_code}"]`).remove();
                 index();
-                alertCustom("success", response.message);
+                alertCustom('success', response.message);
             },
         });
     });

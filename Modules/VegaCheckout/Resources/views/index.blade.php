@@ -103,7 +103,7 @@
                 </div>
                 <div class="pr-20 pl-20 modal_integracao_body">
                     @include('vegacheckout::create')
-                    @include('vegacheckout::edit')
+                    @include('vegacheckout::show')
                 </div>
                 <div class="modal-footer"
                      style="margin-top: 15px">
@@ -113,7 +113,8 @@
                             data-dismiss="modal"></button>
                     <button type="button"
                             class="btn btn-primary"
-                            data-dismiss="modal">Fechar</button>
+                            data-dismiss="modal">Fechar
+                    </button>
                 </div>
             </div>
         </div>
@@ -142,7 +143,8 @@
         </div>
     </div>
 
-    <div id="modal-delete-integration" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">
+    <div id="modal-delete-integration" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true"
+         role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
@@ -158,10 +160,14 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <button type="button"
+                            class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                            data-dismiss="modal" style="width: 20%;">
                         <b>Cancelar</b>
                     </button>
-                    <button id_code="" type="button" data-dismiss="modal"  class="col-4 btn border-0 btn-delete btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                    <button id_code="" type="button" data-dismiss="modal"
+                            class="col-4 btn border-0 btn-delete btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row"
+                            style="width: 20%;">
                         <b class="mr-2">Excluir </b>
                         <span class="o-bin-1"></span>
                     </button>

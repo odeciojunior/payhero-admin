@@ -71,7 +71,7 @@ class ConvertaXApiController extends Controller
 
             //return ConvertaxResource::collection($convertaxIntegrations);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 

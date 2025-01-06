@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\ConvertaX\Database\Seeders;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +17,5 @@ class ConvertaXDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call("OthersTableSeeder");
     }
 }

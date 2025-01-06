@@ -10,18 +10,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
-use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
@@ -85,14 +83,33 @@ class ProductsApiController extends Controller
             }
             // Woocommerce products
             elseif (isset($filters["shopify"]) && $filters["shopify"] == 2) {
-                $productsSearch->where("shopify", 0);
-                $productsSearch->where(function ($query) {
-                    $query->whereRaw(
-                        "(shopify_id IS NOT NULL AND shopify_variant_id IS NOT NULL) OR
+                $productsSearch
+                    ->where("shopify", 0)
+                    ->whereHas("project", function ($query) {
+                        $query->whereNotNull("woocommerce_id");
+                    })
+                    ->where(function ($query) {
+                        $query->whereRaw(
+                            "(shopify_id IS NOT NULL AND shopify_variant_id IS NOT NULL) OR
                             (shopify_id IS NULL AND shopify_variant_id IS NOT NULL) OR
-                            (shopify_id IS NOT NULL AND shopify_variant_id IS NULL)"
-                    );
-                });
+                            (shopify_id IS NOT NULL AND shopify_variant_id IS NULL)",
+                        );
+                    });
+            }
+            // Nuvemshop products
+            elseif (isset($filters["shopify"]) && $filters["shopify"] == 3) {
+                $productsSearch
+                    ->where("shopify", 0)
+                    ->whereHas("project", function ($query) {
+                        $query->whereNotNull("nuvemshop_id");
+                    })
+                    ->where(function ($query) {
+                        $query->whereRaw(
+                            "(shopify_id IS NOT NULL AND shopify_variant_id IS NOT NULL) OR
+                            (shopify_id IS NULL AND shopify_variant_id IS NOT NULL) OR
+                            (shopify_id IS NOT NULL AND shopify_variant_id IS NULL)",
+                        );
+                    });
             }
             // Sirius products
             else {
@@ -106,7 +123,10 @@ class ProductsApiController extends Controller
                 $productsSearch->where("name", "LIKE", "%" . $filters["name"] . "%");
             }
 
-            if (isset($filters["project"]) && ($filters["shopify"] == 1 || $filters["shopify"] == 2)) {
+            if (
+                isset($filters["project"]) &&
+                ($filters["shopify"] == 1 || $filters["shopify"] == 2 || $filters["shopify"] == 3)
+            ) {
                 $projectId = current(Hashids::decode($filters["project"]));
                 $productsSearch->where("project_id", $projectId);
             }
@@ -187,7 +207,7 @@ class ProductsApiController extends Controller
                         $data["digital_product_url"],
                         null,
                         false,
-                        "private"
+                        "private",
                     );
 
                     $product->update([
@@ -295,7 +315,7 @@ class ProductsApiController extends Controller
                     [
                         "message" => "Ocorreu um erro produto não encontrado, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -347,7 +367,7 @@ class ProductsApiController extends Controller
                         $data["digital_product_url"],
                         null,
                         false,
-                        "private"
+                        "private",
                     );
 
                     $product->update(["digital_product_url" => $amazonPath]);
@@ -365,7 +385,7 @@ class ProductsApiController extends Controller
                     "message" => "Produto Atualizado com sucesso!",
                     "digital_product_url" => $product->digital_product_url,
                 ],
-                200
+                200,
             );
         } catch (Exception $e) {
             report($e);
@@ -385,7 +405,7 @@ class ProductsApiController extends Controller
                     [
                         "message" => "Ocorreu um erro produto não encontrado, tente novamente mais tarde",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -456,7 +476,7 @@ class ProductsApiController extends Controller
                     [
                         "message" => "Impossivel excluir, existem planos associados a este produto!",
                     ],
-                    400
+                    400,
                 );
             }
 
@@ -491,7 +511,7 @@ class ProductsApiController extends Controller
                     "user_id",
                     auth()
                         ->user()
-                        ->getAccountOwnerId()
+                        ->getAccountOwnerId(),
                 );
 
             if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
@@ -505,8 +525,8 @@ class ProductsApiController extends Controller
                             "name",
                             DB::raw("min(id) as id"),
                             DB::raw(
-                                "if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"
-                            )
+                                "if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description",
+                            ),
                         )
                         ->groupBy("name", "shopify_id", DB::raw("if(shopify_id is null, id, 0)"));
                 }
@@ -546,7 +566,7 @@ class ProductsApiController extends Controller
                 [
                     "message" => "Ocorreu um erro, ao buscar dados dos produtos",
                 ],
-                400
+                400,
             );
         }
     }
@@ -626,7 +646,7 @@ class ProductsApiController extends Controller
 
             $signedUrl = FoxUtils::getAwsSignedUrl(
                 $requestData["digital_product_url"],
-                $requestData["url_expiration_time"]
+                $requestData["url_expiration_time"],
             );
 
             return response()->json(["signed_url" => $signedUrl]);

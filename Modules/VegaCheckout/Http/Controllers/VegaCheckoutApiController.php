@@ -1,284 +1,275 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\VegaCheckout\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controller;
 use Modules\Core\Entities\ApiToken;
 use Modules\Core\Entities\Webhook;
-use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
-use Modules\Webhooks\Transformers\WebhooksResource;
+use Modules\Core\ValueObjects\Url;
+use Modules\Integrations\Actions\CreateTokenAction;
+use Modules\Integrations\Exceptions\ApiTokenNotFoundException;
+use Modules\Integrations\Exceptions\UnauthorizedApiTokenDeletionException;
 use Modules\Integrations\Transformers\ApiTokenResource;
+use Modules\Projects\Actions\CreateProjectByCheckoutIntegrationAction;
+use Modules\VegaCheckout\Actions\DeleteVegaCheckoutAction;
+use Modules\Webhooks\Actions\CreateWebhook\CreateWebhookAction;
+use Modules\Webhooks\Actions\CreateWebhook\CreateWebhookInputDTO;
+use Modules\Webhooks\Actions\GenerateSignatureWebhookAction;
+use Modules\Webhooks\Transformers\WebhooksResource;
+use PharIo\Manifest\InvalidUrlException;
+use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response as ResponseStatus;
+use Vinkla\Hashids\Facades\Hashids;
 
 class VegaCheckoutApiController extends Controller
 {
-    /**
-     * @return JsonResponse
-     */
-    public function index(Request $request)
+    private string $description = 'Vega_Checkout';
+
+    public function __construct(
+        private readonly Webhook $webhookModel,
+        private readonly ApiToken $apiTokenModel,
+    ) {
+    }
+
+    public function index(Request $request, CreateProjectByCheckoutIntegrationAction $createProjectAction): JsonResponse
     {
         try {
-            activity()->on((new Webhook()))->tap(function(Activity $activity) {
+            activity()->on($this->webhookModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações Vega Checkout');
 
-            $Webhook = Webhook::where('company_id', auth()->user()->company_default)
-                    ->where('description', 'Vega_Checkout')->get();
-            $ApiToken = ApiToken::where('company_id', auth()->user()->company_default)
-                    ->where('description', 'Vega_Checkout')->get();
+            $webhook = $this->webhookModel
+                ->newQuery()
+                ->with('company:id,fantasy_name')
+                ->where('company_id', auth()->user()->company_default)
+                ->where('user_id', auth()->user()?->getAccountOwnerId())
+                ->where('description', $this->description)
+                ->get();
+
+            /**
+             * @todo remover código após verificar se todos os webhooks vega_checkout tem o signature criado.
+             *
+             * @var Webhook $item
+             */
+            foreach ($webhook as $item) {
+                if (empty($item->signature)) {
+                    $signature = GenerateSignatureWebhookAction::handle([
+                        'user_id' => $item->user_id,
+                        'company_id' => $item->company_id,
+                        'description' => $this->description,
+                        'url' => new Url($item->url),
+                    ]);
+                    $item->update(['signature' => $signature]);
+                }
+            }
+
+            $apiToken = $this->apiTokenModel
+                ->newQuery()
+                ->where('company_id', auth()->user()->company_default)
+                ->where('user_id', auth()->user()?->getAccountOwnerId())
+                ->where('description', $this->description)
+                ->get();
+
+            /**
+             * @todo remover código após verificar se todos os ApiTokens vega_checkout tem um project relacionado.
+             *
+             * @var ApiToken $item
+             */
+            foreach ($apiToken as $item) {
+                if (is_null($item->project_id)) {
+                    $project = $createProjectAction->handle([
+                        'company_id' => $item->company_id,
+                        'name' => $item->name,
+                        'platform_enum' => $item->platform_enum,
+                    ]);
+                    if (!is_null($project)) {
+                        $item->update(['project_id' => $project->id]);
+                    }
+                }
+            }
 
             return response()->json([
-                "integrations" => ApiTokenResource::collection($ApiToken),
-                "Webhooks" => WebhooksResource::collection($Webhook),
+                'integrations' => ApiTokenResource::collection($apiToken),
+                'Webhooks' => WebhooksResource::collection($webhook),
             ]);
         } catch (Exception $e) {
-            return response()->json([$e], 400);
+            report($e);
+
+            return response()->json([
+                'message' => __('messages.system.error'),
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         }
     }
 
-    /**
-     * @param $id
-     * @return ReportanaResource
-     */
-    public function show($id)
+    public function show($id): JsonResponse|ApiTokenResource
     {
         try {
-            $ApiTokenModel = new ApiToken();
-            $ApiToken = $ApiTokenModel->find(current(Hashids::decode($id)));
+            /**
+             * @var ApiToken $apiToken
+             */
+            $apiToken = $this->apiTokenModel
+                ->newQuery()
+                ->find(current(Hashids::decode($id)));
 
             activity()
-                ->on($ApiTokenModel)
+                ->on($this->apiTokenModel)
                 ->tap(function (Activity $activity) use ($id) {
-                    $activity->log_name = "visualization";
+                    $activity->log_name = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
                 })
-                ->log(
-                    "Visualizou tela editar configurações de integração " .
-                        $ApiToken->description .
-                        " "
-                );
+                ->log(sprintf('Visualizou tela editar configurações de integração: %s', $apiToken->description));
 
-            return new ApiTokenResource($ApiToken);
+            return new ApiTokenResource($apiToken);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function store(Request $request)
-    {
-        try {
-            $ApiTokenModel = new ApiToken();
-            $WebhooksModel = new Webhook();
-
-            $ApiToken = $ApiTokenModel
-                    ->where("description", 'Vega_Checkout')
-                    ->where("company_id", auth()->user()->company_default)
-                    ->where("deleted_at", null)
-                    ->first();
-
-            if (!empty($ApiToken)) {
-                
-                $integrationCreated = $WebhooksModel->firstOrCreate([
-                    "user_id" => auth()->user()->account_owner_id,
-                    "company_id" => auth()->user()->company_default,
-                    "description" => 'Vega_Checkout',
-                    "url" => 'https://pay.vegacheckout.com.br/api/postback/azcend',                    
-                ]);
-
-                if ($integrationCreated) {
-                    return response()->json(
-                        [
-                            "message" => "Integração criada com sucesso!",
-                        ],
-                        200
-                    );
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro ao realizar a integração ",
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        "message" => "Ocorreu um erro ao realizar a integração",
-                    ],
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            Log::warning("Erro ao realizar integração Vega Checkout - store");
             report($e);
 
-            return response()->json(
-                [
-                    "message" => "Ocorreu um erro ao realizar a integração",
-                ],
-                400
-            );
+            return response()->json([
+                'message' => __('messages.system.error')
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function edit($id)
+    public function store(Request $request, CreateWebhookAction $createWebhookAction): JsonResponse
     {
         try {
-            if (!empty($id)) {
-                $ApiTokenModel = new ApiToken();
-                $WebhookModel = new Webhook();
+            $apiToken = $this->apiTokenModel
+                ->newQuery()
+                ->where('description', $this->description)
+                ->where('company_id', auth()->user()->company_default)
+                ->where('user_id', auth()->user()?->getAccountOwnerId())
+                ->first();
 
-                activity()
-                    ->on($ApiTokenModel)
-                    ->tap(function (Activity $activity) use ($id) {
-                        $activity->log_name = "visualization";
-                        $activity->subject_id = current(Hashids::decode($id));
-                    })
-                    ->log("Visualizou tela editar configurações da integração Vega Checkout");
-
-                $Webhook = $WebhookModel->where("description", 'Vega_Checkout')
-                                        ->where("deleted_at", null)->first();
-              
-                $integration = $ApiTokenModel->where("id", $id)->first();
-
-                if ($integration) {
-                    return response()->json(["Webhook" => $Webhook, "integration" => $ApiTokenModel]);
-                } else {
-                    return response()->json(
-                        [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
-                    ],
-                    400
-                );
+            if (empty($apiToken)) {
+                return response()->json([
+                    'message' => __('messages.system.error'),
+                ], ResponseStatus::HTTP_BAD_REQUEST);
             }
+
+            $createWebhookAction->handle(
+                new CreateWebhookInputDTO(
+                    userId: auth()->user()->getAccountOwnerId(),
+                    companyId: auth()->user()->company_default,
+                    description: $this->description,
+                    url: new Url('https://pay.vegacheckout.com.br/api/postback/azcend'),
+                )
+            );
+
+            return response()->json([
+                'message' => __('messages.integration.created'),
+            ]);
+        } catch (InvalidUrlException) {
+            return response()->json([
+                'message' => __('messages.url.invalid')
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
-            Log::warning("Erro ao tentar acessar tela editar Integração Vega Checkout (GeradorRastreioController - edit)");
             report($e);
 
-            return response()->json(
-                [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
-                ],
-                400
-            );
+            return response()->json([
+                'message' => __('messages.system.error'),
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         }
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
-    public function update(Request $request, $id)
+    public function edit(string $id): JsonResponse
     {
         try {
-            $WebhooksModel = new Webhook();
+            activity()
+                ->on($this->apiTokenModel)
+                ->tap(function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })
+                ->log('Visualizou tela editar configurações da integração Vega Checkout');
+
+            $apiToken = $this->apiTokenModel
+                ->newQuery()
+                ->where('id', $id)
+                ->first();
+
+            if (empty($apiToken)) {
+                return response()->json([
+                    'message' => __('messages.integration.not_found'),
+                ], ResponseStatus::HTTP_BAD_REQUEST);
+            }
+
+            $webhook = $this->webhookModel
+                ->newQuery()
+                ->where('description', $this->description)
+                ->where('user_id', auth()->user()?->getAccountOwnerId())
+                ->where('company_id', auth()->user()->company_default)
+                ->first();
+
+            return response()->json(['Webhook' => $webhook, 'integration' => $apiToken]);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                'message' => __('messages.system.error'),
+            ], ResponseStatus::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        try {
             $data = $request->all();
             $integrationId = current(Hashids::decode($id));
-            $Webhook = $WebhooksModel->find($integrationId);
-            $messageError = "";
-            if (empty($data["clientid"])) {
-                return response()->json(["message" => "CLIENT ID é obrigatório!"], 400);
+
+            $webhook = $this->webhookModel
+                ->newQuery()
+                ->find($integrationId);
+
+            if (empty($data['clientid'])) {
+                return response()->json([
+                    'message' => 'CLIENT ID é obrigatório!'
+                ], ResponseStatus::HTTP_BAD_REQUEST);
             }
 
-            $integrationUpdated = $Webhook->update([
-                "clientid" => $data["clientid"],                
+            $webhook->update([
+                'clientid' => $data['clientid'],
             ]);
-            if ($integrationUpdated) {
-                return response()->json(
-                    [
-                        "message" => "Integração atualizada com sucesso!",
-                    ],
-                    200
-                );
-            }
 
-            return response()->json(
-                [
-                    "message" => "Ocorreu um erro ao atualizar a integração",
-                ],
-                400
-            );
+            return response()->json([
+                'message' => __('messages.integration.updated'),
+            ]);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    "message" => "Ocorreu um erro ao atualizar a integração",
-                ],
-                400
-            );
+            return response()->json([
+                'message' => __('messages.system.error'),
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         }
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id)
+    public function destroy($id, DeleteVegaCheckoutAction $action): JsonResponse
     {
         try {
-            $integrationId = current(Hashids::decode($id));
-            $ApitokenModel = new ApiToken();
-            $WebhookModel = new Webhook();
-            $integration = $ApitokenModel->where("id", $integrationId)->first();
-            $Webhook = $WebhookModel->where("description", 'Vega_Checkout')->first();
-            if (empty($integration)) {
-                return response()->json(
-                    [
-                        "message" => "Erro ao tentar encontrar integração para remover",
-                    ],
-                    400
-                );
-            } else {
-                $integrationDeleted = $integration->delete();
-                $WebhookDeleted = $Webhook->delete();
-                if ($integrationDeleted && $WebhookDeleted) {
-                    return response()->json(
-                        [
-                            "message" => "Integração Removida com sucesso!",
-                        ],
-                        200
-                    );
-                }
+            $action->handle(current(Hashids::decode($id)));
 
-                return response()->json(
-                    [
-                        "message" => "Erro ao tentar remover Integração",
-                    ],
-                    400
-                );
-            }
+            return response()
+                ->json([
+                    'message' => __('messages.integration.deleted'),
+                ]);
+        } catch (UnauthorizedApiTokenDeletionException) {
+            return response()->json([
+                'message' => __('messages.system.unauthorized'),
+            ], ResponseStatus::HTTP_FORBIDDEN);
+        } catch (ApiTokenNotFoundException) {
+            return response()->json([
+                'message' => __('messages.integration.not_found'),
+            ], ResponseStatus::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
-            Log::warning("Erro ao tentar remover Integração Vega Checkout");
             report($e);
 
-            return response()->json(
-                [
-                    "message" => "Ocorreu um erro ao tentar remover, tente novamente mais tarde!",
-                ],
-                400
-            );
+            return response()
+                ->json([
+                    'message' => __('messages.system.error'),
+                ], ResponseStatus::HTTP_BAD_REQUEST);
         }
     }
 }

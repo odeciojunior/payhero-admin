@@ -475,7 +475,6 @@ function pagination(response, model, callback) {
     }
 
     $(paginationContainer + ' .first_page').on("click", function () {
-        console.log($(this).html() + ' -1111');
         callback('?page=1');
     });
 
@@ -488,7 +487,6 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
-            console.log($(this).html() + ' 00000');
             callback('?page=' + $(this).html());
         });
     }
@@ -509,7 +507,6 @@ function pagination(response, model, callback) {
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
         $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
-            console.log($(this).html() + ' 1111');
             callback('?page=' + $(this).html());
         });
     }
@@ -524,7 +521,6 @@ function pagination(response, model, callback) {
         }
 
         $(paginationContainer + ' .last_page').on("click", function () {
-            console.log($(this).html() + ' 2222');
             callback('?page=' + lastPage);
         });
     }
@@ -537,7 +533,6 @@ function copyToClipboard(elem) {
     var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
     var origSelectionStart, origSelectionEnd;
 
-    console.log(elem.tagName)
     if (isInput) {
         // can just use the original source element for the selection and copy
         target = elem;
@@ -580,7 +575,6 @@ function copyToClipboard(elem) {
         // clear temporary content
         target.textContent = "";
     }
-    console.log(target)
     return succeed;
 }
 

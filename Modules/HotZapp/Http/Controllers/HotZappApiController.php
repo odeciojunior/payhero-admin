@@ -67,7 +67,7 @@ class HotZappApiController extends Controller
                 'projects'     => ProjectsSelectResource::collection($projects),
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -188,7 +188,7 @@ class HotZappApiController extends Controller
                 } else {
                     return response()->json(
                         [
-                            "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                            "message" => __('messages.unexpected_error'),
                         ],
                         400
                     );
@@ -196,7 +196,7 @@ class HotZappApiController extends Controller
             } else {
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        "message" => __('messages.unexpected_error'),
                     ],
                     400
                 );
@@ -207,7 +207,7 @@ class HotZappApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );

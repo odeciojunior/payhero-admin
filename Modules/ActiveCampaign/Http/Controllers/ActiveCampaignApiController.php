@@ -27,8 +27,6 @@ class ActiveCampaignApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $user = auth()->user();
-
             activity()->on((new ActivecampaignIntegration()))->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as integrações do ActiveCampaign');
@@ -48,7 +46,7 @@ class ActiveCampaignApiController extends Controller
             ]);
         } catch (Exception $e) {
             report($e);
-            return response()->json(["message" => "Ocorreu algum erro"], 400);
+            return response()->json(["message" => __('messages.unexpected_error')], 400);
         }
     }
 
@@ -73,7 +71,7 @@ class ActiveCampaignApiController extends Controller
         if (Gate::denies("show", [$activecampaignIntegration])) {
             return response()->json(
                 [
-                    "message" => "Sem permissão",
+                    "message" => __('messages.unauthorized'),
                 ],
                 Response::HTTP_FORBIDDEN
             );
@@ -199,7 +197,7 @@ class ActiveCampaignApiController extends Controller
                 if (Gate::denies("edit", [$integration])) {
                     return response()->json(
                         [
-                            "message" => "Sem permissão",
+                            "message" => __('messages.unauthorized'),
                         ],
                         Response::HTTP_FORBIDDEN
                     );
@@ -211,7 +209,7 @@ class ActiveCampaignApiController extends Controller
 
                 return response()->json(
                     [
-                        "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                        "message" => __('messages.unexpected_error'),
                     ],
                     400
                 );
@@ -219,7 +217,7 @@ class ActiveCampaignApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );
@@ -231,7 +229,7 @@ class ActiveCampaignApiController extends Controller
 
             return response()->json(
                 [
-                    "message" => "Ocorreu um erro, tente novamente mais tarde!",
+                    "message" => __('messages.unexpected_error'),
                 ],
                 400
             );
@@ -254,7 +252,7 @@ class ActiveCampaignApiController extends Controller
             if (Gate::denies("update", [$activecampaignIntegration])) {
                 return response()->json(
                     [
-                        "message" => "Sem permissão",
+                        "message" => __('messages.unauthorized'),
                     ],
                     Response::HTTP_FORBIDDEN
                 );
@@ -328,7 +326,7 @@ class ActiveCampaignApiController extends Controller
             if (Gate::denies("destroy", [$integration])) {
                 return response()->json(
                     [
-                        "message" => "Sem permissão",
+                        "message" => __('messages.unauthorized'),
                     ],
                     Response::HTTP_FORBIDDEN
                 );

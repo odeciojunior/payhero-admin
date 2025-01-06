@@ -26,6 +26,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 
 abstract class GatewayServicesAbstract
 {
+    const EXCLUDED_COMPANY_IDS = [802, 1112, 971, 1013, 1055, 945, 989, 1050, 236, 1116, 992, 622, 1026, 1068, 1029, 993, 1089, 23];
     public Company $company;
     public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
@@ -138,13 +139,24 @@ abstract class GatewayServicesAbstract
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
+    public function getAvailableBalanceByTransfers(){
+        $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers
+        WHERE company_id = :companyId",["companyId"=>$this->company->id]);
+
+        $pendingWithdrawal = Withdrawal::where("company_id", $this->company->id)
+            ->whereNotIn("status", [Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED, Withdrawal::STATUS_LIQUIDATING])
+            ->sum("value");
+
+        return intval($balance[0]->total ?? 0) - intval($pendingWithdrawal);
+    }
+
     public function withdrawalValueIsValid($value): bool
     {
         if (empty($value) || $value < 1) {
             return false;
         }
 
-        $availableBalance = $this->getAvailableBalance();
+        $availableBalance = $this->getAvailableBalanceByTransfers();
         $pendingBalance = $this->getPendingBalance();
         (new CompanyService())->applyBlockedBalance($this, $availableBalance, $pendingBalance);
 
@@ -270,20 +282,42 @@ abstract class GatewayServicesAbstract
 
             $currentTime = Carbon::now()->format("H:i:s");
 
-            foreach ($transactions->cursor() as $transaction) {
+            // Check if the current date is a national holiday in Brazil
+            try {
+                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+            } catch (Exception $e) {
+                $holidays = [];
+            }
 
+            foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
-                if(!empty($company->credit_card_time) && $currentTime < $company->credit_card_time){
+                $user = $transaction->user;
+                $sale = $transaction->sale;
+                
+                $isHoliday = false;
+                foreach ($holidays as $holiday) {
+                    if ($holiday['date'] == Carbon::now()->format('Y-m-d')) {
+                        $isHoliday = true;
+                        break;
+                    }
+                }
+
+                 // trava de liberação de cartão por conta da IUGU segurar os saques
+                //  if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                //     continue;
+                // }
+
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
+                        && ($isHoliday || ( !empty($company->credit_card_release_time) 
+                                            && $currentTime < $company->credit_card_release_time)
+                            )) {
                     continue;
                 }
-                
                 $transaction->update([
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
                 
-                $user = $transaction->user;
-                $sale = $transaction->sale;
 
                 $hasSecurityReserve = false;
                 $reserveValue = 0;
@@ -346,6 +380,21 @@ abstract class GatewayServicesAbstract
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
+        }
+    }
+
+    public function updateAllCompaniesBalance()
+    {
+        $companies = Company::all();
+
+        foreach ($companies as $company) {
+            $this->setCompany($company);
+            $availableBalanceByTransfers = $this->getAvailableBalanceByTransfers();
+            $columnBalanceName = $this->companyColumnBalance;
+
+            $company->update([
+                $columnBalanceName => $availableBalanceByTransfers,
+            ]);
         }
     }
 

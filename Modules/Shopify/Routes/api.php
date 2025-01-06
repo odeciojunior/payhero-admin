@@ -45,6 +45,11 @@ Route::group(
             "as" => "shopify.updatetoken",
         ]);
 
+        Route::delete("/apps/shopify/delete", [
+            "uses" => "ShopifyApiController@destroy",
+            "as" => "shopify.delete",
+        ]);
+
         Route::post("/apps/shopify/verifypermissions", [
             "uses" => "ShopifyApiController@verifyPermission",
             "as" => "shopify.verifypermissions",

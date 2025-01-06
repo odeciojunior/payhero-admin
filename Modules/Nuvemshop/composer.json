@@ -1,0 +1,23 @@
+{
+    "name": "azcend/nuvemshop",
+    "description": "",
+    "authors": [
+        {
+            "name": "Jean Castro",
+            "email": "jean.castro1@outlook.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Nuvemshop\\": ""
+        }
+    }
+}

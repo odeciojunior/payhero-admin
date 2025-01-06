@@ -1,7 +1,7 @@
 $(function () {
-    var integrationId = $(window.location.pathname.split("/")).get(-1);
-    var form_register_event = $("#form-register-event").html();
-    var form_update_event = $("#form-update-event").html();
+    let integrationId = $(window.location.pathname.split("/")).get(-1);
+    let form_register_event = $("#form-register-event").html();
+    let form_update_event = $("#form-update-event").html();
     $("#tab_events").on("click", function () {
         index();
     });
@@ -47,7 +47,7 @@ $(function () {
                     $("#events").append("<option value='" + data.id + "'>" + data.name + "</option>");
                 });
 
-                var lists = response.lists;
+                let lists = response.lists;
                 $("#add_list").html("<option>Selecione a lista</option>");
                 $("#remove_list").html("<option>Selecione a lista</option>");
                 if (lists !== null) {
@@ -64,7 +64,7 @@ $(function () {
                     });
                 }
 
-                var tags = response.tags;
+                let tags = response.tags;
                 $("#add_tags").html("<option>Selecione a(s) tag(s)</option>");
                 $("#remove_tags").html("<option>Selecione a(s) tag(s)</option>");
                 if (tags !== null) {
@@ -124,7 +124,7 @@ $(function () {
                         return false;
                     }
 
-                    var formData = new FormData(document.getElementById("form-register-event"));
+                    let formData = new FormData(document.getElementById("form-register-event"));
                     formData.append("integration_id", integrationId);
                     loadingOnScreen();
                     $.ajax({
@@ -172,7 +172,7 @@ $(function () {
      * Update Table Event
      */
     function index() {
-        var link = "/api/apps/activecampaignevent";
+        let link = "/api/apps/activecampaignevent";
 
         $.ajax({
             method: "GET",
@@ -270,7 +270,7 @@ $(function () {
                  */
                 $(".details-event").unbind("click");
                 $(".details-event").on("click", function () {
-                    var event = $(this).attr("event");
+                    let event = $(this).attr("event");
 
                     $.ajax({
                         method: "GET",
@@ -334,7 +334,7 @@ $(function () {
                 $(".edit-event").on("click", function () {
                     loadOnModal("#modal-add-body");
                     $("#modal-add-body").html("");
-                    var eventId = $(this).attr("event");
+                    let eventId = $(this).attr("event");
                     $("#modal-title-event").html('<span class="ml-15">Editar Evento</span>');
                     $("#modal_add_event").modal("show");
                     $("#form-update-event").hide();
@@ -363,7 +363,7 @@ $(function () {
                             $(".load-list-tags").hide();
                             $("#btn-modal").removeClass("d-none");
 
-                            var lists = response.lists;
+                            let lists = response.lists;
                             $("#add_list_edit").html("<option>Selecione a lista</option>");
                             $("#remove_list_edit").html("<option>Selecione a lista</option>");
                             if (lists !== null) {
@@ -406,7 +406,7 @@ $(function () {
                                 });
                             }
 
-                            var tags = response.tags;
+                            let tags = response.tags;
                             $("#add_tags_edit").html("");
                             $("#remove_tags_edit").html("");
                             if (tags !== null) {
@@ -494,7 +494,7 @@ $(function () {
                              */
                             $(".btn-update-event").unbind("click");
                             $(".btn-update-event").on("click", function () {
-                                var formData = new FormData(document.getElementById("form-update-event"));
+                                let formData = new FormData(document.getElementById("form-update-event"));
                                 formData.append("integration_id", integrationId);
                                 loadingOnScreen();
                                 $.ajax({
@@ -541,7 +541,7 @@ $(function () {
                  */
                 $(".delete-event").on("click", function (event) {
                     event.preventDefault();
-                    var eventSale = $(this).attr("event");
+                    let eventSale = $(this).attr("event");
                     $("#modal-delete-event").modal("show");
                     $("#btn-delete-event").unbind("click");
                     $("#btn-delete-event").on("click", function () {

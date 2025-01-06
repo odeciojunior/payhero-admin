@@ -113,9 +113,9 @@ class Company extends Model
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
 
-    public const GATEWAY_TAX_2 = 6.9;
-    public const GATEWAY_TAX_15 = 5.9;
-    public const GATEWAY_TAX_30 = 4.9;
+    public const GATEWAY_TAX_2 = 6.99;
+    public const GATEWAY_TAX_15 = 5.99;
+    public const GATEWAY_TAX_30 = 4.99;
 
     public const DEMO_ID = 1;
     public const DEMO_HASH_ID = "v2RmA83EbZPVpYB";
@@ -186,6 +186,7 @@ class Company extends Model
         "situation",
         "fantasy_name_custom",
         "document_custom",
+        'observation',
         "created_at",
         "updated_at",
         "deleted_at",

@@ -1,0 +1,31 @@
+/* Botões de cópia */
+.btn-copy {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Adicionar feedback visual para hover */
+.btn-copy:hover {
+    background-color: #e9ecef; /* Cinza mais claro */
+}
+
+/* Feedback visual para campos readonly */
+input[readonly] {
+    background-color: #f8f9fa; /* Cinza claro */
+    cursor: not-allowed;
+}
+
+/* Tamanho padrão para ícones */
+.icon-sm {
+    width: 24px;
+    height: 24px;
+}
+
+/* Tooltip */
+.tooltip {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}

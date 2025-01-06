@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Modules\Core\Presenters\ProjectPresenter;
 use Spatie\Activitylog\LogOptions;
 
 /**
+ * @property int $id
  * @property integer $carrier_id
  * @property string $photo
  * @property string $visibility
@@ -30,6 +32,7 @@ use Spatie\Activitylog\LogOptions;
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
  * @property string $woocommerce_id
+ * @property string $nuvemshop_id
  * @property string $cookie_duration
  * @property boolean $url_cookies_checkout
  * @property string $boleto_redirect
@@ -68,6 +71,7 @@ use Spatie\Activitylog\LogOptions;
  * @property Collection $orderBumpRules
  * @property PixelConfig $pixelConfigs
  * @property CheckoutConfig $checkoutConfig
+ * @property ApiToken $apiToken
  * @method ProjectPresenter present()
  */
 class Project extends Model
@@ -104,6 +108,7 @@ class Project extends Model
         "automatic_affiliation",
         "shopify_id",
         "woocommerce_id",
+        "nuvemshop_id",
         "cookie_duration",
         "url_cookies_checkout",
         "boleto_redirect",
@@ -242,5 +247,17 @@ class Project extends Model
     public function checkoutConfig(): HasOne
     {
         return $this->hasOne(CheckoutConfig::class);
+    }
+
+    public function apiToken(): BelongsTo
+    {
+        return $this->belongsTo(ApiToken::class, 'id', 'project_id');
+    }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->created_at
+            ? $this->created_at->format('d/m/Y H:i')
+            : null;
     }
 }

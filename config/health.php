@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\Health\Checks\Checks\ScheduleCheck;
+
 return [
 
     /*
@@ -111,4 +113,8 @@ return [
      * - dark: dark mode
      */
     'theme' => 'dark',
+
+    'checks' => [
+        ScheduleCheck::new(),
+    ],
 ];

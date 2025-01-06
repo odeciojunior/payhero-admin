@@ -15,11 +15,7 @@ use Modules\Core\Events\PixExpiredEvent;
  */
 class PixService
 {
-    /**
-     *  Pix Pending
-     * @return void
-     */
-    public function changePixToCanceled()
+    public function changePixToCanceled(): void
     {
         try {
             $sales = Sale::with("transactions")
@@ -51,13 +47,10 @@ class PixService
                 $pix = $sale->pixCharges->where("status", "ATIVA")->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
-                    //Atualizar pixCharges
                     $pix->update(["status" => "EXPIRED"]);
                 }
 
-                if (!$sale->api_flag && $sale->owner_id > User::DEMO_ID) {
-                    event(new PixExpiredEvent($sale));
-                }
+                event(new PixExpiredEvent($sale));
             }
         } catch (Exception $e) {
             report($e);

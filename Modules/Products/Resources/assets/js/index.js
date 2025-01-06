@@ -9,6 +9,7 @@ jQuery(function () {
                 renderSiriusSelect("#type-products");
                 $("#select-projects-1").find("option").remove();
                 $("#select-projects-2").find("option").remove();
+                $("#select-projects-3").find("option").remove();
                 $("#projects-list select").prop("disabled", true).addClass("disabled");
                 $("#projects-list, .box-projects").addClass("d-none");
                 localStorage.removeItem("page");
@@ -40,6 +41,7 @@ jQuery(function () {
     let appsList = {
         1: "Produtos Shopify",
         2: "Produtos Woocommerce",
+        3: "Produtos Nuvemshop",
     };
 
     let storeTypeProduct = () => {
@@ -79,11 +81,14 @@ jQuery(function () {
                         $.each(appsList, function (index, value) {
                             let exist_shopify = "n";
                             let exist_woocommerce = "n";
+                            let exist_nuvemshop = "n";
                             $.each(response.data, function (index, value) {
                                 if (value.shopify) {
                                     exist_shopify = "s";
                                 } else if (value.woocommerce) {
                                     exist_woocommerce = "s";
+                                } else if (value.nuvemshop) {
+                                    exist_nuvemshop = "s";
                                 }
                             });
                             if (index == 1 && exist_shopify == "s") {
@@ -102,6 +107,15 @@ jQuery(function () {
                                     })
                                 );
                             }
+
+                            if (index == 3 && exist_nuvemshop == "s") {
+                                $("#type-products").append(
+                                    $("<option>", {
+                                        value: index,
+                                        text: value,
+                                    })
+                                );
+                            }
                         });
                         $.each(response.data, function (index, value) {
                             if (value.shopify) {
@@ -113,6 +127,13 @@ jQuery(function () {
                                 );
                             } else if (value.woocommerce) {
                                 $("#select-projects-2").append(
+                                    $("<option>", {
+                                        value: value.id,
+                                        text: value.name,
+                                    })
+                                );
+                            } else if (value.nuvemshop) {
+                                $("#select-projects-3").append(
                                     $("<option>", {
                                         value: value.id,
                                         text: value.name,
@@ -178,6 +199,8 @@ jQuery(function () {
                 project = $("#select-projects-1 option:selected").val();
             else if ($("#select-projects-2 option:selected").val() != "")
                 project = $("#select-projects-2 option:selected").val();
+            else if ($("#select-projects-3 option:selected").val() != "")
+                project = $("#select-projects-3 option:selected").val();
         }
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
@@ -197,10 +220,10 @@ jQuery(function () {
             },
             success: function (response) {
                 removeFilterLoadingSkeleton();
+                $("#filter-products").show();
 
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
-                    $("#filter-products").show();
                     $("#data-table-products").html("");
                     let dados = "";
                     $.each(response.data, function (index, value) {
@@ -342,6 +365,7 @@ jQuery(function () {
             $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
             $("#select-projects-1").val(parseLocalStorage.getProject_1).trigger("change");
             $("#select-projects-2").val(parseLocalStorage.getProject_2).trigger("change");
+            $("#select-projects-3").val(parseLocalStorage.getProject_3).trigger("change");
             $("#name").val(parseLocalStorage.getName);
             $("#projects-list, .box-projects").addClass("d-none");
             type = parseLocalStorage.getTypeProducts;
@@ -368,6 +392,7 @@ jQuery(function () {
         //$("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
         $("#select-projects-1").val($("#select-projects-1 option:first").val());
         $("#select-projects-2").val($("#select-projects-2 option:first").val());
+        $("#select-projects-3").val($("#select-projects-3 option:first").val());
         $("#projects-list select").prop("disabled", true).addClass("disabled");
         $("#projects-list, .box-projects").addClass("d-none");
         const type = $(this).val();
@@ -413,7 +438,8 @@ jQuery(function () {
             storeTypeProduct().getTypeProducts != $("#type-products option:selected").val() ||
             storeTypeProduct().getName != $("#name").val() ||
             storeTypeProduct().getProject_1 != $("#select-projects-1 option:selected").val() ||
-            storeTypeProduct().getProject_2 != $("#select-projects-2 option:selected").val()
+            storeTypeProduct().getProject_2 != $("#select-projects-2 option:selected").val() ||
+            storeTypeProduct().getProject_3 != $("#select-projects-3 option:selected").val()
         ) {
             if (localStorage.getItem("page") != null) {
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
@@ -425,6 +451,7 @@ jQuery(function () {
             getTypeProducts: $("#type-products option:selected").val(),
             getProject_1: $("#select-projects-1 option:selected").val(),
             getProject_2: $("#select-projects-2 option:selected").val(),
+            getProjects_3: $("#select-projects-3 option:selected").val(),
             getName: $("#name").val(),
         };
         localStorage.setItem("filtersApplied", JSON.stringify(filtersApplied));

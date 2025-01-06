@@ -4,10 +4,10 @@
     top: -5px;
     z-index: 1;
     overflow: hidden;
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     text-align: right;
 }
-
 
 
 .ribbon span {
@@ -25,24 +25,37 @@
     background: linear-gradient(#9BC90D 0%, #79A70A 100%);
     box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
     position: absolute;
-    top: 19px; right: -21px;
+    top: 19px;
+    right: -21px;
 }
-.ribbon-woo span{
+
+.ribbon-woo span {
     background-color: #9B5C8F !important;
     font-size: 8px !important;
 }
+
+.ribbon-nuvem span {
+    background-color: #0037b8 !important;
+    font-size: 8px !important;
+}
+
 .ribbon span::before {
     content: "";
-    position: absolute; left: 0px; top: 100%;
+    position: absolute;
+    left: 0px;
+    top: 100%;
     z-index: -1;
     border-left: 3px solid #79A70A;
     border-right: 3px solid transparent;
     border-bottom: 3px solid transparent;
     border-top: 3px solid #79A70A;
 }
+
 .ribbon span::after {
     content: "";
-    position: absolute; right: 0px; top: 100%;
+    position: absolute;
+    right: 0px;
+    top: 100%;
     z-index: -1;
     border-left: 3px solid transparent;
     border-right: 3px solid #79A70A;
@@ -52,19 +65,48 @@
 
 .ribbon-woo span::before {
     content: "";
-    position: absolute; left: 0px; top: 100%;
+    position: absolute;
+    left: 0px;
+    top: 100%;
     z-index: -1;
     border-left: 3px solid #9B5C8F;
     border-right: 3px solid transparent;
     border-bottom: 3px solid transparent;
     border-top: 3px solid #9B5C8F;
 }
+
 .ribbon-woo span::after {
     content: "";
-    position: absolute; right: 0px; top: 100%;
+    position: absolute;
+    right: 0px;
+    top: 100%;
     z-index: -1;
     border-left: 3px solid transparent;
     border-right: 3px solid #9B5C8F;
     border-bottom: 3px solid transparent;
     border-top: 3px solid #9B5C8F;
+}
+
+.ribbon-nuvem span::before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid #0037b8;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #0037b8;
+}
+
+.ribbon-nuvem span::after {
+    content: "";
+    position: absolute;
+    right: 0px;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #0037b8;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #0037b8;
 }

@@ -51,7 +51,7 @@ class SalesRecoveryController extends Controller
                 }
 
                 if ($details == null) {
-                    return response()->json(["message" => "Ocorreu algum erro"]);
+                    return response()->json(["message" => __('messages.unexpected_error')]);
                 } else {
                     return response()->json($details->render());
                 }

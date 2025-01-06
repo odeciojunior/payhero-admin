@@ -23,6 +23,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\Shopify\ShopService;
 use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TaskService;
@@ -30,6 +31,8 @@ use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ShopifyApiController extends Controller
 {
@@ -67,7 +70,7 @@ class ShopifyApiController extends Controller
 
             return ShopifyResource::collection(collect($projects));
         } catch (Exception $e) {
-            return response()->json(["message" => "Ocorreu algum erro"], Response::HTTP_BAD_REQUEST);
+            return response()->json(["message" => __('messages.unexpected_error')], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -295,6 +298,44 @@ class ShopifyApiController extends Controller
         }
     }
 
+    public function destroy(Request $request): JsonResponse
+    {
+        try {
+            $dataRequest = $request->all();
+
+            if (!isset($dataRequest["id"])) {
+                return response()->json(["message" => "É necessário enviar o id da integração"], 400);
+            }
+
+            $projectId = current(Hashids::decode($dataRequest["id"]));
+            if (!$projectId) {
+                return response()->json(["message" => "ID de integração inválido"], 400);
+            }
+            
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $projectId)->first();
+
+            if (empty($shopifyIntegration)) {
+                return response()->json(["message" => "Integração não encontrada!"], 400);
+            }
+
+            // Delete the shop record
+            $shopifyIntegration->delete();
+
+            return response()->json(['message' => 'Shopify excluída com sucesso!'], 200);
+
+            return response()->json(
+                [
+                    "message" => "Integração excluída!",
+                ],
+                200,
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(["message" => "Problema ao criar integração, tente novamente mais tarde"], 400);
+        }
+    }
+    
     public function undoIntegration(Request $request)
     {
         try {

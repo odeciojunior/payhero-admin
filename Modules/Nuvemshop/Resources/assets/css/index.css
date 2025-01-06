@@ -1,0 +1,38 @@
+.page-title > a,
+.page-title > a > span {
+    color: #707070;
+}
+
+.o-arrow-right-1:before {
+    transform: rotate(180deg);
+}
+
+#configs-project-image {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border-radius: 4px;
+}
+
+.btn-sync {
+    height: 38px;
+    padding-left: 46px;
+    line-height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+    background-image: url("/build/layouts/apps/imgs/bt-action.svg");
+    background-repeat: no-repeat;
+    background-position: left;
+    color: #2e85ec;
+    cursor: pointer;
+}
+
+.btn-sync:hover, .btn-sync:focus {
+    background-image: url('/build/layouts/apps/imgs/bt-action-hover.svg');
+    border: none !important;
+}
+
+.gap-1 {
+    gap: 1rem;
+}

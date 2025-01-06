@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Transformers\CompanyResource;
@@ -31,12 +31,14 @@ use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TaskService;
+use Modules\Projects\Exceptions\CannotDeleteProjectException;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectsSettingsUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -54,7 +56,7 @@ class ProjectsApiController extends Controller
             if ($hasCompany) {
                 $projectModel = new Project();
                 $projectService = new ProjectService();
-                $pagination = $request->input("select") ?? false;
+                $pagination = (bool) $request->input("select", false);
                 $affiliation = true;
 
                 if (!empty($request->input("affiliate")) && $request->input("affiliate") == "false") {
@@ -171,36 +173,36 @@ class ProjectsApiController extends Controller
             }
 
             Domain::create([
-                "project_id"            => $project->id,
-                "cloudflare_domain_id"  => null,
-                "name"                  => "pag.net.br",
-                "status"                => 3,
-                "sendgrid_id"           => null,
-                "created_at"            => now(),
-                "updated_at"            => now(),
-                "deleted_at"            => null,
+                "project_id" => $project->id,
+                "cloudflare_domain_id" => null,
+                "name" => "pag.net.br",
+                "status" => 3,
+                "sendgrid_id" => null,
+                "created_at" => now(),
+                "updated_at" => now(),
+                "deleted_at" => null,
             ]);
 
             DiscountCoupon::create([
-                "project_id"            => $project->id,
-                "name"                  => "Desconto 10%",
-                "type"                  => 0,
-                "value"                 => 10,
-                "code"                  => "NEXX10",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $project->id,
+                "name" => "Desconto 10%",
+                "type" => 0,
+                "value" => 10,
+                "code" => "NEXX10",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             DiscountCoupon::create([
-                "project_id"            => $project->id,
-                "name"                  => "Desconto 20%",
-                "type"                  => 0,
-                "value"                 => 20,
-                "code"                  => "NEXX20",
-                "status"                => 1,
-                "rule_value"            => 0,
-                "recovery_flag"         => true,
+                "project_id" => $project->id,
+                "name" => "Desconto 20%",
+                "type" => 0,
+                "value" => 20,
+                "code" => "NEXX20",
+                "status" => 1,
+                "rule_value" => 0,
+                "recovery_flag" => true,
             ]);
 
             $company = Company::find(hashids_decode($requestValidated["company"]));
@@ -245,11 +247,11 @@ class ProjectsApiController extends Controller
                     $img->save($photo->getPathname());
 
                     $amazonPath = $amazonFileService->uploadFile(
-                        "uploads/user/" .
-                            Hashids::encode(auth()->user()->account_owner_id) .
-                            "/public/projects/" .
-                            Hashids::encode($project->id) .
-                            "/main",
+                        "uploads/user/".
+                        Hashids::encode(auth()->user()->account_owner_id).
+                        "/public/projects/".
+                        Hashids::encode($project->id).
+                        "/main",
                         $photo
                     );
                     $project->update(["photo" => $amazonPath]);
@@ -314,7 +316,7 @@ class ProjectsApiController extends Controller
                     $activity->log_name = "visualization";
                     $activity->subject_id = current(Hashids::decode($id));
                 })
-                ->log("Visualizou tela editar configurações do projeto " . $project->name);
+                ->log("Visualizou tela editar configurações do projeto ".$project->name);
 
             $userProject = UserProject::where("user_id", $user->account_owner_id)
                 ->where("project_id", hashids_decode($id))
@@ -374,6 +376,10 @@ class ProjectsApiController extends Controller
                 return response()->json("Projeto não encontrado", 400);
             }
             return response()->json("Sem permissão para remover projeto", 403);
+        } catch (CannotDeleteProjectException) {
+            return response()->json([
+                'message' => 'O projeto não pode ser removido.'
+            ], Response::HTTP_CONFLICT);
         } catch (Exception $e) {
             report($e);
 
@@ -419,11 +425,11 @@ class ProjectsApiController extends Controller
                     $img->save($projectPhoto->getPathname());
 
                     $amazonPath = $amazonFileService->uploadFile(
-                        "uploads/user/" .
-                            Hashids::encode(auth()->user()->account_owner_id) .
-                            "/public/project/" .
-                            Hashids::encode($project->id) .
-                            "/main",
+                        "uploads/user/".
+                        Hashids::encode(auth()->user()->account_owner_id).
+                        "/public/project/".
+                        Hashids::encode($project->id).
+                        "/main",
                         $projectPhoto
                     );
 
@@ -455,7 +461,7 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         "message" => "Erro ao exibir detalhes do projeto",
-                        "account_is_approved" => (bool) auth()->user()->account_is_approved,
+                        "account_is_approved" => (bool)auth()->user()->account_is_approved,
                     ],
                     400
                 );
@@ -469,6 +475,7 @@ class ProjectsApiController extends Controller
                         $query->where("user_id", $userId);
                     },
                     "usersProjects.company",
+                    'apiToken',
                 ])
                 ->first();
 
@@ -476,7 +483,7 @@ class ProjectsApiController extends Controller
                 return response()->json(
                     [
                         "message" => "Projeto não encontrado!",
-                        "account_is_approved" => (bool) auth()->user()->account_is_approved,
+                        "account_is_approved" => (bool)auth()->user()->account_is_approved,
                     ],
                     400
                 );
@@ -498,7 +505,7 @@ class ProjectsApiController extends Controller
                         $activity->log_name = "visualization";
                         $activity->subject_id = $id;
                     })
-                    ->log("Visualizou o projeto " . $project->name);
+                    ->log("Visualizou o projeto ".$project->name);
 
                 return new ProjectsResource($project);
             }

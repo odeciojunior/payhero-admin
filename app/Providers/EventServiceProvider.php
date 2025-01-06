@@ -21,6 +21,7 @@ use Modules\Core\Events\DomainApprovedEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Events\ExtractExportedEvent;
 use Modules\Core\Events\FinancesExportedEvent;
+use Modules\Core\Events\ImportNuvemshopProductsEvent;
 use Modules\Core\Events\ManualRefundEvent;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Events\NotifyUserAchievementEvent;
@@ -59,6 +60,7 @@ use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
+use Modules\Core\Listeners\ImportNuvemshopProductsListener;
 use Modules\Core\Listeners\ManualRefundedSendEmailListener;
 use Modules\Core\Listeners\NotificacoesInteligentesPixExpiredListener;
 use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
@@ -97,6 +99,7 @@ use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
 use Modules\Core\Listeners\UpdateSaleChargebackListener;
 use Modules\Core\Listeners\UserDocumentBureauValidationListener;
 use Modules\Core\Listeners\WithdrawalRequestSendEmailListener;
+use Modules\Webhooks\Listeners\WebhookSaleListener;
 
 /**
  * Class EventServiceProvider
@@ -113,14 +116,19 @@ class EventServiceProvider extends ServiceProvider
             BilletExpiredWhatsapp2Listener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            ReportanaSaleRecoveryListener::class
+            ReportanaSaleRecoveryListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
             IntegrationOrderCancelListener::class,
+            WebhookSaleListener::class,
         ],
-        ManualRefundEvent::class => [ManualRefundedSendEmailListener::class, IntegrationOrderCancelListener::class],
+        ManualRefundEvent::class => [
+            ManualRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
+            WebhookSaleListener::class,
+        ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
             NotifyUserShopifyIntegrationStoreListener::class,
@@ -129,11 +137,6 @@ class EventServiceProvider extends ServiceProvider
             DomainApprovedPusherNotifyUserListener::class,
             DomainApprovedNotifyUserListener::class,
             DomainApprovedEmailNotifyUserListener::class,
-        ],
-        BoletoPaidEvent::class => [
-            BoletoPaidPusherNotifyUser::class,
-            BoletoPaidNotifyUser::class,
-            BoletoPaidEmailNotifyUser::class,
         ],
         TrackingsImportedEvent::class => [NotifyTrackingsImportedListener::class],
         SalesExportedEvent::class => [NotifySalesExportedListener::class],
@@ -173,7 +176,8 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
             ReportanaSaleListener::class,
-            ReportanaSaleRecoveryListener::class
+            ReportanaSaleRecoveryListener::class,
+            WebhookSaleListener::class,
         ],
         CheckTransactionReleasedEvent::class => [CheckTransactionReleasedListener::class],
         NewChargebackEvent::class => [
@@ -183,6 +187,7 @@ class EventServiceProvider extends ServiceProvider
             NotifyAntifraudChargebackListener::class,
         ],
         ReportanaTrackingEvent::class => [ReportanaSaleListener::class],
+        ImportNuvemshopProductsEvent::class => [ImportNuvemshopProductsListener::class],
     ];
 
     /**

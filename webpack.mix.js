@@ -1,5 +1,10 @@
 let mix = require("laravel-mix");
 
+mix.styles(
+    ['resources/assets/input-copy-styles.css'],
+    'public/build/input-copy-styles.min.css',
+);
+
 /**
  * Modules/ActiveCampaign/Resources/views/index.blade.php
  */
@@ -128,7 +133,10 @@ mix.copy(
  * Modules/AdooreiCheckout/Resources/views/index.blade.php
  */
 mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/adooreicheckout/index.min.css");
-mix.babel(["Modules/AdooreiCheckout/Resources/assets/js/index.js"], "public/build/layouts/adooreicheckout/index.min.js");
+mix.babel(
+    ["Modules/AdooreiCheckout/Resources/assets/js/index.js"],
+    "public/build/layouts/adooreicheckout/index.min.js"
+);
 
 /**
  * Modules/Apps/Resources/views/index.blade.php
@@ -769,7 +777,6 @@ mix.babel(["Modules/Utmify/Resources/assets/js/index.js"], "public/build/layouts
 mix.styles(["resources/modules/global/css/empty.css"], "public/build/layouts/vegacheckout/index.min.css");
 mix.babel(["Modules/VegaCheckout/Resources/assets/js/index.js"], "public/build/layouts/vegacheckout/index.min.js");
 
-
 /**
  * Modules/Reports/Resources/views/layouts/details.blade.php
  */
@@ -1110,6 +1117,34 @@ mix.copy("Modules/WooCommerce/Resources/assets/plugins", "public/build/layouts/w
 mix.babel(
     ["Modules/Withdrawals/Resources/assets/js/index.js"],
     "public/build/layouts/finances/withdrawal-index.min.js"
+);
+
+/**
+ * Modules/Nuvemshop/Resources/views/index.blade.php
+ */
+mix.styles(
+    [
+        "Modules/Nuvemshop/Resources/assets/css/index.css",
+        "resources/modules/global/css/empty.css",
+        "resources/modules/global/css/switch.css",
+    ],
+    "public/build/layouts/nuvemshop/index.min.css"
+);
+mix.babel(["Modules/Nuvemshop/Resources/assets/js/index.js"], "public/build/layouts/nuvemshop/index.min.js");
+
+mix.styles(
+    [
+        "resources/modules/global/css/sweetalert2.min.css",
+        "Modules/Nuvemshop/Resources/assets/css/finalize-integration.css",
+    ],
+    "public/build/layouts/nuvemshop/finalize-integration.min.css"
+);
+mix.babel(
+    [
+        "resources/modules/global/js-extra/sweetalert2.all.min.js",
+        "Modules/Nuvemshop/Resources/assets/js/finalize-integration.js",
+    ],
+    "public/build/layouts/nuvemshop/finalize-integration.min.js"
 );
 
 /**

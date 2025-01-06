@@ -17,7 +17,7 @@ use App\Http\Middleware\VerifyShopifyPostback;
 use App\Http\Middleware\DemoAccount;
 use App\Http\Middleware\CheckAccountStatusWeb;
 use App\Http\Middleware\CheckAccountStatusApi;
-use Fruitcake\Cors\HandleCors;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;

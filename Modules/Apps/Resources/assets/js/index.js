@@ -12,7 +12,7 @@ $(document).ready(function () {
         });
     });
 
-    var companiesAndProjects = "";
+    let companiesAndProjects = "";
 
     loadingSkeletonCards($(".loading-container"));
 
@@ -209,13 +209,21 @@ $(document).ready(function () {
                     $("#vegacheckout-bt").removeClass("added");
                     $("#vegacheckout-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
-                
+
                 if (response.adooreicheckoutIntegrations > 0) {
                     $("#adooreicheckout-bt").addClass("added");
                     $("#adooreicheckout-icon").removeClass("o-add-1").addClass("o-checkmark-1");
                 } else {
                     $("#adooreicheckout-bt").removeClass("added");
                     $("#adooreicheckout-icon").removeClass("o-checkmark-1").addClass("o-add-1");
+                }
+
+                if (response.nuvemshopIntegrations > 0) {
+                    $("#nuvemshop-btn").addClass("added");
+                    $("#nuvemshop-icon").removeClass("o-add-1").addClass("o-checkmark-1");
+                } else {
+                    $("#nuvemshop-btn").removeClass("added");
+                    $("#nuvemshop-icon").removeClass("o-checkmark-1").addClass("o-add-1");
                 }
 
                 // removeLoadingSkeletonCards();

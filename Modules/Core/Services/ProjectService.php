@@ -7,23 +7,22 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\NuvemshopIntegration;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectUpsellConfig;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\WooCommerceIntegration;
-use Modules\Core\Services\WooCommerceService;
-use Modules\Core\Entities\Affiliate;
-use Modules\Core\Entities\ApiToken;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Exceptions\Services\ServiceException;
+use Modules\Core\Services\Nuvemshop\NuvemshopAPI;
+use Modules\Core\Services\Nuvemshop\NuvemshopService;
+use Modules\Projects\Exceptions\CannotDeleteProjectException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
-use PhpParser\Node\Stmt\Foreach_;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -66,9 +65,13 @@ class ProjectService
      */
     private $wooCommerceIntegrationModel;
 
+    private NuvemshopAPI $nuvemshopApi;
+
+    private NuvemshopIntegration $nuvemshopIntegrationModel;
+
     /**
-     * @param string|null $urlStore
-     * @param string|null $token
+     * @param  string|null  $urlStore
+     * @param  string|null  $token
      * @return ShopifyService
      */
     private function getShopifyService(string $urlStore = null, string $token = null)
@@ -93,9 +96,9 @@ class ProjectService
     }
 
     /**
-     * @param string|null $urlStore
-     * @param string|null $tokenUser
-     * @param string|null $tokenPass
+     * @param  string|null  $urlStore
+     * @param  string|null  $tokenUser
+     * @param  string|null  $tokenPass
      * @return WooCommerceService
      */
     private function getWooCommerceService(string $urlStore = null, string $tokenUser = null, string $tokenPass = null)
@@ -188,13 +191,15 @@ class ProjectService
     }
 
     /**
-     * @param $projectId
-     * @return bool
      * @throws ServiceException
+     * @throws CannotDeleteProjectException
      */
     public function delete($projectId)
     {
         try {
+            /**
+             * @var Project $project
+             */
             $project = $this->getProjectModel()
                 ->with([
                     "domains",
@@ -212,156 +217,168 @@ class ProjectService
                     "affiliates.affiliateLinks",
                     "upsellConfig",
                     "checkoutConfig",
+                    "apiToken",
                 ])
                 ->where("id", $projectId)
                 ->first();
 
-            if ($project) {
-                if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
-                    foreach ($project->pixels as $pixel) {
-                        $pixel->delete();
-                    }
-                }
-
-                if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
-                    foreach ($project->discountCoupons as $discountCoupon) {
-                        $discountCoupon->delete();
-                    }
-                }
-
-                if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
-                    foreach ($project->shippings as $shipping) {
-                        $shipping->delete();
-                    }
-                }
-
-                foreach ($project->domains as $domain) {
-                    try {
-                        $domainService = new DomainService();
-                        $deleteDomain = $domainService->deleteDomain($domain);
-
-                        if (!$deleteDomain["success"]) {
-                            report(
-                                ["Erro ao excluir dominio do projetoId: " . $project->id] . ", domain: " . $domain->name
-                            );
-                        }
-                    } catch (Exception $e) {
-                        report(["Erro ao excluir dominio do projetoId: " . $project->id, $e]);
-                    }
-                }
-
-                //remover integração do woocommerce
-                $wooCommerceIntegration = $this->getWooCommerceIntegration()
-                    ->where("project_id", $project->id)
-                    ->first();
-
-                if (!empty($wooCommerceIntegration)) {
-                    $wooCommerceIntegration->delete();
-                    $wooCommerceService = $this->getWooCommerceService(
-                        $wooCommerceIntegration->url_store,
-                        $wooCommerceIntegration->token_user,
-                        $wooCommerceIntegration->token_pass
-                    );
-
-                    $wooCommerceService->deleteHooks($project->id);
-                }
-                //end woo
-
-                //remover integração do shopify
-                $shopifyIntegration = $this->getShopifyIntegration()
-                    ->where("project_id", $project->id)
-                    ->first();
-
-                if (!empty($shopifyIntegration)) {
-                    try {
-                        $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                        $shopify->templateService->removeIntegrationInAllThemes();
-                    } catch (Exception $e) {
-                        report($e);
-                    }
-
-                    $shopifyIntegration->delete();
-                }
-
-                $products = Product::where("project_id", $project->id)->get();
-
-                foreach ($products as $product) {
-                    $product->update([
-                        "shopify_variant_id" => "",
-                        "shopify_id" => "",
-                    ]);
-                }
-
-                $plans = Plan::where("project_id", $project->id)->get();
-
-                foreach ($plans as $plan) {
-                    $plan->update([
-                        "shopify_variant_id" => "",
-                        "shopify_id" => "",
-                    ]);
-                }
-                //end shopify
-
-                if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
-                    foreach ($project->notifications as $notification) {
-                        $notification->delete();
-                    }
-                }
-
-                if (!empty($project->affiliateRequests) && $project->affiliateRequests->isNotEmpty()) {
-                    foreach ($project->affiliateRequests as $affiliateRequests) {
-                        $affiliateRequests->delete();
-                    }
-                }
-
-                if (!empty($project->affiliates) && $project->affiliates->isNotEmpty()) {
-                    foreach ($project->affiliates as $affiliate) {
-                        if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
-                            foreach ($affiliate->affiliateLinks as $affiliateLink) {
-                                $affiliateLink->delete();
-                            }
-                        }
-                        $affiliate->delete();
-                    }
-                }
-
-                if (!empty($project->upsellConfig)) {
-                    $upsellConfig = $project->upsellConfig;
-                    $upsellConfig->delete();
-                }
-
-                $projectUpdated = $project->update([
-                    "name" => $project->name . " (Excluído)",
-                    "status" => (new Project())->present()->getStatus("disabled"),
-                ]);
-
-                if ($projectUpdated) {
-                    return true;
-                } else {
-                    report("Erro ao atualizar nome e status do projeto: id-> (" . $project->id . ")");
-
-                    return false;
-                }
-            } else {
-                //projeto nao encontrado
+            if (empty($project)) {
                 return false;
             }
+
+            if (!is_null($project->apiToken)) {
+                throw new CannotDeleteProjectException(
+                    message: "O projeto {$project->id} não pode ser removido porque pertence a um token de integração."
+                );
+            }
+
+            if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
+                foreach ($project->pixels as $pixel) {
+                    $pixel->delete();
+                }
+            }
+
+            if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
+                foreach ($project->discountCoupons as $discountCoupon) {
+                    $discountCoupon->delete();
+                }
+            }
+
+            if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
+                foreach ($project->shippings as $shipping) {
+                    $shipping->delete();
+                }
+            }
+
+            foreach ($project->domains as $domain) {
+                try {
+                    $domainService = new DomainService();
+                    $deleteDomain = $domainService->deleteDomain($domain);
+
+                    if (!$deleteDomain["success"]) {
+                        report('Erro ao excluir domínio do projetoId: '.$project->id.', domain: '.$domain->name);
+                    }
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
+
+            //remover integração do woocommerce
+            $wooCommerceIntegration = $this->getWooCommerceIntegration()
+                ->where("project_id", $project->id)
+                ->first();
+
+            if (!empty($wooCommerceIntegration)) {
+                $wooCommerceIntegration->delete();
+                $wooCommerceService = $this->getWooCommerceService(
+                    $wooCommerceIntegration->url_store,
+                    $wooCommerceIntegration->token_user,
+                    $wooCommerceIntegration->token_pass,
+                );
+
+                $wooCommerceService->deleteHooks($project->id);
+            }
+            //end woo
+
+            //remover integração do shopify
+            $shopifyIntegration = $this->getShopifyIntegration()
+                ->where("project_id", $project->id)
+                ->first();
+
+            if (!empty($shopifyIntegration)) {
+                try {
+                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopify->templateService->removeIntegrationInAllThemes();
+                } catch (Exception $e) {
+                    report($e);
+                }
+
+                $shopifyIntegration->delete();
+            }
+
+            //remover integração do nuvemshop
+            $nuvemshopIntegration = NuvemshopIntegration::where("project_id", $project->id)->first();
+
+            if (!empty($nuvemshopIntegration)) {
+                $nuvemshopIntegration->delete();
+                $nuvemshopService = new NuvemshopService($nuvemshopIntegration);
+                $nuvemshopService->deleteWebhooks();
+            }
+
+            $products = Product::where("project_id", $project->id)->get();
+
+            foreach ($products as $product) {
+                $product->update([
+                    "shopify_variant_id" => "",
+                    "shopify_id" => "",
+                ]);
+            }
+
+            $plans = Plan::where("project_id", $project->id)->get();
+
+            foreach ($plans as $plan) {
+                $plan->update([
+                    "shopify_variant_id" => "",
+                    "shopify_id" => "",
+                ]);
+            }
+            //end shopify
+
+            if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
+                foreach ($project->notifications as $notification) {
+                    $notification->delete();
+                }
+            }
+
+            if (!empty($project->affiliateRequests) && $project->affiliateRequests->isNotEmpty()) {
+                foreach ($project->affiliateRequests as $affiliateRequests) {
+                    $affiliateRequests->delete();
+                }
+            }
+
+            if (!empty($project->affiliates) && $project->affiliates->isNotEmpty()) {
+                foreach ($project->affiliates as $affiliate) {
+                    if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
+                        foreach ($affiliate->affiliateLinks as $affiliateLink) {
+                            $affiliateLink->delete();
+                        }
+                    }
+                    $affiliate->delete();
+                }
+            }
+
+            if (!empty($project->upsellConfig)) {
+                $upsellConfig = $project->upsellConfig;
+                $upsellConfig->delete();
+            }
+
+            $projectUpdated = $project->update([
+                "name" => $project->name . " (Excluído)",
+                "status" => (new Project())->present()->getStatus("disabled"),
+            ]);
+
+            if ($projectUpdated) {
+                return true;
+            }
+
+            report("Erro ao atualizar nome e status do projeto: id-> (".$project->id.")");
+
+            return false;
         } catch (Exception $e) {
+
+            if ($e instanceof CannotDeleteProjectException) {
+                throw new CannotDeleteProjectException($e->getMessage());
+            }
+
             throw new ServiceException(
-                "ProjectService - Erro ao remover projeto - " . $e->getMessage(),
+                "ProjectService - Erro ao remover projeto - ".$e->getMessage(),
                 $e->getCode(),
                 $e
             );
         }
     }
 
-    /**
-     * @param string $pagination
-     * @param array $status
-     * @param bool $affiliate
-     * @return AnonymousResourceCollection
-     */
-    public function getUserProjects(string $pagination, array $status, $affiliate = false, $companyId = "")
+    public function getUserProjects(bool $pagination, array $status, $affiliate = false, $companyId = ""): AnonymousResourceCollection
     {
         $userId = auth()
             ->user()
@@ -396,8 +413,8 @@ class ProjectService
                     "affiliates.status_enum as affiliate_status",
                     DB::raw("CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id"),
                     DB::raw(
-                        "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p"
-                    )
+                        "CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p",
+                    ),
                 )
                 ->whereIn("projects.status", $status)
                 ->where("users_projects.user_id", $userId)
@@ -443,7 +460,7 @@ class ProjectService
         return ProjectsResource::collection($projects);
     }
 
-    public function getUserProjectsAndTokens(string $pagination, array $status, $affiliate = false, $companyId = "")
+    public function getUserProjectsAndTokens(bool $pagination, array $status, $affiliate = false, $companyId = "")
     {
         $projects = $this->getUserProjects($pagination, $status, $affiliate, $companyId);
         $userId =

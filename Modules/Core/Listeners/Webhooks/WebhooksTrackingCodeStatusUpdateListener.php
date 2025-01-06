@@ -3,12 +3,12 @@
 namespace Modules\Core\Listeners\Webhooks;
 
 use Exception;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Webhook;
-use Modules\Core\Services\WebhookService;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Webhooks\Services\WebhookService;
 
 /**
  * Class WebhooksTrackingCodeStatusUpdateListener

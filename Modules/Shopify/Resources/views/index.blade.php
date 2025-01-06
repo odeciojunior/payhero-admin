@@ -694,16 +694,23 @@
 
                         <div id="footer"
                              style="border-top: 1px solid #F4F4F4; padding:20px; text-align:center">
+
                             <button id="bt-close"
                                     data-dismiss="modal"
                                     aria-label="Close"
                                     class="btn btn-primary"
                                     style="padding: 12px 32px; font-size: 16px; font-weight: 600">Fechar</button>
+
                             <button id='bt-update-keys'
                                     class="btn btn-primary"
                                     style="display: none; padding: 12px 32px; font-size: 16px; font-weight: 600">Atualizar
                                 e
                                 fechar</button>
+
+                            <button id="bt-delete-integration"
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    style="padding: 12px 32px; font-size: 16px; font-weight: 600">Excluir</button>
                         </div>
 
                     </div>
