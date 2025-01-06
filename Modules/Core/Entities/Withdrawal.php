@@ -43,6 +43,7 @@ class Withdrawal extends Model
     const STATUS_RETURNED = 7;
     const STATUS_LIQUIDATING = 8;
     const STATUS_PARTIALLY_LIQUIDATED = 9;
+    const STATUS_AUTOMATIC_TRANSFERRED = 10;
 
     protected $presenter = WithdrawalPresenter::class;
 

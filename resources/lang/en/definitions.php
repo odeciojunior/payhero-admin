@@ -107,6 +107,7 @@ return [
                 "returned" => "Retornado",
                 "liquidating" => "Depósito agendado",
                 "partially_liquidated" => "Parcialmente Liquidado",
+                "automatic_transfered" => "Transferido Automaticamente",
             ],
         ],
         "invitation" => [

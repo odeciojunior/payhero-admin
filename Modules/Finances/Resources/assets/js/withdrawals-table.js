@@ -9,6 +9,7 @@ window.loadWithdrawalsTable = function (link = null) {
         7: "warning",
         8: "primary",
         9: "partially-liquidating",
+        10: "success",
     };
 
     $("#withdrawals-table-data").html("");

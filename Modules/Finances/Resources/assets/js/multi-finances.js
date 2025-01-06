@@ -9,6 +9,7 @@ $(document).ready(function () {
         7: "danger",
         8: "primary",
         9: "partially-liquidating",
+        10: "success",
     };
 
     const GETNET = "w7YL9jZD6gp4qmv";
