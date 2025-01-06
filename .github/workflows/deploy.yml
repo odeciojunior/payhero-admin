@@ -53,7 +53,8 @@ jobs:
                                 "setfacl -R -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
                                 "setfacl -R -m g:www-data:rwx /var/www/html/admin.azcend.com.br",
                                 "setfacl -dR -m u:ubuntu:rwx /var/www/html/admin.azcend.com.br",
-                                "setfacl -dR -m g:www-data:rwx /var/www/html/admin.azcend.com.br"
+                                "setfacl -dR -m g:www-data:rwx /var/www/html/admin.azcend.com.br",
+                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'",
                             ],
                             "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
                             "executionTimeout": ["3600"]
