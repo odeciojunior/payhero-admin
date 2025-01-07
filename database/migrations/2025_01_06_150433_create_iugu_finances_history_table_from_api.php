@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('customer_ref')->nullable();
             $table->string('payer_name')->nullable();
             $table->string('id_Fatura')->nullable();
-            $table->timestamps();
+            $table->timestamps(0);
         });
     }
 
