@@ -141,7 +141,7 @@ abstract class GatewayServicesAbstract
 
     public function getAvailableBalanceByTransfers(){
         $balance = DB::select("SELECT SUM(IF(type_enum=1,value,-value)) as total FROM transfers
-        WHERE company_id = :companyId",["companyId"=>$this->company->id]);
+        WHERE deleted_at is null and company_id = :companyId",["companyId"=>$this->company->id]);
 
         $pendingWithdrawal = Withdrawal::where("company_id", $this->company->id)
             ->whereNotIn("status", [Withdrawal::STATUS_AUTOMATIC_TRANSFERRED, Withdrawal::STATUS_TRANSFERRED, Withdrawal::STATUS_REFUSED, Withdrawal::STATUS_LIQUIDATING])
