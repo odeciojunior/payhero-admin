@@ -302,10 +302,10 @@ abstract class GatewayServicesAbstract
                     }
                 }
 
-                 // trava de liberação de cartão por conta da IUGU segurar os saques
-                //  if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                //     continue;
-                // }
+                 // trava de liberação de cartão por decisao do CEO
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
+                    continue;
+                }
 
                 if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
                         && ($isHoliday || ( !empty($company->credit_card_release_time) 
