@@ -22,7 +22,7 @@
                         <span style="line-height:40px">Webhooks</span>
                     </h1>
                     <p id="text-info"
-                       style="margin-bottom:0">Configure webhooks para integrar com outros sistemas.</p>
+                       style="margin-bottom:0">Configure webhooks para integrar com outros sistemas. <a href="https://documenter.getpostman.com/view/32376631/2sAYQZGrLG" target="_blank">Acesse a documentação</a></p>
                 </div>
                 <div>
                     <button type="button"

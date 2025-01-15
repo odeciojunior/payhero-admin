@@ -21,7 +21,7 @@
                         <span style="line-height: 40px;">API</span>
                     </h1>
                     <p id='text-info'
-                       style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas.</p>
+                       style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas. Acesse a documentação do <a href="https://documenter.getpostman.com/view/38573804/2sAY4rF5FP" target="_blank">Gateway</a> e <a href="https://documenter.getpostman.com/view/32376631/2sAYQZGrLB" target="_blank">Tracking</a>.</p>
                 </div>
                 <div>
                     <button type="button"
