@@ -9,6 +9,7 @@ use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Cloudflare\API\Endpoints\EndpointException;
+use Carbon\Carbon;
 
 class CleanupDomainsCommand extends Command
 {
@@ -19,14 +20,15 @@ class CleanupDomainsCommand extends Command
      */
     protected $signature = 'domains:cleanup 
                             {--dry-run : Execute without making actual changes}
-                            {--force : Skip confirmation prompt}';
+                            {--force : Skip confirmation prompt}
+                            {--days=14 : Minimum age of domains to check in days}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Check all domains in Cloudflare and remove inaccessible ones from the system';
+    protected $description = 'Check domains older than 2 weeks in Cloudflare and remove inaccessible ones from the system';
 
     /**
      * @var CloudFlareService
@@ -59,6 +61,7 @@ class CleanupDomainsCommand extends Command
     {
         $isDryRun = $this->option('dry-run');
         $isForce = $this->option('force');
+        $minAgeDays = $this->option('days');
         
         $this->info('Starting domain cleanup process...');
 
@@ -66,14 +69,31 @@ class CleanupDomainsCommand extends Command
             $this->warn('DRY RUN MODE - No actual changes will be made');
         }
 
-        // Get all active domains from database
-        $domains = Domain::whereNull('deleted_at')->get();
-        $totalDomains = $domains->count();
+        // Calculate cutoff date
+        $cutoffDate = Carbon::now()->subDays($minAgeDays);
+        
+        // Get domains older than cutoff date
+        $domains = Domain::whereNull('deleted_at')
+                        ->where('created_at', '<', $cutoffDate)
+                        ->whereNotIn('name', ['pag.net.br','azcend.com.br'])
+                        ->get();
 
-        $this->info("Found {$totalDomains} domains in the database");
+        $totalDomains = $domains->count();
+        $allDomainsCount = Domain::whereNull('deleted_at')->count();
+
+        $this->info(sprintf(
+            "Found %d domains older than %d days (out of %d total domains)",
+            $totalDomains,
+            $minAgeDays,
+            $allDomainsCount
+        ));
+
+        if ($this->getOutput()->isVerbose()) {
+            $this->line("Cutoff date: " . $cutoffDate->format('Y-m-d H:i:s'));
+        }
 
         if (!$isDryRun && !$isForce) {
-            if (!$this->confirm('This will check all domains and remove inaccessible ones. Continue?')) {
+            if (!$this->confirm('This will check old domains and remove inaccessible ones. Continue?')) {
                 $this->info('Operation cancelled by user.');
                 return 0;
             }
@@ -96,9 +116,14 @@ class CleanupDomainsCommand extends Command
 
         foreach ($domains as $domain) {
             $totalChecked++;
+            $domainAge = Carbon::parse($domain->created_at)->diffInDays(Carbon::now());
             
             if ($this->getOutput()->isVerbose()) {
-                $this->line("\nChecking domain: " . $domain->name);
+                $this->line(sprintf(
+                    "\nChecking domain: %s (age: %d days)",
+                    $domain->name,
+                    $domainAge
+                ));
             }
 
             try {
@@ -131,6 +156,8 @@ class CleanupDomainsCommand extends Command
 
                     $problemDomains[] = [
                         'name' => $domain->name,
+                        'age' => $domainAge . ' days',
+                        'created_at' => $domain->created_at,
                         'reason' => $reason
                     ];
 
@@ -159,6 +186,7 @@ class CleanupDomainsCommand extends Command
                 $this->error("Error processing {$domain->name}: " . $e->getMessage());
                 Log::channel('cloudflare')->error('Error in cleanup process', [
                     'domain' => $domain->name,
+                    'age' => $domainAge,
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString()
                 ]);
@@ -176,7 +204,7 @@ class CleanupDomainsCommand extends Command
         if (!empty($problemDomains)) {
             $this->info('=== Problem Domains ===');
             $this->table(
-                ['Domain', 'Reason'],
+                ['Domain', 'Age', 'Created At', 'Reason'],
                 $problemDomains
             );
         }
@@ -186,7 +214,9 @@ class CleanupDomainsCommand extends Command
         $this->table(
             ['Metric', 'Count'],
             [
-                ['Total Domains Checked', $totalChecked],
+                ['Total Domains in System', $allDomainsCount],
+                ['Domains Older than ' . $minAgeDays . ' days', $totalDomains],
+                ['Domains Checked', $totalChecked],
                 ['Domains to Remove', count($problemDomains)],
                 ['Successfully Removed', $totalRemoved],
                 ['Errors Encountered', $totalErrors],
@@ -198,6 +228,8 @@ class CleanupDomainsCommand extends Command
         }
 
         Log::channel('cloudflare')->info('Domain cleanup completed', [
+            'cutoff_date' => $cutoffDate->format('Y-m-d H:i:s'),
+            'total_in_system' => $allDomainsCount,
             'total_checked' => $totalChecked,
             'total_removed' => $totalRemoved,
             'total_errors' => $totalErrors,

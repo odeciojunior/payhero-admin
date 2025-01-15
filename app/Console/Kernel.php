@@ -25,6 +25,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('config:clear')->everyFourHours()->withoutOverlapping();
         $schedule->command('route:clear')->everyFourHours()->withoutOverlapping();
         $schedule->command('view:clear')->everyFourHours()->withoutOverlapping();
+
+        $schedule->command('domains:cleanup --force --days=30')
+                    ->dailyAt('03:00')
+                    ->appendOutputTo(storage_path('logs/domains-cleanup.log'));
+
         $schedule
             ->command(ScheduleCheckHeartbeatCommand::class)
             ->everyMinute()
