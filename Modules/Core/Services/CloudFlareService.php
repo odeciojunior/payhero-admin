@@ -22,6 +22,7 @@ use PHPHtmlParser\Dom;
 use stdClass;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CloudFlareService
@@ -30,10 +31,10 @@ use Throwable;
 class CloudFlareService
 {
     const shopifyIp = "23.227.38.65";
-    const checkoutIp = "alb-azcend-prd-1608019321.us-east-1.elb.amazonaws.com";
-    const sacIp = "alb-azcend-prd-1608019321.us-east-1.elb.amazonaws.com";
-    const affiliateIp = "alb-azcend-prd-1608019321.us-east-1.elb.amazonaws.com";
-    const adminIp = "alb-azcend-prd-1608019321.us-east-1.elb.amazonaws.com";
+    const checkoutIp = "checkout.azcend.com.br";
+    const sacIp = "sac.azcend.com.br";
+    const affiliateIp = "affiliate.checkout.azcend.com.br";
+    const adminIp = "admin.azcend.com.br";
 
     /**
      * @var APIKey
@@ -960,5 +961,173 @@ class CloudFlareService
         }
 
         return false;
+    }
+
+    /**
+     * Sync DNS records for all zones with new constant values and update database records
+     * 
+     * @param bool $isDryRun If true, only logs what would change without making actual updates
+     * @return array Array containing results of the update operation
+     */
+    public function updateAllZonesDNSRecords(bool $isDryRun = false): array
+    {
+        $results = [];
+        $updateMap = [
+            'checkout' => self::checkoutIp,
+            'sac' => self::sacIp,
+            'affiliate' => self::affiliateIp,
+            'tracking' => self::adminIp
+        ];
+
+        Log::channel('cloudflare')->info('Starting DNS record update process', [
+            'dry_run' => $isDryRun,
+            'update_map' => $updateMap
+        ]);
+
+        try {
+            // Get all zones
+            $zones = $this->getZones();
+            Log::channel('cloudflare')->info('Retrieved zones from CloudFlare', [
+                'zone_count' => count($zones)
+            ]);
+            
+            foreach ($zones as $zone) {
+                $zoneResult = [
+                    'zone' => $zone->name,
+                    'updated_records' => [],
+                    'errors' => []
+                ];
+
+                Log::channel('cloudflare')->info('Processing zone', [
+                    'zone_name' => $zone->name,
+                    'zone_id' => $zone->id
+                ]);
+
+                try {
+                    // Find corresponding domain in database
+                    $domain = Domain::where('name', $zone->name)->first();
+                    if (!$domain) {
+                        Log::channel('cloudflare')->warning('Domain not found in database', [
+                            'zone_name' => $zone->name
+                        ]);
+                        continue;
+                    }
+
+                    // Get all DNS records for the zone
+                    $records = $this->getRecords($zone->name);
+                    Log::channel('cloudflare')->info('Retrieved DNS records', [
+                        'zone_name' => $zone->name,
+                        'record_count' => count($records)
+                    ]);
+                    
+                    foreach ($records as $record) {
+                        // Check if the record is one we want to update
+                        if (isset($updateMap[$record->name]) && $record->type === 'CNAME') {
+                            $newContent = $updateMap[$record->name];
+                            
+                            // Only update if content is different
+                            if ($record->content !== $newContent) {
+                                Log::channel('cloudflare')->info('Found record to update', [
+                                    'zone_name' => $zone->name,
+                                    'record_name' => $record->name,
+                                    'old_content' => $record->content,
+                                    'new_content' => $newContent
+                                ]);
+
+                                if (!$isDryRun) {
+                                    $updateDetails = [
+                                        'type' => $record->type,
+                                        'name' => $record->name,
+                                        'content' => $newContent,
+                                        'proxied' => $record->proxied
+                                    ];
+
+                                    // Attempt to update the record in Cloudflare
+                                    $updateSuccess = $this->updateRecordDetails(
+                                        $zone->id,
+                                        $record->id,
+                                        $updateDetails
+                                    );
+
+                                    if ($updateSuccess) {
+                                        // Update corresponding record in database
+                                        $domainRecord = DomainRecord::where([
+                                            'domain_id' => $domain->id,
+                                            'cloudflare_record_id' => $record->id
+                                        ])->first();
+
+                                        if ($domainRecord) {
+                                            $domainRecord->update([
+                                                'content' => $newContent
+                                            ]);
+                                        }
+
+                                        $zoneResult['updated_records'][] = [
+                                            'name' => $record->name,
+                                            'old_content' => $record->content,
+                                            'new_content' => $newContent
+                                        ];
+                                        
+                                        Log::channel('cloudflare')->info('Successfully updated record', [
+                                            'zone_name' => $zone->name,
+                                            'record_name' => $record->name,
+                                            'new_content' => $newContent
+                                        ]);
+                                    } else {
+                                        $errorMessage = "Failed to update {$record->name} record";
+                                        $zoneResult['errors'][] = $errorMessage;
+                                        
+                                        Log::channel('cloudflare')->error('Failed to update record', [
+                                            'zone_name' => $zone->name,
+                                            'record_name' => $record->name,
+                                            'error' => $errorMessage
+                                        ]);
+                                    }
+                                }
+                            } else {
+                                Log::channel('cloudflare')->info('Record content already up to date', [
+                                    'zone_name' => $zone->name,
+                                    'record_name' => $record->name,
+                                    'content' => $record->content
+                                ]);
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+                    $errorMessage = "Error processing records: " . $e->getMessage();
+                    $zoneResult['errors'][] = $errorMessage;
+                    
+                    Log::channel('cloudflare')->error('Error processing zone records', [
+                        'zone_name' => $zone->name,
+                        'error' => $errorMessage,
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
+
+                $results[] = $zoneResult;
+            }
+
+            Log::channel('cloudflare')->info('Completed DNS update process', [
+                'total_zones' => count($zones),
+                'results' => $results
+            ]);
+
+            return [
+                'success' => true,
+                'results' => $results
+            ];
+        } catch (Exception $e) {
+            $error = "Failed to fetch zones: " . $e->getMessage();
+            
+            Log::channel('cloudflare')->error('Fatal error during DNS update process', [
+                'error' => $error,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return [
+                'success' => false,
+                'error' => $error
+            ];
+        }
     }
 }
