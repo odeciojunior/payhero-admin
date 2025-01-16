@@ -293,7 +293,7 @@ abstract class GatewayServicesAbstract
                 $company = $transaction->company;
                 $user = $transaction->user;
                 $sale = $transaction->sale;
-                
+
                 $isHoliday = false;
                 foreach ($holidays as $holiday) {
                     if ($holiday['date'] == Carbon::now()->format('Y-m-d')) {
@@ -302,13 +302,9 @@ abstract class GatewayServicesAbstract
                     }
                 }
 
-                 // trava de liberação de cartão por decisao do CEO
-                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                    continue;
-                }
 
-                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT 
-                        && ($isHoliday || ( !empty($company->credit_card_release_time) 
+                if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT
+                        && ($isHoliday || ( !empty($company->credit_card_release_time)
                                             && $currentTime < $company->credit_card_release_time)
                             )) {
                     continue;
@@ -317,7 +313,7 @@ abstract class GatewayServicesAbstract
                     "status" => "transfered",
                     "status_enum" => Transaction::STATUS_TRANSFERRED,
                 ]);
-                
+
 
                 $hasSecurityReserve = false;
                 $reserveValue = 0;
