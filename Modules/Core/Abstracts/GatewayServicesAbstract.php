@@ -284,7 +284,22 @@ abstract class GatewayServicesAbstract
 
             // Check if the current date is a national holiday in Brazil
             try {
-                $holidays = json_decode(file_get_contents('https://brasilapi.com.br/api/feriados/v1/' . Carbon::now()->year), true);
+                $currentYear = Carbon::now()->year;
+                $nextYear = Carbon::now()->addYear()->year;
+
+                try {
+                    $holidaysCurrentYear = json_decode(file_get_contents("https://brasilapi.com.br/api/feriados/v1/{$currentYear}"), true);
+                } catch (Exception $e) {
+                    $holidaysCurrentYear = [];
+                }
+
+                try {
+                    $holidaysNextYear = json_decode(file_get_contents("https://brasilapi.com.br/api/feriados/v1/{$nextYear}"), true);
+                } catch (Exception $e) {
+                    $holidaysNextYear = [];
+                }
+
+                $holidays = array_merge($holidaysCurrentYear, $holidaysNextYear);
             } catch (Exception $e) {
                 $holidays = [];
             }
