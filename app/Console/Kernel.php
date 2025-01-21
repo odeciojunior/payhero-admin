@@ -47,12 +47,13 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command("gatewaypostbacks:process")
             ->withoutOverlapping()
-            ->everyFiveMinutes()
+            ->everyMinute()
             ->onOneServer();
 
         $schedule
             ->command("paylab:proccess-postback")
-            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->everyMinute()
             ->onOneServer();
 
         $schedule
