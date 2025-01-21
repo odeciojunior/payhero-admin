@@ -1,60 +1,59 @@
-# This workflow deploys to production by pushing changes to the main branch or manually.
-# It's a very simple script that makes an API call on AWS Systems Manager via CLI and invokes the execution of a script document (passing the commands) that will be executed by SSM.
+name: App Admin Full Deploy and Restart
 
-name: Deploy App Admin to Production
-
-run-name: Deployment initiated by ${{ github.actor }}
+run-name: Full Deploy and Restart to Production by ${{ github.actor }}
 
 on:
-    # Triggers the workflow on push for the main branch
-    push:
-        branches: [main]
-
-    # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
 
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    AWS_DEFAULT_REGION: "us-east-1"
+    AWS_DEFAULT_REGION: us-east-1
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+            - name: Execute git reset
+              run: |
+                  aws ssm send-command \
+                    --document-name "AWS-RunShellScript" \
+                    --targets Key=tag:Name,Values=admin-azc-prd \
+                    --parameters '{
+                      "commands": [
+                        "cd /var/www/html/admin.azcend.com.br",
+                        "systemctl stop nginx php8.2-fpm",
+                        "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard'"'"'",
+                        "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br pull'"'"'"
+                      ],
+                      "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
+                      "executionTimeout": ["3600"]
+                    }' \
+                    --timeout-seconds 600 \
+                    --max-concurrency "50" \
+                    --max-errors "0" \
+                    --comment "Git reset before deploy"
 
             - name: Deploy to EC2
               run: |
                   aws ssm send-command \
-                  --document-name "AWS-RunShellScript" \
-                  --document-version "1" \
-                  --targets Key=tag:Name,Values=admin-azc-prd \
-                  --parameters '
-                        {
-                            "commands": [
-                                "service nginx stop",
-                                "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard origin/main'"'"'",
-                                "sudo -H -u ubuntu bash -c '"'"'git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br pull'"'"'",
-                                "rm -rf /var/www/html/admin.azcend.com.br/storage",
-                                "ln -s /var/www/html/efs-admin-azc-prd/storage /var/www/html/admin.azcend.com.br/storage",
-                                "service nginx start",
-                                "supervisorctl restart all",
-                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan horizon:publish'"'"'",
-                                "php /var/www/html/admin.azcend.com.br/artisan cache:clear",
-                                "php /var/www/html/admin.azcend.com.br/artisan config:clear",
-                                "php /var/www/html/admin.azcend.com.br/artisan route:clear",
-                                "php /var/www/html/admin.azcend.com.br/artisan view:clear",
-                                "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'"
-                            ],
-                            "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
-                            "executionTimeout": ["3600"]
-                        }
-                        ' \
-                  --timeout-seconds 600 \
-                  --max-concurrency "50" \
-                  --comment "Deploy App Admin" \
-                  --max-errors "0"
+                    --document-name "AWS-RunShellScript" \
+                    --targets Key=tag:Name,Values=admin-azc-prd \
+                    --parameters '{
+                      "commands": [
+                        "sudo chmod +x /var/www/html/admin.azcend.com.br/deploy.sh && sudo /var/www/html/admin.azcend.com.br/deploy.sh"
+                      ],
+                      "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
+                      "executionTimeout": ["3600"]
+                    }' \
+                    --timeout-seconds 600 \
+                    --max-concurrency "50" \
+                    --max-errors "0" \
+                    --comment "Production Deploy - App Admin"

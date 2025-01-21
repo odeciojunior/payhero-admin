@@ -1,0 +1,87 @@
+name: App Admin Update
+
+run-name: Admin Update by ${{ github.actor }}
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+            - name: Execute git reset
+              run: |
+                  aws ssm send-command \
+                    --document-name "AWS-RunShellScript" \
+                    --targets Key=tag:Name,Values=admin-azc-prd \
+                    --parameters '{
+                      "commands": [
+                        "cd /var/www/html/admin.azcend.com.br",
+                        "systemctl stop nginx php8.2-fpm",
+                        "sudo -H -u ubuntu bash -c '\''git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br reset --hard'\''",
+                        "sudo -H -u ubuntu bash -c '\''git --git-dir=/var/www/html/admin.azcend.com.br/.git --work-tree=/var/www/html/admin.azcend.com.br pull'\''",
+                        "sudo rm -rf /var/www/html/admin.azcend.com.br/storage",
+                        "sudo ln -sf /var/www/html/efs-admin-azc-prd/storage /var/www/html/admin.azcend.com.br/storage",
+                        "sudo -H -u ubuntu bash -c '\''php artisan horizon:publish'\''",
+                        "systemctl start nginx php8.2-fpm",
+                        "supervisorctl restart all"
+                      ],
+                      "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
+                      "executionTimeout": ["3600"]
+                    }' \
+                    --timeout-seconds 600 \
+                    --max-concurrency "50" \
+                    --max-errors "0" \
+                    --comment "Git reset before deploy"
+
+            - name: Update Refresh Laravel Cache
+              run: |
+                  aws ssm send-command \
+                    --document-name "AWS-RunShellScript" \
+                    --targets Key=tag:Name,Values=admin-azc-prd \
+                    --parameters '{
+                        "commands": [
+                          "sudo chown -R ubuntu:www-data /var/www/html/admin.azcend.com.br",
+                          "sudo chmod -R 775 /var/www/html/admin.azcend.com.br",
+                          "sudo chown ubuntu:www-data /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo chmod 755 /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo chown -R ubuntu:www-data /var/www/html/efs-admin-azc-prd",
+                          "sudo chmod -R 775 /var/www/html/efs-admin-azc-prd",
+                          "sudo chown ubuntu:www-data /var/www/html/efs-admin-azc-prd/deploy.sh",
+                          "sudo chmod 755 /var/www/html/efs-admin-azc-prd/deploy.sh",
+                          "sudo rm -f /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo cp /var/www/html/efs-admin-azc-prd/deploy.sh /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo chmod +x /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo -H -u ubuntu bash -c '\''php artisan cache:clear'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan route:clear'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan view:clear'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan clear-compiled'\''",
+                          "sudo -H -u ubuntu bash -c '\''composer dump-autoload -o'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan route:cache'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan view:cache'\''",
+                          "sudo -H -u ubuntu bash -c '\''php artisan config:clear'\''",
+                          "sudo -H -u ubuntu bash -c '\''php -r \"opcache_reset(); echo '\''OPcache reset successfully.'\'';\"'\''",
+                          "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'"
+                        ],
+                        "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
+                        "executionTimeout": ["3600"]
+                    }' \
+                    --timeout-seconds 600 \
+                    --max-concurrency "50" \
+                    --max-errors "0" \
+                    --comment "Production Deploy - App Admin"
