@@ -11,6 +11,7 @@ use Modules\Core\Presenters\GatewayPresenter;
 use Modules\Core\Services\Gateways\AbmexService;
 use Modules\Core\Services\Gateways\IuguService;
 use Modules\Core\Services\Gateways\MalgaService;
+use Modules\Core\Services\Gateways\MonetixService;
 use Modules\Core\Services\Gateways\PayupService;
 use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\Gateways\SimPayService;
@@ -84,6 +85,9 @@ class Gateway extends Model
     public const AXISBANKING_PRODUCTION_ID = 25;
     public const AXISBANKING_SANDBOX_ID = 26;
 
+    public const MONETIX_PRODUCTION_ID = 27;
+    public const MONETIX_SANDBOX_ID = 28;
+
     public const PAYMENT_STATUS_CONFIRMED = "CONFIRMED";
 
     public const ASAAS_PRODUCTION_ID = 999;
@@ -131,51 +135,20 @@ class Gateway extends Model
 
     public static function getServiceById($gatewayId)
     {
-        switch ($gatewayId) {
-            case self::SAFE2PAY_PRODUCTION_ID:
-            case self::SAFE2PAY_SANDBOX_ID:
-                return new Safe2PayService();
-
-            case self::IUGU_PRODUCTION_ID:
-            case self::IUGU_SANDBOX_ID:
-                return new IuguService();
-
-            case self::ABMEX_PRODUCTION_ID:
-            case self::ABMEX_SANDBOX_ID:
-                return new AbmexService();
-
-            case self::SIMPAY_PRODUCTION_ID:
-            case self::SIMPAY_SANDBOX_ID:
-                return new SimPayService();
-
-            case self::PAYUP_PRODUCTION_ID:
-            case self::PAYUP_SANDBOX_ID:
-                return new PayupService();
-
-            case self::MALGA_PRODUCTION_ID:
-            case self::MALGA_SANDBOX_ID:
-                return new MalgaService();
-
-            case self::ARMPAY_PRODUCTION_ID:
-            case self::ARMPAY_SANDBOX_ID:
-                return new ArmPayService();
-
-            case self::VOLUTI_PRODUCTION_ID:
-            case self::VOLUTI_SANDBOX_ID:
-                return new VolutiService();
-            
-            case self::AXISBANKING_PRODUCTION_ID:
-            case self::AXISBANKING_SANDBOX_ID:
-                return new AxisBankingService();
-
-            case self::VEGA_PRODUCTION_ID:
-            case self::VEGA_SANDBOX_ID:
-                return new VegaService();
-
-            default:
-                throw new LogicException("Gateway {self->name} não encontrado");
-                break;
-        }
+        return match ($gatewayId) {
+            self::SAFE2PAY_PRODUCTION_ID, self::SAFE2PAY_SANDBOX_ID => new Safe2PayService(),
+            self::IUGU_PRODUCTION_ID, self::IUGU_SANDBOX_ID => new IuguService(),
+            self::ABMEX_PRODUCTION_ID, self::ABMEX_SANDBOX_ID => new AbmexService(),
+            self::SIMPAY_PRODUCTION_ID, self::SIMPAY_SANDBOX_ID => new SimPayService(),
+            self::PAYUP_PRODUCTION_ID, self::PAYUP_SANDBOX_ID => new PayupService(),
+            self::MALGA_PRODUCTION_ID, self::MALGA_SANDBOX_ID => new MalgaService(),
+            self::ARMPAY_PRODUCTION_ID, self::ARMPAY_SANDBOX_ID => new ArmPayService(),
+            self::VOLUTI_PRODUCTION_ID, self::VOLUTI_SANDBOX_ID => new VolutiService(),
+            self::AXISBANKING_PRODUCTION_ID, self::AXISBANKING_SANDBOX_ID => new AxisBankingService(),
+            self::VEGA_PRODUCTION_ID, self::VEGA_SANDBOX_ID => new VegaService(),
+            self::MONETIX_PRODUCTION_ID, self::MONETIX_SANDBOX_ID => new MonetixService(),
+            default => throw new LogicException("Gateway {self->name} não encontrado"),
+        };
     }
 
     /**

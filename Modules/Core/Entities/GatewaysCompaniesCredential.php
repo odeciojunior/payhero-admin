@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Company $company
  * @property Gateway[] $gateway
  */
-
 class GatewaysCompaniesCredential extends Model
 {
     public const GATEWAY_STATUS_APPROVED = 1;
@@ -40,11 +39,11 @@ class GatewaysCompaniesCredential extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo("Modules\Core\Entities\Company");
+        return $this->belongsTo(Company::class);
     }
 
     public function gateway(): BelongsTo
     {
-        return $this->belongsTo("Modules\Core\Entities\Gateway");
+        return $this->belongsTo(Gateway::class);
     }
 }

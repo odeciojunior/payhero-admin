@@ -244,7 +244,9 @@ class Kernel extends ConsoleKernel
         // Add the new command with success and failure logging
         $schedule->command('health:schedule-check-heartbeat')
             ->everyMinute()
-            ->onSuccess(function () {})
+            ->onSuccess(function () {
+                Log::info('Comando health:schedule-check-heartbeat executado com sucesso.');
+            })
             ->onFailure(function () {
                 $exception = new Exception('Erro ao executar o comando health:schedule-check-heartbeat.');
                 Sentry::captureException($exception);
