@@ -66,6 +66,7 @@ jobs:
                           "sudo chmod 755 /var/www/html/efs-admin-azc-prd/deploy.sh",
                           "sudo rm -f /var/www/html/admin.azcend.com.br/deploy.sh",
                           "sudo cp /var/www/html/efs-admin-azc-prd/deploy.sh /var/www/html/admin.azcend.com.br/deploy.sh",
+                          "sudo cp /var/www/html/efs-admin-azc-prd/.env /var/www/html/admin.azcend.com.br/.env",
                           "sudo chmod +x /var/www/html/admin.azcend.com.br/deploy.sh",
                           "sudo -H -u ubuntu bash -c '\''php artisan cache:clear'\''",
                           "sudo -H -u ubuntu bash -c '\''php artisan route:clear'\''",
