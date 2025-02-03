@@ -24,7 +24,7 @@ jobs:
                   aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-            - name: Execute git reset
+            - name: Execute git reset and update application
               run: |
                   aws ssm send-command \
                     --document-name "AWS-RunShellScript" \
@@ -49,35 +49,28 @@ jobs:
                     --max-errors "0" \
                     --comment "Git reset before deploy"
 
-            - name: Update Refresh Laravel Cache
+            - name: Update Laravel Cache and Configurations
               run: |
                   aws ssm send-command \
                     --document-name "AWS-RunShellScript" \
                     --targets Key=tag:Name,Values=admin-azc-prd \
                     --parameters '{
                         "commands": [
-                          "sudo chown -R ubuntu:www-data /var/www/html/admin.azcend.com.br",
+                          "sudo chown -R www-data:www-data /var/www/html/admin.azcend.com.br",
                           "sudo chmod -R 775 /var/www/html/admin.azcend.com.br",
-                          "sudo chown ubuntu:www-data /var/www/html/admin.azcend.com.br/deploy.sh",
-                          "sudo chmod 755 /var/www/html/admin.azcend.com.br/deploy.sh",
-                          "sudo chown -R ubuntu:www-data /var/www/html/efs-admin-azc-prd",
+                          "sudo chown -R www-data:www-data /var/www/html/efs-admin-azc-prd",
                           "sudo chmod -R 775 /var/www/html/efs-admin-azc-prd",
-                          "sudo chown ubuntu:www-data /var/www/html/efs-admin-azc-prd/deploy.sh",
-                          "sudo chmod 755 /var/www/html/efs-admin-azc-prd/deploy.sh",
-                          "sudo rm -f /var/www/html/admin.azcend.com.br/deploy.sh",
-                          "sudo cp /var/www/html/efs-admin-azc-prd/deploy.sh /var/www/html/admin.azcend.com.br/deploy.sh",
                           "sudo cp /var/www/html/efs-admin-azc-prd/.env /var/www/html/admin.azcend.com.br/.env",
-                          "sudo chmod +x /var/www/html/admin.azcend.com.br/deploy.sh",
-                          "sudo -H -u ubuntu bash -c '\''php artisan cache:clear'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan route:clear'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan view:clear'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan clear-compiled'\''",
-                          "sudo -H -u ubuntu bash -c '\''composer dump-autoload -o'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan route:cache'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan view:cache'\''",
-                          "sudo -H -u ubuntu bash -c '\''php artisan config:clear'\''",
-                          "sudo -H -u ubuntu bash -c '\''php -r \"opcache_reset(); echo '\''OPcache reset successfully.'\'';\"'\''",
-                          "sudo -H -u ubuntu bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'"
+                          "sudo -H -u www-data bash -c '\''php artisan cache:clear'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan route:clear'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan view:clear'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan clear-compiled'\''",
+                          "sudo -H -u www-data bash -c '\''composer dump-autoload -o'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan route:cache'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan view:cache'\''",
+                          "sudo -H -u www-data bash -c '\''php artisan config:clear'\''",
+                          "sudo -H -u www-data bash -c '\''php -r \"opcache_reset(); echo '\''OPcache reset successfully.'\'';\"'\''",
+                          "sudo -H -u www-data bash -c '"'"'php /var/www/html/admin.azcend.com.br/artisan migrate --force'"'"'"
                         ],
                         "workingDirectory": ["/var/www/html/admin.azcend.com.br"],
                         "executionTimeout": ["3600"]
