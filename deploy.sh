@@ -67,8 +67,13 @@ create_directory_if_not_exists() {
     if [ ! -d "$dir" ]; then
         echo "==> Criando diretório $dir..." | tee -a "$LOG_FILE"
         mkdir -p "$dir"
-        chown $ADMIN_USER:$ADMIN_GROUP "$dir"
-        chmod 2775 "$dir"
+        if [[ "$dir" == *"storage"* ]]; then
+            chown www-data:www-data "$dir"
+            chmod 775 "$dir"
+        else
+            chown $ADMIN_USER:$ADMIN_GROUP "$dir"
+            chmod 2775 "$dir"
+        fi
         verify_directory "$dir"
     fi
 }
@@ -78,20 +83,24 @@ set_permissions() {
     local dir=$1
     echo "==> Ajustando permissões em $dir..." | tee -a "$LOG_FILE"
     
-    # Configurar ownership
-    chown -R $ADMIN_USER:$ADMIN_GROUP "$dir"
-    
-    # Configurar permissões base (diretórios = 2775, arquivos = 664)
-    find "$dir" -type d -exec chmod 2775 {} \;  # SGID para diretórios
-    find "$dir" -type f -exec chmod 664 {} \;   # Permissões para arquivos
-    
-    # Garantir SGID em diretórios críticos (se existirem)
-    chmod 2775 "$dir"
-    [ -d "$dir/framework" ] && chmod 2775 "$dir/framework"
-    [ -d "$dir/framework/cache" ] && chmod 2775 "$dir/framework/cache"
-    [ -d "$dir/framework/sessions" ] && chmod 2775 "$dir/framework/sessions"
-    [ -d "$dir/framework/views" ] && chmod 2775 "$dir/framework/views"
-    [ -d "$dir/logs" ] && chmod 2775 "$dir/logs"
+    if [[ "$dir" == *"storage"* ]]; then
+        # Permissões específicas para pasta storage
+        chown -R www-data:www-data "$dir"
+        chmod -R 775 "$dir"
+        
+        # Garantir permissões em diretórios críticos do storage
+        for subdir in framework/cache framework/sessions framework/views logs; do
+            if [ -d "$dir/$subdir" ]; then
+                chown -R www-data:www-data "$dir/$subdir"
+                chmod -R 775 "$dir/$subdir"
+            fi
+        done
+    else
+        # Permissões padrão para outros diretórios
+        chown -R $ADMIN_USER:$ADMIN_GROUP "$dir"
+        find "$dir" -type d -exec chmod 2775 {} \;
+        find "$dir" -type f -exec chmod 664 {} \;
+    fi
     
     verify_permissions "$dir"
 }
@@ -100,7 +109,6 @@ set_permissions() {
 ensure_efs_unmounted() {
     echo "==> Verificando e desmontando EFS se necessário..." | tee -a "$LOG_FILE"
     
-    # Verifica se existem processos usando o EFS
     if lsof "$EFS_MOUNTPOINT" 2>/dev/null; then
         echo "Finalizando processos usando $EFS_MOUNTPOINT" | tee -a "$LOG_FILE"
         lsof "$EFS_MOUNTPOINT" | awk 'NR>1 {print $2}' | sort -u | xargs -r kill -9
@@ -131,17 +139,13 @@ mount_efs() {
 verify_services() {
     echo "==> Verificando status dos serviços..." | tee -a "$LOG_FILE"
     
-    if ! systemctl is-active --quiet nginx; then
-        echo "ERRO: Nginx não está rodando!" | tee -a "$LOG_FILE"
-        systemctl status nginx >> "$LOG_FILE"
-        return 1
-    fi
-    
-    if ! systemctl is-active --quiet php8.2-fpm; then
-        echo "ERRO: PHP-FPM não está rodando!" | tee -a "$LOG_FILE"
-        systemctl status php8.2-fpm >> "$LOG_FILE"
-        return 1
-    fi
+    for service in nginx php8.2-fpm; do
+        if ! systemctl is-active --quiet $service; then
+            echo "ERRO: $service não está rodando!" | tee -a "$LOG_FILE"
+            systemctl status $service >> "$LOG_FILE"
+            return 1
+        fi
+    done
     
     echo "Todos os serviços estão rodando corretamente." | tee -a "$LOG_FILE"
     return 0
@@ -151,29 +155,21 @@ verify_services() {
 create_php_utilities() {
     echo "==> Criando arquivos PHP utilitários..." | tee -a "$LOG_FILE"
     
-    # Gerar sufixo aleatório
     RANDOM_SUFFIX=$(openssl rand -hex 8)
-    
-    # Definir caminhos dos arquivos
     PHPINFO_FILE="$ADMIN_DIR/public/info_${RANDOM_SUFFIX}.php"
     OPCACHE_FILE="$ADMIN_DIR/public/reset_opcache_${RANDOM_SUFFIX}.php"
     
-    # Criar arquivos
     echo "<?php phpinfo();" | sudo tee "$PHPINFO_FILE" > /dev/null
     echo "<?php opcache_reset(); echo 'OPcache reset successfully.';" | sudo tee "$OPCACHE_FILE" > /dev/null
     
-    # Ajustar permissões
-    chown $ADMIN_USER:$ADMIN_GROUP "$PHPINFO_FILE" "$OPCACHE_FILE"
+    chown www-data:www-data "$PHPINFO_FILE" "$OPCACHE_FILE"
     chmod 644 "$PHPINFO_FILE" "$OPCACHE_FILE"
     
     echo "Arquivos PHP criados com sucesso:" | tee -a "$LOG_FILE"
     echo "- PHPInfo: info_${RANDOM_SUFFIX}.php" | tee -a "$LOG_FILE"
     echo "- OPcache Reset: reset_opcache_${RANDOM_SUFFIX}.php" | tee -a "$LOG_FILE"
     
-    # Teste imediato do arquivo de reset de OPcache
     sudo php "$OPCACHE_FILE" | tee -a "$LOG_FILE"
-    
-    # Verificar arquivos
     verify_permissions "$ADMIN_DIR/public"
 }
 
@@ -198,7 +194,7 @@ refresh_laravel_cache() {
 
     for cmd in "${commands[@]}"; do
         echo "Executando: $cmd" | tee -a "$LOG_FILE"
-        sudo -H -u $ADMIN_GROUP bash -c "cd $ADMIN_DIR && $cmd" || {
+        sudo -H -u www-data bash -c "cd $ADMIN_DIR && $cmd" || {
             echo "AVISO: Falha ao executar $cmd" | tee -a "$LOG_FILE"
         }
     done
@@ -208,13 +204,10 @@ refresh_laravel_cache() {
 clean_temporary_files() {
     echo "==> Limpando arquivos temporários no diretório public/..." | tee -a "$LOG_FILE"
     
-    # Listar os arquivos que serão removidos
     local temp_files=$(find "$ADMIN_DIR/public" -type f \( -name "info_*.php" -o -name "reset_opcache_*.php" \))
     if [ -n "$temp_files" ]; then
         echo "Arquivos encontrados para remoção:" | tee -a "$LOG_FILE"
         echo "$temp_files" | tee -a "$LOG_FILE"
-        
-        # Remover os arquivos
         find "$ADMIN_DIR/public" -type f \( -name "info_*.php" -o -name "reset_opcache_*.php" \) -exec rm -f {} \;
         echo "Arquivos temporários removidos com sucesso." | tee -a "$LOG_FILE"
     else
@@ -243,39 +236,25 @@ fi
 
 # 3. Criar estrutura de diretórios
 echo "==> Criando estrutura de diretórios..." | tee -a "$LOG_FILE"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage/logs"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage/framework"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage/framework/cache"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage/framework/sessions"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/storage/framework/views"
-create_directory_if_not_exists "$EFS_MOUNTPOINT/nginx"
+for dir in storage storage/logs storage/framework storage/framework/cache storage/framework/sessions storage/framework/views nginx; do
+    create_directory_if_not_exists "$EFS_MOUNTPOINT/$dir"
+done
+
+# Ajuste final das permissões do storage
+chown -R www-data:www-data "$EFS_MOUNTPOINT/storage"
+chmod -R 775 "$EFS_MOUNTPOINT/storage"
 
 # 4. Ajuste de permissões antes de atualizar o código via Git
 echo "==> Ajustando permissões no projeto antes do Git Pull..." | tee -a "$LOG_FILE"
 cd "$ADMIN_DIR"
 
-sudo chown -R $ADMIN_USER:$ADMIN_GROUP .
-sudo find . -type d -exec chmod 775 {} \;
-sudo find . -type f -exec chmod 664 {} \;
+chown -R $ADMIN_USER:$ADMIN_GROUP .
+find . -type d -exec chmod 775 {} \;
+find . -type f -exec chmod 664 {} \;
 
-# Ajustar permissões executáveis para scripts críticos (se existirem)
-[ -f artisan ] && sudo chmod +x artisan
-[ -f deploy.sh ] && sudo chmod +x deploy.sh
-
-# Ajustar permissões do .git (se existir)
-if [ -d ".git" ]; then
-    sudo chown -R $ADMIN_USER:$ADMIN_GROUP .git
-    sudo find .git -type d -exec chmod 775 {} \;
-    sudo find .git -type f -exec chmod 664 {} \;
-fi
-
-# Ajustar permissões específicas do diretório app/Console/Commands
-if [ -d "app/Console/Commands" ]; then
-    sudo chown -R $ADMIN_USER:$ADMIN_GROUP app/Console/Commands
-    sudo find app/Console/Commands -type d -exec chmod 775 {} \;
-    sudo find app/Console/Commands -type f -exec chmod 664 {} \;
-fi
+# Ajustar permissões executáveis para scripts críticos
+[ -f artisan ] && chmod +x artisan
+[ -f deploy.sh ] && chmod +x deploy.sh
 
 # 4.2. Atualizar código via Git
 echo "==> Atualizando código via Git..." | tee -a "$LOG_FILE"
@@ -286,7 +265,11 @@ sudo -H -u $ADMIN_USER bash -c "git pull"
 echo "==> Configurando storage..." | tee -a "$LOG_FILE"
 rm -rf "$ADMIN_DIR/storage"
 ln -sf "$EFS_MOUNTPOINT/storage" "$ADMIN_DIR/storage"
-set_permissions "$EFS_MOUNTPOINT/storage"
+
+# Aplicar permissões específicas no storage do EFS
+chown -R www-data:www-data "$EFS_MOUNTPOINT/storage"
+chmod -R 775 "$EFS_MOUNTPOINT/storage"
+
 verify_storage_link || {
     echo "Tentando recriar link do storage..." | tee -a "$LOG_FILE"
     rm -rf "$ADMIN_DIR/storage"
@@ -298,7 +281,7 @@ verify_storage_link || {
 echo "==> Configurando .env..." | tee -a "$LOG_FILE"
 if [ -f "$EFS_MOUNTPOINT/.env" ]; then
     cp "$EFS_MOUNTPOINT/.env" "$ADMIN_DIR/.env"
-    chown $ADMIN_USER:$ADMIN_GROUP "$ADMIN_DIR/.env"
+    chown www-data:www-data "$ADMIN_DIR/.env"
     chmod 664 "$ADMIN_DIR/.env"
 fi
 
@@ -309,9 +292,9 @@ set_permissions "$EFS_MOUNTPOINT/storage"
 
 # 8. Reiniciar serviços
 echo "==> Reiniciando serviços..." | tee -a "$LOG_FILE"
-sudo systemctl start php8.2-fpm
+systemctl start php8.2-fpm
 sleep 2
-sudo systemctl start nginx
+systemctl start nginx
 sleep 2
 
 # 9. Verificar serviços
@@ -320,57 +303,26 @@ verify_services || {
     exit 1
 }
 
-# 11. Verificar montagem automática
+# 10. Verificar montagem automática
 if ! grep -q "$EFS_SERVER" /etc/fstab; then
     echo "$FSTAB_ENTRY" >> /etc/fstab
     echo "Entrada adicionada ao fstab." | tee -a "$LOG_FILE"
 fi
 
-# 12. Criar arquivos PHP utilitários
+# 11. Criar arquivos PHP utilitários e limpar temporários
 create_php_utilities
-
-# 12.1. Limpar arquivos PHP temporários antigos
 clean_temporary_files
-php -r "opcache_reset(); echo 'OPcache reset successfully.';" | tee -a "$LOG_FILE"
+php -r "opcache_reset();" | tee -a "$LOG_FILE"
 
-# 13. Verificações finais
-echo "==> Verificações finais..." | tee -a "$LOG_FILE"
-verify_storage_link
-verify_services
-
-echo "==> Status final dos diretórios:" | tee -a "$LOG_FILE"
-ls -la "$ADMIN_DIR" >> "$LOG_FILE"
-ls -la "$EFS_MOUNTPOINT/storage" >> "$LOG_FILE"
-
-echo "==> Deploy concluído com sucesso em $(date)" | tee -a "$LOG_FILE"
-
-
-# 14. (Opcional) Configurar Git globalmente para o usuário ubuntu
-#Caso deseje armazenar configs globais no /home/ubuntu em vez de /root, descomente as linhas abaixo:
-echo "==> Configurando Git globalmente para o usuário $ADMIN_USER (opcional)..." | tee -a "$LOG_FILE"
-sudo -u ubuntu -H git config --global core.attributesfile ~/.gitattributes
-sudo -u ubuntu -H git config --global core.excludesfile ~/.gitignore
-
-#15. Aquele refresh final maroto >:)
-# Reiniciar o PHP-FPM
-echo "==> Reiniciando serviços..." | tee -a "$LOG_FILE"
-sudo systemctl restart php8.2-fpm
-# Reiniciar o Nginx
-sudo systemctl restart nginx
-
-#16. Atualizar cache do Laravel
+# 12. Atualizar cache do Laravel
 refresh_laravel_cache
 
-#17. subir artisan
+# 13. Subir artisan
 php artisan up
 
-#18. Publicar Horizon
+# 14. Publicar Horizon
 echo "==> Publicando Horizon..." | tee -a "$LOG_FILE"
-sudo -H -u $ADMIN_USER bash -c "cd $ADMIN_DIR && php artisan horizon:publish"
+sudo -H -u www-data bash -c "cd $ADMIN_DIR && php artisan horizon:publish"
 
-#19. Se chegamos até aqui esse script é do bom, então vamos guardar no storage para quando as instâncias subirem novamente utilizarem ele
-echo "==> Atualizando script de deploy no EFS..." | tee -a "$LOG_FILE"
-rm -f "$EFS_MOUNTPOINT/deploy.sh"
-cp "$ADMIN_DIR/deploy.sh" "$EFS_MOUNTPOINT/deploy.sh"
-
-echo "Script finalizado com sucesso em: $(date)" | tee -a "$LOG_FILE"
+# 15. Atualizar script de deploy no EFS
+echo "==> Atualizando script de deploy no EFS..." | tee -a
