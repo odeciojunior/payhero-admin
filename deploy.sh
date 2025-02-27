@@ -69,10 +69,10 @@ create_directory_if_not_exists() {
         mkdir -p "$dir"
         if [[ "$dir" == *"storage"* ]]; then
             chown www-data:www-data "$dir"
-            chmod 775 "$dir"
+            chmod 777 "$dir"
         else
             chown $ADMIN_USER:$ADMIN_GROUP "$dir"
-            chmod 2775 "$dir"
+            chmod 2777 "$dir"
         fi
         verify_directory "$dir"
     fi
@@ -86,20 +86,20 @@ set_permissions() {
     if [[ "$dir" == *"storage"* ]]; then
         # Permissões específicas para pasta storage
         chown -R www-data:www-data "$dir"
-        chmod -R 775 "$dir"
+        chmod -R 777 "$dir"
         
         # Garantir permissões em diretórios críticos do storage
         for subdir in framework/cache framework/sessions framework/views logs; do
             if [ -d "$dir/$subdir" ]; then
                 chown -R www-data:www-data "$dir/$subdir"
-                chmod -R 775 "$dir/$subdir"
+                chmod -R 777 "$dir/$subdir"
             fi
         done
     else
         # Permissões padrão para outros diretórios
         chown -R $ADMIN_USER:$ADMIN_GROUP "$dir"
-        find "$dir" -type d -exec chmod 2775 {} \;
-        find "$dir" -type f -exec chmod 664 {} \;
+        find "$dir" -type d -exec chmod 2777 {} \;
+        find "$dir" -type f -exec chmod 666 {} \;
     fi
     
     verify_permissions "$dir"
@@ -163,7 +163,7 @@ create_php_utilities() {
     echo "<?php opcache_reset(); echo 'OPcache reset successfully.';" | sudo tee "$OPCACHE_FILE" > /dev/null
     
     chown www-data:www-data "$PHPINFO_FILE" "$OPCACHE_FILE"
-    chmod 644 "$PHPINFO_FILE" "$OPCACHE_FILE"
+    chmod 666 "$PHPINFO_FILE" "$OPCACHE_FILE"
     
     echo "Arquivos PHP criados com sucesso:" | tee -a "$LOG_FILE"
     echo "- PHPInfo: info_${RANDOM_SUFFIX}.php" | tee -a "$LOG_FILE"
@@ -242,15 +242,15 @@ done
 
 # Ajuste final das permissões do storage
 chown -R www-data:www-data "$EFS_MOUNTPOINT/storage"
-chmod -R 775 "$EFS_MOUNTPOINT/storage"
+chmod -R 777 "$EFS_MOUNTPOINT/storage"
 
 # 4. Ajuste de permissões antes de atualizar o código via Git
 echo "==> Ajustando permissões no projeto antes do Git Pull..." | tee -a "$LOG_FILE"
 cd "$ADMIN_DIR"
 
 chown -R $ADMIN_USER:$ADMIN_GROUP .
-find . -type d -exec chmod 775 {} \;
-find . -type f -exec chmod 664 {} \;
+find . -type d -exec chmod 777 {} \;
+find . -type f -exec chmod 666 {} \;
 
 # Ajustar permissões executáveis para scripts críticos
 [ -f artisan ] && chmod +x artisan
@@ -268,7 +268,7 @@ ln -sf "$EFS_MOUNTPOINT/storage" "$ADMIN_DIR/storage"
 
 # Aplicar permissões específicas no storage do EFS
 chown -R www-data:www-data "$EFS_MOUNTPOINT/storage"
-chmod -R 775 "$EFS_MOUNTPOINT/storage"
+chmod -R 777 "$EFS_MOUNTPOINT/storage"
 
 verify_storage_link || {
     echo "Tentando recriar link do storage..." | tee -a "$LOG_FILE"
@@ -282,7 +282,7 @@ echo "==> Configurando .env..." | tee -a "$LOG_FILE"
 if [ -f "$EFS_MOUNTPOINT/.env" ]; then
     cp "$EFS_MOUNTPOINT/.env" "$ADMIN_DIR/.env"
     chown www-data:www-data "$ADMIN_DIR/.env"
-    chmod 664 "$ADMIN_DIR/.env"
+    chmod 666 "$ADMIN_DIR/.env"
 fi
 
 # 7. Ajustar permissões críticas
