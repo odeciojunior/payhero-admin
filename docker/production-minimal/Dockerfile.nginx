@@ -1,0 +1,29 @@
+# Nginx Dockerfile for PayHero Production-Minimal
+FROM nginx:alpine
+
+# Install dependencies
+RUN apk add --no-cache bash curl netcat-openbsd
+
+# Copy nginx configuration
+COPY docker/production-minimal/config/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/production-minimal/config/nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Create necessary directories
+RUN mkdir -p /var/log/nginx /var/www/html/public /var/cache/nginx
+#    chown -R nginx:nginx /var/log/nginx /var/www/html/public /var/cache/nginx && \    
+#    chmod -R 777 /var/log/nginx /var/www/public /var/cache/nginx
+
+# Add cache configuration
+RUN echo 'proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=60m max_size=1g;' > /etc/nginx/conf.d/cache.conf
+
+# Copy public directory
+COPY public /var/www/html/public
+
+# Create a simple health check file as fallback
+RUN echo "healthy" > /var/www/html/public/health
+
+# Expose port
+EXPOSE 80
+
+# Run nginx
+CMD ["nginx", "-g", "daemon off;"]

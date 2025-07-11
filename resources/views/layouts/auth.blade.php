@@ -11,7 +11,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token"
           content="{{ csrf_token() }}">
-    <title>Admin @yield('title')</title>
+    <title>@whitelabel('app_name') - @yield('title')</title>
     <!-- Fonts -->
     <link rel="dns-prefetch"
           href="https://fonts.gstatic.com">
@@ -22,26 +22,33 @@
     <!-- Favicon -->
     <link rel="apple-touch-icon"
           sizes="180x180"
-          href="{{ mix('build/global/img/apple-touch-icon.png') }}">
+          href="@whitelabelLogo('icon')">
     <link rel="icon"
           type="image/png"
           sizes="32x32"
-          href="{{ mix('build/global/img/favicon-32x32.png') }}">
+          href="@whitelabel('favicon')">
     <link rel="icon"
           type="image/png"
           sizes="16x16"
-          href="{{ mix('build/global/img/favicon-16x16.png') }}">
+          href="@whitelabel('favicon')">
     <link rel="mask-icon"
-          href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
-          color="#5bbad5">
+          href="@whitelabelLogo('icon')"
+          color="@whitelabelColor('primary')">
     <meta name="msapplication-TileColor"
-          content="#603cba">
+          content="@whitelabelColor('primary')">
     <meta name="theme-color"
-          content="#ffffff">
+          content="@whitelabelColor('primary')">
 
     <!-- Styles -->
     <link rel='stylesheet'
           href='{{ mix('build/layouts/auth/auth.min.css') }}'>
+          
+    <!-- Whitelabel Dynamic Styles -->
+    @whitelabelStyles
+    
+    <!-- Whitelabel Dynamic CSS -->
+    <link rel="stylesheet"
+          href="{{ route('whitelabel.css') }}">
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"

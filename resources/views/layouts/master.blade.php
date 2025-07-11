@@ -2,20 +2,20 @@
 <html class="no-js">
 
 <head>
-    <title>Admin</title>
+    <title>@whitelabel('app_name') - Admin</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible"
           content="IE=edge">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
-          content="Azcend">
+          content="@whitelabel('app_name') - Admin Panel">
     <meta name="app-debug"
           content="{{ getenv('APP_DEBUG') }}">
     <meta name="msapplication-TileColor"
-          content="#603cba">
+          content="@whitelabelColor('primary')">
     <meta name="theme-color"
-          content="#ffffff">
+          content="@whitelabelColor('primary')">
     <meta name="csrf-token"
           content="{{ csrf_token() }}">
     @if (getenv('APP_ENV') === 'production' && getenv('APP_DEBUG') === 'false')
@@ -47,25 +47,33 @@
     <meta name="user-id"
           content="{{ hashids_encode($user_id) }}">
     <!-- Favicon -->
-    {{-- <link rel="apple-touch-icon"
+    <link rel="apple-touch-icon"
           sizes="180x180"
-          href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}"> --}}
+          href="@whitelabelLogo('icon')">
     <link rel="icon"
           type="image/png"
           sizes="32x32"
-          href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
-    {{-- <link rel="icon"
+          href="@whitelabel('favicon')">
+    <link rel="icon"
           type="image/png"
           sizes="16x16"
-          href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}"> --}}
+          href="@whitelabel('favicon')">
     <link rel="mask-icon"
-          href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
-          color="#5bbad5">
+          href="@whitelabelLogo('icon')"
+          color="@whitelabelColor('primary')">
     <!-- Stylesheets -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet"
           href="{{ mix('build/layouts/master/master.min.css') }}">
+    
+    <!-- Whitelabel Dynamic Styles -->
+    @whitelabelStyles
+    
+    <!-- Whitelabel Dynamic CSS -->
+    <link rel="stylesheet"
+          href="{{ route('whitelabel.css') }}">
+    
     @stack('css')
 
     <!-- End Google Tag Manager -->

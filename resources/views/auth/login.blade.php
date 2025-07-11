@@ -8,25 +8,25 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
 
-    <title>Admin - Login</title>
+    <title>{{ whitelabel_app_name() }} - Login</title>
 
     <!-- Favicon -->
-    {{-- <link rel="apple-touch-icon"
+    <link rel="apple-touch-icon"
           sizes="180x180"
-          href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}"> --}}
+          href="{{ whitelabel_logo('icon') }}">
     <link rel="icon"
           type="image/png"
           sizes="32x32"
-          href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
-    {{-- <link rel="icon"
+          href="{{ whitelabel_favicon() }}">
+    <link rel="icon"
           type="image/png"
           sizes="16x16"
-          href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}"> --}}
+          href="{{ whitelabel_favicon() }}">
     <link rel="mask-icon"
-          href="{{ mix('build/global/img/safari-pinned-tab.svg') }}"
-          color="#5bbad5">
+          href="{{ whitelabel_logo('icon') }}"
+          color="{{ whitelabel_color('primary') }}">
     <meta name="theme-color"
-          content="#FF9000">
+          content="{{ whitelabel_color('primary') }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
@@ -36,6 +36,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;1,400&amp;display=swap"
           rel="stylesheet">
 
+    <!-- Whitelabel Dynamic CSS -->
+    <link rel="stylesheet"
+          href="{{ route('whitelabel.css') }}">
+          
     <!-- Styles -->
     <style>
         * {
@@ -236,7 +240,7 @@
         <div class="img-container"></div>
         <div class="login-container">
             <img class="content-logo"
-                 src="{{ mix('build/global/img/logo-secondary.png') }}"
+                 src="{{ whitelabel_logo('login') }}"
                  alt=""
                  width="300">
             <div class="form-container"

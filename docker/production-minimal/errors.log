@@ -1,0 +1,768 @@
+2025-07-06T10:44:40.199Z
+[Production-Minimal] Starting container...
+2025-07-06T10:44:40.201Z
+[Startup] Starting PayHero application container...
+2025-07-06T10:44:40.201Z
+[Startup] Environment: production
+2025-07-06T10:44:40.473Z
+[Startup] PHP Version: PHP 8.2.29 (cli) (built: Jul 3 2025 23:08:09) (NTS)
+2025-07-06T10:44:40.473Z
+[Startup] Generating .env file from environment variables...
+2025-07-06T10:44:40.475Z
+[Startup] Redis configuration:
+2025-07-06T10:44:40.475Z
+REDIS_HOST=velana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com
+2025-07-06T10:44:40.475Z
+REDIS_SESSION_HOST=velana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com
+2025-07-06T10:44:40.475Z
+REDIS_HORIZON_HOST=velana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com
+2025-07-06T10:44:40.475Z
+REDIS_CACHE_HOST=velana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com
+2025-07-06T10:44:40.476Z
+[Startup] Waiting for MySQL at velana-production-minimal-db.citucm2i84vy.us-east-1.rds.amazonaws.com:3306...
+2025-07-06T10:44:40.482Z
+[Startup] MySQL is available
+2025-07-06T10:44:40.483Z
+[Startup] Waiting for Redis at velana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com:6379...
+2025-07-06T10:44:40.486Z
+[Startup] Redis is available
+2025-07-06T10:44:40.486Z
+[Startup] Waiting for PHP at 127.0.0.1:9001...
+2025-07-06T10:44:40.488Z
+[Startup] Waiting for PHP... (1/15)
+2025-07-06T10:44:41.490Z
+[Startup] Waiting for PHP... (2/15)
+2025-07-06T10:44:42.491Z
+[Startup] Waiting for PHP... (3/15)
+2025-07-06T10:44:43.493Z
+[Startup] Waiting for PHP... (4/15)
+2025-07-06T10:44:44.495Z
+[Startup] Waiting for PHP... (5/15)
+2025-07-06T10:44:45.496Z
+[Startup] Waiting for PHP... (6/15)
+2025-07-06T10:44:46.498Z
+[Startup] Waiting for PHP... (7/15)
+2025-07-06T10:44:47.499Z
+[Startup] Waiting for PHP... (8/15)
+2025-07-06T10:44:48.501Z
+[Startup] Waiting for PHP... (9/15)
+2025-07-06T10:44:49.503Z
+[Startup] Waiting for PHP... (10/15)
+2025-07-06T10:44:50.504Z
+[Startup] Waiting for PHP... (11/15)
+2025-07-06T10:44:51.506Z
+[Startup] Waiting for PHP... (12/15)
+2025-07-06T10:44:52.508Z
+[Startup] Waiting for PHP... (13/15)
+2025-07-06T10:44:53.509Z
+[Startup] Waiting for PHP... (14/15)
+2025-07-06T10:44:54.511Z
+[Startup] Waiting for PHP... (15/15)
+2025-07-06T10:44:55.512Z
+[Startup] WARNING: Could not connect to PHP, but continuing...
+2025-07-06T10:44:55.512Z
+[Startup] Clearing all caches...
+2025-07-06T10:44:56.329Z
+INFO Configuration cache cleared successfully.
+2025-07-06T10:44:57.217Z
+In AbstractConnection.php line 155:
+2025-07-06T10:44:57.217Z
+2025-07-06T10:44:57.217Z
+`AUTH` failed: ERR AUTH <password> called without any password configured f
+2025-07-06T10:44:57.217Z
+or the default user. Are you sure your configuration is correct? [tcp://vel
+2025-07-06T10:44:57.217Z
+ana-production-minimal-redis.zj9zvg.0001.use1.cache.amazonaws.com:6379]
+2025-07-06T10:44:57.217Z
+2025-07-06T10:44:58.080Z
+INFO Compiled views cleared successfully.
+2025-07-06T10:44:58.898Z
+INFO Route cache cleared successfully.
+2025-07-06T10:44:58.908Z
+[Startup] Running production optimizations...
+2025-07-06T10:44:58.908Z
+[Startup] Running database migrations...
+2025-07-06T10:44:59.794Z
+INFO Running migrations.
+2025-07-06T10:44:59.799Z
+2025_07_06_104135_create_permission_tables ........................ 4ms FAIL
+2025-07-06T10:44:59.822Z
+[2025-07-06 07:44:59] production.ERROR: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'permissions' already exists (SQL: create table `permissions` (`id` bigint unsigned not null auto_increment primary key, `name` varchar(255) not null, `guard_name` varchar(255) not null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'permissions' already exists (SQL: create table `permissions` (`id` bigint unsigned not null auto_increment primary key, `name` varchar(255) not null, `guard_name` varchar(255) not null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:760)
+2025-07-06T10:44:59.822Z
+[stacktrace]
+2025-07-06T10:44:59.822Z
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+2025-07-06T10:44:59.822Z
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+2025-07-06T10:44:59.822Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(109): Illuminate\\Database\\Connection->statement()
+2025-07-06T10:44:59.822Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(439): Illuminate\\Database\\Schema\\Blueprint->build()
+2025-07-06T10:44:59.822Z
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(281): Illuminate\\Database\\Schema\\Builder->build()
+2025-07-06T10:44:59.822Z
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(338): Illuminate\\Database\\Schema\\Builder->create()
+2025-07-06T10:44:59.822Z
+#6 /var/www/database/migrations/2025_07_06_104135_create_permission_tables.php(28): Illuminate\\Support\\Facades\\Facade::__callStatic()
+2025-07-06T10:44:59.822Z
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(496): CreatePermissionTables->up()
+2025-07-06T10:44:59.822Z
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(414): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+2025-07-06T10:44:59.822Z
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(423): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+2025-07-06T10:44:59.822Z
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(778): Illuminate\\Console\\View\\Components\\Task->render()
+2025-07-06T10:44:59.822Z
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write()
+2025-07-06T10:44:59.822Z
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp()
+2025-07-06T10:44:59.822Z
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending()
+2025-07-06T10:44:59.822Z
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate\\Database\\Migrations\\Migrator->run()
+2025-07-06T10:44:59.822Z
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(636): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(81): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+2025-07-06T10:44:59.822Z
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+2025-07-06T10:44:59.822Z
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+2025-07-06T10:44:59.822Z
+#21 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+2025-07-06T10:44:59.822Z
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+2025-07-06T10:44:59.822Z
+#23 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+2025-07-06T10:44:59.822Z
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+2025-07-06T10:44:59.822Z
+#25 /var/www/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+2025-07-06T10:44:59.822Z
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+2025-07-06T10:44:59.822Z
+#27 /var/www/vendor/symfony/console/Application.php(1078): Illuminate\\Console\\Command->run()
+2025-07-06T10:44:59.822Z
+#28 /var/www/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+2025-07-06T10:44:59.822Z
+#29 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:44:59.822Z
+#30 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:44:59.822Z
+#31 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:44:59.822Z
+#32 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:44:59.822Z
+#33 {main}
+2025-07-06T10:44:59.822Z
+[previous exception] [object] (PDOException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'permissions' already exists at /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php:545)
+2025-07-06T10:44:59.822Z
+[stacktrace]
+2025-07-06T10:44:59.822Z
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(545): PDOStatement->execute()
+2025-07-06T10:44:59.822Z
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(753): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+2025-07-06T10:44:59.822Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+2025-07-06T10:44:59.822Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+2025-07-06T10:44:59.822Z
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(109): Illuminate\\Database\\Connection->statement()
+2025-07-06T10:44:59.822Z
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(439): Illuminate\\Database\\Schema\\Blueprint->build()
+2025-07-06T10:44:59.822Z
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(281): Illuminate\\Database\\Schema\\Builder->build()
+2025-07-06T10:44:59.822Z
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(338): Illuminate\\Database\\Schema\\Builder->create()
+2025-07-06T10:44:59.822Z
+#8 /var/www/database/migrations/2025_07_06_104135_create_permission_tables.php(28): Illuminate\\Support\\Facades\\Facade::__callStatic()
+2025-07-06T10:44:59.822Z
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(496): CreatePermissionTables->up()
+2025-07-06T10:44:59.822Z
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(414): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+2025-07-06T10:44:59.822Z
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(423): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#12 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+2025-07-06T10:44:59.822Z
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#14 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(778): Illuminate\\Console\\View\\Components\\Task->render()
+2025-07-06T10:44:59.822Z
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write()
+2025-07-06T10:44:59.822Z
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp()
+2025-07-06T10:44:59.822Z
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending()
+2025-07-06T10:44:59.822Z
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate\\Database\\Migrations\\Migrator->run()
+2025-07-06T10:44:59.822Z
+#19 /var/www/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(636): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+2025-07-06T10:44:59.822Z
+#20 /var/www/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(81): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+2025-07-06T10:44:59.822Z
+#21 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+2025-07-06T10:44:59.822Z
+#22 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+2025-07-06T10:44:59.822Z
+#23 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+2025-07-06T10:44:59.822Z
+#24 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+2025-07-06T10:44:59.822Z
+#25 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+2025-07-06T10:44:59.822Z
+#26 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+2025-07-06T10:44:59.822Z
+#27 /var/www/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+2025-07-06T10:44:59.822Z
+#28 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+2025-07-06T10:44:59.822Z
+#29 /var/www/vendor/symfony/console/Application.php(1078): Illuminate\\Console\\Command->run()
+2025-07-06T10:44:59.822Z
+#30 /var/www/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+2025-07-06T10:44:59.822Z
+#31 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:44:59.822Z
+#32 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:44:59.822Z
+#33 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:44:59.822Z
+#34 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:44:59.822Z
+#35 {main}
+2025-07-06T10:44:59.822Z
+"}
+2025-07-06T10:44:59.825Z
+In Connection.php line 760:
+2025-07-06T10:44:59.825Z
+2025-07-06T10:44:59.825Z
+SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'permissions
+2025-07-06T10:44:59.825Z
+' already exists (SQL: create table `permissions` (`id` bigint unsigned not
+2025-07-06T10:44:59.826Z
+null auto_increment primary key, `name` varchar(255) not null, `guard_name
+2025-07-06T10:44:59.826Z
+` varchar(255) not null, `created_at` timestamp null, `updated_at` timestam
+2025-07-06T10:44:59.826Z
+p null) default character set utf8mb4 collate 'utf8mb4_unicode_ci')
+2025-07-06T10:44:59.826Z
+2025-07-06T10:44:59.826Z
+In Connection.php line 545:
+2025-07-06T10:44:59.826Z
+2025-07-06T10:44:59.826Z
+SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'permissions
+2025-07-06T10:44:59.826Z
+' already exists
+2025-07-06T10:44:59.826Z
+2025-07-06T10:44:59.835Z
+[Startup] WARNING: Migrations failed, but continuing...
+2025-07-06T10:44:59.835Z
+[Startup] Discovering modules...
+2025-07-06T10:45:00.708Z
+[2025-07-06 07:45:00] production.ERROR: Command "module:discover" is not defined.
+2025-07-06T10:45:00.708Z
+Did you mean one of these?
+2025-07-06T10:45:00.708Z
+model:prune
+2025-07-06T10:45:00.708Z
+model:show
+2025-07-06T10:45:00.708Z
+module:delete
+2025-07-06T10:45:00.708Z
+module:disable
+2025-07-06T10:45:00.708Z
+module:dump
+2025-07-06T10:45:00.708Z
+module:enable
+2025-07-06T10:45:00.708Z
+module:install
+2025-07-06T10:45:00.708Z
+module:list
+2025-07-06T10:45:00.708Z
+module:make
+2025-07-06T10:45:00.708Z
+module:make-command
+2025-07-06T10:45:00.708Z
+module:make-component
+2025-07-06T10:45:00.708Z
+module:make-component-view
+2025-07-06T10:45:00.708Z
+module:make-controller
+2025-07-06T10:45:00.708Z
+module:make-event
+2025-07-06T10:45:00.708Z
+module:make-factory
+2025-07-06T10:45:00.708Z
+module:make-job
+2025-07-06T10:45:00.708Z
+module:make-listener
+2025-07-06T10:45:00.708Z
+module:make-mail
+2025-07-06T10:45:00.708Z
+module:make-middleware
+2025-07-06T10:45:00.708Z
+module:make-migration
+2025-07-06T10:45:00.708Z
+module:make-model
+2025-07-06T10:45:00.708Z
+module:make-notification
+2025-07-06T10:45:00.708Z
+module:make-policy
+2025-07-06T10:45:00.708Z
+module:make-provider
+2025-07-06T10:45:00.708Z
+module:make-request
+2025-07-06T10:45:00.708Z
+module:make-resource
+2025-07-06T10:45:00.708Z
+module:make-rule
+2025-07-06T10:45:00.708Z
+module:make-seed
+2025-07-06T10:45:00.708Z
+module:make-test
+2025-07-06T10:45:00.708Z
+module:migrate
+2025-07-06T10:45:00.708Z
+module:migrate-fresh
+2025-07-06T10:45:00.708Z
+module:migrate-refresh
+2025-07-06T10:45:00.708Z
+module:migrate-reset
+2025-07-06T10:45:00.708Z
+module:migrate-rollback
+2025-07-06T10:45:00.708Z
+module:migrate-status
+2025-07-06T10:45:00.708Z
+module:model-show
+2025-07-06T10:45:00.708Z
+module:publish
+2025-07-06T10:45:00.708Z
+module:publish-config
+2025-07-06T10:45:00.708Z
+module:publish-migration
+2025-07-06T10:45:00.708Z
+module:publish-translation
+2025-07-06T10:45:00.708Z
+module:route-provider
+2025-07-06T10:45:00.708Z
+module:seed
+2025-07-06T10:45:00.708Z
+module:setup
+2025-07-06T10:45:00.708Z
+module:unuse
+2025-07-06T10:45:00.708Z
+module:update
+2025-07-06T10:45:00.708Z
+module:use
+2025-07-06T10:45:00.708Z
+module:v6:migrate
+2025-07-06T10:45:00.708Z
+package:discover {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"module:discover\" is not defined.
+2025-07-06T10:45:00.708Z
+Did you mean one of these?
+2025-07-06T10:45:00.708Z
+model:prune
+2025-07-06T10:45:00.708Z
+model:show
+2025-07-06T10:45:00.708Z
+module:delete
+2025-07-06T10:45:00.708Z
+module:disable
+2025-07-06T10:45:00.708Z
+module:dump
+2025-07-06T10:45:00.708Z
+module:enable
+2025-07-06T10:45:00.708Z
+module:install
+2025-07-06T10:45:00.708Z
+module:list
+2025-07-06T10:45:00.708Z
+module:make
+2025-07-06T10:45:00.708Z
+module:make-command
+2025-07-06T10:45:00.708Z
+module:make-component
+2025-07-06T10:45:00.708Z
+module:make-component-view
+2025-07-06T10:45:00.708Z
+module:make-controller
+2025-07-06T10:45:00.708Z
+module:make-event
+2025-07-06T10:45:00.708Z
+module:make-factory
+2025-07-06T10:45:00.708Z
+module:make-job
+2025-07-06T10:45:00.708Z
+module:make-listener
+2025-07-06T10:45:00.708Z
+module:make-mail
+2025-07-06T10:45:00.708Z
+module:make-middleware
+2025-07-06T10:45:00.708Z
+module:make-migration
+2025-07-06T10:45:00.708Z
+module:make-model
+2025-07-06T10:45:00.708Z
+module:make-notification
+2025-07-06T10:45:00.708Z
+module:make-policy
+2025-07-06T10:45:00.708Z
+module:make-provider
+2025-07-06T10:45:00.708Z
+module:make-request
+2025-07-06T10:45:00.708Z
+module:make-resource
+2025-07-06T10:45:00.708Z
+module:make-rule
+2025-07-06T10:45:00.708Z
+module:make-seed
+2025-07-06T10:45:00.708Z
+module:make-test
+2025-07-06T10:45:00.708Z
+module:migrate
+2025-07-06T10:45:00.708Z
+module:migrate-fresh
+2025-07-06T10:45:00.708Z
+module:migrate-refresh
+2025-07-06T10:45:00.708Z
+module:migrate-reset
+2025-07-06T10:45:00.708Z
+module:migrate-rollback
+2025-07-06T10:45:00.708Z
+module:migrate-status
+2025-07-06T10:45:00.708Z
+module:model-show
+2025-07-06T10:45:00.708Z
+module:publish
+2025-07-06T10:45:00.708Z
+module:publish-config
+2025-07-06T10:45:00.708Z
+module:publish-migration
+2025-07-06T10:45:00.708Z
+module:publish-translation
+2025-07-06T10:45:00.708Z
+module:route-provider
+2025-07-06T10:45:00.708Z
+module:seed
+2025-07-06T10:45:00.708Z
+module:setup
+2025-07-06T10:45:00.708Z
+module:unuse
+2025-07-06T10:45:00.708Z
+module:update
+2025-07-06T10:45:00.708Z
+module:use
+2025-07-06T10:45:00.708Z
+module:v6:migrate
+2025-07-06T10:45:00.708Z
+package:discover at /var/www/vendor/symfony/console/Application.php:737)
+2025-07-06T10:45:00.708Z
+[stacktrace]
+2025-07-06T10:45:00.708Z
+#0 /var/www/vendor/symfony/console/Application.php(266): Symfony\\Component\\Console\\Application->find()
+2025-07-06T10:45:00.708Z
+#1 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:45:00.708Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:45:00.708Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:45:00.708Z
+#4 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:45:00.708Z
+#5 {main}
+2025-07-06T10:45:00.708Z
+"}
+2025-07-06T10:45:00.713Z
+ERROR Command "module:discover" is not defined. Did you mean one of these?
+2025-07-06T10:45:00.716Z
+⇂ model:prune
+2025-07-06T10:45:00.716Z
+⇂ model:show
+2025-07-06T10:45:00.716Z
+⇂ module:delete
+2025-07-06T10:45:00.716Z
+⇂ module:disable
+2025-07-06T10:45:00.716Z
+⇂ module:dump
+2025-07-06T10:45:00.716Z
+⇂ module:enable
+2025-07-06T10:45:00.716Z
+⇂ module:install
+2025-07-06T10:45:00.716Z
+⇂ module:list
+2025-07-06T10:45:00.716Z
+⇂ module:make
+2025-07-06T10:45:00.716Z
+⇂ module:make-command
+2025-07-06T10:45:00.716Z
+⇂ module:make-component
+2025-07-06T10:45:00.716Z
+⇂ module:make-component-view
+2025-07-06T10:45:00.716Z
+⇂ module:make-controller
+2025-07-06T10:45:00.716Z
+⇂ module:make-event
+2025-07-06T10:45:00.716Z
+⇂ module:make-factory
+2025-07-06T10:45:00.716Z
+⇂ module:make-job
+2025-07-06T10:45:00.716Z
+⇂ module:make-listener
+2025-07-06T10:45:00.716Z
+⇂ module:make-mail
+2025-07-06T10:45:00.716Z
+⇂ module:make-middleware
+2025-07-06T10:45:00.716Z
+⇂ module:make-migration
+2025-07-06T10:45:00.716Z
+⇂ module:make-model
+2025-07-06T10:45:00.716Z
+⇂ module:make-notification
+2025-07-06T10:45:00.716Z
+⇂ module:make-policy
+2025-07-06T10:45:00.716Z
+⇂ module:make-provider
+2025-07-06T10:45:00.716Z
+⇂ module:make-request
+2025-07-06T10:45:00.716Z
+⇂ module:make-resource
+2025-07-06T10:45:00.716Z
+⇂ module:make-rule
+2025-07-06T10:45:00.716Z
+⇂ module:make-seed
+2025-07-06T10:45:00.716Z
+⇂ module:make-test
+2025-07-06T10:45:00.716Z
+⇂ module:migrate
+2025-07-06T10:45:00.716Z
+⇂ module:migrate-fresh
+2025-07-06T10:45:00.716Z
+⇂ module:migrate-refresh
+2025-07-06T10:45:00.716Z
+⇂ module:migrate-reset
+2025-07-06T10:45:00.716Z
+⇂ module:migrate-rollback
+2025-07-06T10:45:00.716Z
+⇂ module:migrate-status
+2025-07-06T10:45:00.716Z
+⇂ module:model-show
+2025-07-06T10:45:00.716Z
+⇂ module:publish
+2025-07-06T10:45:00.716Z
+⇂ module:publish-config
+2025-07-06T10:45:00.716Z
+⇂ module:publish-migration
+2025-07-06T10:45:00.716Z
+⇂ module:publish-translation
+2025-07-06T10:45:00.716Z
+⇂ module:route-provider
+2025-07-06T10:45:00.716Z
+⇂ module:seed
+2025-07-06T10:45:00.716Z
+⇂ module:setup
+2025-07-06T10:45:00.716Z
+⇂ module:unuse
+2025-07-06T10:45:00.716Z
+⇂ module:update
+2025-07-06T10:45:00.716Z
+⇂ module:use
+2025-07-06T10:45:00.716Z
+⇂ module:v6:migrate
+2025-07-06T10:45:00.716Z
+⇂ package:discover
+2025-07-06T10:45:00.723Z
+[Startup] Module discovery completed
+2025-07-06T10:45:00.723Z
+[Startup] Clearing config cache before optimization...
+2025-07-06T10:45:01.614Z
+INFO Configuration cache cleared successfully.
+2025-07-06T10:45:01.625Z
+[Startup] Caching configuration...
+2025-07-06T10:45:02.622Z
+INFO Configuration cached successfully.
+2025-07-06T10:45:03.619Z
+[2025-07-06 07:45:03] production.ERROR: Unable to prepare route [notazz/requisicao] for serialization. Another route has already been assigned name [requisicao]. {"exception":"[object] (LogicException(code: 0): Unable to prepare route [notazz/requisicao] for serialization. Another route has already been assigned name [requisicao]. at /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php:247)
+2025-07-06T10:45:03.619Z
+[stacktrace]
+2025-07-06T10:45:03.619Z
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(208): Illuminate\\Routing\\AbstractRouteCollection->addToSymfonyRoutesCollection()
+2025-07-06T10:45:03.619Z
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Routing/RouteCollection.php(246): Illuminate\\Routing\\AbstractRouteCollection->toSymfonyRouteCollection()
+2025-07-06T10:45:03.619Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(192): Illuminate\\Routing\\RouteCollection->toSymfonyRouteCollection()
+2025-07-06T10:45:03.619Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(163): Illuminate\\Routing\\AbstractRouteCollection->dumper()
+2025-07-06T10:45:03.619Z
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteCacheCommand.php(120): Illuminate\\Routing\\AbstractRouteCollection->compile()
+2025-07-06T10:45:03.619Z
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteCacheCommand.php(79): Illuminate\\Foundation\\Console\\RouteCacheCommand->buildRouteCacheFile()
+2025-07-06T10:45:03.619Z
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\RouteCacheCommand->handle()
+2025-07-06T10:45:03.619Z
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+2025-07-06T10:45:03.619Z
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+2025-07-06T10:45:03.619Z
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+2025-07-06T10:45:03.619Z
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+2025-07-06T10:45:03.619Z
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+2025-07-06T10:45:03.619Z
+#12 /var/www/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+2025-07-06T10:45:03.619Z
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+2025-07-06T10:45:03.619Z
+#14 /var/www/vendor/symfony/console/Application.php(1078): Illuminate\\Console\\Command->run()
+2025-07-06T10:45:03.619Z
+#15 /var/www/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+2025-07-06T10:45:03.619Z
+#16 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:45:03.619Z
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:45:03.619Z
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:45:03.619Z
+#19 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:45:03.619Z
+#20 {main}
+2025-07-06T10:45:03.619Z
+"}
+2025-07-06T10:45:03.622Z
+In AbstractRouteCollection.php line 247:
+2025-07-06T10:45:03.622Z
+2025-07-06T10:45:03.622Z
+Unable to prepare route [notazz/requisicao] for serialization. Another rout
+2025-07-06T10:45:03.622Z
+e has already been assigned name [requisicao].
+2025-07-06T10:45:03.622Z
+2025-07-06T10:45:03.679Z
+[Production-Minimal] Clearing caches...
+2025-07-06T10:45:04.424Z
+INFO Configuration cache cleared successfully.
+2025-07-06T10:45:05.301Z
+INFO Route cache cleared successfully.
+2025-07-06T10:45:06.123Z
+INFO Compiled views cleared successfully.
+2025-07-06T10:45:06.182Z
+[Production-Minimal] Caching configuration...
+2025-07-06T10:45:07.129Z
+INFO Configuration cached successfully.
+2025-07-06T10:45:08.186Z
+[2025-07-06 07:45:08] production.ERROR: Unable to prepare route [notazz/requisicao] for serialization. Another route has already been assigned name [requisicao]. {"exception":"[object] (LogicException(code: 0): Unable to prepare route [notazz/requisicao] for serialization. Another route has already been assigned name [requisicao]. at /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php:247)
+2025-07-06T10:45:08.186Z
+[stacktrace]
+2025-07-06T10:45:08.186Z
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(208): Illuminate\\Routing\\AbstractRouteCollection->addToSymfonyRoutesCollection()
+2025-07-06T10:45:08.186Z
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Routing/RouteCollection.php(246): Illuminate\\Routing\\AbstractRouteCollection->toSymfonyRouteCollection()
+2025-07-06T10:45:08.186Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(192): Illuminate\\Routing\\RouteCollection->toSymfonyRouteCollection()
+2025-07-06T10:45:08.186Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(163): Illuminate\\Routing\\AbstractRouteCollection->dumper()
+2025-07-06T10:45:08.186Z
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteCacheCommand.php(120): Illuminate\\Routing\\AbstractRouteCollection->compile()
+2025-07-06T10:45:08.186Z
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteCacheCommand.php(79): Illuminate\\Foundation\\Console\\RouteCacheCommand->buildRouteCacheFile()
+2025-07-06T10:45:08.186Z
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\RouteCacheCommand->handle()
+2025-07-06T10:45:08.186Z
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+2025-07-06T10:45:08.186Z
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+2025-07-06T10:45:08.186Z
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+2025-07-06T10:45:08.186Z
+#10 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+2025-07-06T10:45:08.186Z
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+2025-07-06T10:45:08.186Z
+#12 /var/www/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+2025-07-06T10:45:08.186Z
+#13 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+2025-07-06T10:45:08.186Z
+#14 /var/www/vendor/symfony/console/Application.php(1078): Illuminate\\Console\\Command->run()
+2025-07-06T10:45:08.186Z
+#15 /var/www/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+2025-07-06T10:45:08.186Z
+#16 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:45:08.186Z
+#17 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:45:08.186Z
+#18 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:45:08.186Z
+#19 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:45:08.186Z
+#20 {main}
+2025-07-06T10:45:08.186Z
+"}
+2025-07-06T10:45:08.190Z
+In AbstractRouteCollection.php line 247:
+2025-07-06T10:45:08.190Z
+2025-07-06T10:45:08.190Z
+Unable to prepare route [notazz/requisicao] for serialization. Another rout
+2025-07-06T10:45:08.190Z
+e has already been assigned name [requisicao].
+2025-07-06T10:45:08.190Z
+2025-07-06T10:45:09.707Z
+[2025-07-06 07:45:09] production.ERROR: The "/var/www/Modules/Core/Providers/../Resources/views" directory does not exist. {"exception":"[object] (Symfony\\Component\\Finder\\Exception\\DirectoryNotFoundException(code: 0): The \"/var/www/Modules/Core/Providers/../Resources/views\" directory does not exist. at /var/www/vendor/symfony/finder/Finder.php:649)
+2025-07-06T10:45:09.707Z
+[stacktrace]
+2025-07-06T10:45:09.707Z
+#0 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/ViewCacheCommand.php(93): Symfony\\Component\\Finder\\Finder->in()
+2025-07-06T10:45:09.707Z
+#1 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/ViewCacheCommand.php(54): Illuminate\\Foundation\\Console\\ViewCacheCommand->bladeFilesIn()
+2025-07-06T10:45:09.707Z
+#2 /var/www/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(235): Illuminate\\Foundation\\Console\\ViewCacheCommand->Illuminate\\Foundation\\Console\\{closure}()
+2025-07-06T10:45:09.707Z
+#3 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/ViewCacheCommand.php(49): Illuminate\\Support\\Collection->each()
+2025-07-06T10:45:09.707Z
+#4 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\ViewCacheCommand->handle()
+2025-07-06T10:45:09.707Z
+#5 /var/www/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+2025-07-06T10:45:09.707Z
+#6 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+2025-07-06T10:45:09.707Z
+#7 /var/www/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+2025-07-06T10:45:09.707Z
+#8 /var/www/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+2025-07-06T10:45:09.707Z
+#9 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+2025-07-06T10:45:09.707Z
+#10 /var/www/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+2025-07-06T10:45:09.707Z
+#11 /var/www/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+2025-07-06T10:45:09.707Z
+#12 /var/www/vendor/symfony/console/Application.php(1078): Illuminate\\Console\\Command->run()
+2025-07-06T10:45:09.707Z
+#13 /var/www/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+2025-07-06T10:45:09.707Z
+#14 /var/www/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+2025-07-06T10:45:09.707Z
+#15 /var/www/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+2025-07-06T10:45:09.707Z
+#16 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+2025-07-06T10:45:09.707Z
+#17 /var/www/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+2025-07-06T10:45:09.707Z
+#18 {main}
+2025-07-06T10:45:09.707Z
+"}
+2025-07-06T10:45:09.711Z
+In Finder.php line 649:
+2025-07-06T10:45:09.711Z
+2025-07-06T10:45:09.711Z
+The "/var/www/Modules/Core/Providers/../Resources/views" directory does not
+2025-07-06T10:45:09.711Z
+exist.
+2025-07-06T10:45:09.711Z
+2025-07-06T10:45:09.718Z
+[Production-Minimal] Starting PHP-FPM...
+2025-07-06T10:45:09.839Z
+[06-Jul-2025 10:45:09] NOTICE: fpm is running, pid 1
+2025-07-06T10:45:09.840Z
+[06-Jul-2025 10:45:09] NOTICE: ready to handle connections

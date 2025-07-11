@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             CheckAccountStatusWeb::class,
             VerifyFrozenAccountWeb::class,
+            \App\Http\Middleware\WhitelabelMiddleware::class,
         ],
 
         "api" => ["throttle:500,1", "bindings", CheckAccountStatusApi::class, VerifyFrozenAccountApi::class],

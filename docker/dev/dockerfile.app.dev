@@ -1,0 +1,35 @@
+# Simple development Dockerfile for PayHero
+FROM thecodingmachine/php:8.2-v4-fpm
+
+# Install additional PHP extensions
+# Note: pcntl is not available in thecodingmachine/php, but posix is available as an alternative
+ENV PHP_EXTENSIONS="bcmath pdo_mysql mysqli mbstring exif posix gd zip opcache intl redis"
+
+# Install Node.js, npm, and required system packages
+USER root
+RUN apt-get update && apt-get install -y \
+    nodejs \
+    npm \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Enable PHP extensions that need manual enabling
+RUN phpenmod pdo_mysql mysqli mysqlnd
+
+# Set working directory
+WORKDIR /var/www
+
+# Fix git safe directory issue
+RUN git config --global --add safe.directory /var/www
+
+# Set correct permissions for the docker user
+RUN chown -R docker:docker /var/www
+
+# Switch back to docker user
+USER docker
+
+# The app code will be mounted as a volume

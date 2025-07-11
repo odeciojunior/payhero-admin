@@ -172,6 +172,7 @@ return [
 
         Barryvdh\DomPDF\ServiceProvider::class,
         App\Providers\HealthServiceProvider::class,
+        App\Providers\WhitelabelServiceProvider::class,
     ],
 
     /*
@@ -226,7 +227,8 @@ return [
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'GeoIP'        => \Torann\GeoIP\Facades\GeoIP::class,
         'PDF'          => Barryvdh\DomPDF\Facade::class,
-        'Melhorenvio' => \Modules\Melhorenvio\Facades\MelhorenvioFacade::class
+        'Melhorenvio' => \Modules\Melhorenvio\Facades\MelhorenvioFacade::class,
+        'Whitelabel'   => App\Facades\Whitelabel::class,
     ],
 
 ];

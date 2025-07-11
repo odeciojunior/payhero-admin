@@ -10,6 +10,13 @@ Route::get("/up", function () {
     return "System is up";
 });
 
+// Whitelabel routes
+Route::get('/whitelabel/css', '\App\Http\Controllers\WhitelabelController@css')
+    ->name('whitelabel.css');
+Route::post('/whitelabel/clear-cache', '\App\Http\Controllers\WhitelabelController@clearCache')
+    ->name('whitelabel.clear-cache')
+    ->middleware('auth');
+
 Route::get("/account-validation/{user_id}", function () {
     return view("idwall.face-id")->with("user_id", request()->user_id);
 });
