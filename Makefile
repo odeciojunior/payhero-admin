@@ -125,7 +125,7 @@ dev-setup:
 
 # Service access
 dev-bash:
-	docker compose -f docker-compose.payhero-dev.yml exec app bash
+	docker compose -f docker-compose.payhero-dev.yml exec app sh
 
 dev-mysql:
 	docker compose -f docker-compose.payhero-dev.yml exec mysql bash
