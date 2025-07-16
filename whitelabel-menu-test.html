@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitelabel Menu Test</title>
+    <style>
+        /* PayHero Theme */
+        :root {
+            --primary: #FF5733;
+            --menu-bg: #FF5733;
+        }
+        
+        /* Base styles */
+        .bg-menu {
+            padding: 0 10px 0 15px;
+        }
+        
+        .menu-active > .bg-menu {
+            background: var(--menu-bg, var(--primary, #00b7ff));
+            border-radius: 0 44px 44px 0;
+            display: inline-block;
+            color: white;
+            padding: 10px 20px;
+        }
+        
+        .site-menu-item {
+            margin: 10px 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Whitelabel Menu Background Test</h1>
+    
+    <h2>PayHero Theme (Orange Primary: #FF5733)</h2>
+    <div class="site-menu-item menu-active">
+        <a href="#">
+            <span class="bg-menu">Sales Dashboard</span>
+        </a>
+    </div>
+    
+    <hr>
+    
+    <h2>Velana Theme (Green Primary: #3baa1a)</h2>
+    <style>
+        .velana-theme {
+            --primary: #3baa1a;
+            --menu-bg: #3baa1a;
+        }
+    </style>
+    <div class="site-menu-item menu-active velana-theme">
+        <a href="#">
+            <span class="bg-menu">Sales Dashboard</span>
+        </a>
+    </div>
+    
+    <p><strong>Changes Made:</strong></p>
+    <ul>
+        <li>Updated <code>config/whitelabel.php</code> to include <code>menu-bg</code> color for both PayHero and Velana clients</li>
+        <li>Modified <code>WhitelabelController.php</code> to generate CSS using <code>var(--menu-bg, var(--primary))</code></li>
+        <li>Updated <code>resources/modules/global/css/global.css</code> to use the same CSS variable approach</li>
+        <li>The <code>.bg-menu</code> class now dynamically uses the whitelabel primary color</li>
+    </ul>
+</body>
+</html>

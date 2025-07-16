@@ -146,7 +146,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
         App\Providers\RouteMacroServiceProvider::class,
 
         /*
@@ -224,7 +223,6 @@ return [
         'Image'        => Intervention\Image\Facades\Image::class,
         'Javascript'   => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         'Hashids'      => Vinkla\Hashids\Facades\Hashids::class,
-        'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'GeoIP'        => \Torann\GeoIP\Facades\GeoIP::class,
         'PDF'          => Barryvdh\DomPDF\Facade::class,
         'Melhorenvio' => \Modules\Melhorenvio\Facades\MelhorenvioFacade::class,

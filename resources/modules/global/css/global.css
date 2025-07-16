@@ -21,7 +21,7 @@ body {
 }
 
 .menu-active > .bg-menu {
-    background: #00b7ff;
+    background: var(--menu-bg, var(--primary, #00b7ff));
     border-radius: 0 44px 44px 0;
     display: inline-block;
 }
@@ -2632,7 +2632,7 @@ tbody td {
 }
 
 .alert-pendings-box-2 {
-    background-color: #2e85ec;
+    background-color: var(--primary, #2e85ec);
     color: white;
     border-radius: 4px;
     padding: 6px 10px;
@@ -3367,11 +3367,11 @@ tbody td {
     font-size: 16px;
 } */
 
-.cloudfox-logo-desktop {
+.brand-logo-desktop {
     display: flex;
 }
 
-.cloudfox-logo-mobile {
+.brand-logo-mobile {
     display: none;
     /* background-color: #fff; */
 }

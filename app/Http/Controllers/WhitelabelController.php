@@ -384,6 +384,27 @@ a:hover {
     scrollbar-width: thin;
     scrollbar-color: var(--gray-400) var(--gray-100);
 }
+
+/* Menu items */
+.bg-menu {
+    padding: 0 10px 0 15px;
+}
+
+.menu-active > .bg-menu {
+    background: var(--menu-bg, var(--primary));
+    border-radius: 0 44px 44px 0;
+    display: inline-block;
+}
+
+/* Alert pendings */
+.alert-pendings-box-2 {
+    background-color: var(--primary);
+    color: white;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 15px;
+    margin: auto;
+}
 CSS;
     }
     

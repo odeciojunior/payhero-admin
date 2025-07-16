@@ -1,0 +1,18 @@
+# Dockerfile to fix identified issues in the admin application
+FROM 983877353757.dkr.ecr.us-east-1.amazonaws.com/velana-production-minimal-admin-app:v1.0.3
+
+# Create missing directory for postback module views
+RUN mkdir -p /var/www/resources/views/modules/postback
+
+# Copy and run the route fix script
+COPY fix-routes.php /tmp/fix-routes.php
+RUN php /tmp/fix-routes.php
+
+# Clean up temporary files
+RUN rm /tmp/fix-routes.php
+
+# Ensure proper permissions
+RUN chown -R www-data:www-data /var/www/resources/views/modules/postback
+
+LABEL version="v1.0.4"
+LABEL description="Fixed version with route conflicts resolved and missing directories created"

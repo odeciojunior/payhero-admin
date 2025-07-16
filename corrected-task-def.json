@@ -1,0 +1,83 @@
+{
+    "family": "velana-production-minimal-admin-task",
+    "taskRoleArn": "arn:aws:iam::983877353757:role/velana-production-minimal-admin-task-role",
+    "executionRoleArn": "arn:aws:iam::983877353757:role/velana-production-minimal-admin-execution-role",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "2048",
+    "memory": "4096",
+    "containerDefinitions": [
+        {
+            "name": "admin-app",
+            "image": "983877353757.dkr.ecr.us-east-1.amazonaws.com/velana-production-minimal-admin-app:v1.0.3",
+            "cpu": 1536,
+            "memory": 3072,
+            "essential": true,
+            "portMappings": [
+                {"containerPort": 9000, "protocol": "tcp"},
+                {"containerPort": 9001, "protocol": "tcp"}
+            ],
+            "environment": [
+                {"name": "APP_ENV", "value": "production"},
+                {"name": "MODULE_NAME", "value": "admin"},
+                {"name": "ENVIRONMENT", "value": "production-minimal"}
+            ],
+            "secrets": [
+                {"name": "APP_KEY", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/APP_KEY"},
+                {"name": "DB_HOST", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/DB_HOST"},
+                {"name": "DB_DATABASE", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/DB_DATABASE"},
+                {"name": "DB_USERNAME", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/DB_USERNAME"},
+                {"name": "DB_PASSWORD", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/DB_PASSWORD"},
+                {"name": "REDIS_HOST", "valueFrom": "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/REDIS_HOST"}
+            ],
+            "healthCheck": {
+                "command": ["CMD-SHELL", "curl -f http://localhost:9001/health || exit 1"],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 120
+            },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/velana-production-minimal-admin",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        },
+        {
+            "name": "admin-nginx",
+            "image": "983877353757.dkr.ecr.us-east-1.amazonaws.com/velana-production-minimal-admin-nginx:v1.0.3",
+            "cpu": 512,
+            "memory": 1024,
+            "essential": true,
+            "portMappings": [
+                {"containerPort": 80, "protocol": "tcp"}
+            ],
+            "dependsOn": [
+                {"containerName": "admin-app", "condition": "HEALTHY"}
+            ],
+            "environment": [
+                {"name": "FPM_HOST", "value": "127.0.0.1"},
+                {"name": "FPM_PORT", "value": "9000"},
+                {"name": "MODULE_NAME", "value": "admin"}
+            ],
+            "healthCheck": {
+                "command": ["CMD-SHELL", "curl -f http://localhost/admin-health || exit 1"],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 10
+            },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/velana-production-minimal-admin",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ]
+}

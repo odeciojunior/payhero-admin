@@ -224,6 +224,10 @@ if [ "$APP_ENV" = "production-minimal" ] || [ "$APP_ENV" = "production" ]; then
     echo "[Startup] Discovering modules..."
     # Enable all modules without checking status
     php artisan module:enable 2>/dev/null || true
+    # Publish module configurations and assets
+    php artisan module:publish 2>/dev/null || true
+    php artisan module:publish-config 2>/dev/null || true
+    php artisan module:publish-translation 2>/dev/null || true
     echo "[Startup] Module discovery completed"
     
     # Clear config cache before recaching to ensure fresh config

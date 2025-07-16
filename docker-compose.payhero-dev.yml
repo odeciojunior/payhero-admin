@@ -10,10 +10,8 @@ services:
       - ./:/var/www
     networks:
       - payhero_network
-    depends_on:
-      - mysql
-      - redis
     environment:
+      - PROJECT_NAME=velana
       - APP_NAME=$APP_NAME
       - APP_ENV=$APP_ENV
       - APP_KEY=$APP_KEY
@@ -29,22 +27,17 @@ services:
       - DB_USERNAME=$DB_USERNAME
       - DB_PASSWORD=$DB_PASSWORD
       - REDIS_HOST=$REDIS_HOST
-      - REDIS_PASSWORD=$REDIS_PASSWORD
       - REDIS_PORT=$REDIS_PORT
       - REDIS_SESSION_HOST=$REDIS_SESSION_HOST
-      - REDIS_SESSION_PASSWORD=$REDIS_SESSION_PASSWORD
       - REDIS_SESSION_PORT=$REDIS_SESSION_PORT
       - REDIS_SESSION_DB=$REDIS_SESSION_DB
       - REDIS_HORIZON_HOST=$REDIS_HORIZON_HOST
-      - REDIS_HORIZON_PASSWORD=$REDIS_HORIZON_PASSWORD
       - REDIS_HORIZON_PORT=$REDIS_HORIZON_PORT
       - REDIS_HORIZON_DB=$REDIS_HORIZON_DB
       - REDIS_STATEMENT_HOST=$REDIS_STATEMENT_HOST
-      - REDIS_STATEMENT_PASSWORD=$REDIS_STATEMENT_PASSWORD
       - REDIS_STATEMENT_PORT=$REDIS_STATEMENT_PORT
       - REDIS_STATEMENT_DB=$REDIS_STATEMENT_DB
       - REDIS_CACHE_HOST=$REDIS_CACHE_HOST
-      - REDIS_CACHE_PASSWORD=$REDIS_CACHE_PASSWORD
       - REDIS_CACHE_PORT=$REDIS_CACHE_PORT
       - REDIS_CACHE_DB=$REDIS_CACHE_DB
       - QUEUE_CONNECTION=$QUEUE_CONNECTION
@@ -82,61 +75,22 @@ services:
     depends_on:
       - app
 
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./docker/dev/config/mysql/init:/docker-entrypoint-initdb.d
-    networks:
-      - payhero_network
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootsecret}
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: redis
     restart: unless-stopped
     ports:
-      - "6380:6379"
+      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
       - payhero_network
-    environment:
-      - APP_NAME=$APP_NAME
-      - REDIS_HOST=$REDIS_HOST
-      - REDIS_PASSWORD=$REDIS_PASSWORD
-      - REDIS_PORT=$REDIS_PORT
-      - REDIS_SESSION_HOST=$REDIS_SESSION_HOST
-      - REDIS_SESSION_PASSWORD=$REDIS_SESSION_PASSWORD
-      - REDIS_SESSION_PORT=$REDIS_SESSION_PORT
-      - REDIS_SESSION_DB=$REDIS_SESSION_DB
-      - REDIS_HORIZON_HOST=$REDIS_HORIZON_HOST
-      - REDIS_HORIZON_PASSWORD=$REDIS_HORIZON_PASSWORD
-      - REDIS_HORIZON_PORT=$REDIS_HORIZON_PORT
-      - REDIS_HORIZON_DB=$REDIS_HORIZON_DB
-      - REDIS_STATEMENT_HOST=$REDIS_STATEMENT_HOST
-      - REDIS_STATEMENT_PASSWORD=$REDIS_STATEMENT_PASSWORD
-      - REDIS_STATEMENT_PORT=$REDIS_STATEMENT_PORT
-      - REDIS_STATEMENT_DB=$REDIS_STATEMENT_DB
-      - REDIS_CACHE_HOST=$REDIS_CACHE_HOST
-      - REDIS_CACHE_PASSWORD=$REDIS_CACHE_PASSWORD
-      - REDIS_CACHE_PORT=$REDIS_CACHE_PORT
-      - REDIS_CACHE_DB=$REDIS_CACHE_DB
-      - CACHE_DRIVER=$CACHE_DRIVER
-      - SESSION_DRIVER=$SESSION_DRIVER
-      - SESSION_LIFETIME=$SESSION_LIFETIME
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
 
 networks:
   payhero_network:
     driver: bridge
+    external: true
 
 volumes:
   mysql_data:

@@ -423,4 +423,44 @@ a:hover {
         }
         return false;
     }
+
+    /**
+     * Validate client configuration
+     */
+    public function validateClientConfig($client = null)
+    {
+        $client = $client ?? $this->currentClient;
+        $config = $this->config['clients'][$client] ?? [];
+        
+        $required = ['name', 'colors', 'fonts', 'logo'];
+        $missing = [];
+        
+        foreach ($required as $key) {
+            if (!isset($config[$key])) {
+                $missing[] = $key;
+            }
+        }
+        
+        return [
+            'valid' => empty($missing),
+            'missing' => $missing,
+            'client' => $client,
+        ];
+    }
+
+    /**
+     * Get all available clients
+     */
+    public function getAvailableClients()
+    {
+        return array_keys($this->config['clients'] ?? []);
+    }
+
+    /**
+     * Check if client exists
+     */
+    public function clientExists($client)
+    {
+        return isset($this->config['clients'][$client]);
+    }
 }

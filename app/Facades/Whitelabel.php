@@ -15,9 +15,15 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getAppName()
  * @method static string getFooterText()
  * @method static string getFavicon()
+ * @method static string generateCssVariables()
+ * @method static string generateFontCss()
+ * @method static string generateTypographyCss()
  * @method static string generateStyles()
  * @method static void clearCache()
  * @method static bool setClient(string $client)
+ * @method static array validateClientConfig(string $client = null)
+ * @method static array getAvailableClients()
+ * @method static bool clientExists(string $client)
  * 
  * @see \App\Services\WhitelabelService
  */

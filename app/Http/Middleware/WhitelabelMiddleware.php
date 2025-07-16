@@ -29,7 +29,18 @@ class WhitelabelMiddleware
         view()->share('whitelabel', app('whitelabel'));
         view()->share('whitelabelClient', Whitelabel::getCurrentClient());
         view()->share('whitelabelConfig', Whitelabel::getCurrentClientConfig());
+        
+        // Add whitelabel CSS link to response headers for better performance
+        $response = $next($request);
+        
+        // Only add CSS link for HTML responses
+        if ($response->headers->get('Content-Type') && 
+            str_contains($response->headers->get('Content-Type'), 'text/html')) {
+            
+            $cssUrl = route('whitelabel.css');
+            $response->headers->set('Link', "<{$cssUrl}>; rel=preload; as=style", false);
+        }
 
-        return $next($request);
+        return $response;
     }
 }

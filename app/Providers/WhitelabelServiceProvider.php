@@ -76,7 +76,7 @@ class WhitelabelServiceProvider extends ServiceProvider
 
         // @whitelabelFont('type')
         Blade::directive('whitelabelFont', function ($expression) {
-            return "<?php echo app('whitelabel')->getFont($expression); ?>";
+            return "<?php echo json_encode(app('whitelabel')->getFont($expression)); ?>";
         });
 
         // @whitelabelClient

@@ -10,26 +10,29 @@
         <span class="hamburger-bar"></span>
     </button>
 
-    <!-- Azcend LOGO -->
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-desktop site-menubar"
+    <!-- Brand LOGO -->
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle brand-logo-desktop site-menubar"
          data-toggle="gridmenu"
          style="background-color: #191919; overflow: hidden; top:0px; box-shadow:none;">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
-             src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}"
+             src="@whitelabelLogo('icon')"
+             alt="@whitelabel('name')"
              style="height: 1.8rem;">
         <img id="logoSirius"
              class="navbar-brand-logo d-none logo-sirius"
-             src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}"
+             src="@whitelabelLogo('main')"
+             alt="@whitelabel('name')"
              height="26"
              style="margin: 0px 2rem 0px 1rem;">
     </div>
 
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle cloudfox-logo-mobile"
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle brand-logo-mobile"
          data-toggle="gridmenu">
         <img id="logoIconSirius"
              class="navbar-brand-logo"
-             src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}"
+             src="@whitelabelLogo('icon')"
+             alt="@whitelabel('name')"
              style="height:  2.7rem;">
     </div>
 

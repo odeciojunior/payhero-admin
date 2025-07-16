@@ -74,6 +74,12 @@ FROM base AS production-minimal
 # Copy vendor directory
 COPY --from=composer-build /app/vendor ./vendor
 
+# Generate module autoload files
+RUN cd /var/www && composer dump-autoload --no-dev --optimize || true
+
+# Discover and publish module assets
+RUN cd /var/www && php artisan module:discover || true
+
 # Copy helper scripts (without EFS scripts)
 COPY docker/production-minimal/startup.sh /usr/local/bin/startup.sh
 COPY docker/production-minimal/entrypoint-minimal.sh /usr/local/bin/entrypoint-minimal.sh

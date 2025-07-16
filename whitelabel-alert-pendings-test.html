@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitelabel Alert Pendings Test</title>
+    <style>
+        /* PayHero Theme */
+        .payhero-theme {
+            --primary: #FF5733;
+        }
+        
+        /* Velana Theme */
+        .velana-theme {
+            --primary: #3baa1a;
+        }
+        
+        /* Default theme */
+        :root {
+            --primary: #2e85ec;
+        }
+        
+        /* Alert pendings styles */
+        .alert-pendings {
+            background-color: #f7f8fb;
+            border: 1px #e7eaee solid;
+            border-radius: 6px;
+            padding: 2px;
+            font-family: Inter;
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            width: 300px;
+        }
+        
+        .alert-pendings-box-1 {
+            color: #222;
+            padding-top: 4px;
+            padding-right: 6px;
+            font-size: 15px;
+        }
+        
+        .alert-pendings-box-2 {
+            background-color: var(--primary, #2e85ec);
+            color: white;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 15px;
+            margin: auto;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .theme-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Whitelabel Alert Pendings Test</h1>
+    
+    <div class="theme-section">
+        <h2>Default Theme (Blue: #2e85ec)</h2>
+        <div class="alert-pendings">
+            <div class="alert-pendings-box-1">
+                <img src="/build/global/img/alert-pending.png" alt="Alert" style="margin: 0 10px 4px; width: 20px; height: 20px;">
+                <span class="count">3</span>
+            </div>
+            <div class="alert-pendings-box-2">Verificar pendências</div>
+        </div>
+    </div>
+    
+    <div class="theme-section payhero-theme">
+        <h2>PayHero Theme (Orange: #FF5733)</h2>
+        <div class="alert-pendings">
+            <div class="alert-pendings-box-1">
+                <img src="/build/global/img/alert-pending.png" alt="Alert" style="margin: 0 10px 4px; width: 20px; height: 20px;">
+                <span class="count">3</span>
+            </div>
+            <div class="alert-pendings-box-2">Verificar pendências</div>
+        </div>
+    </div>
+    
+    <div class="theme-section velana-theme">
+        <h2>Velana Theme (Green: #3baa1a)</h2>
+        <div class="alert-pendings">
+            <div class="alert-pendings-box-1">
+                <img src="/build/global/img/alert-pending.png" alt="Alert" style="margin: 0 10px 4px; width: 20px; height: 20px;">
+                <span class="count">3</span>
+            </div>
+            <div class="alert-pendings-box-2">Verificar pendências</div>
+        </div>
+    </div>
+    
+    <h3>Changes Made:</h3>
+    <ul>
+        <li>Updated <code>resources/modules/global/css/global.css</code> to use <code>var(--primary, #2e85ec)</code> instead of hardcoded <code>#2e85ec</code></li>
+        <li>Added CSS rules to <code>WhitelabelController.php</code> to generate the alert-pendings-box-2 styling in dynamic CSS</li>
+        <li>The alert box now automatically adapts to each whitelabel client's primary color</li>
+        <li>Maintains backward compatibility with fallback to original color</li>
+    </ul>
+    
+    <h3>How it works:</h3>
+    <p>The <code>.alert-pendings-box-2</code> class now uses <code>background-color: var(--primary, #2e85ec)</code> which means:</p>
+    <ol>
+        <li>First, try to use the <code>--primary</code> CSS variable (set by whitelabel system)</li>
+        <li>If not available, fall back to the original blue color <code>#2e85ec</code></li>
+        <li>Each client's primary color is automatically applied to the alert pendings box</li>
+    </ol>
+</body>
+</html>

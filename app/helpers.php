@@ -120,3 +120,28 @@ if (!function_exists('is_whitelabel_client')) {
         return Whitelabel::getCurrentClient() === $client;
     }
 }
+
+if (!function_exists('whitelabel_validate_config')) {
+    /**
+     * Validate current client configuration
+     *
+     * @param string|null $client
+     * @return array
+     */
+    function whitelabel_validate_config($client = null)
+    {
+        return Whitelabel::validateClientConfig($client);
+    }
+}
+
+if (!function_exists('whitelabel_available_clients')) {
+    /**
+     * Get list of available clients
+     *
+     * @return array
+     */
+    function whitelabel_available_clients()
+    {
+        return Whitelabel::getAvailableClients();
+    }
+}

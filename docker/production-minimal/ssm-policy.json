@@ -9,7 +9,8 @@
         "ssm:GetParametersByPath"
       ],
       "Resource": [
-        "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/*"
+        "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/*",
+        "arn:aws:ssm:us-east-1:983877353757:parameter/velana/production-minimal/admin/*"
       ]
     }
   ]

@@ -1296,5 +1296,5 @@ if (mix.inProduction()) {
     mix.version();
 }
 
-const proxy = process.env.APP_URL || "localhost:8000";
+const proxy = process.env.APP_URL || "localhost:8080";
 mix.browserSync(proxy);

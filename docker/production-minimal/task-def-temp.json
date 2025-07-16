@@ -1,0 +1,289 @@
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:983877353757:task-definition/velana-production-minimal-admin-task:2",
+        "containerDefinitions": [
+            {
+                "name": "admin-app",
+                "image": "983877353757.dkr.ecr.us-east-1.amazonaws.com/velana-production-minimal-admin-app:latest",
+                "cpu": 512,
+                "memory": 1024,
+                "portMappings": [
+                    {
+                        "containerPort": 9000,
+                        "hostPort": 9000,
+                        "protocol": "tcp"
+                    },
+                    {
+                        "containerPort": 9001,
+                        "hostPort": 9001,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [
+                    {
+                        "name": "REDIS_DB",
+                        "value": "0"
+                    },
+                    {
+                        "name": "MODULE_NAME",
+                        "value": "admin"
+                    },
+                    {
+                        "name": "FILESYSTEM_DISK",
+                        "value": "local"
+                    },
+                    {
+                        "name": "APP_ENV",
+                        "value": "production"
+                    },
+                    {
+                        "name": "DB_PORT",
+                        "value": "3306"
+                    },
+                    {
+                        "name": "ENVIRONMENT",
+                        "value": "production-minimal"
+                    },
+                    {
+                        "name": "APP_NAME",
+                        "value": "PayHero Admin"
+                    },
+                    {
+                        "name": "REDIS_STATEMENT_DB",
+                        "value": "3"
+                    },
+                    {
+                        "name": "PROJECT_NAME",
+                        "value": "velana"
+                    },
+                    {
+                        "name": "SESSION_DRIVER",
+                        "value": "redis"
+                    },
+                    {
+                        "name": "QUEUE_CONNECTION",
+                        "value": "redis"
+                    },
+                    {
+                        "name": "LOG_CHANNEL",
+                        "value": "stderr"
+                    },
+                    {
+                        "name": "DB_CONNECTION",
+                        "value": "mysql"
+                    },
+                    {
+                        "name": "REDIS_SESSION_DB",
+                        "value": "1"
+                    },
+                    {
+                        "name": "REDIS_CACHE_DB",
+                        "value": "3"
+                    },
+                    {
+                        "name": "LOG_LEVEL",
+                        "value": "error"
+                    },
+                    {
+                        "name": "BROADCAST_DRIVER",
+                        "value": "null"
+                    },
+                    {
+                        "name": "APP_URL",
+                        "value": "http://localhost"
+                    },
+                    {
+                        "name": "CACHE_DRIVER",
+                        "value": "redis"
+                    },
+                    {
+                        "name": "APP_DEBUG",
+                        "value": "false"
+                    },
+                    {
+                        "name": "REDIS_HORIZON_DB",
+                        "value": "2"
+                    }
+                ],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "secrets": [
+                    {
+                        "name": "APP_KEY",
+                        "valueFrom": "/velana/production-minimal/admin/APP_KEY"
+                    },
+                    {
+                        "name": "DB_HOST",
+                        "valueFrom": "/velana/production-minimal/DB_HOST"
+                    },
+                    {
+                        "name": "DB_DATABASE",
+                        "valueFrom": "/velana/production-minimal/DB_DATABASE"
+                    },
+                    {
+                        "name": "DB_USERNAME",
+                        "valueFrom": "/velana/production-minimal/DB_USERNAME"
+                    },
+                    {
+                        "name": "DB_PASSWORD",
+                        "valueFrom": "/velana/production-minimal/DB_PASSWORD"
+                    },
+                    {
+                        "name": "REDIS_HOST",
+                        "valueFrom": "/velana/production-minimal/REDIS_HOST"
+                    },
+                    {
+                        "name": "REDIS_PORT",
+                        "valueFrom": "/velana/production-minimal/REDIS_PORT"
+                    },
+                    {
+                        "name": "REDIS_SESSION_HOST",
+                        "valueFrom": "/velana/production-minimal/REDIS_HOST"
+                    },
+                    {
+                        "name": "REDIS_SESSION_PORT",
+                        "valueFrom": "/velana/production-minimal/REDIS_PORT"
+                    }
+                ],
+                "workingDirectory": "/var/www",
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/velana-production-minimal-admin",
+                        "awslogs-region": "us-east-1",
+                        "awslogs-stream-prefix": "admin-app"
+                    }
+                },
+                "healthCheck": {
+                    "command": [
+                        "CMD-SHELL",
+                        "/usr/local/bin/healthcheck.sh || exit 1"
+                    ],
+                    "interval": 30,
+                    "timeout": 10,
+                    "retries": 3,
+                    "startPeriod": 10
+                },
+                "systemControls": []
+            },
+            {
+                "name": "admin-nginx",
+                "image": "983877353757.dkr.ecr.us-east-1.amazonaws.com/velana-production-minimal-admin-nginx:latest",
+                "cpu": 256,
+                "memory": 512,
+                "portMappings": [
+                    {
+                        "containerPort": 80,
+                        "hostPort": 80,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [
+                    {
+                        "name": "PROJECT_NAME",
+                        "value": "velana"
+                    },
+                    {
+                        "name": "MODULE_NAME",
+                        "value": "admin"
+                    },
+                    {
+                        "name": "ENVIRONMENT",
+                        "value": "production-minimal"
+                    }
+                ],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "dependsOn": [
+                    {
+                        "containerName": "admin-app",
+                        "condition": "START"
+                    }
+                ],
+                "workingDirectory": "/var/www/html",
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/velana-production-minimal-admin",
+                        "awslogs-region": "us-east-1",
+                        "awslogs-stream-prefix": "admin-nginx"
+                    }
+                },
+                "healthCheck": {
+                    "command": [
+                        "CMD-SHELL",
+                        "curl -f http://localhost/health || exit 1"
+                    ],
+                    "interval": 30,
+                    "timeout": 5,
+                    "retries": 3,
+                    "startPeriod": 90
+                },
+                "systemControls": []
+            }
+        ],
+        "family": "velana-production-minimal-admin-task",
+        "taskRoleArn": "arn:aws:iam::983877353757:role/velana-production-minimal-ecs-task",
+        "executionRoleArn": "arn:aws:iam::983877353757:role/velana-production-minimal-ecs-execution",
+        "networkMode": "awsvpc",
+        "revision": 2,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.task-iam-role"
+            },
+            {
+                "name": "ecs.capability.container-health-check"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "ecs.capability.secrets.ssm.environment-variables"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+                "name": "ecs.capability.container-ordering"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "1024",
+        "memory": "2048",
+        "registeredAt": "2025-07-11T17:38:53.547000-03:00",
+        "registeredBy": "arn:aws:iam::983877353757:user/RootAdmin"
+    },
+    "tags": []
+}

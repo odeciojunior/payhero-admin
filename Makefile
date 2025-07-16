@@ -76,7 +76,7 @@ dev-up:
 	@echo "Services started successfully!"
 	@echo "Application: http://localhost:8080"
 	@echo "MySQL: localhost:3306"
-	@echo "Redis: localhost:6380"
+	@echo "Redis: localhost:6379"
 
 dev-down:
 	@echo "Stopping Docker containers..."
