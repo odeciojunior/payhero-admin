@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitelabel Site Menu Item Test</title>
+    <style>
+        /* PayHero Theme */
+        .payhero-theme {
+            --primary: #FF5733;
+            --primary-light: #FF8A65;
+            --primary-dark: #D84315;
+            --menu-item-bg: #FF5733;
+            --menu-item-active-bg: #FF8A65;
+            --menu-item-hover-bg: #FF8A65;
+        }
+        
+        /* Velana Theme */
+        .velana-theme {
+            --primary: #3baa1a;
+            --primary-light: #66BB6A;
+            --primary-dark: #2E7D32;
+            --menu-item-bg: #3baa1a;
+            --menu-item-active-bg: #66BB6A;
+            --menu-item-hover-bg: #66BB6A;
+        }
+        
+        /* Default theme */
+        :root {
+            --primary: #2e85ec;
+            --primary-light: #6fabf9;
+            --primary-dark: #1976d2;
+            --menu-item-bg: #2e85ec;
+            --menu-item-active-bg: #6fabf9;
+            --menu-item-hover-bg: #6fabf9;
+        }
+        
+        /* Base site-menu-item styles */
+        .site-menu-item {
+            position: relative;
+            white-space: nowrap;
+            margin: 5px 0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Inter', Arial, sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .site-menu-item a {
+            display: block;
+            color: rgba(163, 175, 183, 0.9);
+            text-decoration: none;
+        }
+        
+        .site-menu-item.active {
+            background: var(--menu-item-bg, var(--primary-dark, var(--primary)));
+            color: white;
+        }
+        
+        .site-menu-item.active a {
+            color: white;
+        }
+        
+        .site-menu-item > .site-menu-sub {
+            background-color: var(--menu-item-bg, var(--primary-dark, var(--primary)));
+            padding: 5px 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+        
+        .site-menu-item.active > a {
+            background-color: var(--menu-item-active-bg, var(--primary-light, var(--primary)));
+            border-radius: 0 50px 50px 0;
+            margin-right: 8px;
+            padding: 10px 20px;
+        }
+        
+        .site-menu-item:hover > a {
+            background-color: var(--menu-item-hover-bg, var(--primary-light, var(--primary)));
+            border-radius: 0 50px 50px 0;
+            margin-right: 8px;
+            color: white;
+        }
+        
+        .site-menubar-light .site-menu-item:hover {
+            background-color: var(--menu-item-hover-bg, var(--primary-light, rgba(11, 105, 227, 0.05)));
+        }
+        
+        .site-menubar-light .site-menu-item:hover > a {
+            color: var(--primary, #3e8ef7);
+        }
+        
+        .site-menubar-light .site-menu-item.active {
+            background: var(--menu-item-active-bg, var(--primary-light, rgba(11, 105, 227, 0.05)));
+        }
+        
+        .site-menubar-light .site-menu-item.active > a {
+            color: var(--primary, #3e8ef7);
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .theme-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        .menu-container {
+            background-color: #263238;
+            padding: 20px;
+            border-radius: 8px;
+            width: 250px;
+        }
+        
+        .site-menubar-light .menu-container {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Whitelabel Site Menu Item Test</h1>
+    
+    <div class="theme-section">
+        <h2>Default Theme (Blue: #2e85ec)</h2>
+        <div class="menu-container">
+            <div class="site-menu-item">
+                <a href="#">Dashboard</a>
+            </div>
+            <div class="site-menu-item active">
+                <a href="#">Sales</a>
+                <div class="site-menu-sub">Overview</div>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Products</a>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Settings</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="theme-section payhero-theme">
+        <h2>PayHero Theme (Orange: #FF5733)</h2>
+        <div class="menu-container">
+            <div class="site-menu-item">
+                <a href="#">Dashboard</a>
+            </div>
+            <div class="site-menu-item active">
+                <a href="#">Sales</a>
+                <div class="site-menu-sub">Overview</div>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Products</a>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Settings</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="theme-section velana-theme">
+        <h2>Velana Theme (Green: #3baa1a)</h2>
+        <div class="menu-container">
+            <div class="site-menu-item">
+                <a href="#">Dashboard</a>
+            </div>
+            <div class="site-menu-item active">
+                <a href="#">Sales</a>
+                <div class="site-menu-sub">Overview</div>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Products</a>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Settings</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="theme-section site-menubar-light">
+        <h2>Light Theme Example</h2>
+        <div class="menu-container">
+            <div class="site-menu-item">
+                <a href="#">Dashboard</a>
+            </div>
+            <div class="site-menu-item active">
+                <a href="#">Sales</a>
+                <div class="site-menu-sub">Overview</div>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Products</a>
+            </div>
+            <div class="site-menu-item">
+                <a href="#">Settings</a>
+            </div>
+        </div>
+    </div>
+    
+    <h3>Changes Made:</h3>
+    <ul>
+        <li>Updated <code>config/whitelabel.php</code> to include specific menu item colors:
+            <ul>
+                <li><code>menu-item-bg</code> - Background for active menu items</li>
+                <li><code>menu-item-active-bg</code> - Background for active menu item links</li>
+                <li><code>menu-item-hover-bg</code> - Background for hovered menu item links</li>
+            </ul>
+        </li>
+        <li>Modified <code>WhitelabelController.php</code> to generate CSS using whitelabel variables:
+            <ul>
+                <li><code>var(--menu-item-bg, var(--primary-dark, var(--primary)))</code></li>
+                <li><code>var(--menu-item-active-bg, var(--primary-light, var(--primary)))</code></li>
+                <li><code>var(--menu-item-hover-bg, var(--primary-light, var(--primary)))</code></li>
+            </ul>
+        </li>
+        <li>Updated <code>resources/modules/global/css/new-site.css</code> to use CSS variables instead of hardcoded colors</li>
+        <li>Added support for both dark and light menu themes</li>
+    </ul>
+    
+    <h3>How It Works:</h3>
+    <ul>
+        <li><strong>Fallback Chain:</strong> Each CSS property has multiple fallbacks to ensure compatibility</li>
+        <li><strong>Dynamic Colors:</strong> Each whitelabel client gets their specific menu colors</li>
+        <li><strong>Flexible:</strong> Works with both dark sidebar and light sidebar themes</li>
+        <li><strong>Consistent:</strong> Maintains the existing design structure while applying brand colors</li>
+    </ul>
+    
+    <p>Try hovering over the menu items to see the hover effects with the whitelabel colors!</p>
+    
+    <script>
+        // Add hover effect demonstration
+        document.querySelectorAll('.site-menu-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'translateX(5px)';
+                }
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body>
+</html>

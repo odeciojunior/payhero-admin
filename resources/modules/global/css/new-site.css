@@ -133,7 +133,7 @@
 .o-security-shield-1:hover,
 .o-special-price-1:hover,
 .o-discount-1 {
-    color: #2e85ec;
+    color: var(--primary, #2e85ec);
     transition: 0.3s;
 }
 
@@ -497,7 +497,7 @@ input[type="radio"] {
     width: 20px;
     height: 20px;
     font-size: 18px;
-    -webkit-text-fill-color: #2e85ec;
+    -webkit-text-fill-color: var(--primary, #2e85ec);
     margin-right: 5px;
     vertical-align: middle;
 }
@@ -535,7 +535,7 @@ h3 {
     width: 18px;
     height: 18px;
     vertical-align: middle;
-    fill: #2e85ec;
+    fill: var(--primary, #2e85ec);
 }
 
 .text-filtros {
@@ -556,7 +556,7 @@ h3 {
     top: 20px;
     right: 20px;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-    background-color: #2e85ec;
+    background-color: var(--primary, #2e85ec);
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -691,7 +691,7 @@ h3 {
     justify-content: center;
     height: 12px !important;
     width: 12px !important;
-    background-color: #2e85ec;
+    background-color: var(--primary, #2e85ec);
 }
 
 .badge-notification-true {
@@ -720,7 +720,7 @@ h3 {
 }
 
 .badge-antifraude {
-    background: #2e85ec;
+    background: var(--primary, #2e85ec);
 }
 
 .badge-aprovado,
@@ -759,7 +759,7 @@ h3 {
     border-radius: 100%;
     width: 25px;
     height: 25px;
-    color: #2e85ec !important;
+    color: var(--primary, #2e85ec) !important;
     display: flex;
     text-align: center;
     align-items: center;
@@ -831,8 +831,8 @@ h3 {
 }
 
 .table .material-icons.gradient {
-    color: #2e85ec;
-    background-color: #2e85ec;
+    color: var(--primary, #2e85ec);
+    background-color: var(--primary, #2e85ec);
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
@@ -840,8 +840,8 @@ h3 {
 }
 
 .material-icons.gradient {
-    color: #2e85ec;
-    background-color: #2e85ec;
+    color: var(--primary, #2e85ec);
+    background-color: var(--primary, #2e85ec);
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
@@ -936,17 +936,17 @@ h3 {
 .btn-primary,
 .btn-primary:focus,
 .btn-primary:active {
-    background: none;
-    border-color: none;
-    border: none;
-    outline: none;
+    background: var(--primary, #2e85ec);
+    border-color: var(--primary, #2e85ec);
+    border: 1px solid var(--primary, #2e85ec);
+    color: var(--primary-contrast, #ffffff);
     font-weight: normal;
-    background: rgb(25, 25, 25);
-    background: linear-gradient(90deg, rgba(25, 25, 25, 1) 0%, rgba(2, 114, 158, 1) 100%, rgba(0, 0, 0, 1) 100%);
 }
 
 .btn-primary:hover {
-    background-color: #00b7ff;
+    background-color: var(--primary-dark, var(--primary, #2e85ec));
+    border-color: var(--primary-dark, var(--primary, #2e85ec));
+    color: var(--primary-contrast, #ffffff);
 }
 
 .btn-success,
@@ -1280,5 +1280,5 @@ h3 {
 }
 
 .bg-primary {
-    background-color: #2e85ec !important;
+    background-color: var(--primary, #2e85ec) !important;
 }

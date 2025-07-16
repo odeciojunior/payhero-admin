@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitelabel Button Test</title>
+    <style>
+        /* PayHero Theme */
+        :root {
+            --primary: #FF5733;
+            --primary-dark: #D84315;
+            --primary-contrast: #FFFFFF;
+            --menu-bg: #FF5733;
+        }
+        
+        /* Base button styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background: var(--primary, #2e85ec);
+            border-color: var(--primary, #2e85ec);
+            border: 1px solid var(--primary, #2e85ec);
+            color: var(--primary-contrast, #ffffff);
+            font-weight: normal;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark, var(--primary, #2e85ec));
+            border-color: var(--primary-dark, var(--primary, #2e85ec));
+            color: var(--primary-contrast, #ffffff);
+        }
+        
+        .bg-primary {
+            background-color: var(--primary, #2e85ec) !important;
+            color: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        
+        .icon-example {
+            color: var(--primary, #2e85ec);
+            font-size: 24px;
+            margin: 10px;
+        }
+        
+        .site-menu-item {
+            margin: 10px 0;
+            display: block;
+        }
+        
+        .bg-menu {
+            padding: 0 10px 0 15px;
+        }
+        
+        .menu-active > .bg-menu {
+            background: var(--menu-bg, var(--primary, #00b7ff));
+            border-radius: 0 44px 44px 0;
+            display: inline-block;
+            color: white;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Whitelabel Button & Color System Test</h1>
+    
+    <h2>PayHero Theme (Orange Primary: #FF5733)</h2>
+    
+    <h3>Buttons:</h3>
+    <button class="btn btn-primary">Primary Button</button>
+    <a href="#" class="btn btn-primary">Primary Link</a>
+    
+    <h3>Background Elements:</h3>
+    <div class="bg-primary">
+        This div uses the bg-primary class
+    </div>
+    
+    <h3>Icons & Colors:</h3>
+    <div class="icon-example">★ Icon with primary color</div>
+    
+    <h3>Menu Items:</h3>
+    <div class="site-menu-item menu-active">
+        <a href="#">
+            <span class="bg-menu">Dashboard Menu Item</span>
+        </a>
+    </div>
+    
+    <hr>
+    
+    <h2>Velana Theme (Green Primary: #3baa1a)</h2>
+    <style>
+        .velana-theme {
+            --primary: #3baa1a;
+            --primary-dark: #2E7D32;
+            --primary-contrast: #FFFFFF;
+            --menu-bg: #3baa1a;
+        }
+    </style>
+    
+    <div class="velana-theme">
+        <h3>Buttons:</h3>
+        <button class="btn btn-primary">Primary Button</button>
+        <a href="#" class="btn btn-primary">Primary Link</a>
+        
+        <h3>Background Elements:</h3>
+        <div class="bg-primary">
+            This div uses the bg-primary class
+        </div>
+        
+        <h3>Icons & Colors:</h3>
+        <div class="icon-example">★ Icon with primary color</div>
+        
+        <h3>Menu Items:</h3>
+        <div class="site-menu-item menu-active">
+            <a href="#">
+                <span class="bg-menu">Dashboard Menu Item</span>
+            </a>
+        </div>
+    </div>
+    
+    <h2>Changes Made:</h2>
+    <ul>
+        <li>Updated <code>.btn-primary</code> styles in <code>new-site.css</code> to use CSS variables</li>
+        <li>Replaced hardcoded <code>#2e85ec</code> color references with <code>var(--primary, #2e85ec)</code></li>
+        <li>Updated icon colors, background colors, and other primary color usages</li>
+        <li>Added support for <code>--primary-dark</code> and <code>--primary-contrast</code> variables</li>
+        <li>All buttons and primary colored elements now follow the whitelabel theme</li>
+    </ul>
+    
+    <h2>Files Modified:</h2>
+    <ul>
+        <li><code>resources/modules/global/css/new-site.css</code> - Updated button styles and primary color references</li>
+        <li><code>app/Http/Controllers/WhitelabelController.php</code> - Already had button CSS variables</li>
+        <li><code>config/whitelabel.php</code> - Already had primary colors defined for both clients</li>
+    </ul>
+</body>
+</html>
