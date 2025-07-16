@@ -1023,21 +1023,21 @@ h3 {
 }
 
 .site-menu-item.active {
-    background: #263238;
+    background: var(--primary-dark, #263238);
 }
 
 .site-menu-item > .site-menu-sub {
-    background-color: #263238;
+    background-color: var(--primary-dark, #263238);
 }
 
 .site-menu-item.active > a {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--primary, rgba(255, 255, 255, 0.2));
     border-radius: 0 50px 50px 0;
     margin-right: 8px;
 }
 
 .site-menu-item:hover > a {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--primary, rgba(255, 255, 255, 0.2));
     border-radius: 0 50px 50px 0;
     margin-right: 8px;
 

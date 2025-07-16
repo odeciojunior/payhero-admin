@@ -396,6 +396,47 @@ a:hover {
     display: inline-block;
 }
 
+/* Site menu items */
+.site-menu-item.active {
+    background: var(--menu-item-bg, var(--primary-dark, var(--primary)));
+}
+
+.site-menu-item > .site-menu-sub {
+    background-color: var(--menu-item-bg, var(--primary-dark, var(--primary)));
+}
+
+.site-menu-item.active > a {
+    background-color: var(--menu-item-active-bg, var(--primary-light, var(--primary)));
+    border-radius: 0 50px 50px 0;
+    margin-right: 8px;
+}
+
+.site-menu-item:hover > a {
+    background-color: var(--menu-item-hover-bg, var(--primary-light, var(--primary)));
+    border-radius: 0 50px 50px 0;
+    margin-right: 8px;
+}
+
+.site-menubar-light .site-menu-item:hover {
+    background-color: var(--menu-item-hover-bg, var(--primary-light, rgba(11, 105, 227, 0.05)));
+}
+
+.site-menubar-light .site-menu-item:hover > a {
+    color: var(--primary, #3e8ef7);
+}
+
+.site-menubar-light .site-menu-item.active {
+    background: var(--menu-item-active-bg, var(--primary-light, rgba(11, 105, 227, 0.05)));
+}
+
+.site-menubar-light .site-menu-item.active > a {
+    color: var(--primary, #3e8ef7);
+}
+
+.site-menubar-light .site-menu-item > .site-menu-sub {
+    background-color: var(--menu-item-bg, var(--primary-light, rgba(11, 105, 227, 0.05)));
+}
+
 /* Alert pendings */
 .alert-pendings-box-2 {
     background-color: var(--primary);
