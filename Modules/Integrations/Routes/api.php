@@ -20,7 +20,7 @@ Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:dev","dem
     Route::get("integrations/{id}", "IntegrationsApiController@show");
     Route::apiResource("integrations", "IntegrationsApiController")
         ->only("store", "destroy", "update")
-        ->names("api.integrations")
+        ->names("api.integrations_api")
         ->middleware("permission:dev_manage");
 
     Route::post("/integrations/{integration}/refreshtoken", "IntegrationsApiController@refreshToken")

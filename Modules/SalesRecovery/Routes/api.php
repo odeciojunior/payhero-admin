@@ -9,7 +9,7 @@ Route::group(
     function () {
         Route::apiResource("recovery", "SalesRecoveryApiController")
             ->only("index")
-            ->names("api.recovery");
+            ->names("api.recovery_api");
 
         Route::get("recovery/getrecoverydata", "SalesRecoveryApiController@getRecoveryData");
         Route::get("checkout/getrecoverydata", "SalesRecoveryApiController@getRecoveryData");

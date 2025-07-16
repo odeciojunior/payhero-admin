@@ -24,5 +24,6 @@ Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], 
 
     Route::apiResource("apps/smartfunnel", "SmartfunnelApiController")
         ->only("create", "store", "update", "destroy")
+        ->names("api.smartfunnel_api")
         ->middleware("permission:apps_manage");
 });

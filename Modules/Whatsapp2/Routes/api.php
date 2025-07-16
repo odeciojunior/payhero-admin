@@ -20,5 +20,6 @@ Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps", "d
 
     Route::apiResource("apps/whatsapp2", "Whatsapp2ApiController")
         ->only("create", "store", "update", "destroy")
+        ->names("api.whatsapp2_api")
         ->middleware("permission:apps_manage");
 });

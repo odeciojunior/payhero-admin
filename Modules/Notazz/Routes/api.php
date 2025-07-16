@@ -8,6 +8,7 @@ Route::group(["middleware" => ["auth:api", "scopes:admin","demo_account"]], func
     Route::get("apps/notazz/{id}/edit", "NotazzApiController@edit");
     Route::apiResource("apps/notazz", "NotazzApiController")
         ->only("create", "store", "update", "destroy")
+        ->names("api.notazz_api")
         ->middleware("permission:apps_manage");
 
     Route::get("apps/notazz/invoice/{id}", "NotazzApiController@getInvoice");
@@ -17,6 +18,7 @@ Route::group(["middleware" => ["auth:api", "scopes:admin","demo_account"]], func
     Route::get("apps/notazz/report/{id}/edit", "NotazzReportApiController@edit");
     Route::apiResource("apps/notazz/report", "NotazzReportApiController")
         ->only("create", "store", "update", "destroy")
+        ->names("api.notazzreport_api")
         ->middleware("permission:apps_manage");
 
     Route::get("apps/notazz/export/{id}/", "NotazzReportApiController@invoicesExport");

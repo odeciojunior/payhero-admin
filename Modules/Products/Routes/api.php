@@ -13,7 +13,7 @@ Route::group(
 
         Route::apiResource("products", "ProductsApiController")
             ->only("store", "update", "destroy", "create")
-            ->names("api.products")
+            ->names("api.products_api")
             ->middleware("permission:products_manage");
 
         Route::post("/products/update-product-type/{id}", "ProductsApiController@updateProductType")

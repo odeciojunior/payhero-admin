@@ -22,6 +22,7 @@ Route::group(
 
         Route::apiResource("/projectreviews", "ProjectReviewsApiController")
             ->only("store", "destroy", "update")
+            ->names("api.projectreviews_api")
             ->middleware("permission:projects_manage");
     }
 );

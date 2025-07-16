@@ -13,6 +13,6 @@ Route::group(["middleware" => ["auth:api", "demo_account","scopes:admin", "permi
 
     Route::apiResource("/apps/melhorenvio", "MelhorenvioApiController")
         ->only("store", "destroy")
-        ->names("melhorenvio")
+        ->names("api.melhorenvio_api")
         ->middleware("permission:apps_manage");
 });

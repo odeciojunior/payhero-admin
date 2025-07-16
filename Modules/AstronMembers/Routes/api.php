@@ -24,6 +24,7 @@ Route::group(
 
         Route::apiResource("/apps/astronmembers", "AstronMembersApiController")
             ->only("store", "update", "destroy")
+            ->names("api.astronmembers_api")
             ->middleware("permission:apps_manage");
     }
 );

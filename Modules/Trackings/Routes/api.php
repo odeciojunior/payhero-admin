@@ -19,7 +19,7 @@ Route::group(['middleware' => ['auth:api', 'scopes:admin', 'demo_account']], fun
     Route::post('/tracking/export', 'TrackingsApiController@export');
     Route::post('/tracking/import', 'TrackingsApiController@import');
 
-    //Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'show', 'store')->names('api.trackings');
+    //Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'show', 'store')->names('api.trackings_api');
     Route::get("/tracking", "TrackingsApiController@index");
     Route::get("/tracking/{id}", "TrackingsApiController@show");
     Route::post("/tracking", "TrackingsApiController@store")->middleware("permission:trackings_manage");

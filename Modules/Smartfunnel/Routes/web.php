@@ -22,5 +22,6 @@ Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
 
     Route::Resource("apps/smartfunnel", "SmartfunnelController")
         ->only("create", "store", "update", "destroy")
+        ->names("smartfunnel")
         ->middleware("permission:apps_manage");
 });

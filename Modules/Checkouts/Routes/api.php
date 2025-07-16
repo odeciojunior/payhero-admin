@@ -9,6 +9,6 @@ Route::group(
     function () {
         Route::apiResource("checkout", "CheckoutApiController")
             ->only("index", "show")
-            ->names("api.checkout");
+            ->names("api.checkout_api");
     }
 );

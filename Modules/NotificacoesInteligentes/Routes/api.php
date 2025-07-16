@@ -24,6 +24,7 @@ Route::group(
 
         Route::apiResource("/apps/notificacoesinteligentes", "NotificacoesInteligentesApiController")
             ->only("store", "update", "destroy")
+            ->names("api.notificacoesinteligentes_api")
             ->middleware("permission:apps_manage");
     }
 );

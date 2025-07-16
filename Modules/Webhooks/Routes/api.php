@@ -20,7 +20,7 @@ Route::group(
         Route::get("webhooks/{id}", "WebhooksApiController@show");
         Route::apiResource("webhooks", "WebhooksApiController")
             ->only("store", "destroy", "update")
-            ->names("api.webhooks")
+            ->names("api.webhooks_api")
             ->middleware("permission:apps_manage");
     }
 );

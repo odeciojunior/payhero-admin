@@ -21,9 +21,9 @@ Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], 
     Route::apiResource("apps/geradorrastreio", "GeradorRastreioApiController")
         ->only("store", "update", "destroy")
         ->names([
-            'store' => 'api.geradorrastreio.resource.store',
-            'update' => 'api.geradorrastreio.resource.update',
-            'destroy' => 'api.geradorrastreio.resource.destroy'
+            'store' => 'api.geradorrastreio_api.resource.store',
+            'update' => 'api.geradorrastreio_api.resource.update',
+            'destroy' => 'api.geradorrastreio_api.resource.destroy'
         ])
         ->middleware("permission:apps_manage");
 });

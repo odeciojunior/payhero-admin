@@ -19,6 +19,7 @@ Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps","de
     Route::get("apps/activecampaign/{id}/edit", "ActiveCampaignApiController@edit");
     Route::apiResource("apps/activecampaign", "ActiveCampaignApiController")
         ->only("create", "store", "update", "destroy")
+        ->names("api.activecampaign_api")
         ->middleware("permission:apps_manage");
 
     Route::get("apps/activecampaignevent/create", "ActiveCampaignEventApiController@create");
@@ -29,5 +30,6 @@ Route::group(["middleware" => ["auth:api", "scopes:admin", "permission:apps","de
 
     Route::apiResource("apps/activecampaignevent", "ActiveCampaignEventApiController")
         ->only("store", "update", "destroy")
+        ->names("api.activecampaignevent_api")
         ->middleware("permission:apps_manage");
 });

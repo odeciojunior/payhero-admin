@@ -13,12 +13,12 @@ Route::group(
         ]);
 
         Route::post("/export", [
-            "as" => "sales.export",
+            "as" => "sales.export_api",
             "uses" => "SalesApiController@export",
         ]);
 
         Route::get("/resume", [
-            "as" => "sales.resume",
+            "as" => "sales.resume_api",
             "uses" => "SalesApiController@resume",
         ]);
         Route::post("/refund/{transaction_id}", "SalesApiController@refund")->middleware([
@@ -48,6 +48,7 @@ Route::group([
 ],function(){
     Route::apiResource('sales', 'SalesApiController')
          ->only('index', 'show')
+         ->names('api.sales_api')
          ->middleware(['auth:api', 'scopes:admin']);
 
 });

@@ -35,7 +35,7 @@ Route::group(
         Route::group([], function () {
             Route::get("/project/{projectId}/pixels", "PixelsApiDemoController@index");
             Route::get("/projects/{projectId}/pixels/configs", "PixelsApiDemoController@getPixelConfigs")->name(
-                "pixels.getconfig"
+                "api.demo.pixels.getconfig"
             );
             Route::get("/project/{projectId}/pixels/{id}", "PixelsApiDemoController@show");
             Route::get("/project/{projectId}/pixels/{id}/edit", "PixelsApiDemoController@edit");
@@ -77,14 +77,14 @@ Route::group(
                 "uses" => "SalesApiDemoController@filters",
             ]);
             Route::get("/sales/resume", [
-                "as" => "sales.resume",
+                "as" => "demo.sales.resume_api",
                 "uses" => "SalesApiDemoController@resume",
             ]);
-            Route::get("/sales/user-plans", "SalesApiDemoController@getPlans");
+            Route::get("/sales/user-plans", "SalesApiDemoController@getPlans")->name("demo.sales.userplans");
 
-            Route::get("/sales", "SalesApiDemoController@index");
-            Route::get("/sales/{id}", "SalesApiDemoController@show");
-            Route::get("/sales/projects-with-sales", "SalesApiDemoController@getProjectsWithSales");
+            Route::get("/sales", "SalesApiDemoController@index")->name("demo.sales.index");
+            Route::get("/sales/{id}", "SalesApiDemoController@show")->name("demo.sales.show");
+            Route::get("/sales/projects-with-sales", "SalesApiDemoController@getProjectsWithSales")->name("demo.sales.projectswithsales");
         });
 
         //ActiveCampaign
@@ -127,17 +127,17 @@ Route::group(
                 "ContestationsApiDemoController@getProjectsWithContestations"
             );
             Route::get("/contestations/getcontestations", "ContestationsApiDemoController@getContestations")->name(
-                "contestations.getchargebacks"
+                "api.demo.contestations.getchargebacks"
             );
             Route::get("/contestations/gettotalvalues", "ContestationsApiDemoController@getTotalValues")->name(
-                "contestations.gettotalvalues"
+                "api.demo.contestations.gettotalvalues"
             );
             Route::get(
                 "/contestations/get-contestation-files/{salecontestation}",
                 "ContestationsApiDemoController@getContestationFiles"
-            )->name("contestations.getContestationFiles");
+            )->name("api.demo.contestations.getContestationFiles");
             Route::get("/contestations/{contestation_id}/contestation", "ContestationsApiDemoController@show")
-                ->name("contestations.show")
+                ->name("api.demo.contestations.show")
                 ->middleware("permission:contestations_manage");
         });
 
@@ -226,7 +226,7 @@ Route::group(
         Route::group([], function () {
             Route::get("invitations", "InvitesApiDemoController@index");
             Route::get("/invitations/getinvitationdata", "InvitesApiDemoController@getInvitationData")->name(
-                "api.getinvitationdata"
+                "api.demo.getinvitationdata"
             );
         });
 
@@ -415,7 +415,7 @@ Route::group(
 
         //Tickets
         Route::group([], function () {
-            Route::get("tickets/getvalues", "TicketsApiDemoController@getTotalValues")->name("api.tickets.getvalues");
+            Route::get("tickets/getvalues", "TicketsApiDemoController@getTotalValues")->name("api.demo.tickets.getvalues");
             Route::get("/tickets", "TicketsApiDemoController@index");
             Route::get("/tickets/{id}", "TicketsApiDemoController@show");
         });
@@ -477,7 +477,7 @@ Route::group(
             Route::get("/apps/woocommerce", "WooCommerceApiDemoController@index");
             Route::post("/apps/woocommerce/keys/get", [
                 "uses" => "WooCommerceApiDemoController@keysGet",
-                "as" => "woocommerce.keys.get",
+                "as" => "demo.woocommerce.keys.get_api",
             ]);
         });
 

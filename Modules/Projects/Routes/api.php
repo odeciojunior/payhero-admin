@@ -21,6 +21,7 @@ Route::group(
 
         Route::apiResource("/projects", "ProjectsApiController")
             ->only("store", "destroy")
+            ->names("api.projects_api")
             ->middleware("permission:projects_manage");
 
         // Nova Edicao de projeto com novo metodo

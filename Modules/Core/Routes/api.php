@@ -20,7 +20,7 @@ Route::group(
             ->middleware("role:account_owner|attendance|finantial|custom|admin");
 
         Route::get("/core/companies", "CoreApiController@companies")
-            //->names('api.companies')
+            //->names('api.companies_api')
             ->middleware("permission:sales|finances|report_pending|apps|invitations");
 
         Route::post('/core/company-default','CoreApiController@updateCompanyDefault');

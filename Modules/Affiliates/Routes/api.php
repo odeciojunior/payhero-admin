@@ -43,7 +43,7 @@ Route::group(
 
         Route::apiResource("/affiliates", "AffiliatesApiController")
             ->only("store", "update", "destroy")
-            ->names("api.affiliates")
+            ->names("api.affiliates_api")
             ->middleware("permission:affiliates_manage");
 
         Route::get("/affiliatelinks", "AffiliateLinksApiController@index");
@@ -52,7 +52,7 @@ Route::group(
 
         Route::apiResource("/affiliatelinks", "AffiliateLinksApiController")
             ->only("store", "update", "destroy")
-            ->names("api.affiliatelinks")
+            ->names("api.affiliatelinks_api")
             ->middleware("permission:affiliates_manage");
     }
 );

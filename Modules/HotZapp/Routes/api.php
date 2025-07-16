@@ -13,6 +13,7 @@ Route::group(
 
         Route::apiResource("/apps/hotzapp", "HotZappApiController")
             ->only("store", "update", "destroy")
+            ->names("api.hotzapp_api")
             ->middleware("permission:apps_manage");
     }
 );

@@ -9,6 +9,6 @@ Route::group(
     function () {
         Route::apiResource("/delivery", "DeliveryApiController")
             ->only("show")
-            ->names("api.client");
+            ->names("api.client_api");
     }
 );

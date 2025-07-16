@@ -25,9 +25,9 @@ Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], 
     Route::apiResource("apps/reportana", "ReportanaApiController")
         ->only("store", "update", "destroy")
         ->names([
-            'store' => 'api.reportana.resource.store',
-            'update' => 'api.reportana.resource.update',
-            'destroy' => 'api.reportana.resource.destroy'
+            'store' => 'api.reportana_api.resource.store',
+            'update' => 'api.reportana_api.resource.update',
+            'destroy' => 'api.reportana_api.resource.destroy'
         ])
         ->middleware("permission:apps_manage");
 });

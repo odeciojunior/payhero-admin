@@ -20,7 +20,7 @@ Route::group(
 
         Route::apiResource("/project/{projectId}/pixels", "PixelsApiController")
             ->only("update", "destroy", "store")
-            ->names("pixels")
+            ->names("api.pixels_api")
             ->middleware("permission:projects_manage");
     }
 );

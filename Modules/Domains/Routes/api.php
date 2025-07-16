@@ -8,7 +8,7 @@ Route::group(
 
     ],
     function () {
-        // Route::apiResource('project/{projectId}/domains', 'DomainsApiController')->names('api.domains');
+        // Route::apiResource('project/{projectId}/domains', 'DomainsApiController')->names('api.domains_api');
         Route::get("project/{projectId}/domains", "DomainsApiController@index");
         Route::get("project/{projectId}/domains/{domainId}", "DomainsApiController@show");
         Route::get("project/{projectId}/domains/{domainId}/edit", "DomainsApiController@edit");
@@ -22,7 +22,7 @@ Route::group(
         Route::get("project/{projectId}/domain/{domainId}/records", "DomainRecordsApiController@index");
         Route::apiResource("project/{projectId}/domain/{domainId}/records", "DomainRecordsApiController")
             ->except(["index"])
-            ->names("api.domainrecords")
+            ->names("api.domainrecords_api")
             ->middleware("permission:projects_manage");
 
         Route::get("project/{projectId}/domain/{domainId}/recheck", "DomainsApiController@recheckOnly")

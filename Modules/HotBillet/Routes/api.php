@@ -24,6 +24,7 @@ Route::group(
 
         Route::apiResource("/apps/hotbillet", "HotBilletApiController")
             ->only("store", "update", "destroy")
+            ->names("api.hotbillet_api")
             ->middleware("permission:apps_manage");
     }
 );

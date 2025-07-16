@@ -12,5 +12,5 @@ Route::prefix('apps')
         Route::apiResource('adooreicheckout', AdooreiCheckoutApiController::class)
             ->only('index', 'show', 'edit', 'create', 'store', 'update', 'destroy')
             ->middleware('permission:apps_manage')
-            ->names('adooreicheckout');
+            ->names('api.adooreicheckout_api');
     });

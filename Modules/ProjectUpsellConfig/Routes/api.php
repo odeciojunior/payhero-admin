@@ -23,6 +23,7 @@ Route::group(
 
         Route::apiResource("/projectupsellconfig", "ProjectUpsellConfigApiController")
             ->only("store", "destroy", "update")
+            ->names("api.projectupsellconfig_api")
             ->middleware("permission:projects_manage");
     }
 );

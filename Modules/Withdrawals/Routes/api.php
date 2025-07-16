@@ -26,7 +26,7 @@ Route::group(
 
         Route::apiResource('/withdrawals/settings', 'WithdrawalsSettingsApiController')
                 ->only('store', 'update', 'destroy')
-                ->names('api.withdrawals_settings')
+                ->names('api.withdrawals_settings_api')
                 ->middleware('permission:finances_manage');
 
         Route::get('/withdrawals/settings/{companyId}/{settingsId}', 'WithdrawalsSettingsApiController@show');

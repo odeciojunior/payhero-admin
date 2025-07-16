@@ -24,6 +24,7 @@ Route::group(
 
         Route::apiResource("/project/{projectId}/projectnotification", "ProjectNotificationApiController")
             ->only("store", "update", "destroy")
+            ->names("api.projectnotification_api")
             ->middleware("permission:projects_manage");
     }
 );

@@ -8,7 +8,7 @@ Route::group(
     ],
     function () {
         //   Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
-        //   ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
+        //   ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans_api');
 
         Route::get("/project/{projectId}/plans", "PlansApiController@index");
         Route::post("/project/{projectId}/plans", "PlansApiController@store")->middleware("permission:projects_manage");

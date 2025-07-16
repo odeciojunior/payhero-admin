@@ -23,5 +23,5 @@ Route::group(["middleware" => ["auth:api", "scopes:admin", "demo_account"]], fun
     Route::put("tickets/{id}", "TicketsApiController@update")->middleware("permission:attendance_manage");
     Route::apiResource("tickets", "TicketsApiController")
         ->only("index", "show")
-        ->names("api.tickets");
+        ->names("api.tickets_api");
 });

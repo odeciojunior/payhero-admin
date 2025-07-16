@@ -10,7 +10,7 @@ Route::group(
     function () {
         Route::apiResource("dashboard", "DashboardApiController")
             ->only("index")
-            ->names("api.dashboard");
+            ->names("api.dashboard_api");
 
         Route::post("/dashboard/getvalues", "DashboardApiController@getValues");
         Route::get("/dashboard/get-releases", "DashboardApiController@getReleases");

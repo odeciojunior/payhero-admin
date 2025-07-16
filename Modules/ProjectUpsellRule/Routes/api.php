@@ -24,6 +24,7 @@ Route::group(
         //role:account_owner|admin
         Route::apiResource("/projectupsellrule", "ProjectUpsellRuleApiController")
             ->only("store", "destroy", "update")
+            ->names("api.projectupsellrule_api")
             ->middleware("permission:projects_manage");
     }
 );

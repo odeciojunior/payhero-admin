@@ -13,6 +13,7 @@ Route::group(
 
         Route::apiResource("/project/{projectId}/shippings", "ShippingApiController")
             ->only("store", "update", "destroy")
+            ->names("api.shippings_api")
             ->middleware("permission:projects_manage");
 
         Route::get("/shippings/user-shippings", "ShippingApiController@getShippings");

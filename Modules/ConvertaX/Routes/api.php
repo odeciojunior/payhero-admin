@@ -22,6 +22,7 @@ Route::group(
         Route::get("/apps/convertax/{id}", "ConvertaXApiController@show");
         Route::apiResource("/apps/convertax", "ConvertaXApiController")
             ->only("store", "update", "destroy")
+            ->names("api.convertax_api")
             ->middleware("permission:apps_manage");
 
         Route::get("/getconvertaxintegrations", "ConvertaXController@getIntegrations");

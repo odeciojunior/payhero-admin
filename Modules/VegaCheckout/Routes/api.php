@@ -9,5 +9,5 @@ Route::prefix('apps')
     ->name('api.apps.')
     ->middleware(['auth:api', 'permission:apps', 'demo_account'])
     ->group(function () {
-        Route::resource('vegacheckout', VegaCheckoutApiController::class)->names('vegacheckout');
+        Route::resource('vegacheckout', VegaCheckoutApiController::class)->names('vegacheckout_api');
     });

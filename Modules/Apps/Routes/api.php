@@ -7,6 +7,8 @@ Route::group(
         "middleware" => ["auth:api", "scopes:admin", "permission:apps", "demo_account"],
     ],
     function () {
-        Route::apiResource("apps", "AppsApiController")->only("index");
+        Route::apiResource("apps", "AppsApiController")
+            ->only("index")
+            ->names("api.apps_api");
     }
 );
