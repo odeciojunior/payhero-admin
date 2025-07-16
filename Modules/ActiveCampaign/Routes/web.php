@@ -21,7 +21,13 @@ Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
     Route::get("apps/activecampaign/{id}/edit", "ActiveCampaignController@edit");
     Route::Resource("apps/activecampaign", "ActiveCampaignController")
         ->only("create", "store", "update", "destroy")
-        ->middleware("permission:apps_manage");
+        ->middleware("permission:apps_manage")
+        ->names([
+            'create' => 'apps.activecampaign.create',
+            'store' => 'apps.activecampaign.store',
+            'update' => 'apps.activecampaign.update',
+            'destroy' => 'apps.activecampaign.destroy'
+        ]);
 
     Route::get("apps/activecampaignevent", "ActiveCampaignEventController@index");
     Route::get("apps/activecampaignevent/{id}", "ActiveCampaignEventController@show");
@@ -29,5 +35,11 @@ Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
 
     Route::Resource("apps/activecampaignevent", "ActiveCampaignEventController")
         ->only("create", "store", "update", "destroy")
-        ->middleware("permission:apps_manage");
+        ->middleware("permission:apps_manage")
+        ->names([
+            'create' => 'apps.activecampaignevent.create',
+            'store' => 'apps.activecampaignevent.store',
+            'update' => 'apps.activecampaignevent.update',
+            'destroy' => 'apps.activecampaignevent.destroy'
+        ]);
 });

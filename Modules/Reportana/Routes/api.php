@@ -18,11 +18,16 @@ Route::middleware("auth:api")->get("/reportana", function (Request $request) {
 });
 
 Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], function () {
-    Route::get("apps/reportana", "ReportanaApiController@index");
-    Route::get("apps/reportana/{id}", "ReportanaApiController@show");
-    Route::get("apps/reportana/{id}/edit", "ReportanaApiController@edit");
+    Route::get("apps/reportana", "ReportanaApiController@index")->name("api.reportana.index");
+    Route::get("apps/reportana/{id}", "ReportanaApiController@show")->name("api.reportana.show");
+    Route::get("apps/reportana/{id}/edit", "ReportanaApiController@edit")->name("api.reportana.edit");
 
     Route::apiResource("apps/reportana", "ReportanaApiController")
-        ->only("create", "store", "update", "destroy")
+        ->only("store", "update", "destroy")
+        ->names([
+            'store' => 'api.reportana.resource.store',
+            'update' => 'api.reportana.resource.update',
+            'destroy' => 'api.reportana.resource.destroy'
+        ])
         ->middleware("permission:apps_manage");
 });

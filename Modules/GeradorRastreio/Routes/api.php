@@ -13,20 +13,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/geradorrastreio', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware("auth:api")->get("/geradorrastreio", function (Request $request) {
-    return $request->user();
-});
-
 Route::group(["middleware" => ["auth:api", "permission:apps", "demo_account"]], function () {
-    Route::get("apps/geradorrastreio", "GeradorRastreioApiController@index");
-    Route::get("apps/geradorrastreio/{id}", "GeradorRastreioApiController@show");
-    Route::get("apps/geradorrastreio/{id}/edit", "GeradorRastreioApiController@edit");
+    Route::get("apps/geradorrastreio", "GeradorRastreioApiController@index")->name("api.geradorrastreio.index");
+    Route::get("apps/geradorrastreio/{id}", "GeradorRastreioApiController@show")->name("api.geradorrastreio.show");
+    Route::get("apps/geradorrastreio/{id}/edit", "GeradorRastreioApiController@edit")->name("api.geradorrastreio.edit");
 
     Route::apiResource("apps/geradorrastreio", "GeradorRastreioApiController")
-        ->only("create", "store", "update", "destroy")
+        ->only("store", "update", "destroy")
+        ->names([
+            'store' => 'api.geradorrastreio.resource.store',
+            'update' => 'api.geradorrastreio.resource.update',
+            'destroy' => 'api.geradorrastreio.resource.destroy'
+        ])
         ->middleware("permission:apps_manage");
 });

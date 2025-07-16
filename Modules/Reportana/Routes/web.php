@@ -12,11 +12,17 @@
 */
 
 Route::group(["middleware" => ["web", "auth", "permission:apps"]], function () {
-    Route::get("apps/reportana", "ReportanaController@index");
-    Route::get("apps/reportana/{id}", "ReportanaController@show");
-    Route::get("apps/reportana/{id}/edit", "ReportanaController@edit");
+    Route::get("apps/reportana", "ReportanaController@index")->name("reportana.index");
+    Route::get("apps/reportana/{id}", "ReportanaController@show")->name("reportana.show");
+    Route::get("apps/reportana/{id}/edit", "ReportanaController@edit")->name("reportana.edit");
 
     Route::Resource("apps/reportana", "ReportanaController")
         ->only("create", "store", "update", "destroy")
+        ->names([
+            'create' => 'reportana.resource.create',
+            'store' => 'reportana.resource.store',
+            'update' => 'reportana.resource.update',
+            'destroy' => 'reportana.resource.destroy'
+        ])
         ->middleware("permission:apps_manage");
 });

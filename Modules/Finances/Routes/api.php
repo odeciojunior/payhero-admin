@@ -23,9 +23,9 @@ Route::group(
         /**
          * News routes after getnet
          */
-        Route::get("/old_finances/getbalances", "OldFinancesApiController@getBalances")->name("api.finances.balances");
+        Route::get("/old_finances/getbalances", "OldFinancesApiController@getBalances")->name("api.old_finances.balances");
 
-        Route::post("/old_finances/export", "OldFinancesApiController@export")->name("api.finances.export");
+        Route::post("/old_finances/export", "OldFinancesApiController@export")->name("api.old_finances.export");
 
         Route::get("/finances/get-statement-resumes/", "FinancesApiController@getStatementResume")->name(
             "finances.statement-resumes"

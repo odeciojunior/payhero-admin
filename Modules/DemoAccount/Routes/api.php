@@ -54,21 +54,21 @@ Route::group(
         //Products
         Route::group([], function () {
             Route::post("/products/topselling", "ProductsApiDemoController@getTopSellingProducts")->name(
-                "api.products.topselling"
+                "api.demo.products.topselling"
             );
 
             Route::get("/products", "ProductsApiDemoController@index");
             Route::get("/products/{id}", "ProductsApiDemoController@show");
             Route::get("/products/{id}/edit", "ProductsApiDemoController@edit");
             Route::get("/products/saleproducts/{saleId}", "ProductsApiDemoController@getProductBySale")->name(
-                "api.products.saleproducts"
+                "api.demo.products.saleproducts"
             );
 
             Route::post("/products/products-variants", "ProductsApiDemoController@getProductsVariants")->name(
-                "api.products.productsvariants"
+                "api.demo.products.productsvariants"
             );
 
-            Route::get("/product/{id}", "ProductsApiDemoController@getProductById")->name("api.products.getproduct");
+            Route::get("/product/{id}", "ProductsApiDemoController@getProductById")->name("api.demo.products.getproduct");
         });
 
         //Sales
@@ -189,16 +189,16 @@ Route::group(
 
         //Finances
         Route::group([], function () {
-            Route::get("/finances/getbalances", "FinancesApiDemoController@getBalances")->name("api.finances.balances");
+            Route::get("/finances/getbalances", "FinancesApiDemoController@getBalances")->name("api.demo.finances.balances");
             Route::get("/finances/acquirers/{companyId?}", "FinancesApiDemoController@getAcquirers")->name(
-                "api.finances.acquirers"
+                "api.demo.finances.acquirers"
             );
             Route::get("/finances/get-statement-resumes/", "FinancesApiDemoController@getStatementResume")->name(
-                "finances.statement-resumes"
+                "demo.finances.statement-resumes"
             );
 
             Route::get("/old_finances/getbalances", "OldFinancesApiDemoController@getBalances")->name(
-                "api.finances.balances"
+                "api.demo.old_finances.balances"
             );
         });
 
