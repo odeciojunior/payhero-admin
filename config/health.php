@@ -115,6 +115,6 @@ return [
     'theme' => 'dark',
 
     'checks' => [
-        ScheduleCheck::new(),
+        // Health checks are registered in HealthServiceProvider
     ],
 ];

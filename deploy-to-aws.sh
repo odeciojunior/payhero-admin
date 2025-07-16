@@ -189,11 +189,7 @@ prepare_application() {
     log_info "Installing Node.js dependencies..."
     npm ci --only=production
     
-    # Build frontend assets
-    log_info "Building frontend assets..."
-    npm run production
-    
-    # Clear and cache configuration
+        # Clear and cache configuration
     log_info "Optimizing Laravel configuration..."
     php artisan config:clear
     php artisan route:clear
